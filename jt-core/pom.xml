@@ -16,6 +16,7 @@
             <groupId>io.github.hylexus</groupId>
             <artifactId>oaks-common-utils</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

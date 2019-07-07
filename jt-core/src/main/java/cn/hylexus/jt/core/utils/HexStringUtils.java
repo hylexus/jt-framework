@@ -16,7 +16,7 @@ public class HexStringUtils {
 
     protected static byte[] decodeHex(char[] data) {
         int len = data.length;
-        if ((len & 0x01) != 0) {
+        if ((len & 1) != 0) {
             throw new RuntimeException("字符个数应该为偶数");
         }
         byte[] out = new byte[len >> 1];

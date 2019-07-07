@@ -29,7 +29,7 @@
             <dependency>
                 <groupId>io.github.hylexus</groupId>
                 <artifactId>oaks-common-utils</artifactId>
-                <version>1.0</version>
+                <version>1.0.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

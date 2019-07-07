@@ -1,9 +1,12 @@
 package cn.hylexus.jt.core.data;
 
 import cn.hylexus.jt.core.utils.HexStringUtils;
+import io.github.hylexus.utils.BcdOps;
+import io.github.hylexus.utils.Bytes;
 import io.github.hylexus.utils.IntBitOps;
-import io.github.hylexus.utils.Numbers;
+import lombok.NonNull;
 
+import java.nio.charset.Charset;
 import java.util.function.Function;
 
 /**
@@ -11,50 +14,59 @@ import java.util.function.Function;
  * Created At 2019-07-03 23:44
  */
 public class ByteSource {
+    public static final int SIZE_OF_WORD = 2;
+    public static final int SIZE_OF_D_WORD = 4;
     final private byte[] bytes;
     private int index = 0;
 
-    public static byte[] range(byte[] bytes, int startIndex, int length) {
-        byte[] tmp = new byte[length];
-        System.arraycopy(bytes, startIndex, tmp, 0, length);
-        return tmp;
-    }
-
-    public ByteSource(byte[] bytes) {
+    public ByteSource(@NonNull final byte[] bytes) {
         this.bytes = bytes;
     }
 
-    public int nextByte() {
-        return IntBitOps.intFrom1Byte(range(bytes, index++, 1)[0]);
+    public byte nextByte() {
+        return nextBytes(1)[0];
+    }
+
+    public byte[] nextBytes(final int bytesCount) {
+        return nextBytes(bytesCount, Function.identity());
+    }
+
+    public <E> E nextBytes(final int bytesCount, @NonNull Function<byte[], E> converter) {
+        byte[] range = Bytes.subSequence(bytes, index, bytesCount);
+        index += bytesCount;
+        return converter.apply(range);
     }
 
     public int nextWord() {
-        int i = IntBitOps.intFrom2Bytes(range(bytes, index, 2));
-        index += 2;
+        int i = IntBitOps.intFrom2Bytes(bytes, index);
+        index += SIZE_OF_WORD;
         return i;
     }
 
     public int nextDWord() {
-        int i = IntBitOps.intFrom2Bytes(range(bytes, index, 2));
-        index += 4;
+        int i = IntBitOps.intFrom2Bytes(bytes, index);
+        index += SIZE_OF_D_WORD;
         return i;
     }
 
-    public <E> E nextBytes(int n, Function<byte[], E> converter) {
-        byte[] range = range(bytes, index, n);
-        return converter.apply(range);
+    public String nextBCD(final int n) {
+        String string = BcdOps.bcd2String(bytes, index, index + n);
+        index += n;
+        return string;
     }
 
-    public String nextBcd(int n) {
-        String s = new String(range(bytes, index, n));
-        index += n;
-        return s;
+    public String nextStringGBK(final int bytesCount) {
+        return nextString(bytesCount, Charset.forName("gbk"));
     }
 
-    public String nextString(int n) {
-        String s = new String(range(bytes, index, n));
-        index += n;
-        return s;
+    public String nextString(final int bytesCount, Charset charset) {
+        return nextString(bytesCount, bs -> new String(bs, charset));
+    }
+
+    public String nextString(final int bytesCount, @NonNull final Function<byte[], String> converter) {
+        byte[] bytes = this.nextBytes(bytesCount);
+        index += bytesCount;
+        return converter.apply(bytes);
     }
 
     public static void main(String[] args) {
