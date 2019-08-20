@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly "org.springframework.boot:spring-boot-starter-logging"
+    implementation "io.github.hylexus:oaks-common-utils:1.0.2"
+    implementation 'org.apache.commons:commons-lang3'
+    provided "io.netty:netty-all:${jar_version_netty}"
+}

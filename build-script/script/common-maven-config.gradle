@@ -1,0 +1,182 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+jar {
+    manifest.attributes["Implementation-Title"] = project.name
+    manifest.attributes["Implementation-Version"] = project.version
+    manifest.attributes["Automatic-Module-Name"] = project.name.replace('-', '.')
+    manifest.attributes["JDK-Version"] = "${System.getProperty("java.version")}"
+    manifest.attributes["Created-By"] = "${System.getProperty("user.name")}"
+
+    from(rootProject.projectDir) {
+        include "LICENSE"
+        include "NOTICE"
+        into "META-INF"
+    }
+
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    classifier = "sources"
+    from sourceSets.main.allSource
+    // Don't include or exclude anything explicitly by default. See SPR-12085.
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+install {
+    repositories.mavenInstaller {
+        customizePom(pom, project)
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = "$project.group"
+            artifactId = "$project.name"
+            version = "$project.version"
+
+            from components.java
+            artifact sourcesJar
+
+            pom {
+                name = project.name
+                packaging = 'jar'
+                description = "${project.description}"
+
+                licenses {
+                    license {
+                        name = "${projectLicenseName}"
+                        url = "${projectLicenseUrl}"
+                        distribution = "${projectLicenseDistribution}"
+                    }
+                }
+                scm {
+                    url = "${projectScmUrl}"
+                    connection = "${projectScmConnection}"
+                    developerConnection = "${projectScmDeveloperConnection}"
+                }
+                developers {
+                    developer {
+                        id = "${projectDeveloperId}"
+                        name = "${projectDeveloperName}"
+                        email = "${projectDeveloperEmail}"
+                    }
+                }
+                issueManagement {
+                    system = "${projectIssueManagementSystem}"
+                    url = "${projectIssueManagementUrl}"
+                }
+            }
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        if (isSnapshot()) {
+            logger.quiet("publish to my aliyun repo [snapshot]")
+            maven {
+                url rootProject.ext.mavenRepoConfig.snapshotMavenRepo.url
+                credentials {
+                    username rootProject.ext.mavenRepoConfig.snapshotMavenRepo.username
+                    password rootProject.ext.mavenRepoConfig.snapshotMavenRepo.password
+                }
+            }
+        } else {
+            logger.quiet("publish to my aliyun repo ")
+            maven {
+                url rootProject.ext.mavenRepoConfig.releaseMavenRepo.url
+                credentials {
+                    username rootProject.ext.mavenRepoConfig.releaseMavenRepo.username
+                    password rootProject.ext.mavenRepoConfig.releaseMavenRepo.password
+                }
+            }
+        }
+
+        if (publishToMavenCentralRepo()) {
+            if (isSnapshot()) {
+                logger.quiet("publish to maven central repo [snapshot]")
+                maven {
+                    url rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.url
+                    credentials {
+                        username rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.username
+                        password rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.password
+                    }
+                }
+            } else {
+                logger.quiet("publish to maven central repo [release]")
+                maven {
+                    url rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.url
+                    credentials {
+                        username rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.username
+                        password rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.password
+                    }
+                }
+            }
+        }
+    }
+}
+
+def isSnapshot() {
+    rootProject.version.toString().toLowerCase().endsWith("snapshot")
+}
+
+def publishToMavenCentralRepo() {
+    System.getProperty("publish2MavenCentralRepo") ?: "false" == "true"
+}
+
+project(":build-script") {
+    configurations.archives.artifacts.clear()
+}
+
+def customizePom(pom, gradleProject) {
+    pom.whenConfigured { generatedPom ->
+        generatedPom.dependencies.removeAll { dep ->
+            dep.scope == "test"
+        }
+
+        def managedVersions = dependencyManagement.managedVersions
+        generatedPom.dependencies.findAll { dep -> !dep.version }.each { dep ->
+            dep.version = managedVersions["${dep.groupId}:${dep.artifactId}"]
+        }
+
+        generatedPom.project {
+            name = gradleProject.description
+            description = gradleProject.description
+            licenses {
+                license {
+                    name = "${projectLicenseName}"
+                    url = "${projectLicenseUrl}"
+                    distribution = "${projectLicenseDistribution}"
+                }
+            }
+            scm {
+                url = "${projectScmUrl}"
+                connection = "${projectScmConnection}"
+                developerConnection = "${projectScmDeveloperConnection}"
+            }
+            developers {
+                developer {
+                    id = "${projectDeveloperId}"
+                    name = "${projectDeveloperName}"
+                    email = "${projectDeveloperEmail}"
+                }
+            }
+            issueManagement {
+                system = "${projectIssueManagementSystem}"
+                url = "${projectIssueManagementUrl}"
+            }
+        }
+    }
+}

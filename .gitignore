@@ -11,7 +11,8 @@ workspace/
 local.properties
 .settings/
 .loadpath
-
+/build
+/*/build
 # Eclipse Core
 .project
 

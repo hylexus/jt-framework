@@ -1,0 +1,9 @@
+dependencies {
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "org.springframework.boot:spring-boot-starter"
+
+    implementation(project(":jt-core"))
+
+    provided "io.netty:netty-all:${jar_version_netty}"
+    compile "com.google.guava:guava:${jar_version_guava}"
+}

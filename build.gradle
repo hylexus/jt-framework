@@ -1,0 +1,71 @@
+import java.nio.charset.StandardCharsets
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repo.spring.io/plugins-release" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id "io.spring.dependency-management" version "1.0.7.RELEASE" apply false
+}
+
+ext {
+    jar_version_guava = "23.0"
+    jar_version_netty = "4.1.19.Final"
+    jar_version_commons_io = "2.6"
+    jar_version_ok_http = "3.14.2"
+    jar_version_fast_json = "1.2.59"
+    jar_version_oaks = "1.0.2"
+
+    defaultCharset = StandardCharsets.UTF_8.name()
+    defaultJavaVersion = 1.8
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+configure(rootProject) {
+    configurations.archives.artifacts.clear()
+}
+
+configure(allprojects) { project ->
+    group = "io.github.hylexus.jt"
+    version = "1.0-SNAPSHOT"
+}
+
+// 1. java-env config
+configure(subprojects.findAll {
+    (it.name != "docs")
+}) { subProject ->
+    apply from: "${project(":build-script").projectDir}/script/common-java-env-config.gradle"
+}
+
+// 2. maven config
+apply from: "${project(":build-script").projectDir}/script/repo-credentials.gradle"
+def modulesToPublishToMavenRepo = ["jt-core"]
+configure(subprojects.findAll {
+    modulesToPublishToMavenRepo.contains(it.name)
+}) { subProject ->
+    apply from: "${project(":build-script").projectDir}/script/common-maven-config.gradle"
+}
+
