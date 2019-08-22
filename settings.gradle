@@ -3,4 +3,5 @@ rootProject.name = "jt-platform"
 include 'jt-core'
 include 'build-script'
 include 'jt-808-server'
+include 'docs'
 

@@ -1,8 +1,5 @@
 package io.github.hylexus.jt.jt808.msg;
 
-import io.github.hylexus.jt.jt808.model.MsgType;
-import io.github.hylexus.jt.jt808.model.RequestMsg;
-import io.github.hylexus.jt.jt808.model.RequestMsgHeader;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

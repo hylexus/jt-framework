@@ -1,6 +1,10 @@
 package io.github.hylexus.jt808.server.netty;
 
-import io.github.hylexus.jt.jt808.support.RequestMsgDispatcher;
+import io.github.hylexus.jt.jt808.codec.Decoder;
+import io.github.hylexus.jt.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt.jt808.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt.jt808.msg.MsgType;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -8,6 +12,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 import static io.netty.util.ReferenceCountUtil.release;
 
@@ -19,7 +25,14 @@ import static io.netty.util.ReferenceCountUtil.release;
 @ChannelHandler.Sharable
 public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
+    private Decoder decoder = new Decoder();
     private RequestMsgDispatcher msgDispatcher;
+    private MsgTypeParser msgTypeParser;
+
+    public Jt808ChannelHandlerAdapter(RequestMsgDispatcher msgDispatcher, MsgTypeParser msgTypeParser) {
+        this.msgDispatcher = msgDispatcher;
+        this.msgTypeParser = msgTypeParser;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -31,11 +44,23 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
             final byte[] unescaped = new byte[buf.readableBytes()];
             buf.readBytes(unescaped);
-            log.info("unescaped:{}", HexStringUtils.bytes2HexString(unescaped));
+            log.debug("\nreceived msg:");
+            log.debug("unescaped:{}", HexStringUtils.bytes2HexString(unescaped));
             byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808(unescaped, 0, unescaped.length);
             log.debug("escaped : {}", HexStringUtils.bytes2HexString(escaped));
 
-            this.msgDispatcher.doDispatch(null);
+            AbstractRequestMsg abstractMsg = decoder.parseAbstractMsg(escaped);
+            int msgId = abstractMsg.getHeader().getMsgId();
+            final Optional<MsgType> msgType = this.msgTypeParser.parseMsgType(msgId);
+            if (!msgType.isPresent()) {
+                log.warn("received unknown msg, msgId={}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
+                return;
+            }
+            abstractMsg.setMsgType(msgType.get());
+            final String terminalId = abstractMsg.getHeader().getTerminalId();
+
+            log.debug("Receive msg {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
+            this.msgDispatcher.doDispatch(abstractMsg);
         } finally {
             release(msg);
         }

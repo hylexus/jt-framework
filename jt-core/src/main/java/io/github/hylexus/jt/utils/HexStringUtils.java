@@ -46,6 +46,10 @@ public class HexStringUtils {
         return new String(encodeHex(bs));
     }
 
+    public static String int2HexString(int n, int strLength) {
+        return int2HexString(n, strLength, true);
+    }
+
     public static String int2HexString(int n, int strLength, boolean withPrefix) {
         StringBuilder sb = new StringBuilder(Integer.toHexString(n));
         while (sb.length() < strLength) {

@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.support;
+package io.github.hylexus.jt.jt808.dispatcher;
 
 
 import io.github.hylexus.jt.jt808.msg.AbstractRequestMsg;

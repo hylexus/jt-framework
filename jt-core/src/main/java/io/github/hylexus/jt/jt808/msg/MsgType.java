@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.model;
+package io.github.hylexus.jt.jt808.msg;
 
 import java.util.Optional;
 

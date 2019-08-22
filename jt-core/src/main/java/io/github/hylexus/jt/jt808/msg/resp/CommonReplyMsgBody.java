@@ -1,7 +1,7 @@
-package io.github.hylexus.jt.jt808.msg;
+package io.github.hylexus.jt.jt808.msg.resp;
 
 
-import io.github.hylexus.jt.jt808.model.RespMsgBody;
+import io.github.hylexus.jt.jt808.msg.RespMsgBody;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

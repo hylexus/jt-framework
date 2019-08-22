@@ -1,0 +1,3 @@
+logging:
+  level: info
+  level.io.github.hylexus: debug

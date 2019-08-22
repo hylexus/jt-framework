@@ -1,5 +1,9 @@
 package io.github.hylexus.jt.utils;
 
+import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.oaks.utils.Bytes;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -7,6 +11,7 @@ import java.io.IOException;
  * @author hylexus
  * createdAt 2019/1/28
  **/
+@Slf4j
 public class ProtocolUtils {
 
     public static byte calculateCheckSum4Jt808(byte[] bs, int start, int end) {
@@ -80,6 +85,19 @@ public class ProtocolUtils {
             if (baos != null) {
                 baos.close();
             }
+        }
+    }
+
+    public static String bytes2String(byte[] bytes, int start, int length) {
+        return bytes2String(bytes, start, length, null);
+    }
+
+    public static String bytes2String(byte[] bytes, int start, int length, String defaultVal) {
+        try {
+            return new String(Bytes.subSequence(bytes, start, length), JtProtocolConstant.JT_808_STRING_ENCODING);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return defaultVal;
         }
     }
 }

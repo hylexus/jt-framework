@@ -1,5 +1,6 @@
-package io.github.hylexus.jt.jt808.msg;
+package io.github.hylexus.jt.jt808.msg.req;
 
+import io.github.hylexus.jt.jt808.msg.AbstractRequestMsg;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
