@@ -2,7 +2,6 @@ package io.github.hylexus.jt.jt808.session;
 
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +26,8 @@ public class SessionManager {
 
     // <terminalId,Session>
     private Map<String, Session> sessionMap = new ConcurrentHashMap<>();
-    // <terminal,SessionId>
-    private Map<String, String> terminalIdSessionIdMapping = new ConcurrentHashMap<>();
+    // <sessionId,terminalId>
+    private Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
 
     public void persistenceIfNecessary(String terminalId, Channel channel) {
         Optional<Session> session = findByTerminalId(terminalId, true);
@@ -39,30 +38,33 @@ public class SessionManager {
     }
 
     public void persistence(Session session) {
-        String sessionId = this.terminalIdSessionIdMapping.get(session.getTerminalId());
-        if (sessionId != null) {
-            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+        Session sessionInfo = this.sessionMap.get(session.getTerminalId());
+        if (sessionInfo != null) {
+            sessionInfo.setLastCommunicateTimeStamp(System.currentTimeMillis());
             return;
         }
 
         synchronized (lock) {
-            this.sessionMap.put(session.getId(), session);
-            this.terminalIdSessionIdMapping.put(session.getTerminalId(), session.getId());
+            this.sessionMap.put(session.getTerminalId(), session);
+            sessionIdTerminalIdMapping.put(session.getId(), session.getTerminalId());
         }
+    }
+
+    public void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason) {
+        synchronized (lock) {
+            sessionIdTerminalIdMapping.remove(sessionId);
+            sessionMap.remove(sessionId);
+        }
+        log.info("session removed [{}] , sessionId = {}", reason, sessionId);
     }
 
     public void removeByTerminalIdAndClose(String terminalId, SessionCloseReason reason) {
         synchronized (lock) {
-            String sessionId = terminalIdSessionIdMapping.get(terminalId);
-            if (sessionId == null) {
+            Session sessionInfo = sessionMap.get(terminalId);
+            if (sessionInfo != null) {
+                sessionIdTerminalIdMapping.remove(sessionInfo.getId());
                 log.info("session removed [{}] , terminalId={}", reason, terminalId);
-                return;
             }
-            Session remove = sessionMap.remove(sessionId);
-            if (remove != null) {
-                remove.getChannel().close();
-            }
-            log.info("session removed [{}] , terminalId={}, sessionId={}", reason, terminalId, sessionId);
         }
     }
 
@@ -71,21 +73,15 @@ public class SessionManager {
     }
 
     public Optional<Session> findByTerminalId(String terminalId, boolean updateLastCommunicateTime) {
-        String sessionId = terminalIdSessionIdMapping.get(terminalId);
-        if (StringUtils.isEmpty(sessionId)) {
-            return Optional.empty();
-        }
-        Session session = sessionMap.get(sessionId);
+        Session session = sessionMap.get(terminalId);
         if (session == null) {
-            synchronized (lock) {
-                log.error("xxx remove by server null session");
-                terminalIdSessionIdMapping.remove(terminalId);
-            }
             return Optional.empty();
         }
 
         if (updateLastCommunicateTime) {
-            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+            synchronized (lock) {
+                session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+            }
         }
 
         if (!this.checkStatus(session)) {
@@ -99,7 +95,7 @@ public class SessionManager {
         if (!session.getChannel().isActive()) {
             synchronized (lock) {
                 this.sessionMap.remove(session.getId());
-                this.terminalIdSessionIdMapping.remove(session.getTerminalId());
+                sessionIdTerminalIdMapping.remove(session.getId());
                 session.getChannel().close();
                 log.error("Close by server, terminalId = {}", session.getTerminalId());
                 return false;

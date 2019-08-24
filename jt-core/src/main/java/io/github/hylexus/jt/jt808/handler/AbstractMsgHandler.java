@@ -49,13 +49,13 @@ public abstract class AbstractMsgHandler<T extends AbstractRequestMsg> implement
         byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), msg.getHeader().getTerminalId());
         this.send2Client(session.getChannel(), respBytes);
 
-        log.info("<<<<<<<<<<<< {}", HexStringUtils.bytes2HexString(respBytes));
+        log.info("AbstractMsgHandler resp : {}", HexStringUtils.bytes2HexString(respBytes));
     }
 
     protected void send2Client(Channel channel, byte[] bytes) throws InterruptedException {
         ChannelFuture future = channel.writeAndFlush(Unpooled.copiedBuffer(bytes)).sync();
         if (!future.isSuccess()) {
-            log.error("ERROR : send data to client:", future.cause());
+            log.error("ERROR : 'send data to client:'", future.cause());
         }
     }
 

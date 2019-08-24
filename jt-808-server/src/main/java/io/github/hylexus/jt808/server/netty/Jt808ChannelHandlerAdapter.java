@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
+import static io.github.hylexus.jt.jt808.session.Session.generateSessionId;
+import static io.github.hylexus.jt.jt808.session.SessionCloseReason.CLIENT_ABORT;
+import static io.github.hylexus.jt.jt808.session.SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
 import static io.netty.util.ReferenceCountUtil.release;
 
 /**
@@ -73,14 +76,14 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         // TODO 异常处理
+        SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), SERVER_EXCEPTION_OCCURRED);
         super.exceptionCaught(ctx, cause);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.warn("remove session, channelInactive [Jt808ChannelHandlerAdapter]");
-        // TODO remove session
-        // SessionHolder.getInstance().remove(Session.generateSessionId(ctx.channel()));
+        SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), CLIENT_ABORT);
         super.channelInactive(ctx);
     }
 
