@@ -38,12 +38,6 @@ public class SessionManager {
     }
 
     public void persistence(Session session) {
-        Session sessionInfo = this.sessionMap.get(session.getTerminalId());
-        if (sessionInfo != null) {
-            sessionInfo.setLastCommunicateTimeStamp(System.currentTimeMillis());
-            return;
-        }
-
         synchronized (lock) {
             this.sessionMap.put(session.getTerminalId(), session);
             sessionIdTerminalIdMapping.put(session.getId(), session.getTerminalId());
