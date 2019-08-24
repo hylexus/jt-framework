@@ -2,15 +2,24 @@ package io.github.hylexus.jt808.server.config;
 
 import io.github.hylexus.jt.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt.jt808.converter.impl.AuthMsgConverter;
-import io.github.hylexus.jt.jt808.dispatcher.LocalDispatcher;
 import io.github.hylexus.jt.jt808.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt.jt808.dispatcher.impl.LocalEventBusDispatcher;
+import io.github.hylexus.jt.jt808.dispatcher.impl.LocalQueueDispatcher;
+import io.github.hylexus.jt.jt808.handler.impl.AuthMsgHandler;
 import io.github.hylexus.jt.jt808.msg.BuiltinMsgType;
+import io.github.hylexus.jt.jt808.queue.impl.LocalEventBus;
+import io.github.hylexus.jt.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt.jt808.support.MsgConverterMapping;
+import io.github.hylexus.jt.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.server.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.server.netty.NettyChildHandlerInitializer;
 import io.github.hylexus.jt808.server.netty.NettyTcpServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author hylexus
@@ -20,20 +29,47 @@ import org.springframework.context.annotation.Configuration;
 public class Jt808ServerConfig {
 
     @Bean
+    public MsgHandlerMapping msgHandlerMapping() {
+        MsgHandlerMapping mapping = new MsgHandlerMapping();
+        mapping.registerHandler(new AuthMsgHandler());
+        return mapping;
+    }
+
+    @Bean
     public MsgConverterMapping msgConverterMapping() {
         MsgConverterMapping mapping = new MsgConverterMapping();
-        mapping.addConverter(BuiltinMsgType.REQ_CLIENT_AUTH, new AuthMsgConverter());
+        mapping.registerConverter(BuiltinMsgType.REQ_CLIENT_AUTH, new AuthMsgConverter());
         return mapping;
     }
 
     @Bean
     public RequestMsgDispatcher requestMsgDispatcher() {
-        return new LocalDispatcher(msgConverterMapping());
+        return new LocalQueueDispatcher(msgConverterMapping());
+    }
+
+    @Bean
+    public LocalEventBus localEventBus() {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                3, 10, 60, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(10),
+                new ThreadPoolExecutor.AbortPolicy()
+        );
+        return new LocalEventBus(executor);
+    }
+
+    @Bean
+    public RequestMsgDispatcher asyncEventBus() {
+        return new LocalEventBusDispatcher(msgConverterMapping(), localEventBus());
+    }
+
+    @Bean
+    public LocalEventBusListener localEventBusListener() {
+        return new LocalEventBusListener(msgHandlerMapping(), localEventBus());
     }
 
     @Bean
     public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter() {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher(), new BuiltinMsgTypeParser());
+        return new Jt808ChannelHandlerAdapter(asyncEventBus(), new BuiltinMsgTypeParser());
     }
 
     @Bean

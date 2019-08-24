@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.msg.AbstractRequestMsg;
 import io.github.hylexus.jt.jt808.msg.MsgType;
+import io.github.hylexus.jt.jt808.session.SessionManager;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -59,7 +60,9 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             abstractMsg.setMsgType(msgType.get());
             final String terminalId = abstractMsg.getHeader().getTerminalId();
 
-            log.debug("Receive msg {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
+            SessionManager.getInstance().sync(terminalId, ctx.channel());
+
+            log.debug("[HandlerAdapter] receive msg {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
             this.msgDispatcher.doDispatch(abstractMsg);
         } finally {
             release(msg);

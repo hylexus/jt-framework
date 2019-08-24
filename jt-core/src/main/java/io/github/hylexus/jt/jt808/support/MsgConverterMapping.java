@@ -25,7 +25,7 @@ public class MsgConverterMapping {
         return Optional.ofNullable(mapping.get(msgType));
     }
 
-    public MsgConverterMapping addConverter(MsgType msgType, MsgConverter converter) {
+    public MsgConverterMapping registerConverter(MsgType msgType, MsgConverter converter) {
 
         if (containsConverter(msgType)) {
             log.warn("duplicate msgType : {}, the MsgConverter {} is replaced by {}", msgType, mapping.get(msgType).getClass(),

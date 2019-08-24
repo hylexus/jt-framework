@@ -1,6 +1,7 @@
-package io.github.hylexus.jt.jt808.queue;
+package io.github.hylexus.jt.jt808.queue.impl;
 
 import io.github.hylexus.jt.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt.jt808.queue.RequestMsgQueue;
 
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * @author hylexus
  * createdAt 2019/1/28
  **/
-public class LocalMsgQueue {
+public class LocalMsgQueue implements RequestMsgQueue {
     private static volatile LocalMsgQueue instance;
 
     public static LocalMsgQueue getInstance() {
@@ -25,11 +26,12 @@ public class LocalMsgQueue {
 
     private LinkedBlockingDeque<AbstractRequestMsg> queue = new LinkedBlockingDeque<>();
 
-    public boolean postMsg(AbstractRequestMsg msg, int time, TimeUnit unit) throws InterruptedException {
-        return this.queue.offer(msg, time, unit);
-    }
-
     public AbstractRequestMsg getMsg() throws InterruptedException {
         return this.queue.take();
+    }
+
+    @Override
+    public void dispatchRequestMsg(AbstractRequestMsg msg) throws InterruptedException {
+        this.queue.offer(msg, 3, TimeUnit.SECONDS);
     }
 }
