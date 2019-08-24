@@ -60,7 +60,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             abstractMsg.setMsgType(msgType.get());
             final String terminalId = abstractMsg.getHeader().getTerminalId();
 
-            SessionManager.getInstance().sync(terminalId, ctx.channel());
+            SessionManager.getInstance().persistenceIfNecessary(terminalId, ctx.channel());
 
             log.debug("[HandlerAdapter] receive msg {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
             this.msgDispatcher.doDispatch(abstractMsg);

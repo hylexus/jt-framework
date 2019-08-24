@@ -48,9 +48,9 @@ public enum BuiltinMsgType implements MsgType {
 
     @Override
     public String toString() {
-        return "BuiltInMsgType{" +
-                "msgId=" + msgId +
-                "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\'' +
-                '}';
+        return "BuiltInMsgType{"
+                + "msgId=" + msgId
+                + "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\''
+                + '}';
     }
 }

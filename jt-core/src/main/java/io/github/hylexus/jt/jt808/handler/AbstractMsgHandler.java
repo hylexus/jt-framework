@@ -21,7 +21,7 @@ import java.util.Set;
  * @author hylexus
  * Created At 2019-08-24 15:45
  */
-@Slf4j
+@Slf4j(topic = "AbstractMsgHandler")
 public abstract class AbstractMsgHandler<T extends AbstractRequestMsg> implements MsgHandler<T> {
 
     @Getter
@@ -41,7 +41,7 @@ public abstract class AbstractMsgHandler<T extends AbstractRequestMsg> implement
     public void handleMsg(T msg, Session session) throws IOException, InterruptedException {
         Optional<RespMsgBody> respInfo = this.doProcess(msg, session);
         if (!respInfo.isPresent()) {
-            log.debug("MsgHandler returned an EMPTY respBody. [SendResult2Client] canceled.");
+            log.debug("MsgHandler return empty(). [SendResult2Client] canceled.");
             return;
         }
 

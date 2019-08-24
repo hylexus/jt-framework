@@ -1,17 +1,12 @@
 package io.github.hylexus.jt.jt808.session;
 
 import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * @author hylexus
@@ -23,100 +18,79 @@ public class SessionManager {
     private static volatile SessionManager instance = new SessionManager();
 
     private SessionManager() {
-        log.debug("1 time");
+        log.info("SessionManager init time");
     }
 
     public static SessionManager getInstance() {
-//        if (instance == null) {
-//            synchronized (SessionHolder.class) {
-//                if (instance == null) {
-//                    instance = new SessionHolder();
-//                }
-//            }
-//        }
         return instance;
     }
 
+    // <terminalId,Session>
     private Map<String, Session> sessionMap = new ConcurrentHashMap<>();
-    private Map<String, String> phoneMap = new ConcurrentHashMap<>();
-    private final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-//
-//    public List<TerminalInfoVO> toList() {
-//        List<TerminalInfoVO> list = Lists.newArrayListWithCapacity(phoneMap.size());
-//        for (Map.Entry<String, String> entry : this.phoneMap.entrySet()) {
-//            Session session = sessionMap.get(entry.getValue());
-//            if (session == null) {
-//                continue;
-//            }
-//
-//            TerminalInfoVO vo = new TerminalInfoVO();
-//            vo.setAuth(session.isAuthenticated());
-//            vo.setLastCommunicationTime(new Date(session.getLastCommunicateTimeStamp()));
-//            vo.setSessionId(session.getId());
-//            vo.setTerminalId(entry.getKey());
-//            list.add(vo);
-//        }
-//
-//        return list;
-//    }
+    // <terminal,SessionId>
+    private Map<String, String> terminalIdSessionIdMapping = new ConcurrentHashMap<>();
 
-    public synchronized void persistenceIfNecessary(Session session) {
-        String sessionId = this.phoneMap.get(session.getTerminalId());
-        if (sessionId != null) {
-            return;
+    public void persistenceIfNecessary(String terminalId, Channel channel) {
+        Optional<Session> session = findByTerminalId(terminalId, true);
+        if (!session.isPresent()) {
+            Session newSession = Session.buildSession(channel, terminalId);
+            persistence(newSession);
         }
-
-        this.sessionMap.put(session.getId(), session);
-        this.phoneMap.put(session.getTerminalId(), session.getId());
-        this.channels.add(session.getChannel());
     }
 
-    public void remove(String sessionId) {
-        Session session = this.sessionMap.get(sessionId);
-        if (session == null) {
+    public void persistence(Session session) {
+        String sessionId = this.terminalIdSessionIdMapping.get(session.getTerminalId());
+        if (sessionId != null) {
+            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
             return;
         }
 
         synchronized (lock) {
-            this.sessionMap.remove(sessionId);
-            this.phoneMap.remove(session.getTerminalId());
-            this.channels.remove(session.getChannel());
-            session.getChannel().close();
+            this.sessionMap.put(session.getId(), session);
+            this.terminalIdSessionIdMapping.put(session.getTerminalId(), session.getId());
         }
-
-        log.warn("session removed , terminalId={}, sessionId={}", session.getTerminalId(), session.getId());
     }
 
-    public synchronized Session sync(String terminalId, Channel channel) {
-        final Optional<Session> sessionInfo = findByTerminalId(terminalId);
-        if (sessionInfo.isPresent()) {
-            Session session = sessionInfo.get();
-            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
-            session.setChannel(channel);
-            return session;
-        } else {
-            Session session = Session.buildSession(channel, terminalId);
-            persistenceIfNecessary(session);
-            return session;
+    public void removeByTerminalIdAndClose(String terminalId, SessionCloseReason reason) {
+        synchronized (lock) {
+            String sessionId = terminalIdSessionIdMapping.get(terminalId);
+            if (sessionId == null) {
+                log.info("session removed [{}] , terminalId={}", reason, terminalId);
+                return;
+            }
+            Session remove = sessionMap.remove(sessionId);
+            if (remove != null) {
+                remove.getChannel().close();
+            }
+            log.info("session removed [{}] , terminalId={}, sessionId={}", reason, terminalId, sessionId);
         }
-
     }
 
     public Optional<Session> findByTerminalId(String terminalId) {
-        String sessionId = phoneMap.get(terminalId);
-        if (StringUtils.isEmpty(sessionId))
+        return findByTerminalId(terminalId, false);
+    }
+
+    public Optional<Session> findByTerminalId(String terminalId, boolean updateLastCommunicateTime) {
+        String sessionId = terminalIdSessionIdMapping.get(terminalId);
+        if (StringUtils.isEmpty(sessionId)) {
             return Optional.empty();
+        }
         Session session = sessionMap.get(sessionId);
         if (session == null) {
             synchronized (lock) {
                 log.error("xxx remove by server null session");
-                phoneMap.remove(terminalId);
+                terminalIdSessionIdMapping.remove(terminalId);
             }
             return Optional.empty();
         }
 
-        if (!this.checkStatus(session))
+        if (updateLastCommunicateTime) {
+            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+        }
+
+        if (!this.checkStatus(session)) {
             return Optional.empty();
+        }
 
         return Optional.of(session);
     }
@@ -125,9 +99,9 @@ public class SessionManager {
         if (!session.getChannel().isActive()) {
             synchronized (lock) {
                 this.sessionMap.remove(session.getId());
-                this.phoneMap.remove(session.getTerminalId());
+                this.terminalIdSessionIdMapping.remove(session.getTerminalId());
                 session.getChannel().close();
-                log.error("xxx close by server");
+                log.error("Close by server, terminalId = {}", session.getTerminalId());
                 return false;
             }
         }
@@ -135,18 +109,4 @@ public class SessionManager {
         return true;
     }
 
-    public int size() {
-        return this.phoneMap.size();
-    }
-
-    public int channelSize() {
-        return this.channels.size();
-    }
-
-    public List<String> terminalIdList() {
-        return this.phoneMap.keySet()
-                .stream()
-                .sorted()
-                .collect(Collectors.toList());
-    }
 }

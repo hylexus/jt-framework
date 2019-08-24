@@ -16,8 +16,9 @@ public class LocalMsgQueue implements RequestMsgQueue {
     public static LocalMsgQueue getInstance() {
         if (instance == null) {
             synchronized (LocalMsgQueue.class) {
-                if (instance == null)
+                if (instance == null) {
                     instance = new LocalMsgQueue();
+                }
             }
         }
 

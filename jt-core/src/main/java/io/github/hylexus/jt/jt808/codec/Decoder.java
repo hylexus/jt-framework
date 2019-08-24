@@ -39,7 +39,7 @@ public class Decoder {
     private void validateCheckSum(byte[] bytes, RequestMsgHeader msgHeader, byte checkSumInPkg) {
         final int calculatedCheckSum = ProtocolUtils.calculateCheckSum4Jt808(bytes, 0, bytes.length - 1);
         if (checkSumInPkg != calculatedCheckSum) {
-            log.warn("检验码不一致,msgId:{},expected checkSum:{},calculated checkSum:{}", msgHeader.getMsgId(), checkSumInPkg, calculatedCheckSum);
+            log.warn("检验码不一致,msgId:{},expected : {},calculated : {}", msgHeader.getMsgId(), checkSumInPkg, calculatedCheckSum);
         }
     }
 

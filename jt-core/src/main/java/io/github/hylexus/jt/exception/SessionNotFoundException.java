@@ -26,7 +26,8 @@ public class SessionNotFoundException extends AbstractJtException {
         this.terminalId = terminalId;
     }
 
-    public SessionNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String terminalId) {
+    public SessionNotFoundException(
+            String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, String terminalId) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.terminalId = terminalId;
     }

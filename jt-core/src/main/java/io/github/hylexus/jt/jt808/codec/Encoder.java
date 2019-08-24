@@ -25,8 +25,9 @@ public class Encoder {
         // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
         // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
         // [14-15] 1100,0000,0000,0000(C000)(保留位)
-        if (msgBodySize >= 1024)
+        if (msgBodySize >= 1024) {
             log.warn("The max value of msgBodySize is 1024, but {} .", msgBodySize);
+        }
         int props = (msgBodySize & 0x3FF)
                 | ((encryptionType << 10) & 0x1C00)
                 | (((isSubPackage ? 1 : 0) << 13) & 0x2000)

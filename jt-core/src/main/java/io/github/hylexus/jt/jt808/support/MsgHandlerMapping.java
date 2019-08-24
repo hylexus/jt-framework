@@ -32,16 +32,16 @@ public class MsgHandlerMapping {
         this.mapping = new ConcurrentHashMap<>();
     }
 
+    private boolean containsHandler(@NonNull MsgType msgType) {
+        return mapping.containsKey(msgType);
+    }
+
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler) {
         if (containsHandler(msgType)) {
             log.warn("duplicate msgType:{}, the MsgHandler {} is replaced by {}", msgType, mapping.get(msgType).getClass(), handler);
         }
         this.mapping.put(msgType, handler);
         return this;
-    }
-
-    private boolean containsHandler(@NonNull MsgType msgType) {
-        return mapping.containsKey(msgType);
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgHandler handler) {
