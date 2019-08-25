@@ -1,7 +1,9 @@
 rootProject.name = "jt-platform"
 
-include 'jt-core'
-include 'build-script'
-include 'jt-808-server'
 include 'docs'
+include 'build-script'
+include 'jt-core'
+include 'jt-808-server-support'
+include 'jt-808-server-spring-boot-stater'
+include 'jt-808-server'
 

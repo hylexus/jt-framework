@@ -1,9 +1,7 @@
 dependencies {
-    compileOnly "org.springframework.boot:spring-boot-starter-logging"
-    implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
-    implementation 'org.apache.commons:commons-lang3'
-    implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
 
-    provided "io.netty:netty-all:${jar_version_netty}"
-    implementation "com.google.guava:guava:${jar_version_guava}"
+    compileOnly "org.springframework.boot:spring-boot-starter-logging"
+
+    implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+
 }

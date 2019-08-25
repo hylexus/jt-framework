@@ -1,19 +1,19 @@
 package io.github.hylexus.jt808.server.config;
 
-import io.github.hylexus.jt.jt808.converter.BuiltinMsgTypeParser;
-import io.github.hylexus.jt.jt808.converter.impl.AuthMsgConverter;
-import io.github.hylexus.jt.jt808.dispatcher.RequestMsgDispatcher;
-import io.github.hylexus.jt.jt808.dispatcher.impl.LocalEventBusDispatcher;
-import io.github.hylexus.jt.jt808.dispatcher.impl.LocalQueueDispatcher;
-import io.github.hylexus.jt.jt808.handler.impl.AuthMsgHandler;
-import io.github.hylexus.jt.jt808.msg.BuiltinMsgType;
-import io.github.hylexus.jt.jt808.queue.impl.LocalEventBus;
-import io.github.hylexus.jt.jt808.queue.listener.LocalEventBusListener;
-import io.github.hylexus.jt.jt808.support.MsgConverterMapping;
-import io.github.hylexus.jt.jt808.support.MsgHandlerMapping;
-import io.github.hylexus.jt808.server.netty.Jt808ChannelHandlerAdapter;
-import io.github.hylexus.jt808.server.netty.NettyChildHandlerInitializer;
-import io.github.hylexus.jt808.server.netty.NettyTcpServer;
+import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
+import io.github.hylexus.jt808.converter.impl.AuthMsgConverter;
+import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
+import io.github.hylexus.jt808.handler.impl.AuthMsgHandler;
+import io.github.hylexus.jt808.msg.BuiltinMsgType;
+import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
+import io.github.hylexus.jt808.queue.impl.LocalEventBus;
+import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
+import io.github.hylexus.jt808.support.MsgConverterMapping;
+import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
+import io.github.hylexus.jt808.support.netty.NettyChildHandlerInitializer;
+import io.github.hylexus.jt808.support.netty.NettyTcpServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,12 +43,7 @@ public class Jt808ServerConfig {
     }
 
     @Bean
-    public RequestMsgDispatcher requestMsgDispatcher() {
-        return new LocalQueueDispatcher(msgConverterMapping());
-    }
-
-    @Bean
-    public LocalEventBus localEventBus() {
+    public LocalEventBus requestMsgQueue() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 3, 10, 60, TimeUnit.SECONDS,
                 new ArrayBlockingQueue<>(10),
@@ -59,12 +54,12 @@ public class Jt808ServerConfig {
 
     @Bean
     public RequestMsgDispatcher asyncEventBus() {
-        return new LocalEventBusDispatcher(msgConverterMapping(), localEventBus());
+        return new LocalEventBusDispatcher(msgConverterMapping(), requestMsgQueue());
     }
 
     @Bean
-    public LocalEventBusListener localEventBusListener() {
-        return new LocalEventBusListener(msgHandlerMapping(), localEventBus());
+    public RequestMsgQueueListener msgQueueListener() {
+        return new LocalEventBusListener(msgHandlerMapping(), requestMsgQueue());
     }
 
     @Bean

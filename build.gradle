@@ -63,7 +63,7 @@ configure(subprojects.findAll {
 
 // 2. maven config
 apply from: "${project(":build-script").projectDir}/script/repo-credentials.gradle"
-def modulesToPublishToMavenRepo = ["jt-core"]
+def modulesToPublishToMavenRepo = ["jt-core", "jt-808-server-support", "jt-808-server-spring-boot-stater"]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)
 }) { subProject ->
