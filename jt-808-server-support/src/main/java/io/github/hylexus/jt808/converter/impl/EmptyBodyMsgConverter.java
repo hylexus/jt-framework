@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * @author hylexus
  * createdAt 2019/2/5
- * @see io.github.hylexus.jt808.msg.BuiltinMsgType#REQ_CLIENT_HEART_BEAT
+ * @see io.github.hylexus.jt808.msg.BuiltinMsgType#CLIENT_HEART_BEAT
  **/
 public class EmptyBodyMsgConverter implements MsgConverter {
 

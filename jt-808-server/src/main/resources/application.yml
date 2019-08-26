@@ -1,3 +1,8 @@
 logging:
   level: info
   level.io.github.hylexus: debug
+jt808:
+  server:
+    port: 1122
+    boss-thread-count: 0
+    worker-thread-count: 0

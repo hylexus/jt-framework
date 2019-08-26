@@ -13,7 +13,7 @@ public class BuiltinMsgTypeParser implements MsgTypeParser {
 
     @Override
     public Optional<MsgType> parseMsgType(int msgType) {
-        return BuiltinMsgType.REQ_CLIENT_AUTH.parseFromInt(msgType);
+        return BuiltinMsgType.CLIENT_AUTH.parseFromInt(msgType);
     }
 
 }

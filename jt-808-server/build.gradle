@@ -1,4 +1,5 @@
 dependencies {
+    implementation(project(":jt-808-server-spring-boot-stater"))
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
     implementation "org.springframework.boot:spring-boot-starter"
 

@@ -1,7 +1,10 @@
 
 dependencies {
     implementation(project(":jt-808-server-support"))
+    implementation(project(":jt-core"))
 
     implementation "org.springframework.boot:spring-boot-starter"
-    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "com.google.guava:guava:${jar_version_guava}"
+    provided "io.netty:netty-all:${jar_version_netty}"
 }

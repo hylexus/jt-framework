@@ -14,15 +14,16 @@ import java.util.Optional;
  **/
 @Getter
 public enum BuiltinMsgType implements MsgType {
-    REQ_CLIENT_LOG_OUT(0x0003, "终端注销"),
-    REQ_CLIENT_HEART_BEAT(0x0002, "终端心跳"),
 
-    REQ_CLIENT_COMMON_REPLY(0x0001, "终端通用应答"),
-    RESP_SERVER_COMMON_REPLY(0x8001, "平台通用应答"),
+    CLIENT_LOG_OUT(0x0003, "终端注销"),
+    CLIENT_HEART_BEAT(0x0002, "终端心跳"),
 
-    REQ_CLIENT_REGISTER(0x0100, "终端注册"),
-    RESP_CLIENT_REGISTER_REPLY(0x8100, "平台注册应答"),
-    REQ_CLIENT_AUTH(0x0102, "终端鉴权"),
+    CLIENT_COMMON_REPLY(0x0001, "终端通用应答"),
+    SERVER_COMMON_REPLY(0x8001, "平台通用应答"),
+
+    CLIENT_REGISTER(0x0100, "终端注册"),
+    CLIENT_REGISTER_REPLY(0x8100, "平台注册应答"),
+    CLIENT_AUTH(0x0102, "终端鉴权"),
     ;
 
     BuiltinMsgType(int msgId, String desc) {

@@ -1,7 +1,6 @@
 package io.github.hylexus.jt808.support.netty;
 
 import io.github.hylexus.jt.utils.AbstractRunner;
-import io.github.hylexus.jt808.support.netty.NettyChildHandlerInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Setter
 @Getter
-public class NettyTcpServer extends AbstractRunner {
+public class Jt808NettyTcpServer extends AbstractRunner {
 
     private EventLoopGroup bossGroup = null;
     private EventLoopGroup workerGroup = null;
@@ -29,7 +28,7 @@ public class NettyTcpServer extends AbstractRunner {
 
     private NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
-    public NettyTcpServer(String name, NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
+    public Jt808NettyTcpServer(String name, NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
         super(name);
         this.jt808NettyChildHandlerInitializer = jt808NettyChildHandlerInitializer;
     }

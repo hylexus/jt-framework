@@ -1,7 +1,5 @@
 package io.github.hylexus.jt808.support.netty;
 
-import io.github.hylexus.jt808.support.netty.HeatBeatHandler;
-import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;

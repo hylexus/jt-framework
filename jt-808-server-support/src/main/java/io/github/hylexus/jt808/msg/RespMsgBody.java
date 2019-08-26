@@ -12,6 +12,6 @@ public interface RespMsgBody {
     byte[] toBytes();
 
     default MsgType replyMsgType() {
-        return BuiltinMsgType.RESP_SERVER_COMMON_REPLY;
+        return BuiltinMsgType.SERVER_COMMON_REPLY;
     }
 }
