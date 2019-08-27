@@ -37,20 +37,36 @@ public class MsgHandlerMapping {
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler) {
+        return registerHandler(msgType, handler, false);
+    }
+
+    public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler, boolean forceOverride) {
         if (containsHandler(msgType)) {
-            log.warn("duplicate msgType:{}, the MsgHandler {} is replaced by {}", msgType, mapping.get(msgType).getClass(), handler);
+            MsgHandler oldHandler = mapping.get(msgType);
+            if (forceOverride) {
+                log.warn("Duplicate MsgType : {}, the MsgHandler [{}] is replaced by {}", msgType, oldHandler.getClass(), handler);
+                this.mapping.put(msgType, handler);
+            } else {
+                log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.", msgType, oldHandler.getClass(), handler);
+            }
+            return this;
         }
+
         this.mapping.put(msgType, handler);
         return this;
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgHandler handler) {
+        return registerHandler(handler, false);
+    }
+
+    public MsgHandlerMapping registerHandler(@NonNull MsgHandler handler, boolean forceOverride) {
         Set<MsgType> supportedMsgTypes = handler.getSupportedMsgTypes();
 
         if (CollectionUtils.isEmpty(supportedMsgTypes)) {
             throw new JtIllegalStateException("MsgHandler.getSupportedMsgTypes() is null or empty");
         }
-        supportedMsgTypes.forEach(msgType -> registerHandler(msgType, handler));
+        supportedMsgTypes.forEach(msgType -> registerHandler(msgType, handler, forceOverride));
         return this;
     }
 

@@ -21,6 +21,7 @@ import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServer;
 import io.github.hylexus.jt808.support.netty.NettyChildHandlerInitializer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
@@ -40,11 +41,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({Jt808NettyTcpServerProps.class})
-public class Jt808ServerAutoConfigure {
+public class Jt808ServerAutoConfigure implements InitializingBean {
 
     public static final AnsiColor BUILTIN_COMPONENT_COLOR = AnsiColor.BRIGHT_CYAN;
     public static final AnsiColor CUSTOM_COMPONENT_COLOR = AnsiColor.GREEN;
     public static final AnsiColor DEPRECATED_COMPONENT_COLOR = AnsiColor.RED;
+
+    @Autowired(required = false)
+    private Jt808ServerConfigure jt808ServerConfigure;
 
     @Autowired
     private Jt808NettyTcpServerProps jt808NettyTcpServerProps;
@@ -58,10 +62,10 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    @ConditionalOnMissingBean(MsgHandlerMapping.class)
     public MsgHandlerMapping msgHandlerMapping() {
         autoConfigLog("auto config --> MsgHandlerMapping");
         MsgHandlerMapping mapping = new MsgHandlerMapping();
+        jt808ServerConfigure.configureMsgHandlerMapping(mapping);
         mapping.registerHandler(new AuthMsgHandler(authCodeValidator()))
                 .registerHandler(new HeartBeatMsgHandler())
                 .registerHandler(new NoReplyMsgHandler())
@@ -69,11 +73,12 @@ public class Jt808ServerAutoConfigure {
         return mapping;
     }
 
+
     @Bean
-    @ConditionalOnMissingBean(MsgConverterMapping.class)
     public MsgConverterMapping msgConverterMapping() {
         autoConfigLog("auto config --> MsgConverterMapping");
         MsgConverterMapping mapping = new MsgConverterMapping();
+        this.jt808ServerConfigure.configureMsgConverterMapping(mapping);
         mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthMsgConverter());
         return mapping;
     }
@@ -142,5 +147,13 @@ public class Jt808ServerAutoConfigure {
 
     private String tips(AnsiColor color, String content) {
         return AnsiOutput.toString(color, content, AnsiColor.DEFAULT);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (this.jt808ServerConfigure == null) {
+            // NoOps
+            this.jt808ServerConfigure = new Jt808ServerConfigure.BuiltinNoOpsConfigure();
+        }
     }
 }
