@@ -43,9 +43,11 @@ import java.util.concurrent.TimeUnit;
 @EnableConfigurationProperties({Jt808NettyTcpServerProps.class})
 public class Jt808ServerAutoConfigure implements InitializingBean {
 
+    public static final AnsiColor SERVER_BANNER_COLOR = AnsiColor.BRIGHT_BLUE;
     public static final AnsiColor BUILTIN_COMPONENT_COLOR = AnsiColor.BRIGHT_CYAN;
     public static final AnsiColor CUSTOM_COMPONENT_COLOR = AnsiColor.GREEN;
     public static final AnsiColor DEPRECATED_COMPONENT_COLOR = AnsiColor.RED;
+    public static final AnsiColor UNKNOWN_COMPONENT_TYPE_COLOR = AnsiColor.BRIGHT_RED;
 
     @Autowired(required = false)
     private Jt808ServerConfigure jt808ServerConfigure;
@@ -134,6 +136,11 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
         server.setBossThreadCount(jt808NettyTcpServerProps.getBossThreadCount());
         server.setWorkThreadCount(jt808NettyTcpServerProps.getWorkerThreadCount());
         return server;
+    }
+
+    @Bean
+    public Jt808ServerComponentStatistics jt808ServerComponentStatistics() {
+        return new Jt808ServerComponentStatistics();
     }
 
     private void autoConfigLog(String content, Object... args) {

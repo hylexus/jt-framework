@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +24,7 @@ import static java.util.Optional.ofNullable;
  */
 @Slf4j
 public class MsgHandlerMapping {
+
     private Map<MsgType, MsgHandler> mapping;
 
     @Setter
@@ -47,7 +49,8 @@ public class MsgHandlerMapping {
                 log.warn("Duplicate MsgType : {}, the MsgHandler [{}] is replaced by {}", msgType, oldHandler.getClass(), handler);
                 this.mapping.put(msgType, handler);
             } else {
-                log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.", msgType, oldHandler.getClass(), handler);
+                log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.",
+                        msgType, oldHandler.getClass(), handler);
             }
             return this;
         }
@@ -77,5 +80,9 @@ public class MsgHandlerMapping {
         }
 
         return ofNullable(defaultMsgHandlerSupplier.get());
+    }
+
+    public Map<MsgType, MsgHandler> getHandlerMappings() {
+        return Collections.unmodifiableMap(this.mapping);
     }
 }

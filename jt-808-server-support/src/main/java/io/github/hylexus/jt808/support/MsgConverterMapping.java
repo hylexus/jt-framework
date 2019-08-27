@@ -4,6 +4,7 @@ import io.github.hylexus.jt808.converter.MsgConverter;
 import io.github.hylexus.jt808.msg.MsgType;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,4 +45,7 @@ public class MsgConverterMapping {
         return this.mapping == null || this.mapping.isEmpty();
     }
 
+    public Map<MsgType, MsgConverter> getMsgConverterMappings() {
+        return Collections.unmodifiableMap(this.mapping);
+    }
 }

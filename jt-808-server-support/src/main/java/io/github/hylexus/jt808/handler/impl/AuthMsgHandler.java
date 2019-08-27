@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.handler.impl;
 
+import io.github.hylexus.jt.common.BuiltinComponent;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.BuiltinMsgType;
@@ -17,7 +18,7 @@ import static java.util.Optional.of;
  * @author hylexus
  * Created At 2019-08-24 15:44
  */
-public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsg> {
+public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsg> implements BuiltinComponent {
 
     private AuthCodeValidator authCodeValidator;
 

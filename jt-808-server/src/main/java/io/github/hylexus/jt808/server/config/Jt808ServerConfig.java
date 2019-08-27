@@ -2,7 +2,6 @@ package io.github.hylexus.jt808.server.config;
 
 import io.github.hylexus.jt808.boot.config.Jt808ServerConfigure;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author hylexus
