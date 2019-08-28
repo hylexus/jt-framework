@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.ext;
 
+import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsg;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,10 +14,11 @@ public interface AuthCodeValidator {
     boolean validateAuthCode(AuthRequestMsg msg);
 
     @Slf4j
+    @DebugOnly
     class BuiltinAuthCodeValidatorForDebugging implements AuthCodeValidator {
         @Override
         public boolean validateAuthCode(AuthRequestMsg msg) {
-            log.debug(">>|<< Always return true, authCode : {}", msg.getAuthCode());
+            log.info(">>|<< Always return true, authCode : {}", msg.getAuthCode());
             return true;
         }
     }

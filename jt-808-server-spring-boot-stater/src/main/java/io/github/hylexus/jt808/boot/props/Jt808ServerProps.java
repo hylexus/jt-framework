@@ -19,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class Jt808ServerProps {
 
+    private boolean printComponentStatistics = true;
+
     @NestedConfigurationProperty
     private Jt808NettyTcpServerProps server = new Jt808NettyTcpServerProps();
 

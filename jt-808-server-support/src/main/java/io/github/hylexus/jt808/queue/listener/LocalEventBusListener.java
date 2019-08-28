@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.queue.listener;
 
 import com.google.common.eventbus.Subscribe;
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.AbstractRequestMsg;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Created At 2019-08-24 16:44
  */
 @Slf4j
+@BuiltinComponent
 public class LocalEventBusListener extends AbstractRequestMsgQueueListener<LocalEventBus> {
 
     public LocalEventBusListener(MsgHandlerMapping msgHandlerMapping, LocalEventBus queue) {

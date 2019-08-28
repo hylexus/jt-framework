@@ -1,14 +1,19 @@
 package io.github.hylexus.jt808.boot.config;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.annotation.DebugOnly;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.converter.MsgConverter;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt808.queue.RequestMsgQueue;
+import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServerConfigure;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +27,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ClassUtils;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
+import static io.github.hylexus.jt.utils.CommonUtils.*;
 import static io.github.hylexus.jt808.boot.config.Jt808ServerAutoConfigure.*;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
@@ -45,8 +52,14 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     @Autowired
     private MsgHandlerMapping msgHandlerMapping;
 
-    @Autowired
-    private MsgTypeParser msgTypeParser;
+    private Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
+            MsgTypeParser.class,
+            AuthCodeValidator.class,
+            RequestMsgDispatcher.class,
+            RequestMsgQueue.class,
+            RequestMsgQueueListener.class,
+            Jt808NettyTcpServerConfigure.class
+    ));
 
     @Override
     public void run(String... args) throws Exception {
@@ -55,16 +68,23 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
         appendBannerPrefix(stringBuilder);
 
-        detectConvertAndHandlerMappings(stringBuilder);
-        detectMsgTypeParser(stringBuilder);
+        detectConvertAndHandlerMappings(1, stringBuilder);
+
+        stringBuilder.append(END_OF_LINE).append(line(2, "Other Components:")).append(END_OF_LINE);
+        for (Class<?> cls : classSet) {
+            stringBuilder.append(String.format("%1$-36s", cls.getSimpleName()))
+                    .append("|\t")
+                    .append(formatClassName(applicationContext.getBean(cls), false))
+                    .append(END_OF_LINE);
+        }
 
         appendBannerSuffix(stringBuilder);
 
         log.info(stringBuilder.toString());
     }
 
-    private void detectConvertAndHandlerMappings(StringBuilder stringBuilder) {
-        stringBuilder.append(line(1, "MsgConvert and MsgHandler MappingInfo:")).append(END_OF_LINE);
+    private void detectConvertAndHandlerMappings(int no, StringBuilder stringBuilder) {
+        stringBuilder.append(line(no, "MsgConvert and MsgHandler MappingInfo:")).append(END_OF_LINE);
         stringBuilder.append(String.format("%1$-35s\t|\t%2$-56s|\t%3$-64s\n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
         stringBuilder.append("----------------------------------------------------------------------");
         stringBuilder.append("----------------------------------------------------------------------");
@@ -77,10 +97,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     formatClassName(mappingInfo.getHandler()));
             stringBuilder.append(content);
         });
-    }
-
-    private void detectMsgTypeParser(StringBuilder stringBuilder) {
-        stringBuilder.append(END_OF_LINE).append(line(2, "MsgTypeParser -> ")).append(formatClassName(msgTypeParser, false));
     }
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
@@ -117,17 +133,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         return CUSTOM_COMPONENT_COLOR;
     }
 
-    private boolean isDeprecatedClass(Class<?> userClass) {
-        return userClass.isAnnotationPresent(Deprecated.class)
-                || userClass.isAnnotationPresent(DebugOnly.class)
-                || io.github.hylexus.jt.common.DebugOnly.class.isAssignableFrom(userClass);
-    }
-
-    private boolean isBuiltinComponent(Class<?> userClass) {
-        return userClass.isAnnotationPresent(BuiltinComponent.class)
-                || io.github.hylexus.jt.common.BuiltinComponent.class.isAssignableFrom(userClass);
-    }
-
     private String formatClassName(Object instance) {
         return formatClassName(instance, true);
     }
@@ -157,15 +162,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         }
 
         return "";
-    }
-
-    private String shortClassName(Class<?> cls) {
-        String[] arr = cls.getName().split("\\.");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < arr.length - 1; i++) {
-            stringBuilder.append(arr[i].charAt(0)).append(".");
-        }
-        return stringBuilder.append(arr[arr.length - 1]).toString();
     }
 
     private Map<MsgType, MsgConverterAndHandlerMappingInfo> initMappingInfo() {

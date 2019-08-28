@@ -12,6 +12,10 @@ public interface JtProtocolConstant {
     int MAX_PACKAGE_LENGTH = 1024;
 
     String BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL = "jt808RequestMsgDispatcherThreadPool";
+    String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
 
-    long JT808_REQ_MSG_DISPATCHER_THREAD_POOL_KEEP_ALIVE_TIME_IN_SECONDS = 60;
+    String NETTY_HANDLER_NAME_808_HEART_BEAT = "Jt808NettyHeartBeatHandler";
+    String NETTY_HANDLER_NAME_808_IDLE_STATE = "Jt808NettyIdleStateHandler";
+    String NETTY_HANDLER_NAME_808_FRAME = "Jt808NettyHandler";
+    String NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER = "Jt808NettyHandlerAdapter";
 }

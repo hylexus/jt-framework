@@ -3,7 +3,6 @@ package io.github.hylexus.jt808.support.netty;
 import io.github.hylexus.jt.utils.AbstractRunner;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -26,10 +25,13 @@ public class Jt808NettyTcpServer extends AbstractRunner {
 
     private Integer bossThreadCount;
 
-    private NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
+    private final Jt808NettyTcpServerConfigure serverConfigure;
 
-    public Jt808NettyTcpServer(String name, NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
+    private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
+
+    public Jt808NettyTcpServer(String name, Jt808NettyTcpServerConfigure serverConfigure, Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
         super(name);
+        this.serverConfigure = serverConfigure;
         this.jt808NettyChildHandlerInitializer = jt808NettyChildHandlerInitializer;
     }
 
@@ -37,12 +39,12 @@ public class Jt808NettyTcpServer extends AbstractRunner {
         this.bossGroup = new NioEventLoopGroup(bossThreadCount);
         this.workerGroup = new NioEventLoopGroup(workThreadCount);
         ServerBootstrap serverBootstrap = new ServerBootstrap();
+
         serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(this.jt808NettyChildHandlerInitializer)
-                .option(ChannelOption.SO_BACKLOG, 2048)
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .childHandler(this.jt808NettyChildHandlerInitializer);
+
+        serverConfigure.configureServerBootstrap(serverBootstrap);
 
         log.info("----> netty tcp server started, port = {}", this.port);
         ChannelFuture channelFuture = serverBootstrap.bind(port).sync();

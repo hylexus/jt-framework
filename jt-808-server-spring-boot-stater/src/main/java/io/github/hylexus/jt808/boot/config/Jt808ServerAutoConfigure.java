@@ -21,14 +21,15 @@ import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
+import io.github.hylexus.jt808.support.netty.Jt808NettyChildHandlerInitializer;
 import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServer;
-import io.github.hylexus.jt808.support.netty.NettyChildHandlerInitializer;
+import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServerConfigure;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_NETTY_TCP_SERVER;
 import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL;
 
 /**
@@ -47,33 +49,33 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({Jt808ServerProps.class})
-public class Jt808ServerAutoConfigure implements InitializingBean {
-
+public class Jt808ServerAutoConfigure {
     public static final AnsiColor SERVER_BANNER_COLOR = AnsiColor.BRIGHT_BLUE;
     public static final AnsiColor BUILTIN_COMPONENT_COLOR = AnsiColor.BRIGHT_CYAN;
     public static final AnsiColor CUSTOM_COMPONENT_COLOR = AnsiColor.GREEN;
     public static final AnsiColor DEPRECATED_COMPONENT_COLOR = AnsiColor.RED;
     public static final AnsiColor UNKNOWN_COMPONENT_TYPE_COLOR = AnsiColor.BRIGHT_RED;
 
-    @Autowired(required = false)
-    private Jt808ServerConfigure jt808ServerConfigure;
-
     @Autowired
     private Jt808ServerProps serverProps;
 
     @Bean
+    @ConditionalOnMissingBean(Jt808NettyTcpServerConfigure.class)
+    public Jt808NettyTcpServerConfigure jt808NettyTcpServerConfigure() {
+        return new Jt808NettyTcpServerConfigure.BuiltinNoOpsConfigureNettyTcp();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(AuthCodeValidator.class)
     public AuthCodeValidator authCodeValidator() {
-        autoConfigLog("auto config --> AuthCodeValidator");
         warning(AuthCodeValidator.BuiltinAuthCodeValidatorForDebugging.class, AuthCodeValidator.class);
         return new AuthCodeValidator.BuiltinAuthCodeValidatorForDebugging();
     }
 
     @Bean
     public MsgHandlerMapping msgHandlerMapping() {
-        autoConfigLog("auto config --> MsgHandlerMapping");
         MsgHandlerMapping mapping = new MsgHandlerMapping();
-        jt808ServerConfigure.configureMsgHandlerMapping(mapping);
+        jt808NettyTcpServerConfigure().configureMsgHandlerMapping(mapping);
         mapping.registerHandler(new AuthMsgHandler(authCodeValidator()))
                 .registerHandler(new HeartBeatMsgHandler())
                 .registerHandler(new NoReplyMsgHandler())
@@ -81,12 +83,10 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
         return mapping;
     }
 
-
     @Bean
     public MsgConverterMapping msgConverterMapping() {
-        autoConfigLog("auto config --> MsgConverterMapping");
         MsgConverterMapping mapping = new MsgConverterMapping();
-        this.jt808ServerConfigure.configureMsgConverterMapping(mapping);
+        jt808NettyTcpServerConfigure().configureMsgConverterMapping(mapping);
         mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthMsgConverter());
         return mapping;
     }
@@ -94,7 +94,6 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
     @Bean(BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
     public RequestMsgQueue requestMsgQueue() {
-        autoConfigLog("auto config --> RequestMsgQueue");
         MsgDispatcherThreadPoolProps poolProps = serverProps.getMsgDispatcher().getThreadPool();
         final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat(poolProps.getThreadNameFormat())
@@ -115,37 +114,36 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
     @Bean
     @ConditionalOnMissingBean(RequestMsgDispatcher.class)
     public RequestMsgDispatcher requestMsgDispatcher() {
-        autoConfigLog("auto config --> RequestMsgDispatcher");
         return new LocalEventBusDispatcher(msgConverterMapping(), requestMsgQueue());
     }
 
     @Bean
     @ConditionalOnMissingBean(RequestMsgQueueListener.class)
     public RequestMsgQueueListener msgQueueListener() {
-        autoConfigLog("auto config --> RequestMsgQueueListener");
         return new LocalEventBusListener(msgHandlerMapping(), (LocalEventBus) requestMsgQueue());
     }
 
     @Bean
     @ConditionalOnMissingBean(MsgTypeParser.class)
     public MsgTypeParser msgTypeParser() {
-        autoConfigLog("auto config --> MsgTypeParser");
+        warning(BuiltinMsgTypeParser.class, MsgTypeParser.class);
         return new BuiltinMsgTypeParser();
     }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
     public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter() {
-        autoConfigLog("auto config --> Jt808ChannelHandlerAdapter");
         return new Jt808ChannelHandlerAdapter(requestMsgDispatcher(), msgTypeParser());
     }
 
     @Bean
-    @ConditionalOnMissingBean(name = "jt808NettyTcpServer")
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_NETTY_TCP_SERVER)
     public Jt808NettyTcpServer jt808NettyTcpServer() {
-        autoConfigLog("auto config --> jt808NettyTcpServer");
-        Jt808NettyTcpServer server = new Jt808NettyTcpServer("808-tcp-server",
-                new NettyChildHandlerInitializer(jt808ChannelHandlerAdapter()));
+        Jt808NettyTcpServer server = new Jt808NettyTcpServer(
+                "808-tcp-server",
+                jt808NettyTcpServerConfigure(),
+                new Jt808NettyChildHandlerInitializer(jt808NettyTcpServerConfigure(), jt808ChannelHandlerAdapter())
+        );
 
         Jt808NettyTcpServerProps nettyProps = serverProps.getServer();
         server.setPort(nettyProps.getPort());
@@ -155,12 +153,9 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix = "jt808", name = "print-component-statistics", havingValue = "true")
     public Jt808ServerComponentStatistics jt808ServerComponentStatistics() {
         return new Jt808ServerComponentStatistics();
-    }
-
-    private void autoConfigLog(String content, Object... args) {
-        log.info(tips(BUILTIN_COMPONENT_COLOR, content), args);
     }
 
     private void warning(Class<?> actualCls, Class<?> superClass) {
@@ -172,11 +167,4 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
         return AnsiOutput.toString(color, content, AnsiColor.DEFAULT);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (this.jt808ServerConfigure == null) {
-            // NoOps
-            this.jt808ServerConfigure = new Jt808ServerConfigure.BuiltinNoOpsConfigure();
-        }
-    }
 }

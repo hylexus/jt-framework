@@ -5,11 +5,13 @@ import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.AbstractRequestMsg;
 import io.github.hylexus.jt808.msg.BuiltinMsgType;
+import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Optional.of;
 
@@ -21,8 +23,9 @@ import static java.util.Optional.of;
 @BuiltinComponent
 public class HeartBeatMsgHandler extends AbstractMsgHandler {
 
-    public HeartBeatMsgHandler() {
-        super(Sets.newHashSet(BuiltinMsgType.CLIENT_HEART_BEAT));
+    @Override
+    public Set<MsgType> getSupportedMsgTypes() {
+        return Sets.newHashSet(BuiltinMsgType.CLIENT_HEART_BEAT);
     }
 
     @Override

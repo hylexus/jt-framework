@@ -10,12 +10,10 @@ import io.github.hylexus.jt808.session.Session;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * @author hylexus
@@ -24,18 +22,7 @@ import java.util.Set;
 @Slf4j
 public abstract class AbstractMsgHandler<T extends AbstractRequestMsg> implements MsgHandler<T> {
 
-    @Getter
-    protected Set<MsgType> msgTypes;
     private Encoder encoder = new Encoder();
-
-    protected AbstractMsgHandler(Set<MsgType> msgTypes) {
-        this.msgTypes = msgTypes;
-    }
-
-    @Override
-    public Set<MsgType> getSupportedMsgTypes() {
-        return msgTypes;
-    }
 
     @Override
     public void handleMsg(T msg, Session session) throws IOException, InterruptedException {
