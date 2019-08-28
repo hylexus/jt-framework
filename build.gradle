@@ -52,6 +52,11 @@ configure(rootProject) {
 configure(allprojects) { project ->
     group = "io.github.hylexus.jt"
     version = "1.0-SNAPSHOT"
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
 }
 
 // 1. java-env config

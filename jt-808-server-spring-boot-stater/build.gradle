@@ -5,6 +5,15 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    
     implementation "com.google.guava:guava:${jar_version_guava}"
-    provided "io.netty:netty-all:${jar_version_netty}"
+    implementation "io.netty:netty-all:${jar_version_netty}"
+    
+    compile group: 'javax.validation', name: 'validation-api'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.0.17.Final'
+
+
 }
+
+compileJava.dependsOn(processResources)

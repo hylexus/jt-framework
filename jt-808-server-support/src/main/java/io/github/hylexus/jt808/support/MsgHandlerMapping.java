@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import static java.util.Optional.of;
-import static java.util.Optional.ofNullable;
 
 /**
  * @author hylexus
@@ -64,6 +63,7 @@ public class MsgHandlerMapping {
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgHandler handler, boolean forceOverride) {
+        @SuppressWarnings("unchecked")
         Set<MsgType> supportedMsgTypes = handler.getSupportedMsgTypes();
 
         if (CollectionUtils.isEmpty(supportedMsgTypes)) {
@@ -79,7 +79,9 @@ public class MsgHandlerMapping {
             return of(msgHandler);
         }
 
-        return ofNullable(defaultMsgHandlerSupplier.get());
+        return defaultMsgHandlerSupplier == null
+                ? Optional.empty()
+                : Optional.ofNullable(defaultMsgHandlerSupplier.get());
     }
 
     public Map<MsgType, MsgHandler> getHandlerMappings() {

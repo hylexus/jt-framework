@@ -33,10 +33,12 @@ public class LocalEventBusListener extends AbstractRequestMsgQueueListener<Local
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void consumeMsg(AbstractRequestMsg requestMsg) throws IOException, InterruptedException {
         Optional<MsgHandler> handler = msgHandlerMapping.getHandler(requestMsg.getMsgType());
         if (!handler.isPresent()) {
             log.error("No handler found for MsgType : {}", requestMsg.getMsgType());
+            return;
         }
 
         handler.get().handleMsg(requestMsg, getSession(requestMsg));

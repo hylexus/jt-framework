@@ -1,6 +1,9 @@
 package io.github.hylexus.jt808.boot.config;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
+import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
+import io.github.hylexus.jt808.boot.props.dispatcher.MsgDispatcherThreadPoolProps;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.impl.AuthMsgConverter;
@@ -31,8 +34,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL;
 
 /**
  * @author hylexus
@@ -40,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({Jt808NettyTcpServerProps.class})
+@EnableConfigurationProperties({Jt808ServerProps.class})
 public class Jt808ServerAutoConfigure implements InitializingBean {
 
     public static final AnsiColor SERVER_BANNER_COLOR = AnsiColor.BRIGHT_BLUE;
@@ -53,7 +59,7 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
     private Jt808ServerConfigure jt808ServerConfigure;
 
     @Autowired
-    private Jt808NettyTcpServerProps jt808NettyTcpServerProps;
+    private Jt808ServerProps serverProps;
 
     @Bean
     @ConditionalOnMissingBean(AuthCodeValidator.class)
@@ -85,13 +91,22 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
         return mapping;
     }
 
-    @Bean
-    @ConditionalOnMissingBean(RequestMsgQueue.class)
+    @Bean(BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
     public RequestMsgQueue requestMsgQueue() {
         autoConfigLog("auto config --> RequestMsgQueue");
+        MsgDispatcherThreadPoolProps poolProps = serverProps.getMsgDispatcher().getThreadPool();
+        final ThreadFactory threadFactory = new ThreadFactoryBuilder()
+                .setNameFormat(poolProps.getThreadNameFormat())
+                .setDaemon(true)
+                .build();
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                3, 10, 60, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(10),
+                poolProps.getCorePoolSize(),
+                poolProps.getMaximumPoolSize(),
+                poolProps.getKeepAliveTime().getSeconds(),
+                TimeUnit.SECONDS,
+                new ArrayBlockingQueue<>(poolProps.getBlockingQueueSize()),
+                threadFactory,
                 new ThreadPoolExecutor.AbortPolicy()
         );
         return new LocalEventBus(executor);
@@ -132,9 +147,10 @@ public class Jt808ServerAutoConfigure implements InitializingBean {
         Jt808NettyTcpServer server = new Jt808NettyTcpServer("808-tcp-server",
                 new NettyChildHandlerInitializer(jt808ChannelHandlerAdapter()));
 
-        server.setPort(jt808NettyTcpServerProps.getPort());
-        server.setBossThreadCount(jt808NettyTcpServerProps.getBossThreadCount());
-        server.setWorkThreadCount(jt808NettyTcpServerProps.getWorkerThreadCount());
+        Jt808NettyTcpServerProps nettyProps = serverProps.getServer();
+        server.setPort(nettyProps.getPort());
+        server.setBossThreadCount(nettyProps.getBossThreadCount());
+        server.setWorkThreadCount(nettyProps.getWorkerThreadCount());
         return server;
     }
 
