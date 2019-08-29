@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Optional;
 
 import static io.github.hylexus.jt808.session.Session.generateSessionId;
-import static io.github.hylexus.jt808.session.SessionCloseReason.CLIENT_ABORT;
+import static io.github.hylexus.jt808.session.SessionCloseReason.CHANNEL_INACTIVE;
 import static io.github.hylexus.jt808.session.SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
 import static io.netty.util.ReferenceCountUtil.release;
 
@@ -48,10 +48,10 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
             final byte[] unescaped = new byte[buf.readableBytes()];
             buf.readBytes(unescaped);
-            log.debug("\nreceived msg:");
-            log.debug("unescaped:{}", HexStringUtils.bytes2HexString(unescaped));
+            log.debug("\nreceive msg:");
+            log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
             byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808(unescaped, 0, unescaped.length);
-            log.debug("escaped : {}", HexStringUtils.bytes2HexString(escaped));
+            log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
 
             AbstractRequestMsg abstractMsg = decoder.parseAbstractMsg(escaped);
             int msgId = abstractMsg.getHeader().getMsgId();
@@ -65,7 +65,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
             SessionManager.getInstance().persistenceIfNecessary(terminalId, ctx.channel());
 
-            log.debug("[HandlerAdapter] receive msg {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
+            log.debug("[decode] : {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
             this.msgDispatcher.doDispatch(abstractMsg);
         } finally {
             release(msg);
@@ -75,7 +75,6 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        // TODO 异常处理
         SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), SERVER_EXCEPTION_OCCURRED);
         super.exceptionCaught(ctx, cause);
     }
@@ -83,7 +82,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.warn("remove session, channelInactive [Jt808ChannelHandlerAdapter]");
-        SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), CLIENT_ABORT);
+        SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
         super.channelInactive(ctx);
     }
 

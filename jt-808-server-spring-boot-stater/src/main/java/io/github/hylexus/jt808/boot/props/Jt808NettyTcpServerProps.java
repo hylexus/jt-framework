@@ -16,7 +16,7 @@ import javax.validation.constraints.Min;
 @ToString
 @Validated
 public class Jt808NettyTcpServerProps {
-    private int port = 6668;
+    private int port = 6808;
 
     @Min(value = 0, message = "bossThreadCount >= 0, 0 means that Netty's default logical")
     private int bossThreadCount = 0;

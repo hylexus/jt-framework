@@ -29,7 +29,9 @@ public class Jt808NettyTcpServer extends AbstractRunner {
 
     private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
-    public Jt808NettyTcpServer(String name, Jt808NettyTcpServerConfigure serverConfigure, Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
+    public Jt808NettyTcpServer(
+            String name, Jt808NettyTcpServerConfigure serverConfigure,
+            Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
         super(name);
         this.serverConfigure = serverConfigure;
         this.jt808NettyChildHandlerInitializer = jt808NettyChildHandlerInitializer;

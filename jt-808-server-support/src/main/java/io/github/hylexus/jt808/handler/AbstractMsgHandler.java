@@ -36,7 +36,7 @@ public abstract class AbstractMsgHandler<T extends AbstractRequestMsg> implement
         byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), msg.getHeader().getTerminalId());
         this.send2Client(session.getChannel(), respBytes);
 
-        log.debug("AbstractMsgHandler resp : {}", HexStringUtils.bytes2HexString(respBytes));
+        log.debug("<<<<<<<<<<<<<<< : {}", HexStringUtils.bytes2HexString(respBytes));
     }
 
     protected void send2Client(Channel channel, byte[] bytes) throws InterruptedException {

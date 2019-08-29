@@ -18,7 +18,7 @@ public interface AuthCodeValidator {
     class BuiltinAuthCodeValidatorForDebugging implements AuthCodeValidator {
         @Override
         public boolean validateAuthCode(AuthRequestMsg msg) {
-            log.info(">>|<< Always return true, authCode : {}", msg.getAuthCode());
+            log.info("[AuthCodeValidator] Always return true, authCode : {}", msg.getAuthCode());
             return true;
         }
     }

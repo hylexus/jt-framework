@@ -6,6 +6,6 @@ package io.github.hylexus.jt808.session;
  */
 public enum SessionCloseReason {
     IDLE_TIMEOUT,
-    CLIENT_ABORT,
+    CHANNEL_INACTIVE,
     SERVER_EXCEPTION_OCCURRED
 }
