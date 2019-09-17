@@ -25,6 +25,6 @@ public class LocalEventBusDispatcher extends AbstractRequestMsgDispatcher {
     @Override
     public void doBroadcast(AbstractRequestMsg msg) throws Exception {
         log.debug("[EventBus] receive msg : {}", msg);
-        eventBus.dispatchRequestMsg(msg);
+        eventBus.postMsg(msg);
     }
 }

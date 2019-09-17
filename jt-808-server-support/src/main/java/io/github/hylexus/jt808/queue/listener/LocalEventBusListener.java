@@ -2,7 +2,6 @@ package io.github.hylexus.jt808.queue.listener;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.AbstractRequestMsg;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * @author hylexus
@@ -34,15 +32,4 @@ public class LocalEventBusListener extends AbstractRequestMsgQueueListener<Local
         consumeMsg(requestMsg);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void consumeMsg(AbstractRequestMsg requestMsg) throws IOException, InterruptedException {
-        Optional<MsgHandler> handler = msgHandlerMapping.getHandler(requestMsg.getMsgType());
-        if (!handler.isPresent()) {
-            log.error("No handler found for MsgType : {}", requestMsg.getMsgType());
-            return;
-        }
-
-        handler.get().handleMsg(requestMsg, getSession(requestMsg));
-    }
 }

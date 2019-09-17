@@ -9,6 +9,10 @@ import io.github.hylexus.jt808.msg.AbstractRequestMsg;
  */
 public interface RequestMsgQueue {
 
-    void dispatchRequestMsg(AbstractRequestMsg msg) throws InterruptedException;
+    void postMsg(AbstractRequestMsg msg) throws InterruptedException;
 
+    default AbstractRequestMsg takeMsg() throws InterruptedException {
+        return null;
+    }
 }
+

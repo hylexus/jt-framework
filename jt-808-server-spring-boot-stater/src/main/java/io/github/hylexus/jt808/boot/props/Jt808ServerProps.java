@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.boot.props;
 
-import io.github.hylexus.jt808.boot.props.dispatcher.MsgDispatcherProps;
+import io.github.hylexus.jt808.boot.props.dispatcher.MsgProcessorProps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,5 +25,5 @@ public class Jt808ServerProps {
     private Jt808NettyTcpServerProps server = new Jt808NettyTcpServerProps();
 
     @NestedConfigurationProperty
-    private MsgDispatcherProps msgDispatcher = new MsgDispatcherProps();
+    private MsgProcessorProps msgProcessor = new MsgProcessorProps();
 }

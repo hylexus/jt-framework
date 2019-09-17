@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.boot.config;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
-import io.github.hylexus.jt808.boot.props.dispatcher.MsgDispatcherThreadPoolProps;
+import io.github.hylexus.jt808.boot.props.dispatcher.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.impl.AuthMsgConverter;
@@ -39,8 +39,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_NETTY_TCP_SERVER;
-import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL;
+import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 
 /**
  * @author hylexus
@@ -91,10 +90,10 @@ public class Jt808ServerAutoConfigure {
         return mapping;
     }
 
-    @Bean(BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
-    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER_THREAD_POOL)
+    @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE)
     public RequestMsgQueue requestMsgQueue() {
-        MsgDispatcherThreadPoolProps poolProps = serverProps.getMsgDispatcher().getThreadPool();
+        MsgProcessorThreadPoolProps poolProps = serverProps.getMsgProcessor().getThreadPool();
         final ThreadFactory threadFactory = new ThreadFactoryBuilder()
                 .setNameFormat(poolProps.getThreadNameFormat())
                 .setDaemon(true)
@@ -112,15 +111,15 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    @ConditionalOnMissingBean(RequestMsgDispatcher.class)
-    public RequestMsgDispatcher requestMsgDispatcher() {
-        return new LocalEventBusDispatcher(msgConverterMapping(), requestMsgQueue());
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
+    public RequestMsgQueueListener msgQueueListener() {
+        return new LocalEventBusListener(msgHandlerMapping(), (LocalEventBus) requestMsgQueue());
     }
 
     @Bean
-    @ConditionalOnMissingBean(RequestMsgQueueListener.class)
-    public RequestMsgQueueListener msgQueueListener() {
-        return new LocalEventBusListener(msgHandlerMapping(), (LocalEventBus) requestMsgQueue());
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
+    public RequestMsgDispatcher requestMsgDispatcher() {
+        return new LocalEventBusDispatcher(msgConverterMapping(), requestMsgQueue());
     }
 
     @Bean

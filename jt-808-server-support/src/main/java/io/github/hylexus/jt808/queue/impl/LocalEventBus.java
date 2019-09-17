@@ -28,7 +28,7 @@ public class LocalEventBus extends AsyncEventBus implements RequestMsgQueue {
     }
 
     @Override
-    public void dispatchRequestMsg(AbstractRequestMsg msg) {
+    public void postMsg(AbstractRequestMsg msg) {
         super.post(msg);
     }
 }

@@ -14,8 +14,8 @@ import org.springframework.validation.annotation.Validated;
 @Setter
 @ToString
 @Validated
-public class MsgDispatcherProps {
+public class MsgProcessorProps {
 
     @NestedConfigurationProperty
-    private MsgDispatcherThreadPoolProps threadPool = new MsgDispatcherThreadPoolProps();
+    private MsgProcessorThreadPoolProps threadPool = new MsgProcessorThreadPoolProps();
 }

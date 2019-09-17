@@ -19,7 +19,7 @@ import java.time.Duration;
 @ToString
 @Slf4j
 @Validated
-public class MsgDispatcherThreadPoolProps {
+public class MsgProcessorThreadPoolProps {
 
     @Min(value = 1, message = "corePoolSize >= 1, defaultValue = Runtime.getRuntime().availableProcessors() + 1")
     private int corePoolSize = Runtime.getRuntime().availableProcessors() + 1;
