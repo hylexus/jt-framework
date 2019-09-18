@@ -3,5 +3,6 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
 
     implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    compile "com.google.guava:guava:${jar_version_guava}"
 
 }

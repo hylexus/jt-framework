@@ -8,4 +8,7 @@ dependencies {
     implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
 
     provided "io.netty:netty-all:${jar_version_netty}"
+
+    testCompile group: 'junit', name: 'junit'
+
 }

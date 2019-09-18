@@ -2,11 +2,18 @@ package io.github.hylexus.jt808.msg.req;
 
 
 import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
 /**
  * @author hylexus
  * createdAt 2019/1/4
  **/
+@Getter
+@Setter
+@Accessors(chain = true)
 public class TerminalCommonReplyMsg extends AbstractRequestMsg {
 
     private TerminalCommonReplyMsgBody body;
@@ -15,54 +22,13 @@ public class TerminalCommonReplyMsg extends AbstractRequestMsg {
         super(other);
     }
 
-    public TerminalCommonReplyMsgBody getBody() {
-        return body;
-    }
-
-    public TerminalCommonReplyMsg setBody(TerminalCommonReplyMsgBody body) {
-        this.body = body;
-        return this;
-    }
-
+    @Getter
+    @Setter
+    @ToString
+    @Accessors(chain = true)
     public static class TerminalCommonReplyMsgBody {
         private int replyFlowId;
         private int replyMsgId;
         private byte result;
-
-        public int getReplyFlowId() {
-            return replyFlowId;
-        }
-
-        public TerminalCommonReplyMsgBody setReplyFlowId(int replyFlowId) {
-            this.replyFlowId = replyFlowId;
-            return this;
-        }
-
-        public int getReplyMsgId() {
-            return replyMsgId;
-        }
-
-        public TerminalCommonReplyMsgBody setReplyMsgId(int replyMsgId) {
-            this.replyMsgId = replyMsgId;
-            return this;
-        }
-
-        public byte getResult() {
-            return result;
-        }
-
-        public TerminalCommonReplyMsgBody setResult(byte result) {
-            this.result = result;
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return "TerminalCommonReplyMsgBody{"
-                    + "replyFlowId=" + replyFlowId
-                    + ", replyMsgId=" + replyMsgId
-                    + ", result=" + result
-                    + '}';
-        }
     }
 }
