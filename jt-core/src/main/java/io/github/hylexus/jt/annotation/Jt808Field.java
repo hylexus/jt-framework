@@ -19,14 +19,23 @@ public @interface Jt808Field {
     MsgDataType dataType();
 
     /**
-     * 当 {@link #dataType()} == 0 时生效;
-     * <p>
-     * 优先使用 {@link #dataType()}
+     * 1. {@link #dataType()}
+     * 2. {@code length()}
+     * 3. {@link #byteCountMethod()}
      *
      * @return 该字段的字节数
      * @see MsgDataType#getByteCount()
      */
     int length() default 0;
+
+    /**
+     * 1. {@link #dataType()}
+     * 2. {@link #length()}
+     * 3. {@code byteCountMethod()}
+     *
+     * @return 表示字节数长度的字段, 必须为int或Integer
+     */
+    String byteCountMethod() default "";
 
     Class<? extends DataTypeConverter> customerDataTypeConverterClass() default DataTypeConverter.NoOpsConverter.class;
 

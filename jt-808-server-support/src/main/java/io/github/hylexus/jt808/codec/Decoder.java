@@ -6,12 +6,16 @@ import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
+import io.github.hylexus.jt808.support.entity.scan.RequestMsgHeaderAware;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +91,8 @@ public class Decoder {
         return header;
     }
 
-    public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes) throws IllegalAccessException, InstantiationException {
+    public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgCommonProps props) throws IllegalAccessException,
+            InstantiationException, InvocationTargetException {
         T instance = cls.newInstance();
         Field[] fields = cls.getDeclaredFields();
         for (Field field : fields) {
@@ -96,12 +101,13 @@ public class Decoder {
                 continue;
             }
 
+            processAwareMethod(cls, instance, props);
+
             final MsgDataType dataType = annotation.dataType();
             final Class<?> fieldType = field.getType();
             final int startIndex = annotation.startIndex();
-            final int length = dataType.getByteCount() == 0
-                    ? annotation.length()
-                    : dataType.getByteCount();
+
+            int length = getFieldLength(cls, instance, annotation, dataType);
 
             final Class<? extends DataTypeConverter> converterClass = annotation.customerDataTypeConverterClass();
             // 使用用户自定义的属性转换器
@@ -119,6 +125,29 @@ public class Decoder {
             }
         }
         return instance;
+    }
+
+    private <T> void processAwareMethod(Class<T> cls, Object instance, RequestMsgCommonProps props) {
+        if (RequestMsgHeaderAware.class.isAssignableFrom(cls)) {
+            ((RequestMsgHeaderAware) instance).setRequestMsgHeader(props.getHeader());
+        }
+    }
+
+    private <T> Integer getFieldLength(Class<T> cls, T instance, Jt808Field annotation, MsgDataType dataType) throws IllegalAccessException,
+            InvocationTargetException {
+        int length = dataType.getByteCount() == 0
+                ? annotation.length()
+                : dataType.getByteCount();
+
+        if (length <= 0) {
+            Method method = ReflectionUtils.findMethod(cls, annotation.byteCountMethod());
+            if (method == null) {
+                throw new NoSuchMethodError(annotation.byteCountMethod());
+            }
+
+            return (Integer) method.invoke(instance);
+        }
+        return length;
     }
 
     private void populateField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)

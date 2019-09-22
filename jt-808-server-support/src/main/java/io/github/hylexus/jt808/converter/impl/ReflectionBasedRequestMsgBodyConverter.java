@@ -57,7 +57,7 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
             return Optional.empty();
         }
         try {
-            Object o = decoder.decodeRequestMsgBody(targetBodyClass, bytes);
+            Object o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, commonProps);
             return Optional.of(o);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
