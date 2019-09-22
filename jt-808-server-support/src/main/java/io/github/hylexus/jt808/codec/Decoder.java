@@ -1,12 +1,21 @@
 package io.github.hylexus.jt808.codec;
 
+import io.github.hylexus.jt.annotation.Jt808Field;
+import io.github.hylexus.jt.data.MsgDataType;
+import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.utils.ProtocolUtils;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.extern.slf4j.Slf4j;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
 
 /**
  * @author hylexus
@@ -15,8 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Decoder {
 
-    public AbstractRequestMsg parseAbstractMsg(byte[] bytes) {
-        final AbstractRequestMsg ret = new AbstractRequestMsg();
+    private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
+
+    public RequestMsgCommonProps parseAbstractMsg(byte[] bytes) {
+        final RequestMsgCommonProps ret = new RequestMsgCommonProps();
 
         // 1. 消息头 16byte 或 12byte
         final RequestMsgHeader msgHeader = this.parseMsgHeaderFromBytes(bytes);
@@ -74,5 +85,92 @@ public class Decoder {
             header.setSubPackageSeq(IntBitOps.intFromBytes(bytes, 14, 2));
         }
         return header;
+    }
+
+    public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes) throws IllegalAccessException, InstantiationException {
+        T instance = cls.newInstance();
+        Field[] fields = cls.getDeclaredFields();
+        for (Field field : fields) {
+            final Jt808Field annotation = field.getAnnotation(Jt808Field.class);
+            if (annotation == null) {
+                continue;
+            }
+
+            final MsgDataType dataType = annotation.dataType();
+            final Class<?> fieldType = field.getType();
+            final int startIndex = annotation.startIndex();
+            final int length = dataType.getByteCount() == 0
+                    ? annotation.length()
+                    : dataType.getByteCount();
+
+            final Class<? extends DataTypeConverter> converterClass = annotation.customerDataTypeConverterClass();
+            // 使用用户自定义的属性转换器
+            if (converterClass != DataTypeConverter.NoOpsConverter.class) {
+                populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
+            } else {
+                // 默认的实现转换策略
+                if (dataType.getExpectedTargetClassType().contains(fieldType)) {
+                    populateField(bytes, instance, field, dataType, startIndex, length);
+                } else {
+                    // 没有配置【自定义属性转换器】&& 是不支持的目标类型
+                    throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
+                            + fieldType + " for field " + field);
+                }
+            }
+        }
+        return instance;
+    }
+
+    private void populateField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
+            throws IllegalAccessException {
+        final Object value;
+        switch (dataType) {
+            case WORD:
+            case DWORD: {
+                value = IntBitOps.intFromBytes(bytes, startIndex, length);
+                break;
+            }
+            case BYTE: {
+                value = bytes[startIndex];
+                break;
+            }
+            case BCD: {
+                value = BcdOps.bytes2BcdString(bytes, startIndex, length);
+                break;
+            }
+            case STRING: {
+                value = new String(Bytes.subSequence(bytes, startIndex, length), JT_808_STRING_ENCODING);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + dataType);
+        }
+        setFieldValue(instance, field, value);
+    }
+
+    private void populateFieldByCustomerConverter(
+            byte[] bytes, Object instance, Field field,
+            Class<? extends DataTypeConverter> converterClass,
+            int start, int byteCount) throws InstantiationException, IllegalAccessException {
+
+        DataTypeConverter converter = getDataTypeConverter(converterClass);
+        Object value = converter.convert(Bytes.subSequence(bytes, start, byteCount));
+        setFieldValue(instance, field, value);
+    }
+
+    private DataTypeConverter getDataTypeConverter(
+            Class<? extends DataTypeConverter> converterClass) throws InstantiationException, IllegalAccessException {
+
+        DataTypeConverter converter = converterMapping.get(converterClass);
+        if (converter == null) {
+            converter = converterClass.newInstance();
+            converterMapping.put(converterClass, converter);
+        }
+        return converter;
+    }
+
+    private void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
+        field.setAccessible(true);
+        field.set(instance, value);
     }
 }

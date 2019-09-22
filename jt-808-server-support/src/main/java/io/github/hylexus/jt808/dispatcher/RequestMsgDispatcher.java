@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.dispatcher;
 
 
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 
 /**
  * @author hylexus
@@ -9,6 +9,6 @@ import io.github.hylexus.jt808.msg.AbstractRequestMsg;
  **/
 public interface RequestMsgDispatcher {
 
-    void doDispatch(AbstractRequestMsg abstractMsg) throws Exception;
+    void doDispatch(RequestMsgWrapper wrapper) throws Exception;
 
 }

@@ -24,7 +24,8 @@ import static java.util.Optional.of;
 @Slf4j
 public class MsgHandlerMapping {
 
-    private Map<MsgType, MsgHandler> mapping;
+    //private Map<MsgType, MsgHandler> mapping;
+    private Map<Integer, MsgHandler> mapping;
 
     @Setter
     private Supplier<MsgHandler> defaultMsgHandlerSupplier;
@@ -34,7 +35,7 @@ public class MsgHandlerMapping {
     }
 
     private boolean containsHandler(@NonNull MsgType msgType) {
-        return mapping.containsKey(msgType);
+        return mapping.containsKey(msgType.getMsgId());
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler) {
@@ -42,11 +43,12 @@ public class MsgHandlerMapping {
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler, boolean forceOverride) {
+        int msgId = msgType.getMsgId();
         if (containsHandler(msgType)) {
-            MsgHandler oldHandler = mapping.get(msgType);
+            MsgHandler oldHandler = mapping.get(msgId);
             if (forceOverride) {
                 log.warn("Duplicate MsgType : {}, the MsgHandler [{}] is replaced by {}", msgType, oldHandler.getClass(), handler);
-                this.mapping.put(msgType, handler);
+                this.mapping.put(msgId, handler);
             } else {
                 log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.",
                         msgType, oldHandler.getClass(), handler);
@@ -54,7 +56,7 @@ public class MsgHandlerMapping {
             return this;
         }
 
-        this.mapping.put(msgType, handler);
+        this.mapping.put(msgId, handler);
         return this;
     }
 
@@ -74,7 +76,7 @@ public class MsgHandlerMapping {
     }
 
     public Optional<MsgHandler> getHandler(MsgType msgType) {
-        MsgHandler msgHandler = mapping.get(msgType);
+        MsgHandler msgHandler = mapping.get(msgType.getMsgId());
         if (msgHandler != null) {
             return of(msgHandler);
         }
@@ -84,7 +86,7 @@ public class MsgHandlerMapping {
                 : Optional.ofNullable(defaultMsgHandlerSupplier.get());
     }
 
-    public Map<MsgType, MsgHandler> getHandlerMappings() {
+    public Map<Integer, MsgHandler> getHandlerMappings() {
         return Collections.unmodifiableMap(this.mapping);
     }
 }

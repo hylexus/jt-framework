@@ -2,9 +2,10 @@ package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt808.converter.MsgConverter;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER;
 import static io.github.hylexus.jt.utils.CommonUtils.*;
 import static io.github.hylexus.jt808.boot.config.Jt808ServerAutoConfigure.*;
 import static java.util.stream.Collectors.toMap;
@@ -51,6 +54,10 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     @Autowired
     private MsgHandlerMapping msgHandlerMapping;
+
+    @Autowired
+    @Qualifier(BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
+    private MsgTypeParser msgTypeParser;
 
     private Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
             MsgTypeParser.class,
@@ -165,20 +172,23 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private Map<MsgType, MsgConverterAndHandlerMappingInfo> initMappingInfo() {
-        final Map<MsgType, MsgHandler> handlerMappings = msgHandlerMapping.getHandlerMappings();
-        final Map<MsgType, MsgConverter> converterMappings = msgConverterMapping.getMsgConverterMappings();
+        final Map<Integer, MsgHandler> handlerMappings = msgHandlerMapping.getHandlerMappings();
 
-        Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = converterMappings.entrySet().stream()
+        Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = msgConverterMapping.getMsgConverterMappings().entrySet().stream()
                 .map(entry -> {
                     MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
-                    info.setType(entry.getKey());
+                    MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
+                            .orElseThrow(() -> new JtIllegalStateException("Can not parse msgType with msgId : " + entry.getKey()));
+                    info.setType(msgType);
                     info.setConverter(entry.getValue());
-                    MsgHandler msgHandler = handlerMappings.get(entry.getKey());
+                    MsgHandler msgHandler = handlerMappings.get(msgType.getMsgId());
                     info.setHandler(msgHandler);
                     return info;
                 }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
 
-        handlerMappings.forEach((msgType, msgHandler) -> {
+        handlerMappings.forEach((msgId, msgHandler) -> {
+            MsgType msgType = msgTypeParser.parseMsgType(msgId)
+                    .orElseThrow(() -> new JtIllegalStateException("Can not parse msgType with  msgId : " + msgId));
             MsgConverterAndHandlerMappingInfo info = mappings.getOrDefault(msgType, new MsgConverterAndHandlerMappingInfo());
             if (info.getHandler() == null) {
                 info.setHandler(msgHandler);
@@ -202,7 +212,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     @Accessors(chain = true)
     private static class MsgConverterAndHandlerMappingInfo {
         private MsgType type;
-        private MsgConverter converter;
+        private RequestMsgBodyConverter converter;
         private MsgHandler handler;
     }
 }

@@ -1,8 +1,9 @@
 package io.github.hylexus.jt808.dispatcher;
 
-import io.github.hylexus.jt808.converter.MsgConverter;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,25 +22,33 @@ public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatch
         this.msgConverterMapping = msgConverterMapping;
     }
 
-    public void doDispatch(AbstractRequestMsg abstractMsg) throws Exception {
+    public void doDispatch(RequestMsgWrapper wrapper) throws Exception {
 
-        final MsgType msgType = abstractMsg.getMsgType();
-        final Optional<MsgConverter> converter = this.msgConverterMapping.getConverter(msgType);
-        if (!converter.isPresent()) {
-            log.error("No [MsgConverter] found for msgType {}", msgType);
-            return;
-        }
-
-        @SuppressWarnings("unchecked") final MsgConverter<AbstractRequestMsg> msgConverter = converter.get();
-        final Optional<AbstractRequestMsg> subMsg = msgConverter.convert2SubMsg(abstractMsg);
+        final Optional<RequestMsgBody> subMsg = tryParseMsgBody(wrapper);
         if (!subMsg.isPresent()) {
-            log.debug("[MsgConverter] return empty value. converter:{}", msgConverter.getClass());
             return;
         }
-        final AbstractRequestMsg msg = subMsg.get();
-        msg.setMsgType(msgType);
-        this.doBroadcast(msg);
+
+        wrapper.setBody(subMsg.get());
+        this.doBroadcast(wrapper);
     }
 
-    public abstract void doBroadcast(AbstractRequestMsg msg) throws Exception;
+    private Optional<RequestMsgBody> tryParseMsgBody(RequestMsgWrapper wrapper) {
+        final MsgType msgType = wrapper.getCommonProps().getMsgType();
+        final Optional<RequestMsgBodyConverter> converter = this.msgConverterMapping.getConverter(msgType);
+        if (!converter.isPresent()) {
+            log.error("No [MsgConverter] found for msgType {}", msgType);
+            return Optional.empty();
+        }
+
+        @SuppressWarnings("unchecked") final RequestMsgBodyConverter<RequestMsgBody> msgBodyConverter = converter.get();
+        final Optional<RequestMsgBody> subMsg = msgBodyConverter.convert2Entity(wrapper);
+        if (!subMsg.isPresent()) {
+            log.debug("[MsgConverter] return empty(). converter:{}", msgBodyConverter.getClass());
+            return Optional.empty();
+        }
+        return subMsg;
+    }
+
+    public abstract void doBroadcast(RequestMsgWrapper wrapper) throws Exception;
 }

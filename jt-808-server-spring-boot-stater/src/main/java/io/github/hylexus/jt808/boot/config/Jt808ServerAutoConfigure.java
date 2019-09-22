@@ -3,23 +3,23 @@ package io.github.hylexus.jt808.boot.config;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
-import io.github.hylexus.jt808.boot.props.dispatcher.MsgProcessorThreadPoolProps;
+import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
+import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.converter.impl.AuthMsgConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.AuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.HeartBeatMsgHandler;
 import io.github.hylexus.jt808.handler.impl.NoReplyMsgHandler;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808NettyChildHandlerInitializer;
 import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServer;
@@ -86,8 +86,19 @@ public class Jt808ServerAutoConfigure {
     public MsgConverterMapping msgConverterMapping() {
         MsgConverterMapping mapping = new MsgConverterMapping();
         jt808NettyTcpServerConfigure().configureMsgConverterMapping(mapping);
-        mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthMsgConverter());
+        //mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthRequestMsgBodyConverter());
         return mapping;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "jt808.entity-scan", name = "enabled", havingValue = "true")
+    public Jt808EntityScanner jt808EntityScanner() {
+        Jt808EntityScanProps entityScan = serverProps.getEntityScan();
+
+        if (entityScan.isEnableBuiltinEntity()) {
+            entityScan.getBasePackages().add("io.github.hylexus.jt808.msg.req");
+        }
+        return new Jt808EntityScanner(entityScan.getBasePackages(), msgTypeParser(), msgConverterMapping());
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
@@ -122,8 +133,8 @@ public class Jt808ServerAutoConfigure {
         return new LocalEventBusDispatcher(msgConverterMapping(), requestMsgQueue());
     }
 
-    @Bean
-    @ConditionalOnMissingBean(MsgTypeParser.class)
+    @Bean(name = BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
     public MsgTypeParser msgTypeParser() {
         warning(BuiltinMsgTypeParser.class, MsgTypeParser.class);
         return new BuiltinMsgTypeParser();

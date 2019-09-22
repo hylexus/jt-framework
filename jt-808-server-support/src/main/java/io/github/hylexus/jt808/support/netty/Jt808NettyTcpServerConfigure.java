@@ -18,21 +18,22 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.*;
  * @author hylexus
  * Created At 2019-08-27 16:53
  */
-public interface Jt808NettyTcpServerConfigure {
-    default void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
+public class Jt808NettyTcpServerConfigure {
+
+    public void configureMsgConverterMapping(MsgConverterMapping mapping) {
     }
 
-    default void configureMsgConverterMapping(MsgConverterMapping mapping) {
+    public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
     }
 
-    default void configureServerBootstrap(ServerBootstrap serverBootstrap) {
+    public void configureServerBootstrap(ServerBootstrap serverBootstrap) {
         serverBootstrap
                 .option(ChannelOption.SO_BACKLOG, 2048)
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
     }
 
-    default void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+    public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(3, 0, 0, TimeUnit.MINUTES));
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, new HeatBeatHandler());
         ch.pipeline().addLast(
@@ -47,6 +48,6 @@ public interface Jt808NettyTcpServerConfigure {
     }
 
     @DebugOnly
-    class BuiltinNoOpsConfigureNettyTcp implements Jt808NettyTcpServerConfigure {
+    public static class BuiltinNoOpsConfigureNettyTcp extends Jt808NettyTcpServerConfigure {
     }
 }

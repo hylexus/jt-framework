@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.queue;
 
 
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 
 /**
  * @author hylexus
@@ -9,9 +9,9 @@ import io.github.hylexus.jt808.msg.AbstractRequestMsg;
  */
 public interface RequestMsgQueue {
 
-    void postMsg(AbstractRequestMsg msg) throws InterruptedException;
+    void postMsg(RequestMsgWrapper wrapper) throws InterruptedException;
 
-    default AbstractRequestMsg takeMsg() throws InterruptedException {
+    default RequestMsgWrapper takeMsg() throws InterruptedException {
         return null;
     }
 }

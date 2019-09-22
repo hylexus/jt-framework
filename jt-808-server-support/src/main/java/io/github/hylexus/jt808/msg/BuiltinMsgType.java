@@ -24,6 +24,7 @@ public enum BuiltinMsgType implements MsgType {
     CLIENT_REGISTER(0x0100, "终端注册"),
     CLIENT_REGISTER_REPLY(0x8100, "平台注册应答"),
     CLIENT_AUTH(0x0102, "终端鉴权"),
+    CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     ;
 
     BuiltinMsgType(int msgId, String desc) {

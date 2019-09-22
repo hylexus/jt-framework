@@ -9,5 +9,8 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808Msg {
+public @interface Jt808MsgBody {
+
+    int[] msgType();
+
 }

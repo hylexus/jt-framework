@@ -2,7 +2,7 @@ package io.github.hylexus.jt808.queue.listener;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,8 @@ public class LocalEventBusListener extends AbstractRequestMsgQueueListener<Local
     }
 
     @Subscribe
-    public void listen(AbstractRequestMsg requestMsg) throws IOException, InterruptedException {
-        consumeMsg(requestMsg);
+    public void listen(RequestMsgWrapper wrapper) throws IOException, InterruptedException {
+        consumeMsg(wrapper.getCommonProps(), wrapper.getBody());
     }
 
 }

@@ -3,10 +3,7 @@ package io.github.hylexus.jt808.handler.impl;
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
-import io.github.hylexus.jt808.msg.MsgType;
-import io.github.hylexus.jt808.msg.RespMsgBody;
+import io.github.hylexus.jt808.msg.*;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,8 +26,8 @@ public class NoReplyMsgHandler extends AbstractMsgHandler {
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(AbstractRequestMsg msg, Session session) {
-        log.debug("No reply for {}", msg.getMsgType());
+    protected Optional<RespMsgBody> doProcess(RequestMsgCommonProps commonProps, RequestMsgBody msg, Session session) {
+        log.debug("No reply for {}", commonProps.getMsgType());
         return Optional.empty();
     }
 }

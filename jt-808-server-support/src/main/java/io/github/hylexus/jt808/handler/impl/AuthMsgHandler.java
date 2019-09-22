@@ -1,12 +1,13 @@
 package io.github.hylexus.jt808.handler.impl;
 
-import io.github.hylexus.jt.common.BuiltinComponent;
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.msg.req.AuthRequestMsg;
+import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
 
 import java.util.Optional;
@@ -20,7 +21,8 @@ import static java.util.Optional.of;
  * @author hylexus
  * Created At 2019-08-24 15:44
  */
-public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsg> implements BuiltinComponent {
+@BuiltinComponent
+public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
 
     private AuthCodeValidator authCodeValidator;
 
@@ -34,11 +36,11 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsg> implement
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(AuthRequestMsg requestMsg, Session session) {
-        boolean valid = authCodeValidator.validateAuthCode(requestMsg);
+    protected Optional<RespMsgBody> doProcess(RequestMsgCommonProps props, AuthRequestMsgBody body, Session session) {
+        boolean valid = authCodeValidator.validateAuthCode(session, props, body);
         if (valid) {
-            return of(commonReply(requestMsg, BuiltinMsgType.CLIENT_AUTH));
+            return of(commonReply(props, BuiltinMsgType.CLIENT_AUTH));
         }
-        return of(generateCommonReplyMsgBody(requestMsg, BuiltinMsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
+        return of(generateCommonReplyMsgBody(props, BuiltinMsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
     }
 }

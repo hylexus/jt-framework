@@ -2,7 +2,7 @@ package io.github.hylexus.jt808.dispatcher.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.dispatcher.AbstractRequestMsgDispatcher;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +23,8 @@ public class LocalEventBusDispatcher extends AbstractRequestMsgDispatcher {
     }
 
     @Override
-    public void doBroadcast(AbstractRequestMsg msg) throws Exception {
-        log.debug("[EventBus] receive msg : {}", msg);
-        eventBus.postMsg(msg);
+    public void doBroadcast(RequestMsgWrapper wrapper) throws Exception {
+        log.debug("[EventBus] receive msg : {}", wrapper);
+        eventBus.postMsg(wrapper);
     }
 }

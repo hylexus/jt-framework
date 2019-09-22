@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.queue.impl;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 
 import java.util.concurrent.Executor;
@@ -28,7 +28,7 @@ public class LocalEventBus extends AsyncEventBus implements RequestMsgQueue {
     }
 
     @Override
-    public void postMsg(AbstractRequestMsg msg) {
-        super.post(msg);
+    public void postMsg(RequestMsgWrapper wrapper) throws InterruptedException {
+        super.post(wrapper);
     }
 }

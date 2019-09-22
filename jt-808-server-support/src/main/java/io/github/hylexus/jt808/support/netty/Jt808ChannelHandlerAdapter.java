@@ -5,8 +5,10 @@ import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
-import io.github.hylexus.jt808.msg.AbstractRequestMsg;
 import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgHeader;
+import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.session.SessionManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -53,20 +55,22 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808(unescaped, 0, unescaped.length);
             log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
 
-            AbstractRequestMsg abstractMsg = decoder.parseAbstractMsg(escaped);
-            int msgId = abstractMsg.getHeader().getMsgId();
+            final RequestMsgCommonProps commonProps = decoder.parseAbstractMsg(escaped);
+            final RequestMsgHeader header = commonProps.getHeader();
+            final int msgId = header.getMsgId();
             final Optional<MsgType> msgType = this.msgTypeParser.parseMsgType(msgId);
             if (!msgType.isPresent()) {
                 log.warn("received unknown msg, msgId={}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
                 return;
             }
-            abstractMsg.setMsgType(msgType.get());
-            final String terminalId = abstractMsg.getHeader().getTerminalId();
+            commonProps.setMsgType(msgType.get());
 
+            final String terminalId = header.getTerminalId();
             SessionManager.getInstance().persistenceIfNecessary(terminalId, ctx.channel());
+            log.debug("[decode] : {}, terminalId={}, msg = {}", msgType.get(), terminalId, commonProps);
 
-            log.debug("[decode] : {}, terminalId={}, msg = {}", msgType.get(), terminalId, abstractMsg);
-            this.msgDispatcher.doDispatch(abstractMsg);
+            RequestMsgWrapper requestMsgWrapper = new RequestMsgWrapper().setCommonProps(commonProps);
+            this.msgDispatcher.doDispatch(requestMsgWrapper);
         } finally {
             release(msg);
         }

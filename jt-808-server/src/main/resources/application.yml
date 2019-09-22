@@ -2,6 +2,10 @@ logging:
   level: info
   level.io.github.hylexus: debug
 jt808:
+  entity-scan:
+    enabled: true
+    base-packages: io.github.hylexus.jt808.server.msg.req
+    enable-builtin-entity: true
   print-component-statistics: true
   server:
     port: 6808

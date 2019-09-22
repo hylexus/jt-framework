@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Jt808Field {
 
-    int start() default 0;
+    int startIndex() default 0;
 
     MsgDataType dataType();
 
