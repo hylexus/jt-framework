@@ -34,7 +34,7 @@ public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatch
     }
 
     private Optional<RequestMsgBody> tryParseMsgBody(RequestMsgWrapper wrapper) {
-        final MsgType msgType = wrapper.getCommonProps().getMsgType();
+        final MsgType msgType = wrapper.getMetadata().getMsgType();
         final Optional<RequestMsgBodyConverter> converter = this.msgConverterMapping.getConverter(msgType);
         if (!converter.isPresent()) {
             log.error("No [MsgConverter] found for msgType {}", msgType);
@@ -42,7 +42,7 @@ public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatch
         }
 
         @SuppressWarnings("unchecked") final RequestMsgBodyConverter<RequestMsgBody> msgBodyConverter = converter.get();
-        final Optional<RequestMsgBody> subMsg = msgBodyConverter.convert2Entity(wrapper);
+        final Optional<RequestMsgBody> subMsg = msgBodyConverter.convert2Entity(wrapper.getMetadata());
         if (!subMsg.isPresent()) {
             log.debug("[MsgConverter] return empty(). converter:{}", msgBodyConverter.getClass());
             return Optional.empty();

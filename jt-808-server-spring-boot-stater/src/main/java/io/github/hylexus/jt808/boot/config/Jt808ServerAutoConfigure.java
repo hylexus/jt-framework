@@ -7,12 +7,14 @@ import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
 import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.converter.impl.AuthRequestMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.AuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.HeartBeatMsgHandler;
 import io.github.hylexus.jt808.handler.impl.NoReplyMsgHandler;
+import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
@@ -49,6 +51,7 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 @Configuration
 @EnableConfigurationProperties({Jt808ServerProps.class})
 public class Jt808ServerAutoConfigure {
+
     public static final AnsiColor SERVER_BANNER_COLOR = AnsiColor.BRIGHT_BLUE;
     public static final AnsiColor BUILTIN_COMPONENT_COLOR = AnsiColor.BRIGHT_CYAN;
     public static final AnsiColor CUSTOM_COMPONENT_COLOR = AnsiColor.GREEN;
@@ -75,6 +78,7 @@ public class Jt808ServerAutoConfigure {
     public MsgHandlerMapping msgHandlerMapping() {
         MsgHandlerMapping mapping = new MsgHandlerMapping();
         jt808NettyTcpServerConfigure().configureMsgHandlerMapping(mapping);
+        // Default handlers for debug
         mapping.registerHandler(new AuthMsgHandler(authCodeValidator()))
                 .registerHandler(new HeartBeatMsgHandler())
                 .registerHandler(new NoReplyMsgHandler())
@@ -86,7 +90,8 @@ public class Jt808ServerAutoConfigure {
     public MsgConverterMapping msgConverterMapping() {
         MsgConverterMapping mapping = new MsgConverterMapping();
         jt808NettyTcpServerConfigure().configureMsgConverterMapping(mapping);
-        //mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthRequestMsgBodyConverter());
+        // Default converters for debug
+        mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthRequestMsgBodyConverter());
         return mapping;
     }
 

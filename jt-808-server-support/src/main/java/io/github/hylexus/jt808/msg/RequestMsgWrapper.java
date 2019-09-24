@@ -10,6 +10,6 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class RequestMsgWrapper {
-    private RequestMsgCommonProps commonProps;
+    private RequestMsgMetadata metadata;
     private RequestMsgBody body;
 }

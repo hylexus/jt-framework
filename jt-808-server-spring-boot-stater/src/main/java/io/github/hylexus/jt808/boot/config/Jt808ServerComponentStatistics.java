@@ -2,7 +2,7 @@ package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
@@ -16,9 +16,9 @@ import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServerConfigure;
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -45,6 +45,7 @@ import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
 @Slf4j
 public class Jt808ServerComponentStatistics implements CommandLineRunner, ApplicationContextAware {
 
+    @Setter
     private ApplicationContext applicationContext;
 
     private static final String END_OF_LINE = "\n";
@@ -178,7 +179,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                 .map(entry -> {
                     MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
                     MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
-                            .orElseThrow(() -> new JtIllegalStateException("Can not parse msgType with msgId : " + entry.getKey()));
+                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
                     info.setType(msgType);
                     info.setConverter(entry.getValue());
                     MsgHandler msgHandler = handlerMappings.get(msgType.getMsgId());
@@ -188,7 +189,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
         handlerMappings.forEach((msgId, msgHandler) -> {
             MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                    .orElseThrow(() -> new JtIllegalStateException("Can not parse msgType with  msgId : " + msgId));
+                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
             MsgConverterAndHandlerMappingInfo info = mappings.getOrDefault(msgType, new MsgConverterAndHandlerMappingInfo());
             if (info.getHandler() == null) {
                 info.setHandler(msgHandler);
@@ -203,10 +204,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         return String.format("%s (%s)", HexStringUtils.int2HexString(msgType.getMsgId(), 4, true), msgType.getDesc());
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 
     @Data
     @Accessors(chain = true)

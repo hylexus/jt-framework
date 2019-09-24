@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.queue.listener;
 import io.github.hylexus.jt.exception.SessionNotFoundException;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.session.Session;
@@ -30,18 +30,18 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
 
     @Override
     @SuppressWarnings("unchecked")
-    public void consumeMsg(RequestMsgCommonProps commonProps, RequestMsgBody body) throws IOException, InterruptedException {
-        Optional<MsgHandler> handler = msgHandlerMapping.getHandler(commonProps.getMsgType());
+    public void consumeMsg(RequestMsgMetadata metadata, RequestMsgBody body) throws IOException, InterruptedException {
+        Optional<MsgHandler> handler = msgHandlerMapping.getHandler(metadata.getMsgType());
         if (!handler.isPresent()) {
-            log.error("No handler found for MsgType : {}", commonProps.getMsgType());
+            log.error("No handler found for MsgType : {}", metadata.getMsgType());
             return;
         }
 
-        handler.get().handleMsg(commonProps, body, getSession(commonProps));
+        handler.get().handleMsg(metadata, body, getSession(metadata));
     }
 
-    protected Session getSession(RequestMsgCommonProps commonProps) {
-        final String terminalId = commonProps.getHeader().getTerminalId();
+    protected Session getSession(RequestMsgMetadata metadata) {
+        final String terminalId = metadata.getHeader().getTerminalId();
         Optional<Session> session = SessionManager.getInstance().findByTerminalId(terminalId);
         if (session.isPresent()) {
             return session.get();

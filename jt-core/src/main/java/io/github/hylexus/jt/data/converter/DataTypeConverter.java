@@ -7,11 +7,11 @@ package io.github.hylexus.jt.data.converter;
 @FunctionalInterface
 public interface DataTypeConverter<T> {
 
-    T convert(byte[] bytes);
+    T convert(byte[] bytes, byte[] subSeq);
 
     class NoOpsConverter implements DataTypeConverter {
         @Override
-        public Object convert(byte[] bytes) {
+        public Object convert(byte[] bytes, byte[] subSeq) {
             return null;
         }
     }

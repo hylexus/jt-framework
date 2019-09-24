@@ -5,8 +5,7 @@ import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
-import io.github.hylexus.jt808.msg.RequestMsgWrapper;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -29,8 +28,9 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
      */
     private Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
 
-    public ReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(MsgType msgType, Class<? extends RequestMsgBody> cls,
-                                                                      boolean forceOverride) {
+    public ReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
+            MsgType msgType, Class<? extends RequestMsgBody> cls, boolean forceOverride) {
+
         int msgId = msgType.getMsgId();
         if (msgTypeMsgBodyClassMapping.containsKey(msgId)) {
             if (forceOverride) {
@@ -46,18 +46,16 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
         return addSupportedMsgBody(msgType, cls, false);
     }
 
-
     @Override
-    public Optional convert2Entity(RequestMsgWrapper wrapper) {
-        RequestMsgCommonProps commonProps = wrapper.getCommonProps();
-        byte[] bytes = commonProps.getBodyBytes();
-        Class<?> targetBodyClass = msgTypeMsgBodyClassMapping.get(commonProps.getMsgType().getMsgId());
+    public Optional convert2Entity(RequestMsgMetadata metadata) {
+        byte[] bytes = metadata.getBodyBytes();
+        Class<?> targetBodyClass = msgTypeMsgBodyClassMapping.get(metadata.getMsgType().getMsgId());
         if (targetBodyClass == null) {
-            log.warn("Can not convert {}", commonProps.getMsgType());
+            log.warn("Can not convert {}", metadata.getMsgType());
             return Optional.empty();
         }
         try {
-            Object o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, commonProps);
+            Object o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, metadata);
             return Optional.of(o);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

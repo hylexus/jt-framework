@@ -29,7 +29,7 @@ public class LocalEventBusListener extends AbstractRequestMsgQueueListener<Local
 
     @Subscribe
     public void listen(RequestMsgWrapper wrapper) throws IOException, InterruptedException {
-        consumeMsg(wrapper.getCommonProps(), wrapper.getBody());
+        consumeMsg(wrapper.getMetadata(), wrapper.getBody());
     }
 
 }

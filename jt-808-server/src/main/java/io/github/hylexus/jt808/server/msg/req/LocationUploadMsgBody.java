@@ -7,6 +7,9 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.github.hylexus.jt.data.MsgDataType.*;
 
 @Data
@@ -18,7 +21,7 @@ public class LocationUploadMsgBody implements RequestMsgBody {
     private int warningFlag;
 
     @Jt808Field(startIndex = 4, dataType = DWORD)
-    private Integer status;
+    private int status;
 
     @Jt808Field(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatDataTypeConverter.class)
     private Double lat;
@@ -27,14 +30,33 @@ public class LocationUploadMsgBody implements RequestMsgBody {
     private Double lng;
 
     @Jt808Field(startIndex = 16, dataType = WORD)
-    private int height;
+    private short height;
 
     @Jt808Field(startIndex = 18, dataType = WORD)
-    private int speed;
+    private short speed;
 
     @Jt808Field(startIndex = 20, dataType = WORD)
-    private int direction;
+    private short direction;
 
     @Jt808Field(startIndex = 22, dataType = BCD, length = 6)
     private String time;
+
+    @Jt808Field(startIndex = 28, dataType = COLLECTION)
+    private List<ExtraInfo> extraInfoList = new ArrayList<>();
+
+    @Data
+    public static class ExtraInfo {
+        @Jt808Field(startIndex = 0, dataType = BYTE)
+        private byte id;
+
+        @Jt808Field(startIndex = 1, dataType = BYTE)
+        private byte length;
+
+        @Jt808Field(startIndex = 2, dataType = BYTES, byteCountMethod = "getLength")
+        private byte[] content;
+
+        public int getLength() {
+            return length;
+        }
+    }
 }

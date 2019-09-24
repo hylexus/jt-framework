@@ -5,4 +5,6 @@ dependencies {
     implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
     compile "com.google.guava:guava:${jar_version_guava}"
 
+    provided "io.netty:netty-all:${jar_version_netty}"
+
 }

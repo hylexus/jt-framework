@@ -5,8 +5,8 @@ import io.github.hylexus.oaks.utils.IntBitOps;
 public class LngLatDataTypeConverter implements DataTypeConverter<Double> {
 
     @Override
-    public Double convert(byte[] bytes) {
-        return IntBitOps.intFromBytes(bytes, 0, bytes.length) * 1.0 / 100_0000;
+    public Double convert(byte[] bytes, byte[] subSeq) {
+        return IntBitOps.intFromBytes(subSeq, 0, subSeq.length) * 1.0 / 100_0000;
     }
 
 }

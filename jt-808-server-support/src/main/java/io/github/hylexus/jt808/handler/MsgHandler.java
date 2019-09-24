@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.handler;
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.session.Session;
 
 import java.io.IOException;
@@ -19,6 +19,6 @@ public interface MsgHandler<T extends RequestMsgBody> {
         return Sets.newHashSet();
     }
 
-    void handleMsg(RequestMsgCommonProps commonProps, T body, Session session) throws IOException, InterruptedException;
+    void handleMsg(RequestMsgMetadata metadata, T body, Session session) throws IOException, InterruptedException;
 
 }

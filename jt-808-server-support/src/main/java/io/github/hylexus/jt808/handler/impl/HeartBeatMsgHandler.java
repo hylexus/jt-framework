@@ -26,8 +26,8 @@ public class HeartBeatMsgHandler extends AbstractMsgHandler {
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgCommonProps commonProps, RequestMsgBody msg, Session session) {
-        log.debug("client heart beat, terminalId = {}", commonProps.getHeader().getTerminalId());
-        return of(commonReply(commonProps, BuiltinMsgType.CLIENT_HEART_BEAT));
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+        log.debug("client heart beat, terminalId = {}", metadata.getHeader().getTerminalId());
+        return of(commonReply(metadata, BuiltinMsgType.CLIENT_HEART_BEAT));
     }
 }

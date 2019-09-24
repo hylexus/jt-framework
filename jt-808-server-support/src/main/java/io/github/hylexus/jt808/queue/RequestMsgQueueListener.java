@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.queue;
 
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 
 import java.io.IOException;
 
@@ -11,6 +11,6 @@ import java.io.IOException;
  */
 public interface RequestMsgQueueListener {
 
-    void consumeMsg(RequestMsgCommonProps commonProps, RequestMsgBody body) throws IOException, InterruptedException;
+    void consumeMsg(RequestMsgMetadata metadata, RequestMsgBody body) throws IOException, InterruptedException;
 
 }

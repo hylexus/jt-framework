@@ -1,6 +1,6 @@
 dependencies {
     implementation(project(":jt-core"))
-    implementation(project(":jt-spring-core"))
+    implementation(project(":jt-spring"))
     implementation "com.google.guava:guava:${jar_version_guava}"
 
     compile group: 'org.springframework', name: 'spring-context'

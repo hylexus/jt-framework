@@ -26,8 +26,8 @@ public class NoReplyMsgHandler extends AbstractMsgHandler {
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgCommonProps commonProps, RequestMsgBody msg, Session session) {
-        log.debug("No reply for {}", commonProps.getMsgType());
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+        log.debug("No reply for {}", metadata.getMsgType());
         return Optional.empty();
     }
 }

@@ -1,15 +1,16 @@
 package io.github.hylexus.jt808.codec;
 
 import io.github.hylexus.jt.annotation.Jt808Field;
+import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.utils.ProtocolUtils;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgHeaderAware;
+import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
-import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ReflectionUtils;
 
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
+import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 
 /**
  * @author hylexus
@@ -30,8 +32,8 @@ public class Decoder {
 
     private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
 
-    public RequestMsgCommonProps parseAbstractMsg(byte[] bytes) {
-        final RequestMsgCommonProps ret = new RequestMsgCommonProps();
+    public RequestMsgMetadata parseMsgMetadata(byte[] bytes) {
+        final RequestMsgMetadata ret = new RequestMsgMetadata();
 
         // 1. 消息头 16byte 或 12byte
         final RequestMsgHeader msgHeader = this.parseMsgHeaderFromBytes(bytes);
@@ -45,7 +47,6 @@ public class Decoder {
         // 3. 去掉分隔符之后，最后一位就是校验码
         final byte checkSumInPkg = bytes[bytes.length - 1];
         ret.setCheckSum(checkSumInPkg);
-
         validateCheckSum(bytes, msgHeader, checkSumInPkg);
         return ret;
     }
@@ -61,10 +62,10 @@ public class Decoder {
         final RequestMsgHeader header = new RequestMsgHeader();
 
         // 1. byte[0-1]   消息ID word(16)
-        header.setMsgId(IntBitOps.intFromBytes(bytes, 0, 2));
+        header.setMsgId(intFromBytes(bytes, 0, 2));
 
         // 2. byte[2-3]   消息体属性 word(16)
-        final int bodyProps = IntBitOps.intFromBytes(bytes, 2, 2);
+        final int bodyProps = intFromBytes(bytes, 2, 2);
         header.setMsgBodyPropsField(bodyProps);
         // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
         header.setMsgBodyLength(bodyProps & 0x3ff);
@@ -79,29 +80,31 @@ public class Decoder {
         header.setTerminalId(BcdOps.bytes2BcdString(bytes, 4, 6));
 
         // 4. byte[10-11]     消息流水号 word(16)
-        header.setFlowId(IntBitOps.intFromBytes(bytes, 10, 2));
+        header.setFlowId(intFromBytes(bytes, 10, 2));
 
         // 5. byte[12-15]     消息包封装项
         if (header.isHasSubPackage()) {
             // byte[0-1]   消息包总数(word(16))
-            header.setTotalSubPackage(IntBitOps.intFromBytes(bytes, 12, 2));
+            header.setTotalSubPackage(intFromBytes(bytes, 12, 2));
             // byte[2-3]   包序号(word(16))
-            header.setSubPackageSeq(IntBitOps.intFromBytes(bytes, 14, 2));
+            header.setSubPackageSeq(intFromBytes(bytes, 14, 2));
         }
         return header;
     }
 
-    public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgCommonProps props) throws IllegalAccessException,
-            InstantiationException, InvocationTargetException {
+    public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgMetadata metadata)
+            throws IllegalAccessException, InstantiationException, InvocationTargetException {
+
         T instance = cls.newInstance();
+        processAwareMethod(cls, instance, metadata);
+
         Field[] fields = cls.getDeclaredFields();
+        int currentOffset = 0;
         for (Field field : fields) {
             final Jt808Field annotation = field.getAnnotation(Jt808Field.class);
             if (annotation == null) {
                 continue;
             }
-
-            processAwareMethod(cls, instance, props);
 
             final MsgDataType dataType = annotation.dataType();
             final Class<?> fieldType = field.getType();
@@ -114,35 +117,46 @@ public class Decoder {
             if (converterClass != DataTypeConverter.NoOpsConverter.class) {
                 populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
             } else {
-                // 默认的实现转换策略
+                // 默认的属性转换策略
                 if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-                    populateField(bytes, instance, field, dataType, startIndex, length);
+                    populateField(currentOffset, bytes, instance, field, dataType, startIndex, length);
                 } else {
                     // 没有配置【自定义属性转换器】&& 是不支持的目标类型
                     throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
                             + fieldType + " for field " + field);
                 }
             }
+
+            currentOffset += length;
         }
         return instance;
     }
 
-    private <T> void processAwareMethod(Class<T> cls, Object instance, RequestMsgCommonProps props) {
-        if (RequestMsgHeaderAware.class.isAssignableFrom(cls)) {
-            ((RequestMsgHeaderAware) instance).setRequestMsgHeader(props.getHeader());
+    private <T> void processAwareMethod(Class<T> cls, Object instance, RequestMsgMetadata metadata) {
+        if (instance instanceof RequestMsgHeaderAware) {
+            ((RequestMsgHeaderAware) instance).setRequestMsgHeader(metadata.getHeader());
+        }
+
+        if (instance instanceof RequestMsgMetadataAware) {
+            ((RequestMsgMetadataAware) instance).setRequestMsgMetadata(metadata);
         }
     }
 
     private <T> Integer getFieldLength(Class<T> cls, T instance, Jt808Field annotation, MsgDataType dataType) throws IllegalAccessException,
             InvocationTargetException {
+
         int length = dataType.getByteCount() == 0
                 ? annotation.length()
                 : dataType.getByteCount();
 
         if (length <= 0) {
+            if (dataType == MsgDataType.COLLECTION) {
+                return JtProtocolConstant.FIELD_LENGTH_UNKNOWN;
+            }
+
             Method method = ReflectionUtils.findMethod(cls, annotation.byteCountMethod());
             if (method == null) {
-                throw new NoSuchMethodError(annotation.byteCountMethod());
+                throw new NoSuchMethodError("No byteCountMethod() method found : " + annotation.byteCountMethod());
             }
 
             return (Integer) method.invoke(instance);
@@ -150,17 +164,24 @@ public class Decoder {
         return length;
     }
 
-    private void populateField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
+    private void populateField(int currentOffset, byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
             throws IllegalAccessException {
         final Object value;
         switch (dataType) {
-            case WORD:
+            case WORD: {
+                value = (short) intFromBytes(bytes, startIndex, length);
+                break;
+            }
             case DWORD: {
-                value = IntBitOps.intFromBytes(bytes, startIndex, length);
+                value = intFromBytes(bytes, startIndex, length);
                 break;
             }
             case BYTE: {
                 value = bytes[startIndex];
+                break;
+            }
+            case BYTES: {
+                value = Bytes.subSequence(bytes, startIndex, length);
                 break;
             }
             case BCD: {
@@ -169,6 +190,25 @@ public class Decoder {
             }
             case STRING: {
                 value = new String(Bytes.subSequence(bytes, startIndex, length), JT_808_STRING_ENCODING);
+                break;
+            }
+            case COLLECTION: {
+                // TODO
+                Class<?> c = null;
+                try {
+                    c = Class.forName("io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody$ExtraInfo");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Object o = decodeRequestMsgBody(c, bytes, null);
+                    System.out.println(o);
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                value = null;
                 break;
             }
             default:
@@ -183,7 +223,7 @@ public class Decoder {
             int start, int byteCount) throws InstantiationException, IllegalAccessException {
 
         DataTypeConverter converter = getDataTypeConverter(converterClass);
-        Object value = converter.convert(Bytes.subSequence(bytes, start, byteCount));
+        Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
         setFieldValue(instance, field, value);
     }
 

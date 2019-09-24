@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.converter.impl;
 
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
-import io.github.hylexus.jt808.msg.RequestMsgWrapper;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.req.EmptyRequestBody;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class EmptyBodyRequestMsgConverter implements RequestMsgBodyConverter<EmptyRequestBody> {
 
     @Override
-    public Optional<EmptyRequestBody> convert2Entity(RequestMsgWrapper wrapper) {
+    public Optional<EmptyRequestBody> convert2Entity(RequestMsgMetadata metadata) {
         return Optional.of(new EmptyRequestBody());
     }
 }

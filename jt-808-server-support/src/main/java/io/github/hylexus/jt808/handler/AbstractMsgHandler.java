@@ -4,7 +4,7 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
@@ -26,15 +26,15 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
     private Encoder encoder = new Encoder();
 
     @Override
-    public void handleMsg(RequestMsgCommonProps commonProps, T body, Session session) throws IOException, InterruptedException {
-        Optional<RespMsgBody> respInfo = this.doProcess(commonProps, body, session);
+    public void handleMsg(RequestMsgMetadata metadata, T body, Session session) throws IOException, InterruptedException {
+        Optional<RespMsgBody> respInfo = this.doProcess(metadata, body, session);
         if (!respInfo.isPresent()) {
             log.debug("MsgHandler return empty(). [SendResult2Client] canceled.");
             return;
         }
 
         RespMsgBody respBody = respInfo.get();
-        byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), commonProps.getHeader().getTerminalId());
+        byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
         this.send2Client(session.getChannel(), respBytes);
 
         log.debug("<<<<<<<<<<<<<<< : {}", HexStringUtils.bytes2HexString(respBytes));
@@ -47,17 +47,17 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
         }
     }
 
-    protected abstract Optional<RespMsgBody> doProcess(RequestMsgCommonProps commonProps, T msg, Session session);
+    protected abstract Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, T msg, Session session);
 
-    protected RespMsgBody generateCommonReplyMsgBody(RequestMsgCommonProps commonProps, MsgType replyFor, byte result) {
+    protected RespMsgBody generateCommonReplyMsgBody(RequestMsgMetadata metadata, MsgType replyFor, byte result) {
         CommonReplyMsgBody body = new CommonReplyMsgBody();
         body.setResult(result);
-        body.setReplyFlowId(commonProps.getHeader().getFlowId());
+        body.setReplyFlowId(metadata.getHeader().getFlowId());
         body.setReplyMsgId(replyFor.getMsgId());
         return body;
     }
 
-    protected RespMsgBody commonReply(RequestMsgCommonProps commonProps, MsgType replyFor) {
-        return generateCommonReplyMsgBody(commonProps, replyFor, RespMsgBody.SUCCESS);
+    protected RespMsgBody commonReply(RequestMsgMetadata metadata, MsgType replyFor) {
+        return generateCommonReplyMsgBody(metadata, replyFor, RespMsgBody.SUCCESS);
     }
 }

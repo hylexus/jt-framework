@@ -14,9 +14,11 @@ public class Jt808MsgTypeParser implements MsgTypeParser {
 
     @Override
     public Optional<MsgType> parseMsgType(int msgType) {
+        // 先使用自定义解析器
         Optional<MsgType> type = Jt808MsgType.CLIENT_AUTH.parseFromInt(msgType);
         return type.isPresent()
                 ? type
+                // 自定义解析器无法解析,使用内置解析器
                 : BuiltinMsgType.CLIENT_AUTH.parseFromInt(msgType);
     }
 

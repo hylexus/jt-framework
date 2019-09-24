@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.converter.impl;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
-import io.github.hylexus.jt808.msg.RequestMsgWrapper;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
 
 import java.util.Optional;
@@ -17,8 +17,8 @@ import java.util.Optional;
 public class AuthRequestMsgBodyConverter implements RequestMsgBodyConverter<AuthRequestMsgBody> {
 
     @Override
-    public Optional<AuthRequestMsgBody> convert2Entity(RequestMsgWrapper wrapper) {
-        byte[] bytes = wrapper.getCommonProps().getBodyBytes();
+    public Optional<AuthRequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {
+        byte[] bytes = metadata.getBodyBytes();
         AuthRequestMsgBody body = new AuthRequestMsgBody().setAuthCode(ProtocolUtils.bytes2String(bytes, 0, bytes.length));
         return Optional.of(body);
     }

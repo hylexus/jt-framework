@@ -5,7 +5,7 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.msg.MsgType;
-import io.github.hylexus.jt808.msg.RequestMsgCommonProps;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
@@ -36,11 +36,11 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgCommonProps props, AuthRequestMsgBody body, Session session) {
-        boolean valid = authCodeValidator.validateAuthCode(session, props, body);
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) {
+        boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {
-            return of(commonReply(props, BuiltinMsgType.CLIENT_AUTH));
+            return of(commonReply(metadata, BuiltinMsgType.CLIENT_AUTH));
         }
-        return of(generateCommonReplyMsgBody(props, BuiltinMsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
+        return of(generateCommonReplyMsgBody(metadata, BuiltinMsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
     }
 }
