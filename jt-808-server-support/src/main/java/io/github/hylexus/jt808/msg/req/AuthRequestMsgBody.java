@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.msg.req;
 
-import io.github.hylexus.jt.annotation.Jt808Field;
-import io.github.hylexus.jt.annotation.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.BasicField;
+import io.github.hylexus.jt.annotation.msg.Jt808MsgBody;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
@@ -25,11 +25,11 @@ public class AuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware
      * 长度：
      * <pre>
      * --> 1. {@link MsgDataType#getByteCount()} ==0
-     * --> 2. {@link Jt808Field#length()} == 0
-     * --> 3. {@link Jt808Field#byteCountMethod()}
+     * --> 2. {@link BasicField#length()} == 0
+     * --> 3. {@link BasicField#byteCountMethod()}
      * </pre>
      */
-    @Jt808Field(startIndex = 0, dataType = MsgDataType.STRING, byteCountMethod = "getAuthCodeByteCount")
+    @BasicField(startIndex = 0, dataType = MsgDataType.STRING, byteCountMethod = "getAuthCodeByteCount")
     private String authCode;
 
     public int getAuthCodeByteCount() {

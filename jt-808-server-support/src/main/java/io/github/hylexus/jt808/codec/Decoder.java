@@ -1,9 +1,6 @@
 package io.github.hylexus.jt808.codec;
 
-import io.github.hylexus.jt.annotation.Jt808Field;
-import io.github.hylexus.jt.config.JtProtocolConstant;
-import io.github.hylexus.jt.data.MsgDataType;
-import io.github.hylexus.jt.data.converter.DataTypeConverter;
+import io.github.hylexus.jt.codec.FieldDecoder;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
@@ -12,15 +9,9 @@ import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
 import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 
 /**
@@ -29,8 +20,6 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
  **/
 @Slf4j
 public class Decoder {
-
-    private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
 
     public RequestMsgMetadata parseMsgMetadata(byte[] bytes) {
         final RequestMsgMetadata ret = new RequestMsgMetadata();
@@ -92,43 +81,17 @@ public class Decoder {
         return header;
     }
 
+    private FieldDecoder fieldDecoder = new FieldDecoder();
+
     public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgMetadata metadata)
             throws IllegalAccessException, InstantiationException, InvocationTargetException {
 
         T instance = cls.newInstance();
+
         processAwareMethod(cls, instance, metadata);
 
-        Field[] fields = cls.getDeclaredFields();
-        int currentOffset = 0;
-        for (Field field : fields) {
-            final Jt808Field annotation = field.getAnnotation(Jt808Field.class);
-            if (annotation == null) {
-                continue;
-            }
+        fieldDecoder.decode(instance, bytes);
 
-            final MsgDataType dataType = annotation.dataType();
-            final Class<?> fieldType = field.getType();
-            final int startIndex = annotation.startIndex();
-
-            int length = getFieldLength(cls, instance, annotation, dataType);
-
-            final Class<? extends DataTypeConverter> converterClass = annotation.customerDataTypeConverterClass();
-            // 使用用户自定义的属性转换器
-            if (converterClass != DataTypeConverter.NoOpsConverter.class) {
-                populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
-            } else {
-                // 默认的属性转换策略
-                if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-                    populateField(currentOffset, bytes, instance, field, dataType, startIndex, length);
-                } else {
-                    // 没有配置【自定义属性转换器】&& 是不支持的目标类型
-                    throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
-                            + fieldType + " for field " + field);
-                }
-            }
-
-            currentOffset += length;
-        }
         return instance;
     }
 
@@ -142,104 +105,4 @@ public class Decoder {
         }
     }
 
-    private <T> Integer getFieldLength(Class<T> cls, T instance, Jt808Field annotation, MsgDataType dataType) throws IllegalAccessException,
-            InvocationTargetException {
-
-        int length = dataType.getByteCount() == 0
-                ? annotation.length()
-                : dataType.getByteCount();
-
-        if (length <= 0) {
-            if (dataType == MsgDataType.COLLECTION) {
-                return JtProtocolConstant.FIELD_LENGTH_UNKNOWN;
-            }
-
-            Method method = ReflectionUtils.findMethod(cls, annotation.byteCountMethod());
-            if (method == null) {
-                throw new NoSuchMethodError("No byteCountMethod() method found : " + annotation.byteCountMethod());
-            }
-
-            return (Integer) method.invoke(instance);
-        }
-        return length;
-    }
-
-    private void populateField(int currentOffset, byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
-            throws IllegalAccessException {
-        final Object value;
-        switch (dataType) {
-            case WORD: {
-                value = (short) intFromBytes(bytes, startIndex, length);
-                break;
-            }
-            case DWORD: {
-                value = intFromBytes(bytes, startIndex, length);
-                break;
-            }
-            case BYTE: {
-                value = bytes[startIndex];
-                break;
-            }
-            case BYTES: {
-                value = Bytes.subSequence(bytes, startIndex, length);
-                break;
-            }
-            case BCD: {
-                value = BcdOps.bytes2BcdString(bytes, startIndex, length);
-                break;
-            }
-            case STRING: {
-                value = new String(Bytes.subSequence(bytes, startIndex, length), JT_808_STRING_ENCODING);
-                break;
-            }
-            case COLLECTION: {
-                // TODO
-                Class<?> c = null;
-                try {
-                    c = Class.forName("io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody$ExtraInfo");
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Object o = decodeRequestMsgBody(c, bytes, null);
-                    System.out.println(o);
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-                value = null;
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected value: " + dataType);
-        }
-        setFieldValue(instance, field, value);
-    }
-
-    private void populateFieldByCustomerConverter(
-            byte[] bytes, Object instance, Field field,
-            Class<? extends DataTypeConverter> converterClass,
-            int start, int byteCount) throws InstantiationException, IllegalAccessException {
-
-        DataTypeConverter converter = getDataTypeConverter(converterClass);
-        Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
-        setFieldValue(instance, field, value);
-    }
-
-    private DataTypeConverter getDataTypeConverter(
-            Class<? extends DataTypeConverter> converterClass) throws InstantiationException, IllegalAccessException {
-
-        DataTypeConverter converter = converterMapping.get(converterClass);
-        if (converter == null) {
-            converter = converterClass.newInstance();
-            converterMapping.put(converterClass, converter);
-        }
-        return converter;
-    }
-
-    private void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
-        field.setAccessible(true);
-        field.set(instance, value);
-    }
 }

@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation;
+package io.github.hylexus.jt.annotation.msg;
 
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;
@@ -9,10 +9,10 @@ import java.lang.annotation.*;
  * @author hylexus
  * Created At 2019-09-18 8:48 下午
  */
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808Field {
+public @interface BasicField {
 
     int startIndex() default 0;
 

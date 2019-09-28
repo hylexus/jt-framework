@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation;
+package io.github.hylexus.jt.annotation.msg;
 
 import java.lang.annotation.*;
 

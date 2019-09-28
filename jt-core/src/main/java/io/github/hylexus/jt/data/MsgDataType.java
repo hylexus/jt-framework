@@ -1,13 +1,11 @@
 package io.github.hylexus.jt.data;
 
-import io.github.hylexus.jt.annotation.Jt808Field;
+import io.github.hylexus.jt.annotation.msg.BasicField;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static io.github.hylexus.jt.config.JtProtocolConstant.FIELD_LENGTH_UNKNOWN;
 
 /**
  * @author hylexus
@@ -21,13 +19,13 @@ public enum MsgDataType {
     DWORD(4, "无符号四字节整型(双字，32 位)", newHashSet(int.class, Integer.class, long.class, Long.class)),
     BCD(0, "8421 码，n 字节", newHashSet(String.class)),
     STRING(0, "GBK 编码，若无数据，置空", newHashSet(String.class)),
-    COLLECTION(FIELD_LENGTH_UNKNOWN, "集合", newHashSet(List.class, Set.class));
+    ;
 
     /**
      * 字节数
      * 为零表示使用外部指定的长度
      *
-     * @see Jt808Field#length()
+     * @see BasicField#length()
      */
     private int byteCount;
 

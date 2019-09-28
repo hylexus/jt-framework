@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.queue.listener;
 
-import io.github.hylexus.jt.exception.SessionNotFoundException;
+import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
@@ -47,6 +47,6 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
             return session.get();
         }
 
-        throw new SessionNotFoundException(terminalId);
+        throw new JtSessionNotFoundException(terminalId);
     }
 }
