@@ -1,65 +1,117 @@
 package io.github.hylexus.jt.codec;
 
 import io.github.hylexus.jt.annotation.msg.AdditionalField;
-import io.github.hylexus.jt.data.msg.AdditionalInfo;
-import io.github.hylexus.jt.data.msg.BuiltinAdditionalInfo;
+import io.github.hylexus.jt.data.msg.AdditionalFieldInfo;
+import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
-import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.LinkedHashMap;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import static io.github.hylexus.jt.annotation.msg.AdditionalField.ROOT_GROUP_MSG_ID;
 
 /**
  * @author hylexus
  * Created At 2019-09-28 11:41 下午
  */
+@Slf4j
 public class AdditionalFieldDecoder {
 
+    private static final ConcurrentMap<Field, Map<Integer, AdditionalFieldInfo>> FIELD_INFO_CACHE = new ConcurrentHashMap<>();
+
     public void decodeAdditionalField(
-            Class<?> cls, Object instance, byte[] bytes, int currentOffset,
-            JavaBeanFieldMetadata fieldMetadata, int startIndex, int totalLength) {
+            Object instance, byte[] bytes, int startIndex, int totalLength,
+            JavaBeanFieldMetadata fieldMetadata) throws IllegalAccessException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
-        if (annotation == null) {
-            return;
-        }
-        if (fieldMetadata.getFieldType() == List.class) {
-            // TODO
-            return;
-        }
-        List<Class<?>> genericType = fieldMetadata.getGenericType();
-        Class<?> keyClass = genericType.get(0);
-        Class<?> valueClass = genericType.get(1);
 
-        System.out.println(keyClass);
-        System.out.println(valueClass);
-        Class<? extends AdditionalInfo> entityClass = annotation.entityClass();
-        System.out.println(entityClass);
-        System.out.println(HexStringUtils.bytes2HexString(bytes));
-        System.out.println(HexStringUtils.bytes2HexString(Bytes.subSequence(bytes, startIndex, totalLength)));
+        Map<Integer, AdditionalFieldInfo> typeMapping = FIELD_INFO_CACHE.get(fieldMetadata.getField());
+        if (typeMapping == null) {
+            typeMapping = buildTypeMapping(annotation);
+            FIELD_INFO_CACHE.put(fieldMetadata.getField(), typeMapping);
+        }
 
-        Map<Integer, AdditionalInfo> map = new LinkedHashMap<>();
+        AdditionalFieldInfo rootGroupInfo = typeMapping.values().stream()
+                .filter(e -> e.getGroupMsgId() == ROOT_GROUP_MSG_ID)
+                .findFirst().orElseGet(() -> {
+                    log.debug("Use default DEFAULT_ROOT_GROUP");
+                    return AdditionalFieldInfo.DEFAULT_ROOT_GROUP;
+                });
+
+        List<AdditionalItemEntity> result = new ArrayList<>();
+        parseExtraMsg(result, typeMapping, bytes, startIndex, totalLength,
+                rootGroupInfo.getByteCountOfMsgId(), rootGroupInfo.getByteCountOfContentLength(), ROOT_GROUP_MSG_ID);
+
+        setFieldValue(instance, fieldMetadata, result);
+
+    }
+
+    private Map<Integer, AdditionalFieldInfo> buildTypeMapping(AdditionalField annotation) {
+        Map<Integer, AdditionalFieldInfo> typeMapping = new HashMap<>();
+        // <groupMsgId, info>
+        for (AdditionalField.MsgTypeMapping mapping : annotation.msgTypeMappings()) {
+            AdditionalFieldInfo mappingInfo = new AdditionalFieldInfo();
+            mappingInfo.setGroupMsgId(mapping.groupMsgId());
+            mappingInfo.setNestedAdditionalField(mapping.isNestedAdditionalField());
+            mappingInfo.setByteCountOfMsgId(mapping.byteCountOfMsgId());
+            mappingInfo.setByteCountOfContentLength(mapping.byteCountOfContentLength());
+
+            typeMapping.put(mapping.groupMsgId(), mappingInfo);
+        }
+        return typeMapping;
+    }
+
+    private void setFieldValue(Object instance, JavaBeanFieldMetadata fieldMetadata, List<AdditionalItemEntity> result)
+            throws IllegalAccessException {
+        fieldMetadata.getField().setAccessible(true);
+        fieldMetadata.getField().set(instance, result);
+    }
+
+    private List<AdditionalItemEntity> parseExtraMsg(
+            List<AdditionalItemEntity> result, Map<Integer, AdditionalFieldInfo> groupMapping,
+            byte[] bytes, int startIndex, int totalLength, int byteCountOfMSgId, int byteCountOfContentLength, int groupMsgId) {
+
         int readerIndex = startIndex;
         while (readerIndex < totalLength) {
-            final int msgId = IntBitOps.intFromBytes(bytes, readerIndex, 1);
-            readerIndex += 1;
+            final int msgId = IntBitOps.intFromBytes(bytes, readerIndex, byteCountOfMSgId);
+            readerIndex += byteCountOfMSgId;
 
-            int contentLength = IntBitOps.intFromBytes(bytes, readerIndex, 1);
-            readerIndex += 1;
+            final int contentLength = IntBitOps.intFromBytes(bytes, readerIndex, byteCountOfContentLength);
+            readerIndex += byteCountOfContentLength;
 
-            byte[] content = Bytes.subSequence(bytes, readerIndex, contentLength);
+            final byte[] contentBytes = Bytes.subSequence(bytes, readerIndex, contentLength);
             readerIndex += contentLength;
 
-            BuiltinAdditionalInfo item = new BuiltinAdditionalInfo(msgId, contentLength, content);
-            map.put(msgId, item);
+            AdditionalItemEntity additionalItemEntity = new AdditionalItemEntity();
+            additionalItemEntity.setMsgId(msgId);
+            additionalItemEntity.setGroupMsgId(groupMsgId);
+            additionalItemEntity.setLength(contentLength);
+            additionalItemEntity.setRawBytes(contentBytes);
+
+            result.add(additionalItemEntity);
+
+
+            AdditionalFieldInfo groupInfo;
+            if (msgId != ROOT_GROUP_MSG_ID
+                    && (groupInfo = groupMapping.get(msgId)) != null
+                    && groupInfo.isNestedAdditionalField()) {
+
+                return parseExtraMsg(result, groupMapping, contentBytes, 0, contentBytes.length,
+                        groupInfo.getByteCountOfMsgId(),
+                        groupInfo.getByteCountOfContentLength(), groupInfo.getGroupMsgId());
+            }
+
         }
 
-        map.forEach((k, v) -> {
-            String key = HexStringUtils.int2HexString(k, 2, true);
-            System.out.println(key + " -- " + v.getContentLength() + " -- " + v.getContent().length);
-        });
+        return result;
     }
+
 }

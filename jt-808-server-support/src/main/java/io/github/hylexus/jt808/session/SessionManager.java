@@ -17,7 +17,6 @@ public class SessionManager {
     private static volatile SessionManager instance = new SessionManager();
 
     private SessionManager() {
-        log.info("SessionManager init time");
     }
 
     public static SessionManager getInstance() {

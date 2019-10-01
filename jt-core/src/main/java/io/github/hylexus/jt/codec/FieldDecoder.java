@@ -38,19 +38,16 @@ public class FieldDecoder {
         final Class<?> cls = instance.getClass();
         final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
 
-        int currentOffset = 0;
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
 
             if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
-                final int processedLength = processBasicField(cls, bytes, instance, fieldMetadata);
-                currentOffset += processedLength;
+                processBasicField(cls, bytes, instance, fieldMetadata);
                 // 目前为止BasicField不支持和其他类型注解一起使用, continue直接处理下一个Field
                 continue;
             }
 
             if (fieldMetadata.isAnnotationPresent(AdditionalField.class)) {
-                final int processedLength = processAdditionalField(instance, bytes, cls, currentOffset, fieldMetadata);
-                currentOffset += processedLength;
+                processAdditionalField(instance, bytes, cls, fieldMetadata);
             }
 
         }
@@ -60,7 +57,7 @@ public class FieldDecoder {
         return instance1;
     }
 
-    private int processAdditionalField(Object instance, byte[] bytes, Class<?> cls, int currentOffset, JavaBeanFieldMetadata fieldMetadata)
+    private int processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
@@ -73,7 +70,7 @@ public class FieldDecoder {
         int startIndex = annotation.startIndex();
         // 附加项总长度
         int totalLength = getAdditionalFieldLength(cls, instance, annotation);
-        this.additionalFieldDecoder.decodeAdditionalField(cls, instance, bytes, currentOffset, fieldMetadata, startIndex, totalLength);
+        this.additionalFieldDecoder.decodeAdditionalField(instance, bytes, startIndex, totalLength, fieldMetadata);
         return totalLength;
     }
 

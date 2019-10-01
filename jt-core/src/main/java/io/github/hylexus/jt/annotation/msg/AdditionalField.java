@@ -1,13 +1,9 @@
 package io.github.hylexus.jt.annotation.msg;
 
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.data.converter.DataTypeConverter;
-import io.github.hylexus.jt.data.msg.AdditionalInfo;
-import io.github.hylexus.jt.data.msg.BuiltinAdditionalInfo;
 
 import java.lang.annotation.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,7 +15,10 @@ import java.util.Set;
 @Documented
 public @interface AdditionalField {
 
-    Set<Class<?>> SUPPORTED_TARGET_CLASS = Sets.newHashSet(List.class, Map.class);
+    Set<Class<?>> SUPPORTED_TARGET_CLASS = Sets.newHashSet(List.class);
+    int ROOT_GROUP_MSG_ID = -1;
+    int DEFAULT_BYTE_COUNT_OF_MSG_ID = 1;
+    int DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH = 1;
 
     int startIndex();
 
@@ -27,7 +26,17 @@ public @interface AdditionalField {
 
     String byteCountMethod() default "";
 
-    Class<? extends DataTypeConverter> customerDataTypeConverterClass() default DataTypeConverter.NoOpsConverter.class;
+    MsgTypeMapping[] msgTypeMappings();
 
-    Class<? extends AdditionalInfo> entityClass() default BuiltinAdditionalInfo.class;
+    @interface MsgTypeMapping {
+
+        int groupMsgId() default ROOT_GROUP_MSG_ID;
+
+        boolean isNestedAdditionalField() default false;
+
+        int byteCountOfMsgId() default DEFAULT_BYTE_COUNT_OF_MSG_ID;
+
+        int byteCountOfContentLength() default DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH;
+
+    }
 }

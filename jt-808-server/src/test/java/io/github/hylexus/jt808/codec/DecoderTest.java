@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.codec;
 
+import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody;
@@ -7,6 +8,8 @@ import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author hylexus
@@ -37,6 +40,11 @@ public class DecoderTest {
         //        System.out.println(body.get());
         //        Optional<LocationUploadMsgBody> x = new LocationUploadMsgBodyConverter2().convert2Entity(metadata);
         //        System.out.println(x.get());
+        List<AdditionalItemEntity> additionalItemEntity = y.getAdditionalInfo();
+        additionalItemEntity.forEach(msg -> {
+            System.out.println(HexStringUtils.int2HexString(msg.getMsgId(), 4, true) + " --> " + msg);
+        });
+        //System.out.println(JSON.toJSONString(y.getExtraMsg(), true));
     }
 
     @Test

@@ -4,19 +4,16 @@ import io.github.hylexus.jt.annotation.msg.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.BasicField;
 import io.github.hylexus.jt.annotation.msg.Jt808MsgBody;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
-import io.github.hylexus.jt.data.msg.AdditionalInfo;
+import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static io.github.hylexus.jt.annotation.msg.AdditionalField.ROOT_GROUP_MSG_ID;
 import static io.github.hylexus.jt.data.MsgDataType.*;
 
 @Data
@@ -50,11 +47,15 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     @BasicField(startIndex = 22, dataType = BCD, length = 6)
     private String time;
 
-    @AdditionalField(startIndex = 28, length = 10)
-    private List<AdditionalInfo> extraInfoList = new ArrayList<>();
-
-    @AdditionalField(startIndex = 28, byteCountMethod = "getExtraInfoLength")
-    private Map<Integer, AdditionalInfo> extraInfoMap = new HashMap<>();
+    @AdditionalField(
+            startIndex = 28,
+            byteCountMethod = "getExtraInfoLength",
+            msgTypeMappings = {
+                    @AdditionalField.MsgTypeMapping(groupMsgId = ROOT_GROUP_MSG_ID),
+                    @AdditionalField.MsgTypeMapping(groupMsgId = 0xf3, byteCountOfMsgId = 2, isNestedAdditionalField = true),
+            }
+    )
+    private List<AdditionalItemEntity> additionalInfo;
 
     @Override
     public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
@@ -66,12 +67,4 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
         return totalLength - 28;
     }
 
-    @Data
-    @EqualsAndHashCode(of = "id")
-    public static class ExtraInfo {
-        private int id;
-        private int length;
-        private byte[] rawBytes;
-        private Object content;
-    }
 }

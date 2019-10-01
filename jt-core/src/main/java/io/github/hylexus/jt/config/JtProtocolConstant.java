@@ -11,8 +11,6 @@ public interface JtProtocolConstant {
     int PACKAGE_DELIMITER = 0x7E;
     int MAX_PACKAGE_LENGTH = 1024;
 
-    int FIELD_LENGTH_UNKNOWN = -1;
-
     String BEAN_NAME_JT808_REQ_MSG_QUEUE = "jt808RequestMsgQueue";
     String BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER = "jt808RequestMsgQueueListener";
     String BEAN_NAME_JT808_REQ_MSG_DISPATCHER = "jt808RequestMsgDispatcher";
