@@ -1,4 +1,4 @@
-rootProject.name = "jt-platform"
+rootProject.name = "jt-framework"
 
 include 'docs'
 include 'build-script'
