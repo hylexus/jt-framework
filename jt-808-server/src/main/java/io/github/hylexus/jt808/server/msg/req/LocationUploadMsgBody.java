@@ -2,11 +2,13 @@ package io.github.hylexus.jt808.server.msg.req;
 
 import io.github.hylexus.jt.annotation.msg.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.BasicField;
+import io.github.hylexus.jt.annotation.msg.ExtraField;
 import io.github.hylexus.jt.annotation.msg.Jt808MsgBody;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
+import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -26,8 +28,10 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     @BasicField(startIndex = 0, dataType = DWORD)
     private int warningFlag;
 
-    @BasicField(startIndex = 4, dataType = DWORD)
+    @BasicField(startIndex = 4, dataType = DWORD, splitPropsInTo = "statusDetails")
     private int status;
+
+    private Object statusDetails;
 
     @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatDataTypeConverter.class)
     private Double lat;
@@ -56,6 +60,12 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
             }
     )
     private List<AdditionalItemEntity> additionalInfo;
+
+    @ExtraField(
+            startIndex = 28,
+            byteCountMethod = "getExtraInfoLength"
+    )
+    private ExtraEntity extraEntity;
 
     @Override
     public void setRequestMsgMetadata(RequestMsgMetadata metadata) {

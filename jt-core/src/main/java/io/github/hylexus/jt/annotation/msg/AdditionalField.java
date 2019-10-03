@@ -20,10 +20,19 @@ public @interface AdditionalField {
     int DEFAULT_BYTE_COUNT_OF_MSG_ID = 1;
     int DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH = 1;
 
+    /**
+     * @see BasicField#startIndex()
+     */
     int startIndex();
 
+    /**
+     * @see BasicField#length()
+     */
     int length() default 0;
 
+    /**
+     * @see BasicField#byteCountMethod()
+     */
     String byteCountMethod() default "";
 
     MsgTypeMapping[] msgTypeMappings();

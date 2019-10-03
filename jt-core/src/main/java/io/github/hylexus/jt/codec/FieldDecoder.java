@@ -2,6 +2,7 @@ package io.github.hylexus.jt.codec;
 
 import io.github.hylexus.jt.annotation.msg.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.BasicField;
+import io.github.hylexus.jt.annotation.msg.ExtraField;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;
@@ -9,7 +10,6 @@ import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
 import io.github.hylexus.jt.utils.ReflectionUtils;
-import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
 import lombok.NonNull;
 
@@ -18,9 +18,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
-import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 
 /**
  * @author hylexus
@@ -31,6 +28,7 @@ public class FieldDecoder {
     private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
 
     private AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
+    private ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
 
     public <T> T decode(@NonNull Object instance, @NonNull byte[] bytes) throws IllegalAccessException, InstantiationException,
             InvocationTargetException {
@@ -46,6 +44,13 @@ public class FieldDecoder {
                 continue;
             }
 
+            if (fieldMetadata.isAnnotationPresent(ExtraField.class)) {
+                ExtraField annotation = fieldMetadata.getAnnotation(ExtraField.class);
+                int extraFieldLength = getExtraFieldLength(cls, instance, annotation);
+                extraFieldDecoder.decodeExtraField(bytes, annotation.startIndex(), extraFieldLength, instance, fieldMetadata);
+                continue;
+            }
+
             if (fieldMetadata.isAnnotationPresent(AdditionalField.class)) {
                 processAdditionalField(instance, bytes, cls, fieldMetadata);
             }
@@ -57,7 +62,8 @@ public class FieldDecoder {
         return instance1;
     }
 
-    private int processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+
+    private void processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
@@ -71,10 +77,9 @@ public class FieldDecoder {
         // 附加项总长度
         int totalLength = getAdditionalFieldLength(cls, instance, annotation);
         this.additionalFieldDecoder.decodeAdditionalField(instance, bytes, startIndex, totalLength, fieldMetadata);
-        return totalLength;
     }
 
-    private int processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
+    private void processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
         BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
@@ -89,52 +94,18 @@ public class FieldDecoder {
         final Field field = fieldMetadata.getField();
         if (converterClass != DataTypeConverter.NoOpsConverter.class) {
             populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
-            return length;
+            return;
         }
 
         // 2. 默认的属性转换策略
         if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-            populateBasicField(bytes, instance, field, dataType, startIndex, length);
-            return length;
+            ReflectionUtils.populateBasicField(bytes, instance, field, dataType, startIndex, length);
+            return;
         }
 
         // 3. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
         throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
                 + fieldType + " for field " + field);
-    }
-
-    private void populateBasicField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
-            throws IllegalAccessException {
-        final Object value;
-        switch (dataType) {
-            case WORD: {
-                value = (short) intFromBytes(bytes, startIndex, length);
-                break;
-            }
-            case DWORD: {
-                value = intFromBytes(bytes, startIndex, length);
-                break;
-            }
-            case BYTE: {
-                value = bytes[startIndex];
-                break;
-            }
-            case BYTES: {
-                value = Bytes.subSequence(bytes, startIndex, length);
-                break;
-            }
-            case BCD: {
-                value = BcdOps.bytes2BcdString(bytes, startIndex, length);
-                break;
-            }
-            case STRING: {
-                value = new String(Bytes.subSequence(bytes, startIndex, length), JT_808_STRING_ENCODING);
-                break;
-            }
-            default:
-                throw new IllegalStateException("Unexpected value: " + dataType);
-        }
-        setFieldValue(instance, field, value);
     }
 
     private void populateFieldByCustomerConverter(
@@ -144,7 +115,7 @@ public class FieldDecoder {
 
         DataTypeConverter converter = getDataTypeConverter(converterClass);
         Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
-        setFieldValue(instance, field, value);
+        ReflectionUtils.setFieldValue(instance, field, value);
     }
 
     private DataTypeConverter getDataTypeConverter(
@@ -158,11 +129,6 @@ public class FieldDecoder {
         return converter;
     }
 
-    private void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
-        field.setAccessible(true);
-        field.set(instance, value);
-    }
-
     private Integer getBasicFieldLength(Class<?> cls, Object instance, BasicField annotation, MsgDataType dataType)
             throws IllegalAccessException, InvocationTargetException {
 
@@ -170,6 +136,19 @@ public class FieldDecoder {
                 ? annotation.length()
                 : dataType.getByteCount();
 
+        if (length > 0) {
+            return length;
+        }
+
+        final Method lengthMethod = getLengthMethod(cls, annotation.byteCountMethod());
+
+        return getLengthFromByteCountMethod(instance, lengthMethod);
+    }
+
+    private int getExtraFieldLength(Class<?> cls, Object instance, ExtraField annotation)
+            throws InvocationTargetException, IllegalAccessException {
+
+        final int length = annotation.length();
         if (length > 0) {
             return length;
         }

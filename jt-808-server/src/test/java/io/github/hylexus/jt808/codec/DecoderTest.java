@@ -1,15 +1,14 @@
 package io.github.hylexus.jt808.codec;
 
-import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
+import com.alibaba.fastjson.JSON;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody;
+import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * @author hylexus
@@ -35,15 +34,17 @@ public class DecoderTest {
         byte[] bodyBytes = metadata.getBodyBytes();
 
         LocationUploadMsgBody y = decoder.decodeRequestMsgBody(LocationUploadMsgBody.class, bodyBytes, metadata);
-        System.out.println(y);
+        ExtraEntity extraEntity = y.getExtraEntity();
+        System.out.println(extraEntity);
+        System.out.println(JSON.toJSONString(extraEntity.getObdData(), true));
         //        Optional<LocationUploadMsgBody> body = new LocationUploadMsgBodyConverter().convert2Entity(metadata);
         //        System.out.println(body.get());
         //        Optional<LocationUploadMsgBody> x = new LocationUploadMsgBodyConverter2().convert2Entity(metadata);
         //        System.out.println(x.get());
-        List<AdditionalItemEntity> additionalItemEntity = y.getAdditionalInfo();
-        additionalItemEntity.forEach(msg -> {
-            System.out.println(HexStringUtils.int2HexString(msg.getMsgId(), 4, true) + " --> " + msg);
-        });
+        //        List<AdditionalItemEntity> additionalItemEntity = y.getAdditionalInfo();
+        //        additionalItemEntity.forEach(msg -> {
+        //            System.out.println(HexStringUtils.int2HexString(msg.getMsgId(), 4, true) + " --> " + msg);
+        //        });
         //System.out.println(JSON.toJSONString(y.getExtraMsg(), true));
     }
 
