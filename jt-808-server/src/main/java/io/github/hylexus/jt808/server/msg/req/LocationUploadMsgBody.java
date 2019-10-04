@@ -30,10 +30,19 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     private LocationUploadWarning locationUploadWarningInfo;
 
     @BasicField(startIndex = 4, dataType = DWORD)
-    @SplittableField(splitPropsIntoField = "statusInfo")
+    @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
 
     private LocationUploadStatus statusInfo = new LocationUploadStatus();
+
+    @SliceFrom(sourceFieldName = "status", bitIndex = 0)
+    private Boolean acc;
+
+    @SliceFrom(sourceFieldName = "status", startBitIndex = 8, endBitIndex = 9)
+    private Integer bit8to9;
+
+    @SliceFrom(sourceFieldName = "status", bitIndex = 18)
+    private Integer bit18;
 
     @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatDataTypeConverter.class)
     private Double lat;

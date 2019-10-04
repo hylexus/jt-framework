@@ -22,6 +22,7 @@ import static io.github.hylexus.jt.utils.ReflectionUtils.populateBasicField;
 public class ExtraFieldDecoder {
 
     private static final ConcurrentMap<Class<?>, ConcurrentMap<Integer, NestedFieldMappingInfo>> cache = new ConcurrentHashMap<>();
+    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
 
     public void decodeExtraField(
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)
@@ -69,12 +70,17 @@ public class ExtraFieldDecoder {
                 ExtraMsgBody ex = info.getFieldMetadata().getFieldType().getAnnotation(ExtraMsgBody.class);
 
                 Object newInstance = info.getFieldMetadata().getFieldType().newInstance();
-                info.getFieldMetadata().getField().setAccessible(true);
-                info.getFieldMetadata().getField().set(instance, newInstance);
+                info.getFieldMetadata().setFieldValue(instance, newInstance);
+                // info.getFieldMetadata().getField().setAccessible(true);
+                // info.getFieldMetadata().getField().set(instance, newInstance);
 
                 decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
             } else {
-                populateBasicField(bodyBytes, instance, info.getFieldMetadata().getField(), info.getDataType(), 0, bodyBytes.length);
+                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata().getField(), info.getDataType(), 0,
+                        bodyBytes.length);
+
+                splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
+                //splittableFieldDecoder.processSliceFromField(instance);
             }
         }
     }

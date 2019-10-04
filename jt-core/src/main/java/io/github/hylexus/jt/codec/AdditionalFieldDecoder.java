@@ -26,23 +26,20 @@ import static io.github.hylexus.jt.annotation.msg.AdditionalField.ROOT_GROUP_MSG
 public class AdditionalFieldDecoder {
 
     private static final ConcurrentMap<Field, Map<Integer, AdditionalFieldInfo>> FIELD_INFO_CACHE = new ConcurrentHashMap<>();
+    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
 
     public void decodeAdditionalField(
             Object instance, byte[] bytes, int startIndex, int totalLength,
-            JavaBeanFieldMetadata fieldMetadata) throws IllegalAccessException {
+            JavaBeanFieldMetadata fieldMetadata) throws IllegalAccessException, InstantiationException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
 
-        Map<Integer, AdditionalFieldInfo> typeMapping = FIELD_INFO_CACHE.get(fieldMetadata.getField());
-        if (typeMapping == null) {
-            typeMapping = buildTypeMapping(annotation);
-            FIELD_INFO_CACHE.put(fieldMetadata.getField(), typeMapping);
-        }
+        Map<Integer, AdditionalFieldInfo> typeMapping = getTypeMapping(fieldMetadata, annotation);
 
         AdditionalFieldInfo rootGroupInfo = typeMapping.values().stream()
                 .filter(e -> e.getGroupMsgId() == ROOT_GROUP_MSG_ID)
                 .findFirst().orElseGet(() -> {
-                    log.debug("Use default DEFAULT_ROOT_GROUP");
+                    log.debug("Use DEFAULT_ROOT_GROUP");
                     return AdditionalFieldInfo.DEFAULT_ROOT_GROUP;
                 });
 
@@ -50,8 +47,20 @@ public class AdditionalFieldDecoder {
         parseExtraMsg(result, typeMapping, bytes, startIndex, totalLength,
                 rootGroupInfo.getByteCountOfMsgId(), rootGroupInfo.getByteCountOfContentLength(), ROOT_GROUP_MSG_ID);
 
-        setFieldValue(instance, fieldMetadata, result);
+        fieldMetadata.setFieldValue(instance, result);
 
+        splittableFieldDecoder.processSplittableField(instance, fieldMetadata, result);
+    }
+
+    private Map<Integer, AdditionalFieldInfo> getTypeMapping(JavaBeanFieldMetadata fieldMetadata, AdditionalField annotation) {
+        Map<Integer, AdditionalFieldInfo> typeMapping = FIELD_INFO_CACHE.get(fieldMetadata.getField());
+        if (typeMapping != null) {
+            return typeMapping;
+        }
+
+        typeMapping = buildTypeMapping(annotation);
+        FIELD_INFO_CACHE.put(fieldMetadata.getField(), typeMapping);
+        return typeMapping;
     }
 
     private Map<Integer, AdditionalFieldInfo> buildTypeMapping(AdditionalField annotation) {
@@ -67,12 +76,6 @@ public class AdditionalFieldDecoder {
             typeMapping.put(mapping.groupMsgId(), mappingInfo);
         }
         return typeMapping;
-    }
-
-    private void setFieldValue(Object instance, JavaBeanFieldMetadata fieldMetadata, List<AdditionalItemEntity> result)
-            throws IllegalAccessException {
-        fieldMetadata.getField().setAccessible(true);
-        fieldMetadata.getField().set(instance, result);
     }
 
     private List<AdditionalItemEntity> parseExtraMsg(
@@ -97,7 +100,6 @@ public class AdditionalFieldDecoder {
             additionalItemEntity.setRawBytes(contentBytes);
 
             result.add(additionalItemEntity);
-
 
             AdditionalFieldInfo groupInfo;
             if (msgId != ROOT_GROUP_MSG_ID

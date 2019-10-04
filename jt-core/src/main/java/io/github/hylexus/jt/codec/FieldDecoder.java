@@ -40,34 +40,31 @@ public class FieldDecoder {
         final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
 
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
-
             if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
-                Object value = processBasicField(cls, bytes, instance, fieldMetadata);
-                splittableFieldDecoder.processSplittableField(instance, fieldMetadata, value);
-                // 目前为止BasicField不支持和其他类型注解一起使用, continue直接处理下一个Field
-                continue;
-            }
-
-            if (fieldMetadata.isAnnotationPresent(ExtraField.class)) {
-                ExtraField annotation = fieldMetadata.getAnnotation(ExtraField.class);
-                int extraFieldLength = getExtraFieldLength(cls, instance, annotation);
-                extraFieldDecoder.decodeExtraField(bytes, annotation.startIndex(), extraFieldLength, instance, fieldMetadata);
-                continue;
-            }
-
-            if (fieldMetadata.isAnnotationPresent(AdditionalField.class)) {
+                processBasicField(instance, bytes, cls, fieldMetadata);
+            } else if (fieldMetadata.isAnnotationPresent(ExtraField.class)) {
+                processExtraField(instance, bytes, cls, fieldMetadata);
+            } else if (fieldMetadata.isAnnotationPresent(AdditionalField.class)) {
                 processAdditionalField(instance, bytes, cls, fieldMetadata);
             }
-
         }
+        splittableFieldDecoder.processSliceFromField(instance);
 
         @SuppressWarnings("unchecked")
         T instance1 = (T) instance;
         return instance1;
     }
 
+    private void processExtraField(@NonNull Object instance, @NonNull byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+            throws InvocationTargetException, IllegalAccessException, InstantiationException {
+
+        ExtraField annotation = fieldMetadata.getAnnotation(ExtraField.class);
+        int extraFieldLength = getExtraFieldLength(cls, instance, annotation);
+        extraFieldDecoder.decodeExtraField(bytes, annotation.startIndex(), extraFieldLength, instance, fieldMetadata);
+    }
+
     private void processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
-            throws IllegalAccessException, InvocationTargetException {
+            throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
         if (!AdditionalField.SUPPORTED_TARGET_CLASS.contains(fieldMetadata.getFieldType())) {
@@ -80,6 +77,13 @@ public class FieldDecoder {
         // 附加项总长度
         int totalLength = getAdditionalFieldLength(cls, instance, annotation);
         this.additionalFieldDecoder.decodeAdditionalField(instance, bytes, startIndex, totalLength, fieldMetadata);
+    }
+
+    private void processBasicField(@NonNull Object instance, @NonNull byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+            throws IllegalAccessException, InvocationTargetException, InstantiationException {
+
+        Object value = processBasicField(cls, bytes, instance, fieldMetadata);
+        splittableFieldDecoder.processSplittableField(instance, fieldMetadata, value);
     }
 
     private Object processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)

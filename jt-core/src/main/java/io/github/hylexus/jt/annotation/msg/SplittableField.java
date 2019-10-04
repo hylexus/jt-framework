@@ -1,9 +1,6 @@
 package io.github.hylexus.jt.annotation.msg;
 
-import com.google.common.collect.Sets;
-
 import java.lang.annotation.*;
-import java.util.Set;
 
 /**
  * @author hylexus
@@ -14,15 +11,16 @@ import java.util.Set;
 @Documented
 public @interface SplittableField {
 
-    Set<Class<?>> set = Sets.newHashSet(int.class, Integer.class);
-
-    String splitPropsIntoField();
+    /**
+     * @return 字段名(将属性拆分到嵌套的bean中)
+     */
+    String splitPropertyValueIntoNestedBeanField();
 
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
     @interface BitAt {
-        int value();
+        int bitIndex();
     }
 
     @Target({ElementType.FIELD})
