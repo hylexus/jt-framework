@@ -1,14 +1,13 @@
 package io.github.hylexus.jt808.server.msg.req;
 
-import io.github.hylexus.jt.annotation.msg.AdditionalField;
-import io.github.hylexus.jt.annotation.msg.BasicField;
-import io.github.hylexus.jt.annotation.msg.ExtraField;
-import io.github.hylexus.jt.annotation.msg.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.*;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
+import io.github.hylexus.jt808.server.msg.req.location.LocationUploadStatus;
+import io.github.hylexus.jt808.server.msg.req.location.LocationUploadWarning;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -28,10 +27,13 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     @BasicField(startIndex = 0, dataType = DWORD)
     private int warningFlag;
 
-    @BasicField(startIndex = 4, dataType = DWORD, splitPropsInTo = "statusDetails")
+    private LocationUploadWarning locationUploadWarningInfo;
+
+    @BasicField(startIndex = 4, dataType = DWORD)
+    @SplittableField(splitPropsIntoField = "statusInfo")
     private int status;
 
-    private Object statusDetails;
+    private LocationUploadStatus statusInfo = new LocationUploadStatus();
 
     @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatDataTypeConverter.class)
     private Double lat;

@@ -12,6 +12,7 @@ import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
 import io.github.hylexus.jt.utils.ReflectionUtils;
 import io.github.hylexus.oaks.utils.Bytes;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,12 +24,14 @@ import java.util.Map;
  * @author hylexus
  * Created At 2019-09-28 11:25 下午
  */
+@Slf4j
 public class FieldDecoder {
 
     private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
 
     private AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
     private ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
+    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
 
     public <T> T decode(@NonNull Object instance, @NonNull byte[] bytes) throws IllegalAccessException, InstantiationException,
             InvocationTargetException {
@@ -39,7 +42,8 @@ public class FieldDecoder {
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
 
             if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
-                processBasicField(cls, bytes, instance, fieldMetadata);
+                Object value = processBasicField(cls, bytes, instance, fieldMetadata);
+                splittableFieldDecoder.processSplittableField(instance, fieldMetadata, value);
                 // 目前为止BasicField不支持和其他类型注解一起使用, continue直接处理下一个Field
                 continue;
             }
@@ -62,7 +66,6 @@ public class FieldDecoder {
         return instance1;
     }
 
-
     private void processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException {
 
@@ -79,7 +82,7 @@ public class FieldDecoder {
         this.additionalFieldDecoder.decodeAdditionalField(instance, bytes, startIndex, totalLength, fieldMetadata);
     }
 
-    private void processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
+    private Object processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
         BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
@@ -93,14 +96,12 @@ public class FieldDecoder {
         // 1. 优先使用用户自定义的属性转换器
         final Field field = fieldMetadata.getField();
         if (converterClass != DataTypeConverter.NoOpsConverter.class) {
-            populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
-            return;
+            return populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
         }
 
         // 2. 默认的属性转换策略
         if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-            ReflectionUtils.populateBasicField(bytes, instance, field, dataType, startIndex, length);
-            return;
+            return ReflectionUtils.populateBasicField(bytes, instance, field, dataType, startIndex, length);
         }
 
         // 3. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
@@ -108,7 +109,7 @@ public class FieldDecoder {
                 + fieldType + " for field " + field);
     }
 
-    private void populateFieldByCustomerConverter(
+    private Object populateFieldByCustomerConverter(
             byte[] bytes, Object instance, Field field,
             Class<? extends DataTypeConverter> converterClass,
             int start, int byteCount) throws InstantiationException, IllegalAccessException {
@@ -116,6 +117,7 @@ public class FieldDecoder {
         DataTypeConverter converter = getDataTypeConverter(converterClass);
         Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
         ReflectionUtils.setFieldValue(instance, field, value);
+        return value;
     }
 
     private DataTypeConverter getDataTypeConverter(

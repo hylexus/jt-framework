@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -31,17 +32,19 @@ public class JavaBeanMetadataUtils {
     }
 
     private static JavaBeanMetadata buildClassMetadata(Class<?> cls) {
-        JavaBeanMetadata javaBeanMetadata;
-        javaBeanMetadata = new JavaBeanMetadata();
+        JavaBeanMetadata javaBeanMetadata = new JavaBeanMetadata();
         javaBeanMetadata.setOriginalClass(cls);
         javaBeanMetadata.setFieldMetadataList(new ArrayList<>());
+        javaBeanMetadata.setFieldMapping(new HashMap<>());
 
         for (Field field : cls.getDeclaredFields()) {
             Class<?> fieldType = field.getType();
 
             JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
+            javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);
+            javaBeanMetadata.getFieldMapping().put(field.getName(), javaBeanFieldMetadata);
         }
         return javaBeanMetadata;
     }

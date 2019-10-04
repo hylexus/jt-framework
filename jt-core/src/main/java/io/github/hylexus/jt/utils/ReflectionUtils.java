@@ -6,6 +6,7 @@ import io.github.hylexus.oaks.utils.Bytes;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
 import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
@@ -16,6 +17,14 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
  */
 public class ReflectionUtils {
 
+    public static Optional<Field> findFieldByName(Class<?> cls, String fieldName) {
+        try {
+            return Optional.of(cls.getDeclaredField(fieldName));
+        } catch (NoSuchFieldException e) {
+            return Optional.empty();
+        }
+    }
+
     // TODO 支持父类搜索
     public static <T> Method findMethod(Class<T> cls, String methodName) {
         try {
@@ -25,7 +34,7 @@ public class ReflectionUtils {
         }
     }
 
-    public static void populateBasicField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
+    public static Object populateBasicField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
             throws IllegalAccessException {
         final Object value;
         switch (dataType) {
@@ -57,10 +66,13 @@ public class ReflectionUtils {
                 throw new IllegalStateException("Unexpected value: " + dataType);
         }
         setFieldValue(instance, field, value);
+        return value;
     }
 
     public static void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
-        field.setAccessible(true);
+        if (!field.isAccessible()) {
+            field.setAccessible(true);
+        }
         field.set(instance, value);
     }
 }

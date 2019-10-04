@@ -36,7 +36,9 @@ public class DecoderTest {
         LocationUploadMsgBody y = decoder.decodeRequestMsgBody(LocationUploadMsgBody.class, bodyBytes, metadata);
         ExtraEntity extraEntity = y.getExtraEntity();
         System.out.println(extraEntity);
-        System.out.println(JSON.toJSONString(extraEntity.getObdData(), true));
+        System.out.println("Integer.toBinaryString(y.getStatus()) = " + Integer.toBinaryString(y.getStatus()));
+        System.out.println(y.getStatusInfo());
+        // System.out.println(JSON.toJSONString(extraEntity.getObdData(), true));
         //        Optional<LocationUploadMsgBody> body = new LocationUploadMsgBodyConverter().convert2Entity(metadata);
         //        System.out.println(body.get());
         //        Optional<LocationUploadMsgBody> x = new LocationUploadMsgBodyConverter2().convert2Entity(metadata);

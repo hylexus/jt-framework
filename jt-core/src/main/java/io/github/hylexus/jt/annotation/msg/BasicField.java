@@ -18,8 +18,6 @@ public @interface BasicField {
 
     MsgDataType dataType();
 
-    String splitPropsInTo() default "";
-
     /**
      * 1. {@link #dataType()}
      * 2. {@code length()}
