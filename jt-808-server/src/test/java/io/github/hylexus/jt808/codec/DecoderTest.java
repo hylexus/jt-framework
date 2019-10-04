@@ -42,7 +42,8 @@ public class DecoderTest {
         System.out.println(extraEntity);
         System.out.println("Integer.toBinaryString(y.getStatus()) = " + Integer.toBinaryString(y.getStatus()));
         System.out.println(y.getStatusInfo());
-        System.out.println("y.getAcc() = " + y.getAcc());
+        System.out.println("y.getAcc() = " + y.getAccStatus());
+        System.out.println("y.getAcc() = " + y.getAccStatus1());
         System.out.println("y.getBit8to9() = " + y.getBit8to9());
         System.out.println("y.getBit18() = " + y.getBit18());
         System.out.println(y);

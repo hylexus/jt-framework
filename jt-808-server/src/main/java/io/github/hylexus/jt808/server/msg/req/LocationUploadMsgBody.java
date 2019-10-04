@@ -12,7 +12,6 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
 import io.github.hylexus.jt808.server.msg.req.location.LocationUploadStatus;
-import io.github.hylexus.jt808.server.msg.req.location.LocationUploadWarning;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -32,8 +31,6 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     @BasicField(startIndex = 0, dataType = DWORD)
     private int warningFlag;
 
-    private LocationUploadWarning locationUploadWarningInfo;
-
     @BasicField(startIndex = 4, dataType = DWORD)
     @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
@@ -41,7 +38,10 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     private LocationUploadStatus statusInfo = new LocationUploadStatus();
 
     @SliceFrom(sourceFieldName = "status", bitIndex = 0)
-    private Boolean acc;
+    private Integer accStatus;
+
+    @SliceFrom(sourceFieldName = "status", bitIndex = 0)
+    private Boolean accStatus1;
 
     @SliceFrom(sourceFieldName = "status", startBitIndex = 8, endBitIndex = 9)
     private Integer bit8to9;
