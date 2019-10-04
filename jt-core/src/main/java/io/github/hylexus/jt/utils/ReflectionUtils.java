@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.utils;
 
 import io.github.hylexus.jt.data.MsgDataType;
+import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
 
@@ -34,12 +35,28 @@ public class ReflectionUtils {
         }
     }
 
-    public static Object populateBasicField(byte[] bytes, Object instance, Field field, MsgDataType dataType, int startIndex, int length)
+    private static boolean isIntType(Class<?> cls) {
+        return cls == Integer.class || cls == int.class;
+    }
+
+    private static boolean isShortType(Class<?> cls) {
+        return cls == Short.class || cls == short.class;
+    }
+
+    private static boolean isByteType(Class<?> cls) {
+        return cls == Byte.class || cls == byte.class;
+    }
+
+    public static Object populateBasicField(byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata, MsgDataType type, int startIndex, int length)
             throws IllegalAccessException {
         final Object value;
-        switch (dataType) {
+        switch (type) {
             case WORD: {
-                value = (short) intFromBytes(bytes, startIndex, length);
+                if (isShortType(fieldMetadata.getFieldType())) {
+                    value = (short) intFromBytes(bytes, startIndex, length);
+                } else {
+                    value = intFromBytes(bytes, startIndex, length);
+                }
                 break;
             }
             case DWORD: {
@@ -47,7 +64,14 @@ public class ReflectionUtils {
                 break;
             }
             case BYTE: {
-                value = bytes[startIndex];
+                if (isByteType(fieldMetadata.getFieldType())) {
+                    value = bytes[startIndex];
+                } else if (isIntType(fieldMetadata.getFieldType())) {
+                    value = (int) bytes[startIndex];
+                } else {
+                    // short
+                    value = (short) bytes[startIndex];
+                }
                 break;
             }
             case BYTES: {
@@ -63,9 +87,9 @@ public class ReflectionUtils {
                 break;
             }
             default:
-                throw new IllegalStateException("Unexpected value: " + dataType);
+                throw new IllegalStateException("Unexpected value: " + type);
         }
-        setFieldValue(instance, field, value);
+        fieldMetadata.setFieldValue(instance, value);
         return value;
     }
 

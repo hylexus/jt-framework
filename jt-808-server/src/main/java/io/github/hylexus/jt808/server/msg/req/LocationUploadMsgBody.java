@@ -1,6 +1,11 @@
 package io.github.hylexus.jt808.server.msg.req;
 
-import io.github.hylexus.jt.annotation.msg.*;
+import io.github.hylexus.jt.annotation.msg.AdditionalField;
+import io.github.hylexus.jt.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.slice.SliceFrom;
+import io.github.hylexus.jt.annotation.msg.slice.SplittableField;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.msg.RequestMsgBody;

@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.codec;
 
-import io.github.hylexus.jt.annotation.msg.BasicField;
+import io.github.hylexus.jt.annotation.msg.basic.BasicField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;

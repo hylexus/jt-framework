@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.codec;
 
 import io.github.hylexus.jt.annotation.msg.AdditionalField;
-import io.github.hylexus.jt.annotation.msg.BasicField;
-import io.github.hylexus.jt.annotation.msg.ExtraField;
+import io.github.hylexus.jt.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;
@@ -105,7 +105,7 @@ public class FieldDecoder {
 
         // 2. 默认的属性转换策略
         if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-            return ReflectionUtils.populateBasicField(bytes, instance, field, dataType, startIndex, length);
+            return ReflectionUtils.populateBasicField(bytes, instance, fieldMetadata, dataType, startIndex, length);
         }
 
         // 3. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】

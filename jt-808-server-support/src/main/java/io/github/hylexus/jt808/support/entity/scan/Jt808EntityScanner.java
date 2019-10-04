@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.support.entity.scan;
 
-import io.github.hylexus.jt.annotation.msg.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;

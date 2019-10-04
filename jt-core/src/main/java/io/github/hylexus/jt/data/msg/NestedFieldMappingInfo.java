@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.data.msg;
 
-import io.github.hylexus.jt.annotation.msg.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.utils.HexStringUtils;

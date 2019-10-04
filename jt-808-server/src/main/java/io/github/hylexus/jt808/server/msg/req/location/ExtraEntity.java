@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.server.msg.req.location;
 
-import io.github.hylexus.jt.annotation.msg.ExtraField;
-import io.github.hylexus.jt.annotation.msg.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
 import lombok.Data;
 
 import static io.github.hylexus.jt.data.MsgDataType.*;

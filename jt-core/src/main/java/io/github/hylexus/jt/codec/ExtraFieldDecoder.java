@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.ExtraField;
-import io.github.hylexus.jt.annotation.msg.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
 import io.github.hylexus.jt.data.msg.NestedFieldMappingInfo;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
@@ -76,7 +76,7 @@ public class ExtraFieldDecoder {
 
                 decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
             } else {
-                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata().getField(), info.getDataType(), 0,
+                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata(), info.getDataType(), 0,
                         bodyBytes.length);
 
                 splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
