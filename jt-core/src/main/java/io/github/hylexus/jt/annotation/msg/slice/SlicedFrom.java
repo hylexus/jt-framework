@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SliceFrom {
+public @interface SlicedFrom {
 
     int DEFAULT_BIT_INDEX = -1;
 

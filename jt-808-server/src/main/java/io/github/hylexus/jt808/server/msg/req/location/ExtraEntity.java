@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.server.msg.req.location;
 
 import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
 import lombok.Data;
 
 import static io.github.hylexus.jt.data.MsgDataType.*;
@@ -16,6 +17,9 @@ public class ExtraEntity {
 
     @ExtraField.NestedFieldMapping(msgId = 0x01, dataType = DWORD)
     private Integer field0x01;
+
+    @SlicedFrom(sourceFieldName = "field0x01", bitIndex = 0)
+    private Boolean field0x01BoolValue;
 
     @ExtraField.NestedFieldMapping(msgId = 0x02, dataType = WORD)
     private Integer field0x02;

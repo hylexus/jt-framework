@@ -1,12 +1,17 @@
 package io.github.hylexus.jt.utils;
 
+import com.google.common.collect.Sets;
+import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,21 +23,21 @@ public class JavaBeanMetadataUtils {
 
     private static final ConcurrentMap<Class<?>, JavaBeanMetadata> CLASS_METADATA_CACHE = new ConcurrentHashMap<>();
     /**
-     * 可以从其他属性拆分而来的类型,目前只支持 int 和 boolean
+     * 支持按bit拆分的类型
      */
-    private static final Set<Class<?>> SLICEABLE_TYPE;
+    public static final Set<Class<?>> SLICED_TYPE;
 
     static {
-        final Set<Class<?>> set = new HashSet<>(4);
-        set.add(Integer.class);
-        set.add(int.class);
-        set.add(Boolean.class);
-        set.add(boolean.class);
-        SLICEABLE_TYPE = Collections.unmodifiableSet(set);
+        final Set<Class<?>> set = Sets.newHashSet(
+                Byte.class, byte.class,
+                Short.class, short.class,
+                Integer.class, int.class
+        );
+        SLICED_TYPE = Collections.unmodifiableSet(set);
     }
 
-    public static boolean isSliceableType(Class<?> cls) {
-        return SLICEABLE_TYPE.contains(cls);
+    public static boolean isSlicedType(Class<?> cls) {
+        return SLICED_TYPE.contains(cls);
     }
 
     public static JavaBeanMetadata getBeanMetadata(Class<?> cls) {
@@ -52,7 +57,7 @@ public class JavaBeanMetadataUtils {
         javaBeanMetadata.setOriginalClass(cls);
         javaBeanMetadata.setFieldMetadataList(new ArrayList<>());
         javaBeanMetadata.setFieldMapping(new HashMap<>());
-        javaBeanMetadata.setSliceableTypeList(new ArrayList<>());
+        javaBeanMetadata.setSliceFromSupportedFieldList(new ArrayList<>());
 
         for (Field field : cls.getDeclaredFields()) {
             Class<?> fieldType = field.getType();
@@ -62,8 +67,8 @@ public class JavaBeanMetadataUtils {
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);
             javaBeanMetadata.getFieldMapping().put(field.getName(), javaBeanFieldMetadata);
-            if (JavaBeanMetadataUtils.isSliceableType(fieldType)) {
-                javaBeanMetadata.getSliceableTypeList().add(javaBeanFieldMetadata);
+            if (field.getAnnotation(SlicedFrom.class) != null) {
+                javaBeanMetadata.getSliceFromSupportedFieldList().add(javaBeanFieldMetadata);
             }
         }
         return javaBeanMetadata;

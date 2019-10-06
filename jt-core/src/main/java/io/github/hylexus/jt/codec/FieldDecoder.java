@@ -32,6 +32,7 @@ public class FieldDecoder {
     private AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
     private ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
     private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
+    private SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 
     public <T> T decode(@NonNull Object instance, @NonNull byte[] bytes) throws IllegalAccessException, InstantiationException,
             InvocationTargetException {
@@ -48,7 +49,7 @@ public class FieldDecoder {
                 processAdditionalField(instance, bytes, cls, fieldMetadata);
             }
         }
-        splittableFieldDecoder.processSliceFromField(instance);
+        slicedFromDecoder.processAllSlicedFromField(instance);
 
         @SuppressWarnings("unchecked")
         T instance1 = (T) instance;

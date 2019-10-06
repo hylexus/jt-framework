@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.server.msg.req.location;
 
 import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
 import lombok.Data;
 
 import static io.github.hylexus.jt.data.MsgDataType.*;
@@ -16,6 +17,9 @@ public class ObdData {
 
     @ExtraField.NestedFieldMapping(msgId = 0x0002, dataType = WORD)
     private Short field0x0002;
+
+    @SlicedFrom(sourceFieldName = "field0x0002", bitIndex = 1)
+    private Boolean field0x0002Bit1;
 
     @ExtraField.NestedFieldMapping(msgId = 0x0003, dataType = WORD)
     private Short field0x0003;

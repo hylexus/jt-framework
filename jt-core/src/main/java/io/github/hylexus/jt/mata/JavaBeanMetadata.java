@@ -17,7 +17,7 @@ public class JavaBeanMetadata {
     private Class<?> originalClass;
     private List<JavaBeanFieldMetadata> fieldMetadataList;
     private Map<String, JavaBeanFieldMetadata> fieldMapping;
-    private List<JavaBeanFieldMetadata> sliceableTypeList;
+    private List<JavaBeanFieldMetadata> sliceFromSupportedFieldList;
 
     public Optional<JavaBeanFieldMetadata> findFieldMedataByName(String name) {
         return Optional.ofNullable(fieldMapping.get(name));

@@ -30,6 +30,14 @@ public class JavaBeanFieldMetadata {
         return fieldType == Boolean.class || fieldType == boolean.class;
     }
 
+    public boolean isByteType() {
+        return fieldType == Byte.class || fieldType == byte.class;
+    }
+
+    public boolean isShortType() {
+        return fieldType == Short.class || fieldType == short.class;
+    }
+
     public void setFieldValue(Object instance, Object value) throws IllegalAccessException {
         ReflectionUtils.setFieldValue(instance, field, value);
     }

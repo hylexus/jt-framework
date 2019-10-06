@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.msg.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
 import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
-import io.github.hylexus.jt.annotation.msg.slice.SliceFrom;
+import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
 import io.github.hylexus.jt.annotation.msg.slice.SplittableField;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
@@ -37,16 +37,16 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
 
     private LocationUploadStatus statusInfo = new LocationUploadStatus();
 
-    @SliceFrom(sourceFieldName = "status", bitIndex = 0)
+    @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
     private Integer accStatus;
 
-    @SliceFrom(sourceFieldName = "status", bitIndex = 0)
+    @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
     private Boolean accStatus1;
 
-    @SliceFrom(sourceFieldName = "status", startBitIndex = 8, endBitIndex = 9)
+    @SlicedFrom(sourceFieldName = "status", startBitIndex = 8, endBitIndex = 9)
     private Integer bit8to9;
 
-    @SliceFrom(sourceFieldName = "status", bitIndex = 18)
+    @SlicedFrom(sourceFieldName = "status", bitIndex = 18)
     private Integer bit18;
 
     @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatDataTypeConverter.class)
