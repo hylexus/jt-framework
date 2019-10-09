@@ -33,6 +33,6 @@ public class MsgProcessorThreadPoolProps {
     private int blockingQueueSize = 20;
 
     @NotEmpty(message = "threadNameFormat is null or empty. defaultConfig = '808-msg-dispatcher-%d' ")
-    private String threadNameFormat = "808-msg-dispatcher-%d";
+    private String threadNameFormat = "808-msg-processor-%d";
 
 }

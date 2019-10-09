@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.server.handler;
 
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody;
@@ -21,6 +21,6 @@ public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUpl
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, LocationUploadMsgBody body, Session session) {
 
         log.info("{}", body);
-        return Optional.of(commonReply(metadata, BuiltinMsgType.CLIENT_LOCATION_INFO_UPLOAD));
+        return Optional.of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD));
     }
 }

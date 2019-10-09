@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.handler;
 
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.session.Session;

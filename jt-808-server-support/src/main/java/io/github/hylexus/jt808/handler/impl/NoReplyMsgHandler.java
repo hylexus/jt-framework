@@ -2,8 +2,12 @@ package io.github.hylexus.jt808.handler.impl;
 
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
-import io.github.hylexus.jt808.msg.*;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
+import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +26,7 @@ public class NoReplyMsgHandler extends AbstractMsgHandler {
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
-        return Sets.newHashSet(BuiltinMsgType.CLIENT_COMMON_REPLY);
+        return Sets.newHashSet(BuiltinJt808MsgType.CLIENT_COMMON_REPLY);
     }
 
     @Override

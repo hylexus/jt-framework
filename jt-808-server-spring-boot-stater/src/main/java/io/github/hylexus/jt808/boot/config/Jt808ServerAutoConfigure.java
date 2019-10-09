@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
@@ -14,7 +15,6 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.AuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.HeartBeatMsgHandler;
 import io.github.hylexus.jt808.handler.impl.NoReplyMsgHandler;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
@@ -91,7 +91,7 @@ public class Jt808ServerAutoConfigure {
         MsgConverterMapping mapping = new MsgConverterMapping();
         jt808NettyTcpServerConfigure().configureMsgConverterMapping(mapping);
         // Default converters for debug
-        mapping.registerConverter(BuiltinMsgType.CLIENT_AUTH, new AuthRequestMsgBodyConverter());
+        mapping.registerConverter(BuiltinJt808MsgType.CLIENT_AUTH, new AuthRequestMsgBodyConverter());
         return mapping;
     }
 

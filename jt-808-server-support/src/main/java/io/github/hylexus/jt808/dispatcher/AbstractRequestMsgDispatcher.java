@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.dispatcher;
 
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
-import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.support.MsgConverterMapping;

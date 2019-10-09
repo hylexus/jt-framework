@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.support;
 
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt808.handler.MsgHandler;
-import io.github.hylexus.jt808.msg.MsgType;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class MsgHandlerMapping {
         if (containsHandler(msgType)) {
             MsgHandler oldHandler = mapping.get(msgId);
             if (forceOverride) {
-                log.warn("Duplicate MsgType : {}, the MsgHandler [{}] is replaced by {}", msgType, oldHandler.getClass(), handler);
+                log.warn("Duplicate MsgType : {}, the MsgHandler [{}] was replaced by {}", msgType, oldHandler.getClass(), handler);
                 this.mapping.put(msgId, handler);
             } else {
                 log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.",

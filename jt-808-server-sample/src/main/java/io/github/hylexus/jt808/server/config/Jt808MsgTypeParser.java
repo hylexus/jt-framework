@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.server.config;
 
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
-import io.github.hylexus.jt808.msg.MsgType;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class Jt808MsgTypeParser implements MsgTypeParser {
         return type.isPresent()
                 ? type
                 // 自定义解析器无法解析,使用内置解析器
-                : BuiltinMsgType.CLIENT_AUTH.parseFromInt(msgType);
+                : BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgType);
     }
 
 }

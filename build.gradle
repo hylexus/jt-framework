@@ -30,6 +30,7 @@ ext {
     jar_version_fast_json = "1.2.59"
     jar_version_oaks = "1.0.4"
     jar_version_commons_collection = "3.2.2"
+    jar_version_blocking_map = "0.91"
 
     defaultCharset = StandardCharsets.UTF_8.name()
     defaultJavaVersion = 1.8

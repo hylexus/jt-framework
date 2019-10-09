@@ -1,5 +1,8 @@
 package io.github.hylexus.jt808.msg;
 
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
+
 /**
  * @author hylexus
  * createdAt 2018/12/29
@@ -12,6 +15,6 @@ public interface RespMsgBody {
     byte[] toBytes();
 
     default MsgType replyMsgType() {
-        return BuiltinMsgType.SERVER_COMMON_REPLY;
+        return BuiltinJt808MsgType.SERVER_COMMON_REPLY;
     }
 }

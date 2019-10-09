@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.server.config;
 
-import io.github.hylexus.jt808.msg.MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
 import lombok.Getter;
 import lombok.ToString;
 

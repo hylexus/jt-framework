@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
@@ -9,7 +10,6 @@ import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
-import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;

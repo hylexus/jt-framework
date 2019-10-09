@@ -130,8 +130,10 @@ public class FieldDecoder {
 
         DataTypeConverter converter = converterMapping.get(converterClass);
         if (converter == null) {
-            converter = converterClass.newInstance();
-            converterMapping.put(converterClass, converter);
+            synchronized (this) {
+                converter = converterClass.newInstance();
+                converterMapping.put(converterClass, converter);
+            }
         }
         return converter;
     }

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.support;
 
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
-import io.github.hylexus.jt808.msg.MsgType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -31,8 +31,7 @@ public class MsgConverterMapping {
 
         int msgId = msgType.getMsgId();
         if (containsConverter(msgType)) {
-            log.warn("duplicate msgType : {}, the MsgConverter {} is replaced by {}", msgType, mapping.get(msgId).getClass(),
-                    converter.getClass());
+            log.warn("duplicate msgType : {}, the MsgConverter {} was replaced by {}", msgType, mapping.get(msgId).getClass(), converter.getClass());
         }
 
         this.mapping.put(msgId, converter);

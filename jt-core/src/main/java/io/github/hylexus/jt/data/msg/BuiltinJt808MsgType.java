@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.msg;
+package io.github.hylexus.jt.data.msg;
 
 
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -13,7 +13,7 @@ import java.util.Optional;
  * createdAt 2019/1/24
  **/
 @Getter
-public enum BuiltinMsgType implements MsgType {
+public enum BuiltinJt808MsgType implements MsgType {
 
     CLIENT_LOG_OUT(0x0003, "终端注销"),
     CLIENT_HEART_BEAT(0x0002, "终端心跳"),
@@ -27,7 +27,7 @@ public enum BuiltinMsgType implements MsgType {
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     ;
 
-    BuiltinMsgType(int msgId, String desc) {
+    BuiltinJt808MsgType(int msgId, String desc) {
         this.msgId = msgId;
         this.desc = desc;
     }
@@ -35,10 +35,10 @@ public enum BuiltinMsgType implements MsgType {
     private int msgId;
     private String desc;
 
-    private static Map<Integer, BuiltinMsgType> mapping = new HashMap<>(BuiltinMsgType.values().length);
+    private static Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);
 
     static {
-        for (BuiltinMsgType builtinMsgType : values()) {
+        for (BuiltinJt808MsgType builtinMsgType : values()) {
             mapping.put(builtinMsgType.msgId, builtinMsgType);
         }
     }

@@ -1,3 +1,5 @@
+server:
+  port: 8808
 logging:
   level: info
   level.io.github.hylexus: debug
@@ -17,5 +19,5 @@ jt808:
       maximum-pool-size: 4
       keep-alive-time: 60s
       blocking-queue-size: 20
-      thread-name-format: '808-msg-dispatcher-%d'
+      thread-name-format: '808-msg-processor-%d'
 

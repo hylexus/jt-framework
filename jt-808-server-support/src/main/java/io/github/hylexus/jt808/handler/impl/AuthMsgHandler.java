@@ -1,10 +1,10 @@
 package io.github.hylexus.jt808.handler.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
-import io.github.hylexus.jt808.msg.BuiltinMsgType;
-import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
@@ -28,7 +28,7 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
-        return newHashSet(BuiltinMsgType.CLIENT_AUTH);
+        return newHashSet(BuiltinJt808MsgType.CLIENT_AUTH);
     }
 
     public AuthMsgHandler(AuthCodeValidator authCodeValidator) {
@@ -39,8 +39,8 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) {
         boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {
-            return of(commonReply(metadata, BuiltinMsgType.CLIENT_AUTH));
+            return of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_AUTH));
         }
-        return of(generateCommonReplyMsgBody(metadata, BuiltinMsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
+        return of(generateCommonReplyMsgBody(metadata, BuiltinJt808MsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
     }
 }

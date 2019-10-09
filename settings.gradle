@@ -6,5 +6,5 @@ include 'jt-core'
 include 'jt-spring'
 include 'jt-808-server-support'
 include 'jt-808-server-spring-boot-stater'
-include 'jt-808-server'
+include 'jt-808-server-sample'
 

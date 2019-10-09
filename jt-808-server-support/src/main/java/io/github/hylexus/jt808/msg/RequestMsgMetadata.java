@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.msg;
 
+import io.github.hylexus.jt.data.msg.MsgType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

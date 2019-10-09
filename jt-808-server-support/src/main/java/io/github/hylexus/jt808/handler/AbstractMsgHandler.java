@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.handler;
 
+import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.Encoder;
-import io.github.hylexus.jt808.msg.MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
