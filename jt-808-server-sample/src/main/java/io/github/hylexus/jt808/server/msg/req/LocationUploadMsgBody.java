@@ -14,6 +14,7 @@ import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
 import io.github.hylexus.jt808.server.msg.req.location.LocationUploadStatus;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
 @Jt808MsgBody(msgType = 0x0200)
 public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadataAware {
 
+    @ToString.Exclude
     private RequestMsgMetadata requestMsgMetadata;
 
     @BasicField(startIndex = 0, dataType = DWORD)

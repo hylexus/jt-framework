@@ -31,7 +31,11 @@ public class Decoder {
         // 2. 消息体
         // 有子包信息,消息体起始字节后移四个字节:消息包总数(word(16))+包序号(word(16))
         final int msgBodyByteStartIndex = msgHeader.isHasSubPackage() ? 16 : 12;
-        ret.setBodyBytes(Bytes.subSequence(bytes, msgBodyByteStartIndex, msgHeader.getMsgBodyLength()));
+        // ret.setBodyBytes(Bytes.subSequence(bytes, msgBodyByteStartIndex, msgHeader.getMsgBodyLength()));
+        ret.setBodyBytes(Bytes.range(bytes, msgBodyByteStartIndex, bytes.length - 1));
+        if (msgHeader.getMsgBodyLength() != ret.getBodyBytes().length) {
+            log.error("parse MsgHeader error, expected(byte[2,3]) bodyLength is {}, actual : {}", msgHeader.getMsgBodyLength(), ret.getBodyBytes().length);
+        }
 
         // 3. 去掉分隔符之后，最后一位就是校验码
         final byte checkSumInPkg = bytes[bytes.length - 1];

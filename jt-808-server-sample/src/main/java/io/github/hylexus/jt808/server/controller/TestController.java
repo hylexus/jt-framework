@@ -1,5 +1,8 @@
 package io.github.hylexus.jt808.server.controller;
 
+import io.github.hylexus.jt.command.CommandWaitingPool;
+import io.github.hylexus.jt.command.Jt808CommandKey;
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.session.Session;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -28,12 +32,41 @@ public class TestController {
 
     @GetMapping("/send-to")
     public void sendTo(@RequestParam("terminalId") String terminalId) throws InterruptedException, TimeoutException, ExecutionException {
-        Session session = SessionManager.getInstance().findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
+        Session session = getSession(terminalId);
         ByteBuf byteBuf = Unpooled.wrappedBuffer(HexStringUtils.hexString2Bytes("1234"));
         ChannelFuture future = session.getChannel().writeAndFlush(byteBuf).sync();
         if (!future.isSuccess()) {
             log.error("", future.cause());
         }
+    }
+
+    private Session getSession(@RequestParam("terminalId") String terminalId) {
+        return SessionManager.getInstance().findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
+    }
+
+    @GetMapping("/send-msg")
+    public Object sendMsg(
+            @RequestParam(required = false, name = "terminalId", defaultValue = "13717861955") String terminalId,
+            @RequestParam(required = false, name = "msg", defaultValue = "1234") String msg,
+            @RequestParam(required = false, name = "timeout", defaultValue = "2") Long timeout) throws InterruptedException {
+        final Session session = getSession(terminalId);
+        final ByteBuf byteBuf = Unpooled.wrappedBuffer(HexStringUtils.hexString2Bytes(msg));
+        final ChannelFuture future = session.getChannel().writeAndFlush(byteBuf).sync();
+        if (!future.isSuccess()) {
+            log.error("", future.cause());
+        }
+
+        final CommandWaitingPool waitingPool = CommandWaitingPool.getInstance();
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(BuiltinJt808MsgType.CLIENT_AUTH, terminalId);
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+                waitingPool.putIfNecessary(commandKey, "echo " + msg);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        return waitingPool.waitingForKey(commandKey, timeout, TimeUnit.SECONDS);
     }
 
     @GetMapping("/deferred-result")

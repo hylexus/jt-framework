@@ -16,4 +16,8 @@ public interface CommandKey {
                 ? String.format("%s_%s", getTerminalId(), getMsgId())
                 : String.format("%s_%s_%s", getTerminalId(), getMsgId(), getFlowId());
     }
+
+    default String getWaitingFlag() {
+        return "_" + getKeyAsString();
+    }
 }
