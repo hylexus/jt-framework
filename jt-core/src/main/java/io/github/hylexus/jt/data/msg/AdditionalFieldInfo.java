@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import static io.github.hylexus.jt.annotation.msg.AdditionalField.*;
+import static io.github.hylexus.jt.annotation.msg.req.AdditionalField.*;
 
 /**
  * @author hylexus

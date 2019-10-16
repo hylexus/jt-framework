@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.utils;
 
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
+import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 

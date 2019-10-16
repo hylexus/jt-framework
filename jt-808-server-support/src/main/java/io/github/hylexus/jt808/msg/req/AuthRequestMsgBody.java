@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.msg.req;
 
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
  **/
 @Data
 @Accessors(chain = true)
-@Jt808MsgBody(msgType = 0x0102)
+@Jt808ReqMsgBody(msgType = 0x0102)
 public class AuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware {
 
     private RequestMsgHeader header;

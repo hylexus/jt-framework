@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.data;
 
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import lombok.Getter;
 
 import java.util.Set;
@@ -19,6 +19,7 @@ public enum MsgDataType {
     DWORD(4, "无符号四字节整型(双字，32 位)", newHashSet(int.class, Integer.class)),
     BCD(0, "8421 码，n 字节", newHashSet(String.class)),
     STRING(0, "GBK 编码，若无数据，置空", newHashSet(String.class)),
+    UNKNOWN(0,"",newHashSet())
     ;
 
     /**

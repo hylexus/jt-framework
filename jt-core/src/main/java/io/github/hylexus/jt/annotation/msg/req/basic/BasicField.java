@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation.msg.basic;
+package io.github.hylexus.jt.annotation.msg.req.basic;
 
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;

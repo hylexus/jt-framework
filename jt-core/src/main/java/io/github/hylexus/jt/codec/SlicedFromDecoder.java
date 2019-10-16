@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
+import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import static io.github.hylexus.jt.annotation.msg.slice.SlicedFrom.DEFAULT_BIT_INDEX;
+import static io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom.DEFAULT_BIT_INDEX;
 
 /**
  * @author hylexus

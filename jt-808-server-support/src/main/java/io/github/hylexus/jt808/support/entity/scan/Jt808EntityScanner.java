@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.support.entity.scan;
 
-import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
+import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
@@ -40,7 +40,7 @@ public class Jt808EntityScanner implements InitializingBean {
         }
 
         ClassScanner scanner = new ClassScanner();
-        Set<Class> entityClass = scanner.doScan(packagesToScan, cls -> AnnotationUtils.findAnnotation(cls, Jt808MsgBody.class) != null);
+        Set<Class> entityClass = scanner.doScan(packagesToScan, cls -> AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class) != null);
         if (CollectionUtils.isEmpty(entityClass)) {
             log.info("No MsgBodyEntity found for Jt808");
             return;
@@ -48,7 +48,7 @@ public class Jt808EntityScanner implements InitializingBean {
 
         ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
         for (Class cls : entityClass) {
-            Jt808MsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808MsgBody.class);
+            Jt808ReqMsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class);
             assert annotation != null;
 
             int[] msgIds = annotation.msgType();

@@ -1,7 +1,6 @@
-package io.github.hylexus.jt.annotation.msg;
+package io.github.hylexus.jt.annotation.msg.req;
 
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
 
 import java.lang.annotation.*;
 import java.util.List;

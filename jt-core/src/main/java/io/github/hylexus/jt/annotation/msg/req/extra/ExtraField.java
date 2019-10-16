@@ -1,6 +1,6 @@
-package io.github.hylexus.jt.annotation.msg.extra;
+package io.github.hylexus.jt.annotation.msg.req.extra;
 
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.data.MsgDataType;
 
 import java.lang.annotation.*;

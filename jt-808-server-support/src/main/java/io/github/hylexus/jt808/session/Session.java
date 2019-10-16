@@ -1,6 +1,10 @@
 package io.github.hylexus.jt808.session;
 
+import io.github.hylexus.jt.exception.JtCommunicationException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +24,17 @@ public class Session {
     private String terminalId;
     private int currentFlowId = 0;
     private long lastCommunicateTimeStamp = 0L;
+
+    public void sendMsgToClient(byte[] bytes) throws InterruptedException, JtCommunicationException {
+        this.sendMsgToClient(Unpooled.wrappedBuffer(bytes));
+    }
+
+    public void sendMsgToClient(ByteBuf byteBuf) throws InterruptedException, JtCommunicationException {
+        ChannelFuture sync = channel.writeAndFlush(byteBuf).sync();
+        if (!sync.isSuccess()) {
+            throw new JtCommunicationException("sendMsgToClient failed");
+        }
+    }
 
     public static String generateSessionId(Channel channel) {
         return channel.id().asLongText();

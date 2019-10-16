@@ -1,11 +1,11 @@
 package io.github.hylexus.jt808.server.msg.req;
 
-import io.github.hylexus.jt.annotation.msg.AdditionalField;
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.annotation.msg.basic.Jt808MsgBody;
-import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
-import io.github.hylexus.jt.annotation.msg.slice.SlicedFrom;
-import io.github.hylexus.jt.annotation.msg.slice.SplittableField;
+import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
+import io.github.hylexus.jt.annotation.msg.req.slice.SplittableField;
 import io.github.hylexus.jt.data.converter.LngLatDataTypeConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
@@ -19,12 +19,12 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-import static io.github.hylexus.jt.annotation.msg.AdditionalField.ROOT_GROUP_MSG_ID;
+import static io.github.hylexus.jt.annotation.msg.req.AdditionalField.ROOT_GROUP_MSG_ID;
 import static io.github.hylexus.jt.data.MsgDataType.*;
 
 @Data
 @Accessors(chain = true)
-@Jt808MsgBody(msgType = 0x0200)
+@Jt808ReqMsgBody(msgType = 0x0200)
 public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadataAware {
 
     @ToString.Exclude

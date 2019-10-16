@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation.msg.slice;
+package io.github.hylexus.jt.annotation.msg.req.slice;
 
 import java.lang.annotation.*;
 

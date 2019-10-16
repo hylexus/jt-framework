@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
-import io.github.hylexus.jt.annotation.msg.extra.ExtraMsgBody;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraMsgBody;
 import io.github.hylexus.jt.data.msg.NestedFieldMappingInfo;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;

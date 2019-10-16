@@ -9,7 +9,6 @@ import io.github.hylexus.jt808.session.Session;
 import io.github.hylexus.jt808.session.SessionManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @author hylexus
@@ -31,13 +28,10 @@ import java.util.concurrent.TimeoutException;
 public class TestController {
 
     @GetMapping("/send-to")
-    public void sendTo(@RequestParam("terminalId") String terminalId) throws InterruptedException, TimeoutException, ExecutionException {
+    public void sendTo(@RequestParam("terminalId") String terminalId) throws InterruptedException {
         Session session = getSession(terminalId);
         ByteBuf byteBuf = Unpooled.wrappedBuffer(HexStringUtils.hexString2Bytes("1234"));
-        ChannelFuture future = session.getChannel().writeAndFlush(byteBuf).sync();
-        if (!future.isSuccess()) {
-            log.error("", future.cause());
-        }
+        session.sendMsgToClient(byteBuf);
     }
 
     private Session getSession(@RequestParam("terminalId") String terminalId) {
@@ -50,11 +44,8 @@ public class TestController {
             @RequestParam(required = false, name = "msg", defaultValue = "1234") String msg,
             @RequestParam(required = false, name = "timeout", defaultValue = "2") Long timeout) throws InterruptedException {
         final Session session = getSession(terminalId);
-        final ByteBuf byteBuf = Unpooled.wrappedBuffer(HexStringUtils.hexString2Bytes(msg));
-        final ChannelFuture future = session.getChannel().writeAndFlush(byteBuf).sync();
-        if (!future.isSuccess()) {
-            log.error("", future.cause());
-        }
+        byte[] bytes = HexStringUtils.hexString2Bytes(msg);
+        session.sendMsgToClient(bytes);
 
         final CommandWaitingPool waitingPool = CommandWaitingPool.getInstance();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(BuiltinJt808MsgType.CLIENT_AUTH, terminalId);

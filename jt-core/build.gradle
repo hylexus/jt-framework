@@ -12,3 +12,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit'
 
 }
+
+test {
+    exclude '**/CommandWaitingPoolTest.class'
+}

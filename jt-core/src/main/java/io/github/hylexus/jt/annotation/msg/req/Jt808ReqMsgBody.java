@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation.msg.basic;
+package io.github.hylexus.jt.annotation.msg.req;
 
 import java.lang.annotation.*;
 
@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808MsgBody {
+public @interface Jt808ReqMsgBody {
 
     int[] msgType();
 

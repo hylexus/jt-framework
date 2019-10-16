@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.slice.SplittableField;
+import io.github.hylexus.jt.annotation.msg.req.slice.SplittableField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;

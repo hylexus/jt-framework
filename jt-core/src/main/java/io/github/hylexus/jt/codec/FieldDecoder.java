@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.AdditionalField;
-import io.github.hylexus.jt.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.annotation.msg.extra.ExtraField;
+import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt.data.converter.DataTypeConverter;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;

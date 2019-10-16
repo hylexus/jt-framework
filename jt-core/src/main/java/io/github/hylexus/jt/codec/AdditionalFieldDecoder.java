@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.codec;
 
-import io.github.hylexus.jt.annotation.msg.AdditionalField;
+import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
 import io.github.hylexus.jt.data.msg.AdditionalFieldInfo;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static io.github.hylexus.jt.annotation.msg.AdditionalField.ROOT_GROUP_MSG_ID;
+import static io.github.hylexus.jt.annotation.msg.req.AdditionalField.ROOT_GROUP_MSG_ID;
 
 /**
  * @author hylexus
