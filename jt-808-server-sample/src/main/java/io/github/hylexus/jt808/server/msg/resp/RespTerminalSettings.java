@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.server.msg.resp;
 
 import io.github.hylexus.jt.annotation.msg.resp.BasicRespField;
 import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
+import io.github.hylexus.jt.data.resp.DataType;
 import lombok.Data;
 
 import java.util.List;
@@ -30,10 +31,22 @@ public class RespTerminalSettings {
         @BasicRespField(order = 2, dataType = BYTE)
         private byte msgLength;
 
-        @BasicRespField(order = 3,dataType = BYTES)
+        @BasicRespField(order = 3, dataType = BYTES)
         private byte[] byteValue;
 
         @BasicRespField(order = 3, dataType = UNKNOWN)
         private Object value;
+    }
+
+
+    class Item {
+        private DataType msgId;
+        private DataType content;
+        private int bytesCountLength;
+        private int contentLength;
+
+        public int getContentLength() {
+            return contentLength;
+        }
     }
 }
