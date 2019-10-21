@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.annotation.msg.req.basic;
 
 import io.github.hylexus.jt.data.MsgDataType;
-import io.github.hylexus.jt.data.converter.DataTypeConverter;
+import io.github.hylexus.jt.data.converter.req.entity.ReqMsgFieldConverter;
 
 import java.lang.annotation.*;
 
@@ -37,6 +37,6 @@ public @interface BasicField {
      */
     String byteCountMethod() default "";
 
-    Class<? extends DataTypeConverter> customerDataTypeConverterClass() default DataTypeConverter.NoOpsConverter.class;
+    Class<? extends ReqMsgFieldConverter> customerDataTypeConverterClass() default ReqMsgFieldConverter.NoOpsConverter.class;
 
 }

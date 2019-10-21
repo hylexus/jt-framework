@@ -6,10 +6,14 @@ import lombok.Value;
 @Value
 public class WordDataType implements DataType<Short> {
 
-    private final short value;
+    private final Short value;
 
     private WordDataType(short value) {
         this.value = value;
+    }
+
+    public static WordDataType of(int value) {
+        return of((byte) value);
     }
 
     public static WordDataType of(short value) {

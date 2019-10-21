@@ -2,16 +2,14 @@ package io.github.hylexus.jt.utils;
 
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
+import io.github.hylexus.jt.annotation.msg.resp.CommandField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -64,6 +62,9 @@ public class JavaBeanMetadataUtils {
 
             JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
+            if (javaBeanFieldMetadata.isAnnotationPresent(CommandField.class)) {
+                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(CommandField.class).order());
+            }
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);
             javaBeanMetadata.getFieldMapping().put(field.getName(), javaBeanFieldMetadata);
@@ -71,6 +72,9 @@ public class JavaBeanMetadataUtils {
                 javaBeanMetadata.getSliceFromSupportedFieldList().add(javaBeanFieldMetadata);
             }
         }
+
+        javaBeanMetadata.getFieldMetadataList().sort(Comparator.comparing(JavaBeanFieldMetadata::getOrder));
+
         return javaBeanMetadata;
     }
 

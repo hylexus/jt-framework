@@ -4,13 +4,15 @@ import io.github.hylexus.jt.data.MsgDataType;
 
 import java.lang.annotation.*;
 
+import static io.github.hylexus.jt.data.MsgDataType.UNKNOWN;
+
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ParamItem {
+public @interface CommandField {
 
     int order();
 
-    MsgDataType dataType();
+    MsgDataType dataType() default UNKNOWN;
 
 }

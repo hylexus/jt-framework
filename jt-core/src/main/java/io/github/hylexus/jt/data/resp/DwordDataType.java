@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 public class DwordDataType implements DataType<Integer> {
-    private final int value;
+    private final Integer value;
 
     private DwordDataType(int value) {
         this.value = value;

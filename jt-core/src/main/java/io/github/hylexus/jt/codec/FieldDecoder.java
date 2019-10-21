@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.data.MsgDataType;
-import io.github.hylexus.jt.data.converter.DataTypeConverter;
+import io.github.hylexus.jt.data.converter.req.entity.ReqMsgFieldConverter;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
@@ -27,7 +27,7 @@ import java.util.Map;
 @Slf4j
 public class FieldDecoder {
 
-    private Map<Class<? extends DataTypeConverter>, DataTypeConverter> converterMapping = new HashMap<>();
+    private Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
     private AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
     private ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
@@ -97,10 +97,10 @@ public class FieldDecoder {
 
         int length = getBasicFieldLength(cls, instance, annotation, dataType);
 
-        final Class<? extends DataTypeConverter> converterClass = annotation.customerDataTypeConverterClass();
+        final Class<? extends ReqMsgFieldConverter> converterClass = annotation.customerDataTypeConverterClass();
         // 1. 优先使用用户自定义的属性转换器
         final Field field = fieldMetadata.getField();
-        if (converterClass != DataTypeConverter.NoOpsConverter.class) {
+        if (converterClass != ReqMsgFieldConverter.NoOpsConverter.class) {
             return populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
         }
 
@@ -116,19 +116,19 @@ public class FieldDecoder {
 
     private Object populateFieldByCustomerConverter(
             byte[] bytes, Object instance, Field field,
-            Class<? extends DataTypeConverter> converterClass,
+            Class<? extends ReqMsgFieldConverter> converterClass,
             int start, int byteCount) throws InstantiationException, IllegalAccessException {
 
-        DataTypeConverter converter = getDataTypeConverter(converterClass);
+        ReqMsgFieldConverter converter = getDataTypeConverter(converterClass);
         Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
         ReflectionUtils.setFieldValue(instance, field, value);
         return value;
     }
 
-    private DataTypeConverter getDataTypeConverter(
-            Class<? extends DataTypeConverter> converterClass) throws InstantiationException, IllegalAccessException {
+    private ReqMsgFieldConverter getDataTypeConverter(
+            Class<? extends ReqMsgFieldConverter> converterClass) throws InstantiationException, IllegalAccessException {
 
-        DataTypeConverter converter = converterMapping.get(converterClass);
+        ReqMsgFieldConverter converter = converterMapping.get(converterClass);
         if (converter == null) {
             synchronized (this) {
                 converter = converterClass.newInstance();

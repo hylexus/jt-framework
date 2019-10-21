@@ -12,6 +12,10 @@ public class StringDataType implements DataType<String> {
         this.value = value;
     }
 
+    public static StringDataType of(String value) {
+        return new StringDataType(value);
+    }
+
     @Override
     public byte[] getAsBytes() {
         return value.getBytes(JtProtocolConstant.JT_808_STRING_ENCODING);

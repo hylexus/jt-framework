@@ -2,18 +2,17 @@ package io.github.hylexus.jt.data.converter;
 
 /**
  * @author hylexus
- * Created At 2019-09-18 10:02 下午
+ * Created At 2019-10-19 9:59 下午
  */
 @FunctionalInterface
-public interface DataTypeConverter<T> {
+public interface DataTypeConverter<S, T> {
 
-    T convert(byte[] bytes, byte[] subSeq);
-
-    class NoOpsConverter implements DataTypeConverter {
-        @Override
-        public Object convert(byte[] bytes, byte[] subSeq) {
-            return null;
-        }
-    }
+    /**
+     * source ==> target
+     *
+     * @param source source type
+     * @return target type
+     */
+    T convertTo(S source);
 
 }

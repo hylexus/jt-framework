@@ -21,6 +21,7 @@ public class JavaBeanFieldMetadata {
     private Field field;
     private Class<?> fieldType;
     private List<Class<?>> genericType;
+    private int order = 0;
 
     public boolean isIntType() {
         return fieldType == Integer.class || fieldType == int.class;
