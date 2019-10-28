@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.server.msg.req;
 
 import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
-import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
 import io.github.hylexus.jt.annotation.msg.req.slice.SplittableField;
@@ -64,7 +64,10 @@ public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadata
     private short speed;
 
     @BasicField(startIndex = 20, dataType = WORD)
-    private short direction;
+    private Short direction;
+
+    @BasicField(startIndex = 20, dataType = BYTES, length = 2)
+    private byte[] directionByte;
 
     @BasicField(startIndex = 22, dataType = BCD, length = 6)
     private String time;

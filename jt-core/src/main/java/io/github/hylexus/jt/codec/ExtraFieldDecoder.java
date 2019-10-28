@@ -2,6 +2,10 @@ package io.github.hylexus.jt.codec;
 
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraMsgBody;
+import io.github.hylexus.jt.data.converter.ConvertibleMetadata;
+import io.github.hylexus.jt.data.converter.DataTypeConverter;
+import io.github.hylexus.jt.data.converter.registry.DataTypeConverterRegistry;
+import io.github.hylexus.jt.data.converter.registry.DefaultDataTypeConverterRegistry;
 import io.github.hylexus.jt.data.msg.NestedFieldMappingInfo;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
@@ -10,10 +14,9 @@ import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import static io.github.hylexus.jt.utils.ReflectionUtils.populateBasicField;
 
 /**
  * @author hylexus
@@ -21,6 +24,7 @@ import static io.github.hylexus.jt.utils.ReflectionUtils.populateBasicField;
  */
 public class ExtraFieldDecoder {
 
+    private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private static final ConcurrentMap<Class<?>, ConcurrentMap<Integer, NestedFieldMappingInfo>> cache = new ConcurrentHashMap<>();
     private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
     private SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
@@ -45,6 +49,7 @@ public class ExtraFieldDecoder {
         );
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void decodeNestedField(
             byte[] bytes, int startIndex, int length, Object instance, Map<Integer, NestedFieldMappingInfo> mappingInfo,
             int byteCountOfMsgId, int byteCountOfContentLength) throws IllegalAccessException, InstantiationException {
@@ -75,10 +80,17 @@ public class ExtraFieldDecoder {
 
                 decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
             } else {
-                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata(), info.getDataType(), 0,
-                        bodyBytes.length);
-
-                splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
+                // TODO auto-inject
+                ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(info.getDataType(), info.getFieldMetadata().getFieldType());
+                Optional<DataTypeConverter<?, ?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
+                if (converterInfo.isPresent()) {
+                    DataTypeConverter converter = converterInfo.get();
+                    Object value = converter.convert(byte[].class, info.getFieldMetadata().getFieldType(), bodyBytes);
+                    splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
+                }
+                //                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata(), info.getDataType(), 0,
+                //                        bodyBytes.length);
+                //                splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
             }
         }
         slicedFromDecoder.processAllSlicedFromField(instance);

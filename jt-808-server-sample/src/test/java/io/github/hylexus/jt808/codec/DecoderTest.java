@@ -38,9 +38,10 @@ public class DecoderTest {
         byte[] bodyBytes = metadata.getBodyBytes();
 
         LocationUploadMsgBody y = decoder.decodeRequestMsgBody(LocationUploadMsgBody.class, bodyBytes, metadata);
-        ExtraEntity extraEntity = y.getExtraEntity();
-        System.out.println(extraEntity);
-        System.out.println(extraEntity.getObdData());
+        System.out.println(y);
+        //ExtraEntity extraEntity = y.getExtraEntity();
+        //System.out.println(extraEntity);
+        //System.out.println(extraEntity.getObdData());
         //        System.out.println("Integer.toBinaryString(y.getStatus()) = " + Integer.toBinaryString(y.getStatus()));
         //        System.out.println(y.getStatusInfo());
         //        System.out.println("y.getAcc() = " + y.getAccStatus());

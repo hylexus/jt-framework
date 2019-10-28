@@ -1,6 +1,5 @@
 package io.github.hylexus.jt.data.converter.req.entity;
 
-import io.github.hylexus.jt.data.converter.req.entity.ReqMsgFieldConverter;
 import io.github.hylexus.oaks.utils.IntBitOps;
 
 public class LngLatReqMsgFieldConverter implements ReqMsgFieldConverter<Double> {

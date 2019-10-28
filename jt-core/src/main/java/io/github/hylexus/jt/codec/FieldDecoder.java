@@ -4,6 +4,11 @@ import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.data.MsgDataType;
+import io.github.hylexus.jt.data.converter.ConvertibleMetadata;
+import io.github.hylexus.jt.data.converter.DataTypeConverter;
+import io.github.hylexus.jt.data.converter.Jt808MsgDataTypeConverter;
+import io.github.hylexus.jt.data.converter.registry.DataTypeConverterRegistry;
+import io.github.hylexus.jt.data.converter.registry.DefaultDataTypeConverterRegistry;
 import io.github.hylexus.jt.data.converter.req.entity.ReqMsgFieldConverter;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
@@ -19,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author hylexus
@@ -26,6 +32,8 @@ import java.util.Map;
  */
 @Slf4j
 public class FieldDecoder {
+
+    private DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
 
     private Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
@@ -87,6 +95,7 @@ public class FieldDecoder {
         splittableFieldDecoder.processSplittableField(instance, fieldMetadata, value);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private Object processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
@@ -106,7 +115,23 @@ public class FieldDecoder {
 
         // 2. 默认的属性转换策略
         if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-            return ReflectionUtils.populateBasicField(bytes, instance, fieldMetadata, dataType, startIndex, length);
+            ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(dataType, fieldType);
+            Optional<DataTypeConverter<?, ?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
+            if (converterInfo.isPresent()) {
+                DataTypeConverter converter = converterInfo.get();
+                final Object value;
+                if (converter instanceof Jt808MsgDataTypeConverter) {
+                    value = ((Jt808MsgDataTypeConverter) converter).convert(bytes, startIndex, length);
+                } else {
+                    log.warn("converter missing match for type:{}", field);
+                    value = converter.convert(byte[].class, fieldType, Bytes.subSequence(bytes, startIndex, length));
+                }
+                log.debug("Convert field {}({}) by Converter:{}, result:{}", field.getName(), fieldType.getSimpleName(), converter.getClass().getSimpleName(),
+                        value);
+                fieldMetadata.setFieldValue(instance, value);
+                return value;
+            }
+            //return ReflectionUtils.populateBasicField(bytes, instance, fieldMetadata, dataType, startIndex, length);
         }
 
         // 3. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】

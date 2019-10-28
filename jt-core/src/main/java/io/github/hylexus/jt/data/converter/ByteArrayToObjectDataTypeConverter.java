@@ -8,13 +8,13 @@ import io.github.hylexus.jt.exception.JtDataTypeConvertException;
  */
 public interface ByteArrayToObjectDataTypeConverter<T> extends DataTypeConverter<byte[], T> {
 
-    T convert(Class<byte[]> sourceType, Class<T> targetType, byte[] sourceInstance, int startIndex, int length);
+    T convert(Class<byte[]> sourceType, Class<T> targetType, byte[] bytes, int startIndex, int length);
 
     @Override
-    default T convert(Class<byte[]> sourceType, Class<T> targetType, byte[] sourceInstance) {
-        if (sourceInstance == null) {
-            throw new JtDataTypeConvertException("Can not convert " + sourceType + " to " + targetType + ", [sourceInstance] is null");
+    default T convert(Class<byte[]> sourceType, Class<T> targetType, byte[] bytes) {
+        if (bytes == null) {
+            throw new JtDataTypeConvertException("Can not convert " + sourceType + " to " + targetType + ", [bytes] is null");
         }
-        return convert(sourceType, targetType, sourceInstance, 0, sourceInstance.length);
+        return convert(sourceType, targetType, bytes, 0, bytes.length);
     }
 }

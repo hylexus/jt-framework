@@ -23,7 +23,7 @@ public class RespTerminalSettings {
     @CommandField(order = 1, dataType = BYTE)
     private int totalParamCount;
 
-    private int x;
+    private int tmp;
 
     @Data
     @Accessors(chain = true)
