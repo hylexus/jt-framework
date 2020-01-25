@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.msg.req;
 
-import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;

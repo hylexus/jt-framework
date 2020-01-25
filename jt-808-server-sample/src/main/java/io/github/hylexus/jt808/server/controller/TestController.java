@@ -47,17 +47,23 @@ public class TestController {
         byte[] bytes = HexStringUtils.hexString2Bytes(msg);
         session.sendMsgToClient(bytes);
 
-        final CommandWaitingPool waitingPool = CommandWaitingPool.getInstance();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(BuiltinJt808MsgType.CLIENT_AUTH, terminalId);
+
+        // 模拟2秒后终端有数据回复
+        simulatePutResultByAnotherThread(commandKey);
+
+        return CommandWaitingPool.getInstance().waitingForKey(commandKey, timeout, TimeUnit.SECONDS);
+    }
+
+    private void simulatePutResultByAnotherThread(Jt808CommandKey commandKey) {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(2);
-                waitingPool.putIfNecessary(commandKey, "echo " + msg);
+                CommandWaitingPool.getInstance().putIfNecessary(commandKey, "result for " + commandKey.getKeyAsString());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
-        return waitingPool.waitingForKey(commandKey, timeout, TimeUnit.SECONDS);
     }
 
     @GetMapping("/deferred-result")

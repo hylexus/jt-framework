@@ -13,6 +13,6 @@ public @interface CommandField {
 
     int order();
 
-    MsgDataType dataType() default UNKNOWN;
+    MsgDataType targetMsgDataType() default UNKNOWN;
 
 }

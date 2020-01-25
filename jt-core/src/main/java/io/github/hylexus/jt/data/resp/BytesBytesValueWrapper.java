@@ -8,18 +8,18 @@ import lombok.Value;
  * Created At 2019-10-17 10:59 下午
  */
 @Value
-public class BytesDataType implements DataType<byte[]> {
+public class BytesBytesValueWrapper implements BytesValueWrapper<byte[]> {
     private byte[] value;
 
-    private BytesDataType(byte[] value, int start, int length) {
+    private BytesBytesValueWrapper(byte[] value, int start, int length) {
         this.value = Bytes.subSequence(value, start, length);
     }
 
-    public static BytesDataType of(byte[] bytes, int start, int length) {
-        return new BytesDataType(bytes, start, length);
+    public static BytesBytesValueWrapper of(byte[] bytes, int start, int length) {
+        return new BytesBytesValueWrapper(bytes, start, length);
     }
 
-    public static BytesDataType of(byte[] bytes) {
+    public static BytesBytesValueWrapper of(byte[] bytes) {
         return of(bytes, 0, bytes.length);
     }
 

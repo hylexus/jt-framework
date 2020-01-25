@@ -24,31 +24,32 @@ public class CommandWaitingPool {
     private BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
 
     public void putIfNecessary(CommandKey commandKey, Object msg) {
-        String waitingFlag = commandKey.getWaitingFlag();
-        String key = commandKey.getKeyAsString();
+        final String waitingFlag = commandKey.getWaitingFlag();
+        final String key = commandKey.getKeyAsString();
         if (!blockingMap.containsKey(waitingFlag)) {
-            log.debug("No waiting waitingFlag found for key {}", key);
+            log.debug("No waitingFlag found for key {}", key);
             return;
         }
 
-        // Put result into blockingMap if there is a waiting flag for this key
+        // Put result into blockingMap if there is a waiting-flag for this key
         this.blockingMap.put(key, msg);
-        log.info("put value for waitingFlag [{}]", waitingFlag);
+        log.info("Put value for waitingFlag [{}]", waitingFlag);
     }
 
     public Object waitingForKey(CommandKey commandKey, long time, TimeUnit unit) throws InterruptedException {
-        String key = commandKey.getKeyAsString();
-        String waitingFlag = commandKey.getWaitingFlag();
+        final String waitingFlag = commandKey.getWaitingFlag();
 
-        // Put a waiting flag for put operation
+        // Put a waiting-flag for put operation
         this.blockingMap.put(waitingFlag, null);
 
         // Get result blocked
         Object result;
         try {
+            final String key = commandKey.getKeyAsString();
+            log.debug("Waiting for key {}", key);
             result = this.blockingMap.take(key, time, unit);
         } finally {
-            // Remove tmp waiting flag
+            // Remove tmp waiting-flag
             this.blockingMap.remove(waitingFlag);
         }
 

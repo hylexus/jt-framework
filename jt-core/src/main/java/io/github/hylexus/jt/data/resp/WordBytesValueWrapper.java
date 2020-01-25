@@ -4,20 +4,20 @@ import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.Value;
 
 @Value
-public class WordDataType implements DataType<Short> {
+public class WordBytesValueWrapper implements BytesValueWrapper<Short> {
 
     private final Short value;
 
-    private WordDataType(short value) {
+    private WordBytesValueWrapper(short value) {
         this.value = value;
     }
 
-    public static WordDataType of(int value) {
+    public static WordBytesValueWrapper of(int value) {
         return of((byte) value);
     }
 
-    public static WordDataType of(short value) {
-        return new WordDataType(value);
+    public static WordBytesValueWrapper of(short value) {
+        return new WordBytesValueWrapper(value);
     }
 
     @Override

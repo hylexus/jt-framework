@@ -8,15 +8,15 @@ import lombok.Value;
  * Created At 2019-10-17 10:56 下午
  */
 @Value
-public class BcdDataType implements DataType<String> {
+public class BcdBytesValueWrapper implements BytesValueWrapper<String> {
     private String value;
 
-    private BcdDataType(String value) {
+    private BcdBytesValueWrapper(String value) {
         this.value = value;
     }
 
-    public static BcdDataType of(String value) {
-        return new BcdDataType(value);
+    public static BcdBytesValueWrapper of(String value) {
+        return new BcdBytesValueWrapper(value);
     }
 
 

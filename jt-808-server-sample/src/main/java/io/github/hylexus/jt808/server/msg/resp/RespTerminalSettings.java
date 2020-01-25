@@ -1,7 +1,8 @@
 package io.github.hylexus.jt808.server.msg.resp;
 
+import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.annotation.msg.resp.CommandField;
-import io.github.hylexus.jt.data.resp.DataType;
+import io.github.hylexus.jt.data.resp.BytesValueWrapper;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,8 +21,11 @@ public class RespTerminalSettings {
     @CommandField(order = 2)
     private List<ParamItem> paramList;
 
-    @CommandField(order = 1, dataType = BYTE)
+    @CommandField(order = 1, targetMsgDataType = BYTE)
     private int totalParamCount;
+
+    @Transient
+    private int aTransientValue;
 
     private int tmp;
 
@@ -29,15 +33,15 @@ public class RespTerminalSettings {
     @Accessors(chain = true)
     public static class ParamItem {
         @CommandField(order = 1)
-        private DataType msgId;
+        private BytesValueWrapper msgId;
 
-        @CommandField(order = 2)
+        @CommandField(order = 2, targetMsgDataType = BYTE)
         private int bytesCountOfContentLength;
 
         @CommandField(order = 3)
-        private DataType msgContent;
+        private BytesValueWrapper msgContent;
 
-        public ParamItem(DataType msgId, DataType msgContent) {
+        public ParamItem(BytesValueWrapper msgId, BytesValueWrapper msgContent) {
             this.msgId = msgId;
             this.msgContent = msgContent;
             this.bytesCountOfContentLength = msgContent.getAsBytes().length;

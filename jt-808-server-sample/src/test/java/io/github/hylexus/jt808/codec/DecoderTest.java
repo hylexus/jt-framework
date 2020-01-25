@@ -3,7 +3,6 @@ package io.github.hylexus.jt808.codec;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody;
-import io.github.hylexus.jt808.server.msg.req.location.ExtraEntity;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

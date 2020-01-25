@@ -4,15 +4,15 @@ import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.Value;
 
 @Value
-public class DwordDataType implements DataType<Integer> {
+public class DwordBytesValueWrapper implements BytesValueWrapper<Integer> {
     private final Integer value;
 
-    private DwordDataType(int value) {
+    private DwordBytesValueWrapper(int value) {
         this.value = value;
     }
 
-    public static DwordDataType of(int value) {
-        return new DwordDataType(value);
+    public static DwordBytesValueWrapper of(int value) {
+        return new DwordBytesValueWrapper(value);
     }
 
     @Override

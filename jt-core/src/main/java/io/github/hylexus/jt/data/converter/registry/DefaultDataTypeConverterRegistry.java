@@ -32,8 +32,9 @@ public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegist
         registry.registerConverter(new ByteArrayToStringDataConverter());
 
         registry.registerConverter(new ByteArrayToByteDataTypeConverter());
-        
+
         registry.registerConverter(new NoOpsByteArrayDataTypeConverter());
+
     }
 
     @Override

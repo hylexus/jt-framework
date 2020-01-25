@@ -4,19 +4,19 @@ package io.github.hylexus.jt.data.resp;
  * @author hylexus
  * Created At 2019-10-19 7:51 下午
  */
-public class ByteDataType implements DataType<Byte> {
+public class ByteBytesValueWrapper implements BytesValueWrapper<Byte> {
     private byte value;
 
-    private ByteDataType(byte value) {
+    private ByteBytesValueWrapper(byte value) {
         this.value = value;
     }
 
-    public static ByteDataType of(int value) {
+    public static ByteBytesValueWrapper of(int value) {
         return of((byte) value);
     }
 
-    public static ByteDataType of(byte value) {
-        return new ByteDataType(value);
+    public static ByteBytesValueWrapper of(byte value) {
+        return new ByteBytesValueWrapper(value);
     }
 
     @Override

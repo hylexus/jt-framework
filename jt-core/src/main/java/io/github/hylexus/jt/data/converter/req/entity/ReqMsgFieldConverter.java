@@ -9,7 +9,7 @@ public interface ReqMsgFieldConverter<T> {
 
     T convert(byte[] bytes, byte[] subSeq);
 
-    class NoOpsConverter implements ReqMsgFieldConverter {
+    class NoOpsConverter implements ReqMsgFieldConverter<Object> {
         @Override
         public Object convert(byte[] bytes, byte[] subSeq) {
             return null;

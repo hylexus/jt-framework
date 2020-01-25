@@ -12,6 +12,7 @@ import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author hylexus
  * Created At 2019-10-01 7:39 下午
  */
+@Slf4j
 public class ExtraFieldDecoder {
 
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
@@ -87,6 +89,8 @@ public class ExtraFieldDecoder {
                     DataTypeConverter converter = converterInfo.get();
                     Object value = converter.convert(byte[].class, info.getFieldMetadata().getFieldType(), bodyBytes);
                     splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
+                } else {
+                    log.error("No converter found for filed {}", info.getFieldMetadata().getFieldType().getName());
                 }
                 //                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata(), info.getDataType(), 0,
                 //                        bodyBytes.length);
