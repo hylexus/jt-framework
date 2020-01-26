@@ -70,9 +70,8 @@ public class Encoder {
 
                 // 2.4 其他无法处理的属性 --> 忽略
                 log.debug("Can not encode field : {}, but annotation @{} found", fieldMetadata.getField(), CommandField.class.getSimpleName());
-            }
-            // 2. 没有用 @CommandField 标记过的属性属性跳过
-            else {
+            } else {
+                // 2. 没有用 @CommandField 标记过的属性属性跳过
                 log.debug("No annotation @{} found on field [{}], encoding skipped.", CommandField.class.getSimpleName(), fieldMetadata.getField());
             }
         }

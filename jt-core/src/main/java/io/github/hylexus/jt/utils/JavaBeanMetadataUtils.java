@@ -9,6 +9,7 @@ import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -88,6 +89,11 @@ public class JavaBeanMetadataUtils {
 
         if (genericType instanceof ParameterizedType) {
             for (Type actualTypeArgument : ((ParameterizedType) genericType).getActualTypeArguments()) {
+                // ignore WildcardType
+                // ?, ? extends Number, or ? super Integer
+                if (actualTypeArgument instanceof WildcardType) {
+                    continue;
+                }
                 javaBeanFieldMetadata.getGenericType().add((Class<?>) actualTypeArgument);
             }
         }

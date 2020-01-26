@@ -25,12 +25,12 @@ public class Jt808NettyTcpServer extends AbstractRunner {
 
     private Integer bossThreadCount;
 
-    private final Jt808NettyTcpServerConfigure serverConfigure;
+    private final Jt808ServerConfigure serverConfigure;
 
     private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
     public Jt808NettyTcpServer(
-            String name, Jt808NettyTcpServerConfigure serverConfigure,
+            String name, Jt808ServerConfigure serverConfigure,
             Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
         super(name);
         this.serverConfigure = serverConfigure;

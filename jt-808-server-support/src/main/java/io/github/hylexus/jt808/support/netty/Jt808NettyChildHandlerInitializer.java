@@ -10,9 +10,9 @@ import io.netty.channel.socket.SocketChannel;
 public class Jt808NettyChildHandlerInitializer extends ChannelInitializer<SocketChannel> {
 
     private Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
-    private Jt808NettyTcpServerConfigure serverConfigure;
+    private Jt808ServerConfigure serverConfigure;
 
-    public Jt808NettyChildHandlerInitializer(Jt808NettyTcpServerConfigure serverConfigure, Jt808ChannelHandlerAdapter msgDispatcher) {
+    public Jt808NettyChildHandlerInitializer(Jt808ServerConfigure serverConfigure, Jt808ChannelHandlerAdapter msgDispatcher) {
         this.serverConfigure = serverConfigure;
         this.jt808ChannelHandlerAdapter = msgDispatcher;
     }

@@ -15,6 +15,7 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER = "jt808RequestMsgQueueListener";
     String BEAN_NAME_JT808_REQ_MSG_DISPATCHER = "jt808RequestMsgDispatcher";
     String BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER = "jt808RequestMsgTypeParser";
+    String BEAN_NAME_JT808_AUTH_CODE_VALIDATOR = "jt808AuthCodeValidator";
 
     String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
 

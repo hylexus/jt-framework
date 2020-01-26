@@ -62,7 +62,7 @@ configure(allprojects) { project ->
 
 // 1. java-env config
 configure(subprojects.findAll {
-    (it.name != "docs")
+    (it.name != "docs") && (it.name != 'samples')
 }) { subProject ->
     apply from: "${project(":build-script").projectDir}/script/common-java-env-config.gradle"
 }

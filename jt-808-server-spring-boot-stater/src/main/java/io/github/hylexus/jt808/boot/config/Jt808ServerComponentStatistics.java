@@ -14,13 +14,11 @@ import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
-import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServerConfigure;
+import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
@@ -32,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER;
 import static io.github.hylexus.jt.utils.CommonUtils.*;
 import static io.github.hylexus.jt808.boot.config.Jt808ServerAutoConfigure.*;
 import static java.util.stream.Collectors.toMap;
@@ -50,15 +47,17 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private static final String END_OF_LINE = "\n";
 
-    @Autowired
     private MsgConverterMapping msgConverterMapping;
 
-    @Autowired
     private MsgHandlerMapping msgHandlerMapping;
 
-    @Autowired
-    @Qualifier(BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
     private MsgTypeParser msgTypeParser;
+
+    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, MsgConverterMapping msgConverterMapping, MsgHandlerMapping msgHandlerMapping) {
+        this.msgTypeParser = msgTypeParser;
+        this.msgConverterMapping = msgConverterMapping;
+        this.msgHandlerMapping = msgHandlerMapping;
+    }
 
     private Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
             MsgTypeParser.class,
@@ -66,7 +65,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
             RequestMsgDispatcher.class,
             RequestMsgQueue.class,
             RequestMsgQueueListener.class,
-            Jt808NettyTcpServerConfigure.class
+            Jt808ServerConfigure.class
     ));
 
     @Override
@@ -182,7 +181,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                             .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
                     info.setType(msgType);
                     info.setConverter(entry.getValue());
-                    MsgHandler msgHandler = handlerMappings.get(msgType.getMsgId());
+                    MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
                     info.setHandler(msgHandler);
                     return info;
                 }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
@@ -209,7 +208,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     @Accessors(chain = true)
     private static class MsgConverterAndHandlerMappingInfo {
         private MsgType type;
-        private RequestMsgBodyConverter converter;
-        private MsgHandler handler;
+        private RequestMsgBodyConverter<?> converter;
+        private MsgHandler<?> handler;
     }
 }

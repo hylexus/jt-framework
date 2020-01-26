@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.annotation.msg.req;
 
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 
 import java.lang.annotation.*;
@@ -14,7 +15,8 @@ import java.util.Set;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Deprecated
+//@Deprecated
+@DebugOnly
 public @interface AdditionalField {
 
     Set<Class<?>> SUPPORTED_TARGET_CLASS = Sets.newHashSet(List.class);

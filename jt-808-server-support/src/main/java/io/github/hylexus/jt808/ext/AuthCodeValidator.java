@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @FunctionalInterface
 public interface AuthCodeValidator {
 
-    boolean validateAuthCode(Session session, RequestMsgMetadata metadata, AuthRequestMsgBody body);
+    boolean validateAuthCode(Session session, RequestMsgMetadata requestMsgMetadata, AuthRequestMsgBody authRequestMsgBody);
 
     @Slf4j
     @DebugOnly
