@@ -9,6 +9,7 @@ import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +22,7 @@ import static java.util.Optional.of;
  * @author hylexus
  * Created At 2019-08-24 15:44
  */
+@Slf4j
 @BuiltinComponent
 public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
 
@@ -37,6 +39,7 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
 
     @Override
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) {
+        log.debug("receive AuthMsg : {}", body);
         boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {
             return of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_AUTH));

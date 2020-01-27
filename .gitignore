@@ -114,3 +114,6 @@ logs/
 /RUNNING_PID
 .DS_Store
 target/
+
+# node
+node_modules/
