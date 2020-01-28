@@ -2,7 +2,7 @@ package io.github.hylexus.jt808.support.netty;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt.utils.ProtocolUtils;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
@@ -34,10 +34,12 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
     private Decoder decoder = new Decoder();
     private RequestMsgDispatcher msgDispatcher;
     private MsgTypeParser msgTypeParser;
+    private BytesEncoder bytesEncoder;
 
-    public Jt808ChannelHandlerAdapter(RequestMsgDispatcher msgDispatcher, MsgTypeParser msgTypeParser) {
+    public Jt808ChannelHandlerAdapter(RequestMsgDispatcher msgDispatcher, MsgTypeParser msgTypeParser, BytesEncoder bytesEncoder) {
         this.msgDispatcher = msgDispatcher;
         this.msgTypeParser = msgTypeParser;
+        this.bytesEncoder = bytesEncoder;
     }
 
     @Override
@@ -52,7 +54,8 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             buf.readBytes(unescaped);
             log.debug("\nreceive msg:");
             log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
-            byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808(unescaped, 0, unescaped.length);
+            // final byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808Msg(unescaped, 0, unescaped.length);
+            final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
             log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
 
             final RequestMsgMetadata metadata = decoder.parseMsgMetadata(escaped);

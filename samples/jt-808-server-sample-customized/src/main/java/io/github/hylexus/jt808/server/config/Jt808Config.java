@@ -1,5 +1,7 @@
 package io.github.hylexus.jt808.server.config;
 
+import io.github.hylexus.jt.exception.MsgEscapeException;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.server.handler.LocationInfoUploadMsgHandler;
@@ -39,6 +41,24 @@ public class Jt808Config extends Jt808ServerConfigure {
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
         super.configureMsgHandlerMapping(mapping);
         mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationInfoUploadMsgHandler());
+    }
+
+    @Override
+    public BytesEncoder supplyBytesEncoder() {
+        return new BytesEncoder() {
+
+            private final BytesEncoder bytesEncoder = new BytesEncoder.DefaultBytesEncoder();
+
+            @Override
+            public byte[] doEscapeForReceive(byte[] bytes, int start, int end) throws MsgEscapeException {
+                return bytesEncoder.doEscapeForReceive(bytes, start, end);
+            }
+
+            @Override
+            public byte[] doEscapeForSend(byte[] bytes, int start, int end) throws MsgEscapeException {
+                return bytesEncoder.doEscapeForSend(bytes, start, end);
+            }
+        };
     }
 
     @Override

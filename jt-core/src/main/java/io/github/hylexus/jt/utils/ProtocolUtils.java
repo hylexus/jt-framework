@@ -22,7 +22,7 @@ public class ProtocolUtils {
         return sum;
     }
 
-    public static byte[] doEscape4ReceiveJt808(byte[] bs, int start, int end) throws Exception {
+    public static byte[] doEscape4ReceiveJt808Msg(byte[] bs, int start, int end) throws Exception {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("doEscape4Receive error : index out of bounds(start=" + start
                     + ",end=" + end + ",bytes length=" + bs.length + ")");
@@ -56,7 +56,7 @@ public class ProtocolUtils {
         }
     }
 
-    public static byte[] doEscape4Send(byte[] bs, int start, int end) throws IOException {
+    public static byte[] doEscape4SendJt808Msg(byte[] bs, int start, int end) throws IOException {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("doEscape4Send error : index out of bounds(start=" + start
                     + ",end=" + end + ",bytes length=" + bs.length + ")");

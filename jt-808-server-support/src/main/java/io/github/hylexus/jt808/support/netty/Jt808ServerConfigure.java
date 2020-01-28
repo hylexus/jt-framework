@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.support.netty;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
@@ -52,6 +53,11 @@ public class Jt808ServerConfigure {
                 )
         );
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER, jt808ChannelHandlerAdapter);
+    }
+
+    @Bean(name = BEAN_NAME_JT808_BYTES_ENCODER)
+    public BytesEncoder supplyBytesEncoder() {
+        return new BytesEncoder.DefaultBytesEncoder();
     }
 
     @Bean(name = BEAN_NAME_JT808_AUTH_CODE_VALIDATOR)

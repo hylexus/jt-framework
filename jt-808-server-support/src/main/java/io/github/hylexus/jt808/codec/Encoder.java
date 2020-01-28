@@ -143,7 +143,7 @@ public class Encoder {
                 new byte[]{JtProtocolConstant.PACKAGE_DELIMITER}// 0x7e
         ));
         if (escape) {
-            return ProtocolUtils.doEscape4Send(noEscapedBytes, 1, noEscapedBytes.length - 2);
+            return ProtocolUtils.doEscape4SendJt808Msg(noEscapedBytes, 1, noEscapedBytes.length - 2);
         }
         return noEscapedBytes;
     }

@@ -6,6 +6,7 @@ import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
 import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.impl.AuthRequestMsgBodyConverter;
@@ -66,6 +67,12 @@ public class Jt808ServerAutoConfigure {
     @ConditionalOnMissingBean(Jt808ServerConfigure.class)
     public Jt808ServerConfigure jt808NettyTcpServerConfigure() {
         return new Jt808ServerConfigure.BuiltinNoOpsConfigure();
+    }
+
+    @Bean(BEAN_NAME_JT808_BYTES_ENCODER)
+    @ConditionalOnMissingBean(BytesEncoder.class)
+    public BytesEncoder bytesEncoder() {
+        return new BytesEncoder.DefaultBytesEncoder();
     }
 
     @Autowired
@@ -137,8 +144,8 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
-    public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(RequestMsgDispatcher requestMsgDispatcher) {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser());
+    public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder) {
+        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder);
     }
 
     @Bean

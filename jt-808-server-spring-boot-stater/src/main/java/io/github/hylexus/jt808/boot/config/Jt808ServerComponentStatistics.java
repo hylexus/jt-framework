@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
@@ -60,6 +61,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
+            BytesEncoder.class,
             MsgTypeParser.class,
             AuthCodeValidator.class,
             RequestMsgDispatcher.class,

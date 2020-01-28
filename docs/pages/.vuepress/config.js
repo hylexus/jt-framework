@@ -3,7 +3,7 @@ module.exports = {
     description: 'JT-framework',
 
     port: "9527",
-    base: "/",
+    base: "/jt-framework/",
     markdown: {
         externalLinks: {
             target: '_blank', rel: 'noopener noreferrer'

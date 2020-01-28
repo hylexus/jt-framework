@@ -7,3 +7,7 @@
 ## 报文加密解密
 
 暂时不支持
+
+## 转义字符处理问题
+
+[请移步自定义 BytesEncoder](../basic/customized.md#bytesencoder)
