@@ -2,9 +2,9 @@
 home: true
 # heroImage: /hero.png
 heroText: JT-framework
-tagline: 808、809
+tagline: 808、809(TODO)
 actionText: 快速上手 →
-actionLink: /guide/
+actionLink: /jt-808/
 features:
 - title: 简洁至上
   details: ………………

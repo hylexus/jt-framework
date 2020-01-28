@@ -2,6 +2,19 @@
   "name": "jt-framework-doc",
   "version": "1.0.0",
   "private": true,
+  "keywords": [
+    "808协议"
+  ],
+  "homepage": "https://github.com/hylexus/jt-framework",
+  "bugs": {
+    "url": "https://github.com/hylexus/jt-framework/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hylexus/jt-framework.git"
+  },
+  "license": "",
+  "author": "hylexus",
   "devDependencies": {
     "vuepress": "^1.1.0"
   },
@@ -9,7 +22,7 @@
     "element-ui": "^2.12.0"
   },
   "scripts": {
-    "docs:dev": "vuepress dev pages",
+    "docs:dev": "vuepress dev pages --no-cache",
     "docs:build": "vuepress build pages"
   }
 }

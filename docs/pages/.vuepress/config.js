@@ -3,7 +3,6 @@ module.exports = {
     description: 'JT-framework',
 
     port: "9527",
-    dest: "docs",
     base: "/",
     markdown: {
         externalLinks: {
@@ -16,9 +15,7 @@ module.exports = {
 
     themeConfig: {
         nav: navConfig(),
-        sidebar: {
-            '/': homeSidebarConfig()
-        },
+        sidebar: sidebarConfig(),
         sidebarDepth: 1,
         displayAllHeaders: true,
         activeHeaderLinks: true,
@@ -36,6 +33,34 @@ module.exports = {
         editLinkText: '帮助我们改善此页面！'
     }
 };
+
+function sidebarConfig() {
+    return {
+        '/guide/': false,
+        '/jt-808/': [
+            {
+                title: '808协议',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    ['', '介绍'],
+                    'protocol-introduction',
+                    'quick-start',
+                    'customized'
+                ]
+            },
+            {
+                title: 'FAQ',
+                collapsable: false,
+                sidebarDepth: 1,
+                children: [
+                    'FAQ/package-parsing'
+                ]
+            }
+        ],
+        '/jt-809/': ['']
+    };
+}
 
 function homeSidebarConfig() {
     return [
@@ -58,7 +83,8 @@ function homeSidebarConfig() {
 function navConfig() {
     return [
         {text: '首页', link: '/'},
-        {text: '指南', link: '/guide/'},
+        // {text: '指南', link: '/guide/'},
+        {text: '808协议文档', link: '/jt-808/'},
         {
             text: '协议类型',
             ariaLabel: '协议类型',
