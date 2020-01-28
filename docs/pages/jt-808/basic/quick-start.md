@@ -2,7 +2,7 @@
 
 此处将展示一个 最少配置 的808协议消息处理服务的搭建。
 
-::: tip
+::: tip 传送门
 本小节的示例可以在 [samples/jt-808-server-sample-bare](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-bare) 下找到对应代码。
 :::
 
@@ -10,7 +10,7 @@
 
 创建一个空的 `spring-boot` 工程。
 
-::: tip
+::: tip 传送门
 可以使用 [Spring Initializer](https://start.spring.io) 快速初始化一个 Spring Boot 工程。
 :::
 
@@ -76,7 +76,7 @@ public class Jt808ServerSampleBareApplication {
 
 可以从启动日志中的`组件统计信息`中看到内置了一个对 `0x0102 (终端鉴权)` 消息的处理器。处理逻辑位于 `io.github.hylexus.jt808.handler.impl.AuthMsgHandler` 。
 
-::: tip
+::: tip 配置提示
 `组件统计信息` 的开关由配置项 `jt808.print-component-statistics = true|false` 来控制
 :::
 
@@ -85,16 +85,16 @@ public class Jt808ServerSampleBareApplication {
 
 ### 使用发包工具测试鉴权消息
 
-::: danger
-注意：无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
+::: danger 注意：
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
 :::
 
-::: danger
-注意：无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
+::: danger 注意：
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
 :::
 
-::: danger
-注意：无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
+::: danger 注意：
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../FAQ/debug.md#调试工具) 。
 :::
 
 用发包工具发送如下报文给服务器( `默认TCP端口:6808` )测试：
@@ -113,6 +113,6 @@ public class Jt808ServerSampleBareApplication {
     <img :src="$withBase('/img/auth-msg-breakpoint.png')" alt="auth-msg-breakpoint">
 </p>
 
-::: tip
+::: tip 传送门
 本小节的示例可以在 [samples/jt-808-server-sample-bare](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-bare) 下找到对应代码。
 :::

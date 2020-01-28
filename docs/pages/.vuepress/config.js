@@ -45,11 +45,11 @@ function sidebarConfig() {
 function jt808SidebarConfig() {
     return [
         {
-            title: '808协议',
+            title: '808协议入门',
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['', '介绍'],
+                ['', '说明'],
                 'basic/protocol-introduction',
                 'basic/quick-start',
                 'basic/principle-of-msg-processing',
@@ -57,10 +57,15 @@ function jt808SidebarConfig() {
             ]
         },
         {
-            title: '内置注解',
+            title: '注解驱动开发',
             collapsable: false,
             sidebarDepth: 1,
-            children: []
+            children: [
+                ['/jt-808/annotation-based-dev/', '说明'],
+                'annotation-based-dev/receive-msg-mapping',
+                'annotation-based-dev/send-msg-mapping',
+                'annotation-based-dev/msg-handler-register'
+            ]
         },
         {
             title: 'FAQ',

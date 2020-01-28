@@ -1,10 +1,10 @@
 # 定制化
 
-::: tip
+::: tip 传送门
 本小节的示例可以在 [samples/jt-808-server-sample-customized](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-customized) 下找到对应代码。
 :::
 
-::: tip
+::: tip 提示
 目前几乎所有的自定义的配置都需要继承配置类 `io.github.hylexus.jt808.support.netty.Jt808ServerConfigure` 。
 可以通过如下代码片段的方式来自定义组件：
 
@@ -24,7 +24,7 @@ public class Jt808Config extends Jt808ServerConfigure {
 
 ## BytesEncoder
 
-::: tip
+::: tip 小提示
 每个硬件厂商实现808协议的时候对转义的处理可能略有不同。
 
 如果内置的转义逻辑不符合要求，可以自己实现 `BytesEncoder` 接口实现转义逻辑。
@@ -88,8 +88,8 @@ public enum Jt808MsgType implements MsgType {
 
 - 定制 `MsgTypeParser`
 
-::: warning
-注意 `MsgTypeParser` 的返回类型为 `java.util.Optional<MsgType>` 。
+::: warning 注意
+`MsgTypeParser` 的返回类型为 `java.util.Optional<MsgType>` 。
 
 即便是无法处理的消息也不要返回 `null` 而应该以 `Optional.empty()` 代替。
 此时会跳过这种未知类型的消息处理，并会在日志里打印 `warn` 级别的日志。
@@ -163,6 +163,6 @@ public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter 
 }
 ```
 
-::: tip
+::: tip 传送门
 本小节的示例可以在 [samples/jt-808-server-sample-customized](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-customized) 下找到对应代码。
 :::
