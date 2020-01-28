@@ -26,7 +26,7 @@ public enum Jt808MsgType implements MsgType {
         this.desc = desc;
     }
 
-    private static Map<Integer, Jt808MsgType> mapping = new HashMap<>(values().length);
+    private static final Map<Integer, Jt808MsgType> mapping = new HashMap<>(values().length);
 
     static {
         for (Jt808MsgType type : values()) {

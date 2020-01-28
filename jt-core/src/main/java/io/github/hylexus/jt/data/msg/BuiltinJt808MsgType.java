@@ -35,7 +35,7 @@ public enum BuiltinJt808MsgType implements MsgType {
     private int msgId;
     private String desc;
 
-    private static Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);
+    private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);
 
     static {
         for (BuiltinJt808MsgType builtinMsgType : values()) {

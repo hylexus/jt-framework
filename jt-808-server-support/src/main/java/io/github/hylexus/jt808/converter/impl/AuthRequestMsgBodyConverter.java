@@ -20,6 +20,7 @@ public class AuthRequestMsgBodyConverter implements RequestMsgBodyConverter<Auth
     public Optional<AuthRequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {
         byte[] bytes = metadata.getBodyBytes();
         AuthRequestMsgBody body = new AuthRequestMsgBody().setAuthCode(ProtocolUtils.bytes2String(bytes, 0, bytes.length));
+        body.setHeader(metadata.getHeader());
         return Optional.of(body);
     }
 }

@@ -37,46 +37,53 @@ module.exports = {
 function sidebarConfig() {
     return {
         '/guide/': false,
-        '/jt-808/': [
-            {
-                title: '808协议',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    ['', '介绍'],
-                    'protocol-introduction',
-                    'quick-start',
-                    'customized'
-                ]
-            },
-            {
-                title: 'FAQ',
-                collapsable: false,
-                sidebarDepth: 1,
-                children: [
-                    'FAQ/package-parsing'
-                ]
-            }
-        ],
-        '/jt-809/': ['']
+        '/jt-808/': jt808SidebarConfig(),
+        '/jt-809/': jt809SidebarConfig()
     };
 }
 
-function homeSidebarConfig() {
+function jt808SidebarConfig() {
     return [
-        ['/', '首页'],
-        ['/guide/', '指南'],
         {
             title: '808协议',
-            collapsable: true,
+            collapsable: false,
+            sidebarDepth: 1,
             children: [
-                ['/jt-808/protocol-introduction/', '协议扫盲'],
-                ['/jt-808/quick-start/', '快速开始'],
-                ['/jt-808/customized/', '定制化'],
-                ['/jt-808/FAQ/', 'FAQ']
+                ['', '介绍'],
+                'basic/protocol-introduction',
+                'basic/quick-start',
+                'basic/principle-of-msg-processing',
+                'basic/customized'
             ]
         },
-        ['/jt-809/', '809协议']
+        {
+            title: '内置注解',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: []
+        },
+        {
+            title: 'FAQ',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                'FAQ/package-parsing',
+                'FAQ/debug'
+            ]
+        }
+    ];
+}
+
+function jt809SidebarConfig() {
+    return [
+        {
+            title: '809协议',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ['', 'TODO'],
+            ]
+        }
     ];
 }
 
