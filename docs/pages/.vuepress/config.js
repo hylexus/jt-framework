@@ -49,7 +49,7 @@ function jt808SidebarConfig() {
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['', '说明'],
+                ['/jt-808/basic/', '说明'],
                 'basic/protocol-introduction',
                 'basic/quick-start',
                 'basic/principle-of-msg-processing',

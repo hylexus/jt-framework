@@ -11,3 +11,11 @@
 
 所以，本文档暂时不会介绍这部分内容。
 :::
+
+::: tip
+本小节主要内容如下：
+:::
+
+- [请求消息映射](./receive-msg-mapping.md)
+- [响应消息映射](./send-msg-mapping.md)
+- [消息处理器注册](./msg-handler-register.md)

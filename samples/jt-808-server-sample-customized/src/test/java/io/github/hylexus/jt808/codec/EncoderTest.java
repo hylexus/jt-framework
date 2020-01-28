@@ -5,7 +5,7 @@ import io.github.hylexus.jt.data.resp.DwordBytesValueWrapper;
 import io.github.hylexus.jt.data.resp.StringBytesValueWrapper;
 import io.github.hylexus.jt.data.resp.WordBytesValueWrapper;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt808.server.msg.resp.RespTerminalSettings;
+import io.github.hylexus.jt808.samples.customized.msg.resp.RespTerminalSettings;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;

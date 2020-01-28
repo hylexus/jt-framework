@@ -5,7 +5,7 @@ springBoot {
 }
 
 bootJar {
-    archiveName("jt-808-server-sample-customized.jar")
+    archiveName("${project.name}.jar")
 }
 
 dependencies {

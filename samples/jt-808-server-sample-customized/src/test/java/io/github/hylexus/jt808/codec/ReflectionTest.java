@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
-import io.github.hylexus.jt808.server.msg.req.LocationUploadMsgBody;
+import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadMsgBody;
 import org.junit.Test;
 
 /**
