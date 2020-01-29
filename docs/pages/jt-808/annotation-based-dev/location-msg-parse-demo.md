@@ -109,7 +109,7 @@ status字段是由消息体中第4~7个字节表示的，类型为 `DWORD`。对
 
 所以至少有以下几种解析方式：
 
-### 1. 手动解析
+### 1.手动解析
 
 ```java
 @BasicField(startIndex = 4, dataType = BYTES, length = 4)
@@ -131,7 +131,7 @@ int accStatus = Numbers.getBitAt(status, 0);
 int lngType = Numbers.getBitAt(status, 3);
 ```
 
-### 2. 使用@SlicedFrom解析
+### 2.使用@SlicedFrom解析
 
 ```java
 // 消息体中第4~7个字节 --> int
