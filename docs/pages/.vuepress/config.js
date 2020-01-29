@@ -52,7 +52,7 @@ function jt808SidebarConfig() {
                 ['/jt-808/basic/', '说明'],
                 'basic/protocol-introduction',
                 'basic/quick-start',
-                'basic/principle-of-msg-processing',
+                'basic/config-file',
                 'basic/customized'
             ]
         },
@@ -64,7 +64,18 @@ function jt808SidebarConfig() {
                 ['/jt-808/annotation-based-dev/', '说明'],
                 'annotation-based-dev/receive-msg-mapping',
                 'annotation-based-dev/send-msg-mapping',
-                'annotation-based-dev/msg-handler-register'
+                'annotation-based-dev/msg-handler-register',
+                'annotation-based-dev/location-msg-parse-demo'
+            ]
+        },
+        {
+            title: '深入',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ['/jt-808/more/','说明'],
+                'more/design-of-msg-processing',
+                'more/aware-interface'
             ]
         },
         {
