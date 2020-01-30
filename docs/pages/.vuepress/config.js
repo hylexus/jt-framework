@@ -37,9 +37,23 @@ module.exports = {
 function sidebarConfig() {
     return {
         '/guide/': false,
+        '/jt-808/config/': jt808ConfConfig(),
         '/jt-808/': jt808SidebarConfig(),
         '/jt-809/': jt809SidebarConfig()
     };
+}
+
+function jt808ConfConfig() {
+    return [
+        {
+            title: '配置',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ''
+            ]
+        }
+    ];
 }
 
 function jt808SidebarConfig() {
@@ -73,7 +87,7 @@ function jt808SidebarConfig() {
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['/jt-808/more/','说明'],
+                ['/jt-808/more/', '说明'],
                 'more/design-of-msg-processing',
                 'more/aware-interface'
             ]
@@ -107,7 +121,8 @@ function navConfig() {
     return [
         {text: '首页', link: '/'},
         // {text: '指南', link: '/guide/'},
-        {text: '808协议文档', link: '/jt-808/'},
+        {text: '808协议文档', link: '/jt-808/basic/'},
+        {text: '配置', link: '/jt-808/config/'},
         {
             text: '协议类型',
             ariaLabel: '协议类型',
