@@ -66,7 +66,6 @@ function jt808SidebarConfig() {
                 ['/jt-808/basic/', '说明'],
                 'basic/protocol-introduction',
                 'basic/quick-start',
-                'basic/config-file',
                 'basic/customized'
             ]
         },
