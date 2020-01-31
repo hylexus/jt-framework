@@ -7,9 +7,9 @@ set -e
 npm run docs:build
 
 # 进入生成的文件夹
-cd .vuepress/dist
+cd pages/.vuepress/dist
 #
-##git init
+git init
 git add -A
 git commit -m 'deploy docs'
 #

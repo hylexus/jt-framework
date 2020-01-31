@@ -18,7 +18,7 @@
 
 ::: warning 注意
 - 这个报文格式可能和你使用的有所不同，请加以区分！！！
-- 如何以 `十六进制格式` 发包请移步 [推荐调试工具](jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具)
+- 如何以 `十六进制格式` 发包请移步 [推荐调试工具](pages/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具)
 :::
 
 ```

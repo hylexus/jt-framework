@@ -117,3 +117,5 @@ target/
 
 # node
 node_modules/
+# vue-press temp
+docs/pages/.vuepress/dist

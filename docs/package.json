@@ -22,7 +22,7 @@
     "element-ui": "^2.12.0"
   },
   "scripts": {
-    "docs:dev": "vuepress dev . --no-cache",
-    "docs:build": "vuepress build ."
+    "docs:dev": "vuepress dev pages --no-cache",
+    "docs:build": "vuepress build pages"
   }
 }
