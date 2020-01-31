@@ -1,5 +1,9 @@
 # jt-framework
 
+Jt-808协议服务端。
+
+文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)
+
 ## 项目结构
 
 ```sh
@@ -23,3 +27,5 @@
 ```shell script
 ./gradlew clean build
 ```
+
+文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)

@@ -22,7 +22,7 @@ public class Jt808Config extends Jt808ServerConfigure {
 
 ## application.yml
 
-请移步 [配置文件文档](../config/)。
+请移步 [配置文件文档](../../config/)。
 
 ## BytesEncoder
 
