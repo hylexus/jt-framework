@@ -10,4 +10,4 @@
 
 ## 转义字符处理问题
 
-[请移步自定义 BytesEncoder](../basic/customized.md#bytesencoder)
+[请移步自定义 BytesEncoder](pages/jt-808/guide/basic/customized.md#bytesencoder)

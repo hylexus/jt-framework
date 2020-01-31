@@ -36,14 +36,14 @@ module.exports = {
 
 function sidebarConfig() {
     return {
-        '/guide/': false,
-        '/jt-808/config/': jt808ConfConfig(),
-        '/jt-808/': jt808SidebarConfig(),
+        '/jt-808/guide/': jt808GuideSidebarConfig(),
+        '/jt-808/config/': jt808ConfSidebarConfig(),
+        '/jt-808/': jt808GuideSidebarConfig(),
         '/jt-809/': jt809SidebarConfig()
     };
 }
 
-function jt808ConfConfig() {
+function jt808ConfSidebarConfig() {
     return [
         {
             title: '配置',
@@ -56,17 +56,17 @@ function jt808ConfConfig() {
     ];
 }
 
-function jt808SidebarConfig() {
+function jt808GuideSidebarConfig() {
     return [
         {
             title: '808协议入门',
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['/jt-808/basic/', '说明'],
-                'basic/protocol-introduction',
-                'basic/quick-start',
-                'basic/customized'
+                ['/jt-808/guide/', '说明'],
+                '/jt-808/guide/basic/protocol-introduction',
+                '/jt-808/guide/basic/quick-start',
+                '/jt-808/guide/basic/customized'
             ]
         },
         {
@@ -74,7 +74,7 @@ function jt808SidebarConfig() {
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['/jt-808/annotation-based-dev/', '说明'],
+                ['/jt-808/guide/annotation-based-dev/', '说明'],
                 'annotation-based-dev/receive-msg-mapping',
                 'annotation-based-dev/send-msg-mapping',
                 'annotation-based-dev/msg-handler-register',
@@ -86,7 +86,7 @@ function jt808SidebarConfig() {
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['/jt-808/more/', '说明'],
+                // ['/jt-808/more/', '说明'],
                 'more/design-of-msg-processing',
                 'more/aware-interface'
             ]
@@ -120,13 +120,13 @@ function navConfig() {
     return [
         {text: '首页', link: '/'},
         // {text: '指南', link: '/guide/'},
-        {text: '808协议文档', link: '/jt-808/basic/'},
+        {text: '指南', link: '/jt-808/guide/'},
         {text: '配置', link: '/jt-808/config/'},
         {
             text: '协议类型',
             ariaLabel: '协议类型',
             items: [
-                {text: 'Jt-808', link: '/jt-808/'},
+                {text: 'Jt-808', link: '/jt-808/guide/'},
                 {text: 'Jt-809', link: '/jt-809/'}
             ]
         }

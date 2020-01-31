@@ -57,7 +57,7 @@ public int getLength() {
 | --------- | ------------------- | -------- |
 | `splitPropertyValueIntoNestedBeanField` | 目标属性 |   |
 
-用法请[参考示例](./location-msg-parse-demo.md#2.使用@SlicedFrom解析)。
+用法请[参考示例](/jt-808/guide/annotation-based-dev/location-msg-parse-demo.md#2.使用@SlicedFrom解析)。
 
 ## @SlicedFrom
 
@@ -72,7 +72,7 @@ public int getLength() {
 | `startBitIndex` | 源字段中的起始bit索引 |1  |
 | `endBitIndex` | 源字段中的终止bit索引 | 2   |
 
-用法请[参考示例](./location-msg-parse-demo.md#2.使用@SlicedFrom解析)。
+用法请[参考示例](/jt-808/guide/annotation-based-dev/location-msg-parse-demo.md#2.使用@SlicedFrom解析)。
 
 ## @ExtraField&@ExtraMsgBody
 
@@ -97,4 +97,4 @@ public int getLength() {
 | `byteCountOfMsgId` | 消息ID占用几个字节 | 1   |
 | `byteCountOfContentLength` | 表示消息长度的字段占用几个字节 |  1  |
 
-用法请[参考示例](./location-msg-parse-demo.md#解析位置附加项列表)。
+用法请[参考示例](/jt-808/guide/annotation-based-dev/location-msg-parse-demo.md#解析位置附加项列表)。

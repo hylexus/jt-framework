@@ -16,6 +16,6 @@
 本小节主要内容如下：
 :::
 
-- [请求消息映射](./receive-msg-mapping.md)
-- [响应消息映射](./send-msg-mapping.md)
-- [消息处理器注册](./msg-handler-register.md)
+- [请求消息映射](/jt-808/guide/annotation-based-dev/receive-msg-mapping.md)
+- [响应消息映射](/jt-808/guide/annotation-based-dev/send-msg-mapping.md)
+- [消息处理器注册](/jt-808/guide/annotation-based-dev/msg-handler-register.md)
