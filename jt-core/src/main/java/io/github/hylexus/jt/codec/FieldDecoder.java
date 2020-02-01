@@ -30,7 +30,7 @@ import java.util.Optional;
  * @author hylexus
  * Created At 2019-09-28 11:25 下午
  */
-@Slf4j
+@Slf4j(topic = "jt-808.msg.req.decoder")
 public class FieldDecoder {
 
     private DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
@@ -126,8 +126,9 @@ public class FieldDecoder {
                     log.warn("converter missing match for type:{}", field);
                     value = converter.convert(byte[].class, fieldType, Bytes.subSequence(bytes, startIndex, length));
                 }
-                log.debug("Convert field {}({}) by Converter:{}, result:{}", field.getName(), fieldType.getSimpleName(), converter.getClass().getSimpleName(),
-                        value);
+                log.debug("Convert field {}({}) by converter : {}, result : {}",
+                        field.getName(), fieldType.getSimpleName(),
+                        converter.getClass().getSimpleName(), value);
                 fieldMetadata.setFieldValue(instance, value);
                 return value;
             }

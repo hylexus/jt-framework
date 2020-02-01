@@ -35,7 +35,7 @@ public class Jt808EntityScanner implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (CollectionUtils.isEmpty(packagesToScan)) {
-            log.info("[jt808.packages-to-entity-scan] is empty. Skip...");
+            log.info("[jt808.entity-scan.base-packages] is empty. Skip...");
             return;
         }
 
@@ -46,9 +46,9 @@ public class Jt808EntityScanner implements InitializingBean {
             return;
         }
 
-        ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
+        final ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
         for (Class cls : entityClass) {
-            Jt808ReqMsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class);
+            final Jt808ReqMsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class);
             assert annotation != null;
 
             int[] msgIds = annotation.msgType();

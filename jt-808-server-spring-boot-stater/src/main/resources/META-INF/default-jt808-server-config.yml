@@ -8,6 +8,8 @@ jt808:
     enabled: true
     enable-builtin-entity: true
     base-packages:
+  handler-scan:
+    base-packages:
   msg-processor:
     thread-pool:
       # core-pool-size: Runtime.getRuntime().availableProcessors() + 1

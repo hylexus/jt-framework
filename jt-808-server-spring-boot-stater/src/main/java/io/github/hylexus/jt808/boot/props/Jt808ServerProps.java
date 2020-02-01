@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.boot.props;
 
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
+import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
 import io.github.hylexus.jt808.boot.props.processor.MsgProcessorProps;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,9 @@ public class Jt808ServerProps {
 
     @NestedConfigurationProperty
     private Jt808EntityScanProps entityScan = new Jt808EntityScanProps();
+
+    @NestedConfigurationProperty
+    private Jt808HandlerScanProps handlerScan = new Jt808HandlerScanProps();
 
     @NestedConfigurationProperty
     private Jt808NettyTcpServerProps server = new Jt808NettyTcpServerProps();

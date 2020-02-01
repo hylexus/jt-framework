@@ -24,6 +24,7 @@ import java.util.stream.Stream;
  * Created At 2019-09-22 5:49 下午
  */
 @Slf4j
+@SuppressWarnings("rawtypes")
 public class ClassScanner {
 
     private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();

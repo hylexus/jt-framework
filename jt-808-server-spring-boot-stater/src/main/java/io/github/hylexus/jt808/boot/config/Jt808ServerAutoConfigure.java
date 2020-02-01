@@ -5,6 +5,7 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
+import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
 import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
@@ -23,6 +24,7 @@ import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
+import io.github.hylexus.jt808.support.handler.scan.Jt808MsgHandlerScanner;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808NettyChildHandlerInitializer;
 import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServer;
@@ -108,6 +110,13 @@ public class Jt808ServerAutoConfigure {
             entityScan.getBasePackages().add("io.github.hylexus.jt808.msg.req");
         }
         return new Jt808EntityScanner(entityScan.getBasePackages(), configure.supplyMsgTypeParser(), msgConverterMapping);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "jt808.handler-scan", name = "enabled", havingValue = "true")
+    public Jt808MsgHandlerScanner jt808MsgHandlerScanner(MsgHandlerMapping msgHandlerMapping) {
+        Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
+        return new Jt808MsgHandlerScanner(handlerScan.getBasePackages(), configure.supplyMsgTypeParser(), msgHandlerMapping);
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
