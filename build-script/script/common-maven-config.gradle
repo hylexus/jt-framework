@@ -83,57 +83,8 @@ publishing {
             }
         }
     }
-    repositories {
-        if (isSnapshot()) {
-            logger.quiet("publish to my aliyun repo [snapshot]")
-            maven {
-                url rootProject.ext.mavenRepoConfig.snapshotMavenRepo.url
-                credentials {
-                    username rootProject.ext.mavenRepoConfig.snapshotMavenRepo.username
-                    password rootProject.ext.mavenRepoConfig.snapshotMavenRepo.password
-                }
-            }
-        } else {
-            logger.quiet("publish to my aliyun repo ")
-            maven {
-                url rootProject.ext.mavenRepoConfig.releaseMavenRepo.url
-                credentials {
-                    username rootProject.ext.mavenRepoConfig.releaseMavenRepo.username
-                    password rootProject.ext.mavenRepoConfig.releaseMavenRepo.password
-                }
-            }
-        }
-
-        if (publishToMavenCentralRepo()) {
-            if (isSnapshot()) {
-                logger.quiet("publish to maven central repo [snapshot]")
-                maven {
-                    url rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.url
-                    credentials {
-                        username rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.username
-                        password rootProject.ext.mavenRepoConfig.sonatypeSnapshotRepo.password
-                    }
-                }
-            } else {
-                logger.quiet("publish to maven central repo [release]")
-                maven {
-                    url rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.url
-                    credentials {
-                        username rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.username
-                        password rootProject.ext.mavenRepoConfig.sonatypeStagingRepo.password
-                    }
-                }
-            }
-        }
-    }
-}
-
-def isSnapshot() {
-    rootProject.version.toString().toLowerCase().endsWith("snapshot")
-}
-
-def publishToMavenCentralRepo() {
-    System.getProperty("publish2MavenCentralRepo") ?: "false" == "true"
+    // repositories {}
+    apply from: "${project(":build-script").projectDir}/script/repo-config.gradle"
 }
 
 project(":build-script") {
