@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.samples.customized.msg.resp;
+package io.github.hylexus.jt808.codec.entity.req.resp;
 
 import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.annotation.msg.resp.CommandField;

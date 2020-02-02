@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.codec;
 
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt808.codec.entity.req.LocationUploadMsgBodyForDebug;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadMsgBody;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -36,7 +36,7 @@ public class DecoderTest {
         RequestMsgMetadata metadata = decoder.parseMsgMetadata(HexStringUtils.hexString2Bytes(hex));
         byte[] bodyBytes = metadata.getBodyBytes();
 
-        LocationUploadMsgBody y = decoder.decodeRequestMsgBody(LocationUploadMsgBody.class, bodyBytes, metadata);
+        LocationUploadMsgBodyForDebug y = decoder.decodeRequestMsgBody(LocationUploadMsgBodyForDebug.class, bodyBytes, metadata);
         System.out.println(y);
         //ExtraEntity extraEntity = y.getExtraEntity();
         //System.out.println(extraEntity);

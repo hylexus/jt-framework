@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
-import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadMsgBody;
+import io.github.hylexus.jt808.codec.entity.req.LocationUploadMsgBodyForDebug;
 import org.junit.Test;
 
 /**
@@ -15,7 +15,7 @@ public class ReflectionTest {
 
     @Test
     public void test1() throws Exception {
-        Class<?> cls = LocationUploadMsgBody.class;
+        Class<?> cls = LocationUploadMsgBodyForDebug.class;
         JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
         for (JavaBeanFieldMetadata javaBeanFieldMetadata : beanMetadata.getFieldMetadataList()) {
             String typeName = javaBeanFieldMetadata.getFieldType().getSimpleName();

@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.samples.customized.msg.req.location;
+package io.github.hylexus.jt808.codec.entity.req.location;
 
 import io.github.hylexus.jt.annotation.msg.req.slice.SplittableField;
 import lombok.Data;

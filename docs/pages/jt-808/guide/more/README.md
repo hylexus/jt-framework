@@ -5,4 +5,5 @@
 :::
 
 - [消息处理流程](./design-of-msg-processing)
+- [组件顺序](./component-order.md)
 - [Aware接口](./aware-interface)

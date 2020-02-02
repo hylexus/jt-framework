@@ -88,6 +88,7 @@ function jt808GuideSidebarConfig() {
             children: [
                 // ['/jt-808/more/', '说明'],
                 'more/design-of-msg-processing',
+                'more/component-order',
                 'more/aware-interface'
             ]
         },
