@@ -35,6 +35,11 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
     }
 
     @Override
+    public int getOrder() {
+        return ANNOTATION_BASED_DEV_COMPONENT_ORDER;
+    }
+
+    @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return supportedMsgTypes;
     }

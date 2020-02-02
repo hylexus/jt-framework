@@ -49,15 +49,7 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
 
     protected abstract Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, T msg, Session session);
 
-    protected RespMsgBody generateCommonReplyMsgBody(RequestMsgMetadata metadata, MsgType replyFor, byte result) {
-        CommonReplyMsgBody body = new CommonReplyMsgBody();
-        body.setResult(result);
-        body.setReplyFlowId(metadata.getHeader().getFlowId());
-        body.setReplyMsgId(replyFor.getMsgId());
-        return body;
-    }
-
-    protected RespMsgBody commonReply(RequestMsgMetadata metadata, MsgType replyFor) {
-        return generateCommonReplyMsgBody(metadata, replyFor, RespMsgBody.SUCCESS);
+    protected RespMsgBody commonSuccessReply(RequestMsgMetadata metadata, MsgType replyFor) {
+        return CommonReplyMsgBody.success(metadata.getHeader().getFlowId(), replyFor);
     }
 }

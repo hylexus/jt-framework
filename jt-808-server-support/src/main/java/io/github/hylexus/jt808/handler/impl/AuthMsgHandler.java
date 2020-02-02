@@ -8,6 +8,7 @@ import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
+import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,12 +39,17 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
     }
 
     @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
+    @Override
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) {
         log.debug("receive AuthMsg : {}", body);
         boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {
-            return of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_AUTH));
+            return of(commonSuccessReply(metadata, BuiltinJt808MsgType.CLIENT_AUTH));
         }
-        return of(generateCommonReplyMsgBody(metadata, BuiltinJt808MsgType.CLIENT_AUTH, AUTH_CODE_ERROR));
+        return of(CommonReplyMsgBody.of(AUTH_CODE_ERROR, metadata.getHeader().getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH));
     }
 }

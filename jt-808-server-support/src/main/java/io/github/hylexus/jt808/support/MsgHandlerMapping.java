@@ -43,10 +43,10 @@ public class MsgHandlerMapping {
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler handler, boolean forceOverride) {
-        int msgId = msgType.getMsgId();
+        final int msgId = msgType.getMsgId();
         if (containsHandler(msgType)) {
             MsgHandler oldHandler = mapping.get(msgId);
-            if (forceOverride) {
+            if (forceOverride || oldHandler.shouldBeReplacedBy(handler)) {
                 log.warn("Duplicate MsgType : {}, the MsgHandler [{}] was replaced by {}", msgType, oldHandler.getClass(), handler);
                 this.mapping.put(msgId, handler);
             } else {

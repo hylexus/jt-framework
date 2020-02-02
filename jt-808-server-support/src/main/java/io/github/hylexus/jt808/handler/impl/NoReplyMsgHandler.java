@@ -25,6 +25,11 @@ import java.util.Set;
 public class NoReplyMsgHandler extends AbstractMsgHandler {
 
     @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
+    @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return Sets.newHashSet(BuiltinJt808MsgType.CLIENT_COMMON_REPLY);
     }

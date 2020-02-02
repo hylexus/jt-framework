@@ -28,13 +28,22 @@ public class MsgConverterMapping {
     }
 
     public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter converter) {
+        return registerConverter(msgType, converter, false);
+    }
 
-        int msgId = msgType.getMsgId();
+    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter converter, boolean forceOverride) {
+
+        final int msgId = msgType.getMsgId();
         if (containsConverter(msgType)) {
-            log.warn("duplicate msgType : {}, the MsgConverter {} was replaced by {}", msgType, mapping.get(msgId).getClass(), converter.getClass());
+            final RequestMsgBodyConverter oldConverter = this.mapping.get(msgId);
+            if (forceOverride || oldConverter.shouldBeReplacedBy(converter)) {
+                this.mapping.put(msgId, converter);
+                log.warn("duplicate msgType : {}, the MsgConverter {} was replaced by {}", msgType, oldConverter.getClass(), converter.getClass());
+            }
+        } else {
+            this.mapping.put(msgId, converter);
         }
 
-        this.mapping.put(msgId, converter);
         return this;
     }
 

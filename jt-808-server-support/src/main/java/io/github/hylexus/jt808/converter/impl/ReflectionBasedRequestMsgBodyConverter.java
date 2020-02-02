@@ -28,6 +28,11 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
      */
     private Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
 
+    @Override
+    public int getOrder() {
+        return ANNOTATION_BASED_DEV_COMPONENT_ORDER;
+    }
+
     public ReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
             MsgType msgType, Class<? extends RequestMsgBody> cls, boolean forceOverride) {
 

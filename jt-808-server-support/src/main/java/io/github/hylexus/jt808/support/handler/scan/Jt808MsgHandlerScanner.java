@@ -78,7 +78,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
                     MsgType msgType = msgTypeParser.parseMsgType(msgId)
                             .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                     defaultHandler.addSupportedMsgType(msgType, handlerMethod);
-                    msgHandlerMapping.registerHandler(msgType, defaultHandler);
+                    msgHandlerMapping.registerHandler(msgType, defaultHandler, false);
                 }
             }
         }

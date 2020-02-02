@@ -17,6 +17,11 @@ import java.util.Optional;
 public class AuthRequestMsgBodyConverter implements RequestMsgBodyConverter<AuthRequestMsgBody> {
 
     @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
+    @Override
     public Optional<AuthRequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {
         byte[] bytes = metadata.getBodyBytes();
         AuthRequestMsgBody body = new AuthRequestMsgBody().setAuthCode(ProtocolUtils.bytes2String(bytes, 0, bytes.length));

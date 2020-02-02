@@ -25,6 +25,11 @@ import static java.util.Optional.of;
 public class HeartBeatMsgHandler extends AbstractMsgHandler {
 
     @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
+    @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return Sets.newHashSet(BuiltinJt808MsgType.CLIENT_HEART_BEAT);
     }
@@ -32,6 +37,6 @@ public class HeartBeatMsgHandler extends AbstractMsgHandler {
     @Override
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
         log.debug("client heart beat, terminalId = {}", metadata.getHeader().getTerminalId());
-        return of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_HEART_BEAT));
+        return of(commonSuccessReply(metadata, BuiltinJt808MsgType.CLIENT_HEART_BEAT));
     }
 }

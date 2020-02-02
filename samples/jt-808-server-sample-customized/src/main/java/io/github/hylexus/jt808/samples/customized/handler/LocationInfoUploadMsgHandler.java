@@ -21,6 +21,6 @@ public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUpl
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, LocationUploadMsgBody body, Session session) {
 
         log.info("{}", body);
-        return Optional.of(commonReply(metadata, BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD));
+        return Optional.of(commonSuccessReply(metadata, BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD));
     }
 }
