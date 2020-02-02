@@ -26,6 +26,7 @@ public class CommonHandler {
         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
     }
 
+    // 处理MsgId为0x0200的消息
     @Jt808RequestMsgMapping(msgType = 0x0200)
     public RespMsgBody processLocationMsg(
             Session session, RequestMsgMetadata metadata,

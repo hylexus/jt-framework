@@ -33,7 +33,8 @@ public class ArgumentResolveException extends AbstractJtException {
         this.msg = msg;
     }
 
-    public ArgumentResolveException(String message, Throwable cause, MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(String message, Throwable cause, MethodParameter parameter,
+                                    RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
         super(message, cause);
         this.parameter = parameter;
         this.metadata = metadata;
@@ -49,7 +50,8 @@ public class ArgumentResolveException extends AbstractJtException {
         this.msg = msg;
     }
 
-    public ArgumentResolveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
+                                    MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.parameter = parameter;
         this.metadata = metadata;

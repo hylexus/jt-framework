@@ -17,6 +17,9 @@ public class LocationUploadMsgBodyConverter implements RequestMsgBodyConverter<L
 
     @Override
     public Optional<LocationUploadMsgBody> convert2Entity(RequestMsgMetadata metadata) {
+        // 使用ByteBuf读取字节的时候注意顺序！！！
+        // 使用ByteBuf读取字节的时候注意顺序！！！
+        // 使用ByteBuf读取字节的时候注意顺序！！！
         ByteBuf buf = Unpooled.wrappedBuffer(metadata.getBodyBytes());
         LocationUploadMsgBody body = new LocationUploadMsgBody();
         body.setWarningFlag(buf.readInt());

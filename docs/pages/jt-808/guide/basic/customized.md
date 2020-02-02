@@ -115,6 +115,11 @@ public MsgTypeParser supplyMsgTypeParser() {
 
 ## AuthCodeValidator
 
+::: danger 注意
+- 该组件 `当且仅当` 你使用了内置的 `AuthMsgHandler` 来处理 `鉴权消息` 时才有效。
+- 如果你覆盖/未启用了内置的 `AuthMsgHandler`，那么你也 `不用` 提供 `AuthCodeValidator`。因为此时的鉴权逻辑已经完全交由你自定的 `AuthMsgHandler` 来处理了。
+:::
+
 ```java
 @Override
 public AuthCodeValidator supplyAuthCodeValidator() {
@@ -131,23 +136,89 @@ public AuthCodeValidator supplyAuthCodeValidator() {
 
 ## RequestMsgBodyConverter
 
+::: danger RequestMsgBodyConverter
+- 自定义的消息体解析器 `必须` 实现 `RequestMsgBodyConverter` 这个泛型接口
+- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/receive-msg-mapping.md) 使用 `基于注解` 的方式来实现 `RequestMsgBodyConverter` 的功能。
+:::
+
+`RequestMsgBodyConverter` 负责将客户端请求中的 `byte[]` 转换为 `请求消息体实体类` 以方便使用。 
+
+- 以下为示例性的解析位置消息的 `RequestMsgBodyConverter`
+
+```java
+public class LocationUploadMsgBodyConverter2 implements RequestMsgBodyConverter<LocationUploadMsgBody> {
+
+    @Override
+    public Optional<LocationUploadMsgBody> convert2Entity(RequestMsgMetadata metadata) {
+        byte[] bytes = metadata.getBodyBytes();
+        LocationUploadMsgBody body = new LocationUploadMsgBody();
+        body.setWarningFlag(intFromBytes(bytes, 0, 4));
+        body.setStatus(intFromBytes(bytes, 4, 4));
+        body.setLat(intFromBytes(bytes, 8, 4) * 1.0 / 100_0000);
+        body.setLng(intFromBytes(bytes, 12, 4) * 1.0 / 100_0000);
+        body.setHeight((short) intFromBytes(bytes, 16, 2));
+        body.setSpeed((short) intFromBytes(bytes, 18, 2));
+        body.setDirection((short) intFromBytes(bytes, 20, 2));
+        body.setTime(BcdOps.bytes2BcdString(bytes, 22, 6));
+        return Optional.of(body);
+    }
+
+}
+```
+
+- 注册自定义 `RequestMsgBodyConverter`
+
 ```java
 @Override
 public void configureMsgConverterMapping(MsgConverterMapping mapping) {
     super.configureMsgConverterMapping(mapping);
-    mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new MyLocationMsgConverter());
+    mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
 }
 ```
 
+::: tip 传送门
+基于注解来实现 `RequestMsgBodyConverter` 的功能 [请移步这里](../annotation-based-dev/receive-msg-mapping.md)
+:::
+
+
 ## MsgHandler
+
+::: danger MsgHandler
+- 自定义的消息处理器 `必须` 实现 `MsgHandler` 这个泛型接口
+- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/msg-handler-register.md#@Jt808RequestMsgMapping) 使用 `基于注解` 的方式来实现 `MsgHandler` 的功能。
+:::
+
+`MsgHandler` 负责处理经过 `RequestMsgBodyConverter` 转换之后的 `请求体消息实体类`。
+
+- 以下为示例性的处理位置消息的 `MsgHandler`
+
+```java
+@Slf4j
+public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUploadMsgBody> {
+
+    @Override
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, LocationUploadMsgBody body, Session session) {
+
+        log.info("{}", body);
+        return Optional.of(commonSuccessReply(metadata, BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD));
+    }
+}
+```
+
+- 注册自定义 `MsgHandler`
 
 ```java
 @Override
 public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
     super.configureMsgHandlerMapping(mapping);
-    mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationInfoUploadMsgHandler());
+    // 如果你在这里注册了自定义的鉴权消息处理器，那么AuthCodeValidator也无需提供了
+    mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
 }
 ```
+
+::: tip 传送门
+基于注解来实现MsgHandler的功能 [请移步这里](../annotation-based-dev/msg-handler-register.md#@Jt808RequestMsgMapping)
+:::
 
 ## Netty相关配置
 

@@ -4,6 +4,7 @@ import io.github.hylexus.jt.exception.MsgEscapeException;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
+import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
@@ -35,6 +36,7 @@ public class Jt808Config extends Jt808ServerConfigure {
     @Override
     public void configureMsgConverterMapping(MsgConverterMapping mapping) {
         super.configureMsgConverterMapping(mapping);
+        mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
     }
 
     @Override

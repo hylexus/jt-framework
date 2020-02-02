@@ -10,6 +10,8 @@ jt808:
     base-packages:
   handler-scan:
     base-packages:
+      enabled: true
+      base-packages:
   msg-processor:
     thread-pool:
       # core-pool-size: Runtime.getRuntime().availableProcessors() + 1

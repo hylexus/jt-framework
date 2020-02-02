@@ -37,7 +37,10 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
     private final MsgHandlerMapping msgHandlerMapping;
     private final HandlerMethodArgumentResolver argumentResolver;
 
-    public Jt808MsgHandlerScanner(Set<String> packagesToScan, MsgTypeParser msgTypeParser, MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
+    public Jt808MsgHandlerScanner(
+            Set<String> packagesToScan, MsgTypeParser msgTypeParser,
+            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
+
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgHandlerMapping = msgHandlerMapping;
