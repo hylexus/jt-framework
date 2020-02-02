@@ -10,11 +10,14 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.ReflectionBasedRequestMsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -29,14 +32,16 @@ import java.util.Set;
 @Slf4j
 public class Jt808MsgHandlerScanner implements InitializingBean {
 
-    private Set<String> packagesToScan;
-    private MsgTypeParser msgTypeParser;
-    private MsgHandlerMapping msgHandlerMapping;
+    private final Set<String> packagesToScan;
+    private final MsgTypeParser msgTypeParser;
+    private final MsgHandlerMapping msgHandlerMapping;
+    private final HandlerMethodArgumentResolver argumentResolver;
 
-    public Jt808MsgHandlerScanner(Set<String> packagesToScan, MsgTypeParser msgTypeParser, MsgHandlerMapping msgHandlerMapping) {
+    public Jt808MsgHandlerScanner(Set<String> packagesToScan, MsgTypeParser msgTypeParser, MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgHandlerMapping = msgHandlerMapping;
+        this.argumentResolver = argumentResolver;
     }
 
     @Override
@@ -53,39 +58,18 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
             return;
         }
 
-        final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler();
+        final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler(argumentResolver);
         for (Class<?> cls : handlerClassList) {
             final Jt808RequestMsgHandler handlerAnnotation = AnnotationUtils.findAnnotation(cls, Jt808RequestMsgHandler.class);
             assert handlerAnnotation != null;
 
-            Method[] declaredMethods = cls.getDeclaredMethods();
+            final Method[] declaredMethods = ReflectionUtils.getAllDeclaredMethods(ClassUtils.getUserClass(cls));
             for (Method method : declaredMethods) {
                 if (!isRequestMsgMappingMethod(method)) {
                     continue;
                 }
 
-                int paramCount = method.getGenericParameterTypes().length;
-                MethodParameter[] methodParameters = new MethodParameter[paramCount];
-                for (int i = 0; i < paramCount; i++) {
-                    Type type = method.getGenericParameterTypes()[i];
-                    MethodParameter parameter = new MethodParameter().setIndex(i).setGenericType(Lists.newArrayList());
-                    methodParameters[i] = parameter;
-                    if (type instanceof Class) {
-                        parameter.setParameterType((Class<?>) type);
-                    } else if (type instanceof ParameterizedType) {
-                        for (Type actualTypeArgument : ((ParameterizedType) type).getActualTypeArguments()) {
-                            // ignore WildcardType
-                            // ?, ? extends Number, or ? super Integer
-                            if (actualTypeArgument instanceof WildcardType) {
-                                continue;
-                            }
-                            parameter.setParameterType((Class<?>) ((ParameterizedType) type).getRawType());
-                            parameter.getGenericType().add((Class<?>) actualTypeArgument);
-                        }
-                    } else {
-                        log.error("Unsupported type : {}", type);
-                    }
-                }
+                final MethodParameter[] methodParameters = getMethodParameters(method);
 
                 final HandlerMethod handlerMethod = new HandlerMethod(cls.newInstance(), method, methodParameters);
 
@@ -98,6 +82,32 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
                 }
             }
         }
+    }
+
+    private MethodParameter[] getMethodParameters(Method method) {
+        final int paramCount = method.getGenericParameterTypes().length;
+        final MethodParameter[] methodParameters = new MethodParameter[paramCount];
+        for (int i = 0; i < paramCount; i++) {
+            final Type type = method.getGenericParameterTypes()[i];
+            final MethodParameter parameter = new MethodParameter().setIndex(i).setGenericType(Lists.newArrayList()).setMethod(method);
+            methodParameters[i] = parameter;
+            if (type instanceof Class) {
+                parameter.setParameterType((Class<?>) type);
+            } else if (type instanceof ParameterizedType) {
+                for (Type actualTypeArgument : ((ParameterizedType) type).getActualTypeArguments()) {
+                    // ignore WildcardType
+                    // ?, ? extends Number, or ? super Integer
+                    if (actualTypeArgument instanceof WildcardType) {
+                        continue;
+                    }
+                    parameter.setParameterType((Class<?>) ((ParameterizedType) type).getRawType());
+                    parameter.getGenericType().add((Class<?>) actualTypeArgument);
+                }
+            } else {
+                log.error("Unsupported type : {}", type);
+            }
+        }
+        return methodParameters;
     }
 
     private boolean isRequestMsgMappingMethod(Method method) {

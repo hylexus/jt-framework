@@ -17,6 +17,8 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.AuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.HeartBeatMsgHandler;
 import io.github.hylexus.jt808.handler.impl.NoReplyMsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.DelegateHandlerMethodArgumentResolvers;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
@@ -113,10 +115,16 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
+    public HandlerMethodArgumentResolver handlerMethodArgumentResolver() {
+        // 如果有必要 --> 再提供自定义注册
+        return new DelegateHandlerMethodArgumentResolvers();
+    }
+
+    @Bean
     @ConditionalOnProperty(prefix = "jt808.handler-scan", name = "enabled", havingValue = "true")
-    public Jt808MsgHandlerScanner jt808MsgHandlerScanner(MsgHandlerMapping msgHandlerMapping) {
+    public Jt808MsgHandlerScanner jt808MsgHandlerScanner(MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
         Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
-        return new Jt808MsgHandlerScanner(handlerScan.getBasePackages(), configure.supplyMsgTypeParser(), msgHandlerMapping);
+        return new Jt808MsgHandlerScanner(handlerScan.getBasePackages(), configure.supplyMsgTypeParser(), msgHandlerMapping, argumentResolver);
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)

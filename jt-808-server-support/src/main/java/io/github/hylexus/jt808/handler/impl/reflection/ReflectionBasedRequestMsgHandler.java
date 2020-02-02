@@ -2,9 +2,10 @@ package io.github.hylexus.jt808.handler.impl.reflection;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.session.Session;
@@ -27,6 +28,11 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
 
     private Set<MsgType> supportedMsgTypes = new HashSet<>();
     private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
+    private final HandlerMethodArgumentResolver argumentResolver;
+
+    public ReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver) {
+        this.argumentResolver = argumentResolver;
+    }
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
@@ -47,7 +53,6 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
             return Optional.empty();
         }
 
-        log.info("REQ:{}", msg);
         final Object[] args = this.resolveArgs(handlerMethod, metadata, msg, session);
 
         final Object result;
@@ -64,17 +69,11 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
         final Object[] args = new Object[handlerMethod.getParameters().length];
         for (int i = 0; i < handlerMethod.getParameters().length; i++) {
             final MethodParameter parameter = handlerMethod.getParameters()[i];
-            final Class<?> parameterType = parameter.getParameterType();
 
-            // TODO ArgumentResolver
-            if (RequestMsgMetadata.class.isAssignableFrom(parameterType)) {
-                args[i] = metadata;
-            } else if (RequestMsgHeader.class.isAssignableFrom(parameterType)) {
-                args[i] = metadata.getHeader();
-            } else if (RequestMsgBody.class.isAssignableFrom(parameterType)) {
-                args[i] = msg;
-            } else if (Session.class.isAssignableFrom(parameterType)) {
-                args[i] = session;
+            try {
+                args[i] = this.argumentResolver.resolveArgument(parameter, metadata, session, msg);
+            } catch (ArgumentResolveException e) {
+                log.error("Can not resolve argument for Method : {}, MethodParameter : {} ", e.getParameter().getMethod(), e.getParameter());
             }
         }
         return args;
