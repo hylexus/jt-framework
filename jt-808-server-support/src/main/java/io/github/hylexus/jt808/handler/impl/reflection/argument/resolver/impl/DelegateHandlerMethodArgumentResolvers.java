@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author hylexus
  * Created At 2020-02-02 1:21 下午
  */
+@BuiltinComponent
 public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgumentResolver {
 
     private final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
@@ -40,7 +42,7 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
 
     @Override
     public Object resolveArgument(MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
-        HandlerMethodArgumentResolver resolver = this.getResolver(parameter);
+        final HandlerMethodArgumentResolver resolver = this.getResolver(parameter);
         if (resolver != null) {
             return resolver.resolveArgument(parameter, metadata, session, msg);
         }

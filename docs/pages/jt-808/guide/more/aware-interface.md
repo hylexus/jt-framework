@@ -18,6 +18,40 @@
 
 每次消息处理时为实体类注入 `RequestMsgHeader` 实例。
 
+```java
+public interface RequestMsgHeaderAware {
+
+    void setRequestMsgHeader(RequestMsgHeader header);
+
+}
+```
+
 ## RequestMsgMetadataAware
 
 每次消息处理时为实体类注入 `RequestMsgMetadata` 实例。
+
+```java
+public interface RequestMsgMetadataAware {
+
+    void setRequestMsgMetadata(RequestMsgMetadata metadata);
+
+}
+```
+
+## BytesEncoderAware
+
+::: tip 提示
+有关 `BytesEncoder` 的内容，[请移步此处](../basic/customized.md#bytesencoder)。
+:::
+
+- `MsgHandler` 中可以实现该接口以注入 `BytesEncoder` 给处理器实例。
+- 当然如果是自定义的 `MsgHandler`（接口实现类），完全可以使用 `Spring` 的依赖注入的方式来使用 `BytesEncoder` 实例。
+- 内置的 `MsgHandler` 都实现了该接口。
+
+```java
+public interface BytesEncoderAware {
+
+    void setBytesEncoder(BytesEncoder bytesEncoder);
+
+}
+```

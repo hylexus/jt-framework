@@ -10,7 +10,9 @@ import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.converter.impl.AuthRequestMsgBodyConverter;
+import io.github.hylexus.jt808.converter.impl.resp.DelegateRespMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
@@ -83,8 +85,8 @@ public class Jt808ServerAutoConfigure {
     private Jt808ServerConfigure configure;
 
     @Bean
-    public MsgHandlerMapping msgHandlerMapping() {
-        MsgHandlerMapping mapping = new MsgHandlerMapping();
+    public MsgHandlerMapping msgHandlerMapping(BytesEncoder bytesEncoder) {
+        MsgHandlerMapping mapping = new MsgHandlerMapping(bytesEncoder);
         configure.configureMsgHandlerMapping(mapping);
         // Default handlers for debug
         mapping.registerHandler(new AuthMsgHandler(configure.supplyAuthCodeValidator()))
@@ -121,10 +123,23 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
+    public ResponseMsgBodyConverter responseMsgBodyConverter(MsgTypeParser msgTypeParser) {
+        // 如果有必要 --> 再提供自定义注册
+        return new DelegateRespMsgBodyConverter(msgTypeParser);
+    }
+
+    @Bean
     @ConditionalOnProperty(prefix = "jt808.handler-scan", name = "enabled", havingValue = "true")
-    public Jt808MsgHandlerScanner jt808MsgHandlerScanner(MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
+    public Jt808MsgHandlerScanner jt808MsgHandlerScanner(
+            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver,
+            ResponseMsgBodyConverter responseMsgBodyConverter) {
+
         Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
-        return new Jt808MsgHandlerScanner(handlerScan.getBasePackages(), configure.supplyMsgTypeParser(), msgHandlerMapping, argumentResolver);
+
+        return new Jt808MsgHandlerScanner(
+                handlerScan.getBasePackages(), configure.supplyMsgTypeParser(),
+                msgHandlerMapping, argumentResolver, responseMsgBodyConverter
+        );
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)

@@ -2,12 +2,14 @@ package io.github.hylexus.jt808.handler;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.support.handler.scan.BytesEncoderAware;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -20,20 +22,29 @@ import java.util.Optional;
  * @author hylexus
  * Created At 2019-08-24 15:45
  */
-@Slf4j
-public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements MsgHandler<T> {
+@Slf4j(topic = "jt-808.msg.req.handler.abstract-msg-handler")
+public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements MsgHandler<T>, BytesEncoderAware {
 
-    private Encoder encoder = new Encoder();
+    // Lazy-init until BytesEncoderAware.setBytesEncoder() method invoke
+    protected Encoder encoder;
+    protected BytesEncoder bytesEncoder;
+
+    @Override
+    public void setBytesEncoder(BytesEncoder bytesEncoder) {
+        log.info("Binding BytesEncoder [{}] to MsgHandler [{}]", bytesEncoder, this);
+        this.encoder = new Encoder(bytesEncoder);
+        this.bytesEncoder = bytesEncoder;
+    }
 
     @Override
     public void handleMsg(RequestMsgMetadata metadata, T body, Session session) throws IOException, InterruptedException {
-        Optional<RespMsgBody> respInfo = this.doProcess(metadata, body, session);
+        final Optional<RespMsgBody> respInfo = this.doProcess(metadata, body, session);
         if (!respInfo.isPresent()) {
             log.debug("MsgHandler return empty(). [SendResult2Client] canceled.");
             return;
         }
 
-        RespMsgBody respBody = respInfo.get();
+        final RespMsgBody respBody = respInfo.get();
         byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
         this.send2Client(session.getChannel(), respBytes);
 

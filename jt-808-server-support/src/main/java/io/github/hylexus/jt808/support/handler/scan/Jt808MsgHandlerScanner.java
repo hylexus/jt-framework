@@ -3,14 +3,17 @@ package io.github.hylexus.jt808.support.handler.scan;
 import com.google.common.collect.Lists;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgMapping;
+import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.ReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,22 +32,24 @@ import java.util.Set;
  * @author hylexus
  * Created At 2020-02-01 3:31 下午
  */
-@Slf4j
+@Slf4j(topic = "jt-808.handler-scan")
 public class Jt808MsgHandlerScanner implements InitializingBean {
 
     private final Set<String> packagesToScan;
     private final MsgTypeParser msgTypeParser;
     private final MsgHandlerMapping msgHandlerMapping;
     private final HandlerMethodArgumentResolver argumentResolver;
+    private final ResponseMsgBodyConverter responseMsgBodyConverter;
 
     public Jt808MsgHandlerScanner(
             Set<String> packagesToScan, MsgTypeParser msgTypeParser,
-            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver) {
+            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
 
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgHandlerMapping = msgHandlerMapping;
         this.argumentResolver = argumentResolver;
+        this.responseMsgBodyConverter = responseMsgBodyConverter;
     }
 
     @Override
@@ -61,7 +66,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
             return;
         }
 
-        final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler(argumentResolver);
+        final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter);
         for (Class<?> cls : handlerClassList) {
             final Jt808RequestMsgHandler handlerAnnotation = AnnotationUtils.findAnnotation(cls, Jt808RequestMsgHandler.class);
             assert handlerAnnotation != null;
@@ -72,11 +77,15 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
                     continue;
                 }
 
+
+                if (!isSupportedReturnType(method)) {
+                    continue;
+                }
                 final MethodParameter[] methodParameters = getMethodParameters(method);
 
-                final HandlerMethod handlerMethod = new HandlerMethod(cls.newInstance(), method, methodParameters);
-
+                final HandlerMethod handlerMethod = new HandlerMethod(createBeanInstance(cls), method, methodParameters);
                 final Jt808RequestMsgMapping mappingAnnotation = method.getAnnotation(Jt808RequestMsgMapping.class);
+
                 for (int msgId : mappingAnnotation.msgType()) {
                     MsgType msgType = msgTypeParser.parseMsgType(msgId)
                             .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
@@ -85,6 +94,24 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
                 }
             }
         }
+    }
+
+    private boolean isSupportedReturnType(Method method) {
+        if (RespMsgBody.class.isAssignableFrom(method.getReturnType())) {
+            return true;
+        }
+
+        if (AnnotationUtils.findAnnotation(method.getReturnType(), Jt808RespMsgBody.class) != null) {
+            return true;
+        }
+
+        log.error("Method [{}] returned an unsupported type : [{}], only [{}] is supported by {}",
+                method, method.getReturnType(), RespMsgBody.class, Jt808RequestMsgHandler.class);
+        return false;
+    }
+
+    private Object createBeanInstance(Class<?> cls) throws InstantiationException, IllegalAccessException {
+        return cls.newInstance();
     }
 
     private MethodParameter[] getMethodParameters(Method method) {

@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.handler.impl.reflection;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
@@ -29,9 +30,11 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
     private Set<MsgType> supportedMsgTypes = new HashSet<>();
     private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
     private final HandlerMethodArgumentResolver argumentResolver;
+    private final ResponseMsgBodyConverter responseMsgBodyConverter;
 
-    public ReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver) {
+    public ReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
         this.argumentResolver = argumentResolver;
+        this.responseMsgBodyConverter = responseMsgBodyConverter;
     }
 
     @Override
@@ -67,7 +70,9 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
             log.error(e.getMessage(), e);
             return Optional.empty();
         }
-        return Optional.of((RespMsgBody) result);
+
+        // [userType] --> RespMsgBody
+        return this.responseMsgBodyConverter.convert(result, session, metadata);
     }
 
     private Object[] resolveArgs(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {

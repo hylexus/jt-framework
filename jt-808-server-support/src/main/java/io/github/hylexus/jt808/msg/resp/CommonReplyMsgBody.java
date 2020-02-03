@@ -1,8 +1,11 @@
 package io.github.hylexus.jt808.msg.resp;
 
 
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.msg.RespMsgBody;
+import io.github.hylexus.oaks.utils.Bytes;
+import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -37,6 +40,15 @@ public class CommonReplyMsgBody implements RespMsgBody {
 
     @Override
     public byte[] toBytes() {
-        return new byte[0];
+        return Bytes.concatAll(
+                IntBitOps.intTo2Bytes(this.getReplyFlowId()),
+                IntBitOps.intTo2Bytes(this.getReplyMsgId()),
+                new byte[]{this.getResult()}
+        );
+    }
+
+    @Override
+    public MsgType replyMsgType() {
+        return BuiltinJt808MsgType.SERVER_COMMON_REPLY;
     }
 }

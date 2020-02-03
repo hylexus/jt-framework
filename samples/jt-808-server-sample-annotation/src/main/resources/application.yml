@@ -13,3 +13,4 @@ logging:
   level: info
   level.io.github.hylexus: debug
   level.jt-808.msg.req.decoder: debug
+  level.jt-808.msg.req.handler.abstract-msg-handler: info

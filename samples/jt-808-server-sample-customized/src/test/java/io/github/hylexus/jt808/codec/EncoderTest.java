@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class EncoderTest {
 
-    private Encoder encoder = new Encoder();
+    private Encoder encoder = new Encoder(new BytesEncoder.DefaultBytesEncoder());
 
     @Test
     public void test1() throws IllegalAccessException, InstantiationException {

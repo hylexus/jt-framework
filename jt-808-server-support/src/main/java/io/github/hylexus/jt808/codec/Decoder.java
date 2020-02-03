@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.codec;
 
-import io.github.hylexus.jt.codec.FieldDecoder;
+import io.github.hylexus.jt.codec.decode.FieldDecoder;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;

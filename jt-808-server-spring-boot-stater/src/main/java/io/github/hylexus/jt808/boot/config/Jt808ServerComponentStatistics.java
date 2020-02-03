@@ -8,9 +8,11 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
+import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
@@ -67,7 +69,9 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
             RequestMsgDispatcher.class,
             RequestMsgQueue.class,
             RequestMsgQueueListener.class,
-            Jt808ServerConfigure.class
+            Jt808ServerConfigure.class,
+            ResponseMsgBodyConverter.class,
+            HandlerMethodArgumentResolver.class
     ));
 
     @Override

@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.codec;
+package io.github.hylexus.jt.codec.decode;
 
 import io.github.hylexus.jt.annotation.msg.req.AdditionalField;
 import io.github.hylexus.jt.data.msg.AdditionalFieldInfo;

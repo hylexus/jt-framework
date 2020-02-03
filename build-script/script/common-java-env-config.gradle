@@ -20,6 +20,10 @@ repositories {
 dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
+
+    // for test-class
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
 }
 
 apply plugin: "io.spring.dependency-management"

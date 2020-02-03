@@ -76,8 +76,8 @@ function jt808GuideSidebarConfig() {
             children: [
                 ['/jt-808/guide/annotation-based-dev/', '说明'],
                 'annotation-based-dev/receive-msg-mapping',
-                'annotation-based-dev/send-msg-mapping',
                 'annotation-based-dev/msg-handler-register',
+                'annotation-based-dev/send-msg-mapping',
                 'annotation-based-dev/location-msg-parse-demo'
             ]
         },
