@@ -11,7 +11,7 @@
 所以在基于注解的实体类映射时，你可以给实体类实现这些接口以自动注入一些其他信息。
 
 ::: danger 注意
-目前为止，这些Aware接口只能在 [基于注解处理请求消息映射](../annotation-based-dev/receive-msg-mapping.md) 时用于 `请求体消息实体类` 中。
+目前为止，这些Aware接口只能在 [基于注解处理请求消息映射](../annotation-based-dev/req-msg-mapping.md) 时用于 `请求体消息实体类` 中。
 :::
 
 ## RequestMsgHeaderAware

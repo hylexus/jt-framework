@@ -1,6 +1,5 @@
 package io.github.hylexus.jt808.converter.impl;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
@@ -17,8 +16,7 @@ import java.util.Optional;
  * Created At 2019-09-19 10:35 下午
  */
 @Slf4j
-@BuiltinComponent
-public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyConverter {
+public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyConverter {
 
     private Decoder decoder = new Decoder();
     /**
@@ -33,7 +31,7 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
         return ANNOTATION_BASED_DEV_COMPONENT_ORDER;
     }
 
-    public ReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
+    public CustomReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
             MsgType msgType, Class<? extends RequestMsgBody> cls, boolean forceOverride) {
 
         int msgId = msgType.getMsgId();
@@ -47,7 +45,7 @@ public class ReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyCon
         return this;
     }
 
-    public ReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(MsgType msgType, Class<? extends RequestMsgBody> cls) {
+    public CustomReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(MsgType msgType, Class<? extends RequestMsgBody> cls) {
         return addSupportedMsgBody(msgType, cls, false);
     }
 

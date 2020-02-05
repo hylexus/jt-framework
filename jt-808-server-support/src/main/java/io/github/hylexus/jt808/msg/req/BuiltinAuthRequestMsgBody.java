@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Jt808ReqMsgBody(msgType = 0x0102)
-public class AuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware {
+public class BuiltinAuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware {
 
     private RequestMsgHeader header;
 

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
+import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -22,7 +22,7 @@ import java.util.Set;
  * Created At 2020-02-02 7:30 下午
  */
 @Slf4j
-public class SampleMsgHandler implements MsgHandler<AuthRequestMsgBody> {
+public class SampleMsgHandler implements MsgHandler<BuiltinAuthRequestMsgBody> {
 
     static byte SUCCESS = 0;
     static byte AUTH_CODE_ERROR = 2;
@@ -33,7 +33,7 @@ public class SampleMsgHandler implements MsgHandler<AuthRequestMsgBody> {
     }
 
     @Override
-    public void handleMsg(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) throws IOException, InterruptedException {
+    public void handleMsg(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) throws IOException, InterruptedException {
         final String authCode = body.getAuthCode();
 
         // 鉴权逻辑

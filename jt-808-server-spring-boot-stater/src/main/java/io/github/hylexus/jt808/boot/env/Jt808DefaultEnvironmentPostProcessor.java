@@ -1,6 +1,5 @@
 package io.github.hylexus.jt808.boot.env;
 
-import lombok.Getter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.boot.env.PropertiesPropertySourceLoader;
@@ -26,10 +25,11 @@ public class Jt808DefaultEnvironmentPostProcessor implements EnvironmentPostProc
 
     private static final String DEFAULT_JT_808_SERVER_CONFIG_PROPERTY_SOURCE_NAME = "default-jt808-server-config";
 
-    private final String resourcePattern = "classpath*:META-INF/default-jt808-server-config.*";
+    private static final String resourcePattern = "classpath*:META-INF/default-jt808-server-config.*";
 
-    @Getter
-    private final int order = Ordered.LOWEST_PRECEDENCE - 1;
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE - 1;
+    }
 
     private final YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader();
     private final PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();

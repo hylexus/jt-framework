@@ -12,6 +12,10 @@ public interface OrderedComponent {
 
     int BUILTIN_COMPONENT_ORDER = 200;
 
+    int HIGHEST_PRECEDENCE = Integer.MIN_VALUE;
+
+    int LOWEST_PRECEDENCE = Integer.MAX_VALUE;
+
 
     default int getOrder() {
         return DEFAULT_ORDER;

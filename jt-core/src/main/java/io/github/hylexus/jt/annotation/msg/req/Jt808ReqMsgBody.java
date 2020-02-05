@@ -13,4 +13,7 @@ public @interface Jt808ReqMsgBody {
 
     int[] msgType();
 
+    String desc() default "";
+
 }
+

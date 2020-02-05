@@ -9,7 +9,7 @@ features:
 - title: 基于Netty
   details: TCP处理基于Netty 4.x。
 - title: Spring-Boot驱动
-  details: 提供 Spring-Boot-Starter 可一键接入，可定制化。
+  details: 提供 Spring-Boot-Starter，开箱即用、可定制化。
 - title: 简介至上
   details: 注解驱动开发，省时省力。
 footer: XXX Licensed | Copyright © 2020-present TODO
@@ -35,7 +35,8 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 
 ## 致谢
 
-- 本文档基于 [vue-press](https://www.vuepress.cn/) 编写
+- 本文档基于 [VuePress](https://www.vuepress.cn/) 编写
+
 - `@ExtraMsgBody` 这块的逻辑，感谢这位仁兄[qianhongtang](https://github.com/qianhongtang)的启发
 
 ## 软件版本
@@ -43,4 +44,6 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ::: tip
 - JDK : 1.8+
 - Netty : 4.x
+- VuePress : ^1.1.0
+- Gradle : 5.5.1
 :::

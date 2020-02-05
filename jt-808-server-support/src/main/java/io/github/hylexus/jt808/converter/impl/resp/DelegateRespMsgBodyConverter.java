@@ -32,6 +32,7 @@ public class DelegateRespMsgBodyConverter extends AbstractBuiltinRespBodyConvert
     private void addDefaultConverters() {
         this.addConverter(new NoOpsRespMsgBodyConverter());
         this.addConverter(new ReflectionBasedRespMsgBodyConverter(this.msgTypeParser));
+        this.addConverter(new VoidRespMsgBodyConverter());
     }
 
     @Override

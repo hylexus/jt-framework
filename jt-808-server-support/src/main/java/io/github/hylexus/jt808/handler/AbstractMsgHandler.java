@@ -25,15 +25,13 @@ import java.util.Optional;
 @Slf4j(topic = "jt-808.msg.req.handler.abstract-msg-handler")
 public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements MsgHandler<T>, BytesEncoderAware {
 
-    // Lazy-init until BytesEncoderAware.setBytesEncoder() method invoke
+    // Lazy-init until BytesEncoderAware.setBytesEncoder() method invoked
     protected Encoder encoder;
-    protected BytesEncoder bytesEncoder;
 
     @Override
     public void setBytesEncoder(BytesEncoder bytesEncoder) {
         log.info("Binding BytesEncoder [{}] to MsgHandler [{}]", bytesEncoder, this);
         this.encoder = new Encoder(bytesEncoder);
-        this.bytesEncoder = bytesEncoder;
     }
 
     @Override

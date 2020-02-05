@@ -21,7 +21,7 @@ public class CommonHandler {
 
 对于这种直接返回 `RespMsgBody` 的 `MsgHandler`，其实转换逻辑已经在 `RespMsgBody.toBytes()` 里实现了。
 
-常用的 服务端通用应答消息，可以用内置的 `CommonReplyMsgBody` 来表示。此处不再赘述。
+常用的 `服务端通用应答消息`，可以用内置的 `CommonReplyMsgBody` 来表示。此处不再赘述。
 
 ```java
 @Data
@@ -64,6 +64,16 @@ public class CommonReplyMsgBody implements RespMsgBody {
     }
 }
 ```
+
+## 不给客户端回复数据
+
+::: tip 以下情况不会发送数据给客户端：
+- 手动实现的 `MsgHandler` 
+    - 返回 `Optional.empty()`
+- 基于 `@Jt808RequestMsgMapping` 实现的 `MsgHandler`
+    - 方法返回类型为 `void`
+    - 方法返回值为 `VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT`
+:::
 
 ## @Jt808RespMsgBody
 

@@ -2,7 +2,7 @@ package io.github.hylexus.jt808.ext;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
+import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,13 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 @FunctionalInterface
 public interface AuthCodeValidator {
 
-    boolean validateAuthCode(Session session, RequestMsgMetadata requestMsgMetadata, AuthRequestMsgBody authRequestMsgBody);
+    boolean validateAuthCode(Session session, RequestMsgMetadata requestMsgMetadata, BuiltinAuthRequestMsgBody authRequestMsgBody);
 
     @Slf4j
     @DebugOnly
     class BuiltinAuthCodeValidatorForDebugging implements AuthCodeValidator {
         @Override
-        public boolean validateAuthCode(Session session, RequestMsgMetadata metadata, AuthRequestMsgBody body) {
+        public boolean validateAuthCode(Session session, RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body) {
             log.info("[AuthCodeValidator] Always return true, authCode : {}", body.getAuthCode());
             return true;
         }

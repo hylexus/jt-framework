@@ -5,7 +5,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.converter.impl.ReflectionBasedRequestMsgBodyConverter;
+import io.github.hylexus.jt808.converter.impl.CustomReflectionBasedRequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -22,18 +23,27 @@ import java.util.Set;
 @Slf4j
 public class Jt808EntityScanner implements InitializingBean {
 
-    private Set<String> packagesToScan;
-    private MsgConverterMapping msgConverterMapping;
-    private MsgTypeParser msgTypeParser;
+    private final Set<String> packagesToScan;
+    private final MsgConverterMapping msgConverterMapping;
+    private final MsgTypeParser msgTypeParser;
+    private final CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter;
 
-    public Jt808EntityScanner(Set<String> packagesToScan, MsgTypeParser msgTypeParser, MsgConverterMapping msgConverterMapping) {
+    public Jt808EntityScanner(
+            Set<String> packagesToScan, MsgTypeParser msgTypeParser,
+            MsgConverterMapping msgConverterMapping, CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter) {
+
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgConverterMapping = msgConverterMapping;
+        this.reflectionBasedRequestMsgBodyConverter = reflectionBasedRequestMsgBodyConverter;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        this.doEntityScan(this.packagesToScan, this.reflectionBasedRequestMsgBodyConverter);
+    }
+
+    public void doEntityScan(Set<String> packagesToScan, CustomReflectionBasedRequestMsgBodyConverter converter) throws IOException {
         if (CollectionUtils.isEmpty(packagesToScan)) {
             log.info("[jt808.entity-scan.base-packages] is empty. Skip...");
             return;
@@ -46,7 +56,7 @@ public class Jt808EntityScanner implements InitializingBean {
             return;
         }
 
-        final ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
+        // final ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
         for (Class cls : entityClass) {
             final Jt808ReqMsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class);
             assert annotation != null;
@@ -62,8 +72,8 @@ public class Jt808EntityScanner implements InitializingBean {
                         .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                 @SuppressWarnings("unchecked")
                 Class<? extends RequestMsgBody> cls1 = cls;
-                defaultConverter.addSupportedMsgBody(msgType, cls1);
-                msgConverterMapping.registerConverter(msgType, defaultConverter);
+                converter.addSupportedMsgBody(msgType, cls1);
+                msgConverterMapping.registerConverter(msgType, converter);
             }
         }
     }

@@ -17,6 +17,7 @@ dependencies {
 
     implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
 
+    implementation(project(":jt-spring"))
     implementation(project(":jt-core"))
     implementation(project(":jt-808-server-support"))
     implementation(project(":jt-808-server-spring-boot-stater"))

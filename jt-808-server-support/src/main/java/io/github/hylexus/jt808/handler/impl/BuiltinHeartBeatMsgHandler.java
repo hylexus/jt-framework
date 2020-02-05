@@ -1,6 +1,5 @@
 package io.github.hylexus.jt808.handler.impl;
 
-import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
@@ -11,6 +10,7 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +22,7 @@ import static java.util.Optional.of;
  */
 @Slf4j
 @BuiltinComponent
-public class HeartBeatMsgHandler extends AbstractMsgHandler {
+public class BuiltinHeartBeatMsgHandler extends AbstractMsgHandler {
 
     @Override
     public int getOrder() {
@@ -31,7 +31,7 @@ public class HeartBeatMsgHandler extends AbstractMsgHandler {
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
-        return Sets.newHashSet(BuiltinJt808MsgType.CLIENT_HEART_BEAT);
+        return Collections.singleton(BuiltinJt808MsgType.CLIENT_HEART_BEAT);
     }
 
     @Override

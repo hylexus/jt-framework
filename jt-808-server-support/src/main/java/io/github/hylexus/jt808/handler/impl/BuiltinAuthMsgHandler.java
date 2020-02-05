@@ -7,15 +7,15 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.msg.req.AuthRequestMsgBody;
+import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static io.github.hylexus.jt808.msg.RespMsgBody.AUTH_CODE_ERROR;
 import static java.util.Optional.of;
 
@@ -25,16 +25,16 @@ import static java.util.Optional.of;
  */
 @Slf4j
 @BuiltinComponent
-public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
+public class BuiltinAuthMsgHandler extends AbstractMsgHandler<BuiltinAuthRequestMsgBody> {
 
     private AuthCodeValidator authCodeValidator;
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
-        return newHashSet(BuiltinJt808MsgType.CLIENT_AUTH);
+        return Collections.singleton(BuiltinJt808MsgType.CLIENT_AUTH);
     }
 
-    public AuthMsgHandler(AuthCodeValidator authCodeValidator) {
+    public BuiltinAuthMsgHandler(AuthCodeValidator authCodeValidator) {
         this.authCodeValidator = authCodeValidator;
     }
 
@@ -44,7 +44,7 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, AuthRequestMsgBody body, Session session) {
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) {
         log.debug("receive AuthMsg : {}", body);
         boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {

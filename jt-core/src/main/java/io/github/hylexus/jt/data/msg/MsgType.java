@@ -12,7 +12,7 @@ public interface MsgType {
     String getDesc();
 
     default Optional<MsgType> parseFromInt(int msgId) {
-        throw new UnsupportedOperationException("this method should be override in sub class");
+        throw new UnsupportedOperationException("this method should be override in subclass");
     }
 
     String toString();

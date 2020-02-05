@@ -138,7 +138,7 @@ public AuthCodeValidator supplyAuthCodeValidator() {
 
 ::: danger RequestMsgBodyConverter
 - 自定义的消息体解析器 `必须` 实现 `RequestMsgBodyConverter` 这个泛型接口
-- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/receive-msg-mapping.md) 使用 `基于注解` 的方式来实现 `RequestMsgBodyConverter` 的功能。
+- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/req-msg-mapping.md) 使用 `基于注解` 的方式来实现 `RequestMsgBodyConverter` 的功能。
 :::
 
 `RequestMsgBodyConverter` 负责将客户端请求中的 `byte[]` 转换为 `请求消息体实体类` 以方便使用。 
@@ -177,7 +177,7 @@ public void configureMsgConverterMapping(MsgConverterMapping mapping) {
 ```
 
 ::: tip 传送门
-基于注解来实现 `RequestMsgBodyConverter` 的功能 [请移步这里](../annotation-based-dev/receive-msg-mapping.md)
+基于注解来实现 `RequestMsgBodyConverter` 的功能 [请移步这里](../annotation-based-dev/req-msg-mapping.md)
 :::
 
 

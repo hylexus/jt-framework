@@ -68,7 +68,7 @@ this.workerGroup = new NioEventLoopGroup(workThreadCount);
 
 是否启用实体扫描功能。启用后，请求报文可以自动映射到使用 `@Jt808ReqMsgBody` 标记的 `请求消息体实体类` 。
 
-使用基于注解的 `请求体消息实体类` [请参考这里](../guide/annotation-based-dev/receive-msg-mapping.md)。
+使用基于注解的 `请求体消息实体类` [请参考这里](../guide/annotation-based-dev/req-msg-mapping.md)。
 
 ### enable-builtin-entity
 
@@ -88,6 +88,13 @@ this.workerGroup = new NioEventLoopGroup(workThreadCount);
 
 `请求消息体实体类` 所在的包名，多个以逗号分隔。
 
+### register-builtin-request-msg-converters
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否自动注册内置的 `RequestMsgBodyConverter`。
+
 ## handler-scan
 
 ### enabled
@@ -105,6 +112,13 @@ this.workerGroup = new NioEventLoopGroup(workThreadCount);
 - 默认值：`""`
 
 基于注解的 `MsgHandler` 所在的包名，多个以逗号分隔。
+
+### register-builtin-msg-handlers
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否自动注册内置的 `MsgHandler` 。
 
 
 ## msg-processor.thread-pool

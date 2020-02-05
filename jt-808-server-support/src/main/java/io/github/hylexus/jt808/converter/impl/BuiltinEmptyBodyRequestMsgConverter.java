@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.converter.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
@@ -12,7 +13,8 @@ import java.util.Optional;
  * createdAt 2019/2/5
  * @see BuiltinJt808MsgType#CLIENT_HEART_BEAT
  **/
-public class EmptyBodyRequestMsgConverter implements RequestMsgBodyConverter<EmptyRequestBody> {
+@BuiltinComponent
+public class BuiltinEmptyBodyRequestMsgConverter implements RequestMsgBodyConverter<EmptyRequestBody> {
 
     @Override
     public Optional<EmptyRequestBody> convert2Entity(RequestMsgMetadata metadata) {

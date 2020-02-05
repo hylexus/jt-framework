@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.annotation.msg.req;
 
-import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 
 import java.lang.annotation.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ import java.util.Set;
 @DebugOnly
 public @interface AdditionalField {
 
-    Set<Class<?>> SUPPORTED_TARGET_CLASS = Sets.newHashSet(List.class);
+    Set<Class<?>> SUPPORTED_TARGET_CLASS = Collections.singleton(List.class);
     int ROOT_GROUP_MSG_ID = -1;
     int DEFAULT_BYTE_COUNT_OF_MSG_ID = 1;
     int DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH = 1;

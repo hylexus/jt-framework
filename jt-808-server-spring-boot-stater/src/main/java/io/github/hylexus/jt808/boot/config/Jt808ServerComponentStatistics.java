@@ -29,6 +29,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ClassUtils;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -62,16 +63,16 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         this.msgHandlerMapping = msgHandlerMapping;
     }
 
-    private Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
-            BytesEncoder.class,
-            MsgTypeParser.class,
-            AuthCodeValidator.class,
-            RequestMsgDispatcher.class,
-            RequestMsgQueue.class,
-            RequestMsgQueueListener.class,
-            Jt808ServerConfigure.class,
-            ResponseMsgBodyConverter.class,
-            HandlerMethodArgumentResolver.class
+    private final Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
+        BytesEncoder.class,
+        MsgTypeParser.class,
+        AuthCodeValidator.class,
+        RequestMsgDispatcher.class,
+        RequestMsgQueue.class,
+        RequestMsgQueueListener.class,
+        Jt808ServerConfigure.class,
+        ResponseMsgBodyConverter.class,
+        HandlerMethodArgumentResolver.class
     ));
 
     @Override
@@ -83,13 +84,21 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
         detectConvertAndHandlerMappings(1, stringBuilder);
 
-        stringBuilder.append(END_OF_LINE).append(line(2, "Other Components:")).append(END_OF_LINE);
+        stringBuilder
+            .append(END_OF_LINE).append(line(2, "Other Components:")).append(END_OF_LINE)
+            .append("----------------------------------------------------------------------")
+            .append("----------------------------------------------------------------------")
+            .append(END_OF_LINE);
         for (Class<?> cls : classSet) {
             stringBuilder.append(String.format("%1$-36s", cls.getSimpleName()))
-                    .append("|\t")
-                    .append(formatClassName(applicationContext.getBean(cls), false))
-                    .append(END_OF_LINE);
+                .append("|\t")
+                .append(formatClassName(applicationContext.getBean(cls), false))
+                .append(END_OF_LINE);
         }
+        stringBuilder
+            .append("----------------------------------------------------------------------")
+            .append("----------------------------------------------------------------------")
+            .append(END_OF_LINE);
 
         appendBannerSuffix(stringBuilder);
 
@@ -98,36 +107,47 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private void detectConvertAndHandlerMappings(int no, StringBuilder stringBuilder) {
         stringBuilder.append(line(no, "MsgConvert and MsgHandler MappingInfo:")).append(END_OF_LINE);
-        stringBuilder.append(String.format("%1$-35s\t|\t%2$-56s|\t%3$-64s\n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
+        stringBuilder.append(String.format("%1$-35s\t|\t%2$-64s|\t%3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
         stringBuilder.append("----------------------------------------------------------------------");
         stringBuilder.append("----------------------------------------------------------------------");
         stringBuilder.append(END_OF_LINE);
 
-        Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = initMappingInfo();
-        mappings.forEach((msgType, mappingInfo) -> {
-            String content = String.format("%1$-30s\t|\t%2$-64s\t|\t%3$-64s\n", formatMsgType(msgType),
+        final Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = initMappingInfo();
+
+        String[] headers = new String[]{"MsgId (MsgDesc)", "RequestMsgConverter", "MsgHandler"};
+
+        mappings.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey(Comparator.comparing(MsgType::getMsgId)))
+            .forEach(entry -> {
+                MsgType msgType = entry.getKey();
+                MsgConverterAndHandlerMappingInfo mappingInfo = entry.getValue();
+                String content = String.format("%1$-30s\t|\t%2$-72s\t|\t%3$-64s\n", formatMsgType(msgType),
                     formatClassName(mappingInfo.getConverter()),
                     formatClassName(mappingInfo.getHandler()));
-            stringBuilder.append(content);
-        });
+                stringBuilder.append(content);
+            });
+        stringBuilder
+            .append("----------------------------------------------------------------------")
+            .append("----------------------------------------------------------------------").append(END_OF_LINE);
+
     }
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
         stringBuilder.append(END_OF_LINE)
-                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<\n"));
+            .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<\n"));
     }
 
     private void appendBannerPrefix(StringBuilder stringBuilder) {
         stringBuilder
-                .append(END_OF_LINE)
-                .append(END_OF_LINE)
-                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<"))
-                .append(END_OF_LINE);
+            .append(END_OF_LINE)
+            .append(END_OF_LINE)
+            .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<"))
+            .append(END_OF_LINE);
         stringBuilder.append(AnsiOutput.toString(BUILTIN_COMPONENT_COLOR, "[(B)uiltin-Component]"))
-                .append(AnsiOutput.toString(CUSTOM_COMPONENT_COLOR, " [(C)ustom-Component] "))
-                .append(AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "[(D)eprecated-Component] "))
-                .append(AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "[(U)nknown-Component]"))
-                .append(END_OF_LINE);
+            .append(AnsiOutput.toString(CUSTOM_COMPONENT_COLOR, " [(C)ustom-Component] "))
+            .append(AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "[(D)eprecated-Component] "))
+            .append(AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "[(U)nknown-Component]"))
+            .append(END_OF_LINE);
     }
 
     private String line(int no, String content) {
@@ -157,7 +177,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         Class<?> userClass = ClassUtils.getUserClass(instance);
         AnsiColor color = detectColor(userClass);
         return AnsiOutput.toString(color,
-                shortenClassName ? componentPrefix(color) + shortClassName(userClass) : componentPrefix(color) + userClass.getName());
+            shortenClassName ? componentPrefix(color) + shortClassName(userClass) : componentPrefix(color) + userClass.getName());
     }
 
     private String componentPrefix(AnsiColor color) {
@@ -181,20 +201,20 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         final Map<Integer, MsgHandler> handlerMappings = msgHandlerMapping.getHandlerMappings();
 
         Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = msgConverterMapping.getMsgConverterMappings().entrySet().stream()
-                .map(entry -> {
-                    MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
-                    MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
-                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
-                    info.setType(msgType);
-                    info.setConverter(entry.getValue());
-                    MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
-                    info.setHandler(msgHandler);
-                    return info;
-                }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
+            .map(entry -> {
+                MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
+                MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
+                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
+                info.setType(msgType);
+                info.setConverter(entry.getValue());
+                MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
+                info.setHandler(msgHandler);
+                return info;
+            }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
 
         handlerMappings.forEach((msgId, msgHandler) -> {
             MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
+                .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
             MsgConverterAndHandlerMappingInfo info = mappings.getOrDefault(msgType, new MsgConverterAndHandlerMappingInfo());
             if (info.getHandler() == null) {
                 info.setHandler(msgHandler);
@@ -217,4 +237,17 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         private RequestMsgBodyConverter<?> converter;
         private MsgHandler<?> handler;
     }
+
+    //    public static void main(String[] args) {
+    //        String[] headers = new String[]{"MsgId (MsgDesc)", "RequestMsgConverter", "MsgHandler"};
+    //        String[][] data = new String[][]{
+    //            {"123", "Alfred Alan", "aalan@gmail.comxxxxxxxxxxxxxxxxxxxxxxxxxxxx"},
+    //            {"223", "Alison Smart", "asmart@gmail.com"},
+    //            {"256", "Ben Bessel", "benb@outlook.com"},
+    //            {"374", "John Roberts", "johnrob@company.com"},
+    //        };
+    //
+    //        String str = ASCIITable.fromData(headers, data).toString();
+    //        System.out.println(str);
+    //    }
 }

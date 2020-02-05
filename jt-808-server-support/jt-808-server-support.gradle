@@ -11,6 +11,9 @@ dependencies {
 
     provided "io.netty:netty-all:${jar_version_netty}"
 
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
+
     testCompile group: 'junit', name: 'junit'
 
 }

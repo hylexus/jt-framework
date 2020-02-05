@@ -6,11 +6,13 @@ jt808:
     enabled: true
     base-packages: io.github.hylexus.jt808.samples.annotation.entity.req
     enable-builtin-entity: true
+    register-builtin-request-msg-converters: true
   handler-scan:
     enabled: true
     base-packages: io.github.hylexus.jt808.samples.annotation.handler
+    register-builtin-msg-handlers: true
 logging:
   level: info
-  level.io.github.hylexus: debug
-  level.jt-808.msg.req.decoder: debug
-  level.jt-808.msg.req.handler.abstract-msg-handler: info
+#  level.io.github.hylexus: debug
+#  level.jt-808.msg.req.decoder: debug
+#  level.jt-808.msg.req.handler.abstract-msg-handler: info

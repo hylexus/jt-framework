@@ -21,4 +21,5 @@ public class Jt808EntityScanProps {
     private boolean enabled = true;
     private Set<String> basePackages;
     private boolean enableBuiltinEntity = true;
+    private boolean registerBuiltinRequestMsgConverters = true;
 }

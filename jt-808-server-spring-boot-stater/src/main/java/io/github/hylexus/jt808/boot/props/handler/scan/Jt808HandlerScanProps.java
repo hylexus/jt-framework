@@ -20,4 +20,5 @@ import java.util.Set;
 public class Jt808HandlerScanProps {
     private boolean enabled = true;
     private Set<String> basePackages;
+    private boolean registerBuiltinMsgHandlers = true;
 }

@@ -1,4 +1,3 @@
-rootProject.name = "jt-framework"
 // docs
 include 'docs'
 
@@ -17,3 +16,15 @@ include 'samples:jt-808-server-sample-bare'
 include 'samples:jt-808-server-sample-customized'
 include 'samples:jt-808-server-sample-annotation'
 
+rootProject.name = "jt-framework"
+// Change default "build.gradle" file to "${project.name}.gradle" recursively
+setBuildFileName(rootProject)
+
+def setBuildFileName(project) {
+    project.children.each { childProject ->
+        childProject.buildFileName = "${childProject.name}.gradle"
+        assert childProject.projectDir.isDirectory()
+        assert childProject.buildFile.isFile()
+        setBuildFileName(childProject)
+    }
+}

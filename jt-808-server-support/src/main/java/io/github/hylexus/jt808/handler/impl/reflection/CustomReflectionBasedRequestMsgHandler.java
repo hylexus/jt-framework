@@ -1,6 +1,5 @@
 package io.github.hylexus.jt808.handler.impl.reflection;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
@@ -9,6 +8,7 @@ import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.Handler
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
+import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,15 +24,14 @@ import java.util.concurrent.ConcurrentMap;
  * Created At 2020-02-01 5:58 下午
  */
 @Slf4j
-@BuiltinComponent
-public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
+public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
 
     private Set<MsgType> supportedMsgTypes = new HashSet<>();
     private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
     private final HandlerMethodArgumentResolver argumentResolver;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
 
-    public ReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
+    public CustomReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
         this.argumentResolver = argumentResolver;
         this.responseMsgBodyConverter = responseMsgBodyConverter;
     }
@@ -90,7 +89,12 @@ public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
     }
 
     private Object invokeHandlerMethod(HandlerMethod handlerMethod, Object[] args) throws IllegalAccessException, InvocationTargetException {
-        return handlerMethod.getMethod().invoke(handlerMethod.getBeanInstance(), args);
+        final Object result = handlerMethod.getMethod().invoke(handlerMethod.getBeanInstance(), args);
+
+        if (result == null && handlerMethod.isVoidReturnType()) {
+            return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;
+        }
+        return result;
     }
 
 }

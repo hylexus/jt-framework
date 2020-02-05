@@ -19,7 +19,7 @@ module.exports = {
         sidebarDepth: 1,
         displayAllHeaders: true,
         activeHeaderLinks: true,
-        lastUpdated: 'Last Updated',
+        lastUpdated: false,
 
         smoothScroll: true,
 
@@ -38,22 +38,10 @@ function sidebarConfig() {
     return {
         '/jt-808/guide/': jt808GuideSidebarConfig(),
         '/jt-808/config/': jt808ConfSidebarConfig(),
+        '/jt-808/best-practices/': jt808BestPracticesSidebarConfig(),
         '/jt-808/': jt808GuideSidebarConfig(),
         '/jt-809/': jt809SidebarConfig()
     };
-}
-
-function jt808ConfSidebarConfig() {
-    return [
-        {
-            title: '配置',
-            collapsable: false,
-            sidebarDepth: 1,
-            children: [
-                ''
-            ]
-        }
-    ];
 }
 
 function jt808GuideSidebarConfig() {
@@ -75,9 +63,9 @@ function jt808GuideSidebarConfig() {
             sidebarDepth: 1,
             children: [
                 ['/jt-808/guide/annotation-based-dev/', '说明'],
-                'annotation-based-dev/receive-msg-mapping',
+                'annotation-based-dev/req-msg-mapping',
                 'annotation-based-dev/msg-handler-register',
-                'annotation-based-dev/send-msg-mapping',
+                'annotation-based-dev/resp-msg-mapping',
                 'annotation-based-dev/location-msg-parse-demo'
             ]
         },
@@ -104,6 +92,36 @@ function jt808GuideSidebarConfig() {
     ];
 }
 
+function jt808ConfSidebarConfig() {
+    return [
+        {
+            title: '配置',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ''
+            ]
+        }
+    ];
+}
+
+function jt808BestPracticesSidebarConfig() {
+    return [
+        {
+            title: '使用建议',
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ['/jt-808/best-practices/', '说明'],
+                '/jt-808/best-practices/msg-type',
+                '/jt-808/best-practices/request-msg-body-converter',
+                '/jt-808/best-practices/msg-handler',
+                '/jt-808/best-practices/response-msg-body-converter',
+            ]
+        }
+    ];
+}
+
 function jt809SidebarConfig() {
     return [
         {
@@ -123,6 +141,7 @@ function navConfig() {
         // {text: '指南', link: '/guide/'},
         {text: '指南', link: '/jt-808/guide/'},
         {text: '配置', link: '/jt-808/config/'},
+        {text: '使用建议', link: '/jt-808/best-practices/'},
         {
             text: '协议类型',
             ariaLabel: '协议类型',

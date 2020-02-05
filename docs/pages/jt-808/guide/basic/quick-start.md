@@ -74,7 +74,7 @@ public class Jt808ServerSampleBareApplication {
     <img :src="$withBase('/img/print-component-statistics.png')"/>
 </p>
 
-可以从启动日志中的`组件统计信息`中看到内置了一个对 `0x0102 (终端鉴权)` 消息的处理器。处理逻辑位于 `io.github.hylexus.jt808.handler.impl.AuthMsgHandler` 。
+可以从启动日志中的`组件统计信息`中看到内置了一个对 `0x0102 (终端鉴权)` 消息的处理器。处理逻辑位于 `io.github.hylexus.jt808.handler.impl.BuiltinAuthMsgHandler` 。
 
 ::: tip 配置提示
 `组件统计信息` 的开关由配置项 `jt808.print-component-statistics = true|false` 来控制

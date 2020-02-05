@@ -8,20 +8,21 @@ import io.github.hylexus.jt808.session.Session;
 import java.util.Optional;
 
 /**
+ * 不给客户端回复消息
+ *
  * @author hylexus
- * Created At 2020-02-02 3:21 下午
+ * Created At 2020-02-02 2:50 下午
  */
-public class NoOpsRespMsgBodyConverter extends AbstractBuiltinRespBodyConverter {
+public class VoidRespMsgBodyConverter extends AbstractBuiltinRespBodyConverter {
 
     @Override
     public boolean supportsMsgBody(Object msgBody) {
-        return msgBody != VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT && msgBody instanceof RespMsgBody;
+        return msgBody == VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT || msgBody == null;
     }
 
     @Override
     public Optional<RespMsgBody> convert(Object msgBody, Session session, RequestMsgMetadata metadata) {
-        // mosBody 本身就是 RespMsgBody 类型
-        return Optional.of((RespMsgBody) msgBody);
+        return Optional.empty();
     }
 
 }
