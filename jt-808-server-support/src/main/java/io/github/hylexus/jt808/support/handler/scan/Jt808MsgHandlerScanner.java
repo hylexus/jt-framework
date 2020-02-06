@@ -39,9 +39,9 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
     private final CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler;
 
     public Jt808MsgHandlerScanner(
-        Set<String> packagesToScan, MsgTypeParser msgTypeParser,
-        MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter,
-        CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler) {
+            Set<String> packagesToScan, MsgTypeParser msgTypeParser,
+            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter,
+            CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler) {
 
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
@@ -57,7 +57,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
     }
 
     public void doHandlerScan(Set<String> packagesToScan, CustomReflectionBasedRequestMsgHandler handler) throws IOException, InstantiationException,
-        IllegalAccessException {
+            IllegalAccessException {
         if (CollectionUtils.isEmpty(packagesToScan)) {
             log.info("[jt808.handler-scan.base-packages] is empty. Skip...");
             return;
@@ -91,7 +91,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
 
                 for (int msgId : mappingAnnotation.msgType()) {
                     MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                        .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
+                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                     handler.addSupportedMsgType(msgType, handlerMethod);
                 }
             }
@@ -118,7 +118,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
         }
 
         log.error("Method [{}] returned an unsupported type : [{}], only [{}] is supported by {}",
-            method, method.getReturnType(), RespMsgBody.class, Jt808RequestMsgHandler.class);
+                method, method.getReturnType(), RespMsgBody.class, Jt808RequestMsgHandler.class);
         return false;
     }
 

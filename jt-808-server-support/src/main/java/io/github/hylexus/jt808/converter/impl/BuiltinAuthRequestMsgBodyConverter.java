@@ -2,7 +2,6 @@ package io.github.hylexus.jt808.converter.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.utils.ProtocolUtils;
-import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
 
@@ -14,12 +13,7 @@ import java.util.Optional;
  * @see BuiltinAuthRequestMsgBody
  **/
 @BuiltinComponent
-public class BuiltinAuthRequestMsgBodyConverter implements RequestMsgBodyConverter<BuiltinAuthRequestMsgBody> {
-
-    @Override
-    public int getOrder() {
-        return BUILTIN_COMPONENT_ORDER;
-    }
+public class BuiltinAuthRequestMsgBodyConverter extends AbstractBuiltinRequestMsgBodyConverter<BuiltinAuthRequestMsgBody> {
 
     @Override
     public Optional<BuiltinAuthRequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {

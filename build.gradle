@@ -31,6 +31,7 @@ ext {
     jar_version_oaks = "1.0.4"
     jar_version_commons_collection = "3.2.2"
     jar_version_blocking_map = "0.91"
+    jar_version_hibernate_validator = "6.0.17.Final"
 
     defaultCharset = StandardCharsets.UTF_8.name()
     defaultJavaVersion = 1.8

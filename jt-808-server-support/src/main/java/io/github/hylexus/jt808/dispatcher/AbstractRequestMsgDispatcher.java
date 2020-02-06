@@ -35,19 +35,21 @@ public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatch
 
     private Optional<RequestMsgBody> tryParseMsgBody(RequestMsgWrapper wrapper) {
         final MsgType msgType = wrapper.getMetadata().getMsgType();
-        final Optional<RequestMsgBodyConverter> converter = this.msgConverterMapping.getConverter(msgType);
-        if (!converter.isPresent()) {
+        final Optional<RequestMsgBodyConverter<? extends RequestMsgBody>> converterInfo = this.msgConverterMapping.getConverter(msgType);
+        if (!converterInfo.isPresent()) {
             log.error("No [MsgConverter] found for msgType {}", msgType);
             return Optional.empty();
         }
 
-        @SuppressWarnings("unchecked") final RequestMsgBodyConverter<RequestMsgBody> msgBodyConverter = converter.get();
-        final Optional<RequestMsgBody> subMsg = msgBodyConverter.convert2Entity(wrapper.getMetadata());
+        final RequestMsgBodyConverter<? extends RequestMsgBody> msgBodyConverter = converterInfo.get();
+        final Optional<? extends RequestMsgBody> subMsg = msgBodyConverter.convert2Entity(wrapper.getMetadata());
         if (!subMsg.isPresent()) {
             log.debug("[MsgConverter] return empty(). converter:{}", msgBodyConverter.getClass());
             return Optional.empty();
         }
-        return subMsg;
+
+        final RequestMsgBody requestMsgBody = subMsg.get();
+        return Optional.of(requestMsgBody);
     }
 
     public abstract void doBroadcast(RequestMsgWrapper wrapper) throws Exception;

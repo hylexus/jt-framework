@@ -24,7 +24,7 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
 @Data
 @Accessors(chain = true)
 @Jt808ReqMsgBody(msgType = 0x0200)
-public class LocationUploadMsgBody implements RequestMsgBody, RequestMsgMetadataAware {
+public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgMetadataAware {
 
     @ToString.Exclude
     private RequestMsgMetadata requestMsgMetadata;

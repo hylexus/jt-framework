@@ -6,10 +6,10 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.msg.req.TerminalCommonReplyMsgBody;
+import io.github.hylexus.jt808.msg.req.BuiltinTerminalCommonReplyMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.AuthRequestMsgBody;
-import io.github.hylexus.jt808.samples.annotation.entity.req.LocationUploadMsgBody;
+import io.github.hylexus.jt808.samples.annotation.entity.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ public class CommonHandler {
     @Jt808RequestMsgMapping(msgType = 0x0200)
     public RespMsgBody processLocationMsg(
             Session session, RequestMsgMetadata metadata,
-            RequestMsgHeader header, LocationUploadMsgBody msgBody) {
+            RequestMsgHeader header, LocationUploadRequestMsgBody msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
         assert session.getTerminalId().equals(header.getTerminalId());
@@ -45,7 +45,7 @@ public class CommonHandler {
 
     // 此处会覆盖内置的终端通用应答消息处理器(如果启用了的话)
     @Jt808RequestMsgMapping(msgType = 0x0001)
-    public void processTerminalCommonReplyMsg(Session session, TerminalCommonReplyMsgBody msgBody) {
+    public void processTerminalCommonReplyMsg(Session session, BuiltinTerminalCommonReplyMsgBody msgBody) {
         log.info("处理终端通用应答消息 terminalId = {}, msgBody = {}", session.getTerminalId(), msgBody);
     }
 

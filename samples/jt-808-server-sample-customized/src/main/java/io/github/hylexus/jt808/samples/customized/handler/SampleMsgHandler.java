@@ -11,7 +11,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class SampleMsgHandler implements MsgHandler<BuiltinAuthRequestMsgBody> {
     }
 
     @Override
-    public void handleMsg(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) throws IOException, InterruptedException {
+    public void handleMsg(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) throws InterruptedException {
         final String authCode = body.getAuthCode();
 
         // 鉴权逻辑

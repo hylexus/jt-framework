@@ -95,8 +95,8 @@ public class Jt808ServerAutoConfigure {
         // Default converters for debug
         if (serverProps.getEntityScan().isRegisterBuiltinRequestMsgConverters()) {
             mapping.registerConverter(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgBodyConverter())
-                    .registerConverter(BuiltinJt808MsgType.CLIENT_COMMON_REPLY, new BuiltinTerminalCommonReplyMsgBodyConverter())
-                    .registerConverter(BuiltinJt808MsgType.CLIENT_HEART_BEAT, new BuiltinEmptyBodyRequestMsgConverter())
+                    .registerConverter(BuiltinJt808MsgType.CLIENT_COMMON_REPLY, new BuiltinTerminalCommonReplyRequestMsgBodyConverter())
+                    .registerConverter(BuiltinJt808MsgType.CLIENT_HEART_BEAT, new BuiltinEmptyRequestMsgBodyConverter())
             ;
         }
         return mapping;
@@ -127,7 +127,7 @@ public class Jt808ServerAutoConfigure {
         );
 
         if (entityScan.isEnableBuiltinEntity() && entityScan.isRegisterBuiltinRequestMsgConverters()) {
-            scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinCustomReflectionBasedRequestMsgBodyConverter());
+            scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinReflectionBasedRequestMsgBodyConverter());
         }
         return scanner;
     }

@@ -29,15 +29,16 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void consumeMsg(RequestMsgMetadata metadata, RequestMsgBody body) throws IOException, InterruptedException {
-        Optional<MsgHandler> handler = msgHandlerMapping.getHandler(metadata.getMsgType());
-        if (!handler.isPresent()) {
+        Optional<MsgHandler<? extends RequestMsgBody>> handlerInfo = msgHandlerMapping.getHandler(metadata.getMsgType());
+        if (!handlerInfo.isPresent()) {
             log.error("No handler found for MsgType : {}", metadata.getMsgType());
             return;
         }
 
-        handler.get().handleMsg(metadata, body, getSession(metadata));
+        MsgHandler<? extends RequestMsgBody> msgHandler = handlerInfo.get();
+        ((MsgHandler) msgHandler).handleMsg(metadata, body, getSession(metadata));
     }
 
     protected Session getSession(RequestMsgMetadata metadata) {

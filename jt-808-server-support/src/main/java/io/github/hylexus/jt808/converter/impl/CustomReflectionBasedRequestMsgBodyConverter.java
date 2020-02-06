@@ -7,6 +7,7 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import java.util.Optional;
  * Created At 2019-09-19 10:35 下午
  */
 @Slf4j
-public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyConverter {
+public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyConverter<RequestMsgBody> {
 
     private Decoder decoder = new Decoder();
     /**
@@ -25,6 +26,10 @@ public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgB
      * </pre>
      */
     private Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
+
+    public Map<Integer, Class<? extends RequestMsgBody>> getMsgBodyMapping() {
+        return Collections.unmodifiableMap(msgTypeMsgBodyClassMapping);
+    }
 
     @Override
     public int getOrder() {
@@ -50,15 +55,15 @@ public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgB
     }
 
     @Override
-    public Optional convert2Entity(RequestMsgMetadata metadata) {
+    public Optional<RequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {
         byte[] bytes = metadata.getBodyBytes();
-        Class<?> targetBodyClass = msgTypeMsgBodyClassMapping.get(metadata.getMsgType().getMsgId());
+        Class<? extends RequestMsgBody> targetBodyClass = msgTypeMsgBodyClassMapping.get(metadata.getMsgType().getMsgId());
         if (targetBodyClass == null) {
             log.warn("Can not convert {}", metadata.getMsgType());
             return Optional.empty();
         }
         try {
-            Object o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, metadata);
+            RequestMsgBody o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, metadata);
             return Optional.of(o);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

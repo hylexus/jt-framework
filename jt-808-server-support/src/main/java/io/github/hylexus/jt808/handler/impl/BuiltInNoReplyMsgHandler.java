@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Slf4j
 @BuiltinComponent
-public class BuiltInNoReplyMsgHandler extends AbstractMsgHandler {
+public class BuiltInNoReplyMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
 
     @Override
     public int getOrder() {

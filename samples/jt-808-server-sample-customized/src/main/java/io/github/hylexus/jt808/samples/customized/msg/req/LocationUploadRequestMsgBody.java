@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class LocationUploadMsgBody implements RequestMsgBody {
+public class LocationUploadRequestMsgBody implements RequestMsgBody {
     private int warningFlag;
 
     private int status;

@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.support;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -17,25 +18,25 @@ import java.util.Optional;
 public class MsgConverterMapping {
 
     //private Map<MsgType, RequestMsgBodyConverter> mapping;
-    private Map<Integer, RequestMsgBodyConverter> mapping;
+    private Map<Integer, RequestMsgBodyConverter<? extends RequestMsgBody>> mapping;
 
     public MsgConverterMapping() {
         this.mapping = new HashMap<>();
     }
 
-    public Optional<RequestMsgBodyConverter> getConverter(MsgType msgType) {
+    public Optional<RequestMsgBodyConverter<? extends RequestMsgBody>> getConverter(MsgType msgType) {
         return Optional.ofNullable(mapping.get(msgType.getMsgId()));
     }
 
-    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter converter) {
+    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter) {
         return registerConverter(msgType, converter, false);
     }
 
-    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter converter, boolean forceOverride) {
+    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter, boolean forceOverride) {
 
         final int msgId = msgType.getMsgId();
         if (containsConverter(msgType)) {
-            final RequestMsgBodyConverter oldConverter = this.mapping.get(msgId);
+            final RequestMsgBodyConverter<? extends RequestMsgBody> oldConverter = this.mapping.get(msgId);
             if (forceOverride || oldConverter.shouldBeReplacedBy(converter)) {
                 this.mapping.put(msgId, converter);
                 log.warn("duplicate msgType : {}, the MsgConverter {} was replaced by {}", msgType, oldConverter.getClass(), converter.getClass());
@@ -55,7 +56,7 @@ public class MsgConverterMapping {
         return this.mapping == null || this.mapping.isEmpty();
     }
 
-    public Map<Integer, RequestMsgBodyConverter> getMsgConverterMappings() {
+    public Map<Integer, RequestMsgBodyConverter<? extends RequestMsgBody>> getMsgConverterMappings() {
         return Collections.unmodifiableMap(this.mapping);
     }
 }

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @BuiltinComponent
-public class BuiltinCustomReflectionBasedRequestMsgBodyConverter extends CustomReflectionBasedRequestMsgBodyConverter {
+public class BuiltinReflectionBasedRequestMsgBodyConverter extends CustomReflectionBasedRequestMsgBodyConverter {
 
     @Override
     public int getOrder() {

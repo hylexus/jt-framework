@@ -141,7 +141,7 @@ function navConfig() {
         // {text: '指南', link: '/guide/'},
         {text: '指南', link: '/jt-808/guide/'},
         {text: '配置', link: '/jt-808/config/'},
-        {text: '使用建议', link: '/jt-808/best-practices/'},
+        //{text: '使用建议', link: '/jt-808/best-practices/'},
         {
             text: '协议类型',
             ariaLabel: '协议类型',

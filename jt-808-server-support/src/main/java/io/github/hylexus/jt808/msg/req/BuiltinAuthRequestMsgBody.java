@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.msg.req;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.data.MsgDataType;
@@ -16,6 +17,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Jt808ReqMsgBody(msgType = 0x0102)
+@BuiltinComponent
 public class BuiltinAuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware {
 
     private RequestMsgHeader header;

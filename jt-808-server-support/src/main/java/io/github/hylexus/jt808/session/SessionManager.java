@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class SessionManager {
-    private final Object LOCK = new Object();
+    private final Object lock = new Object();
     private static volatile SessionManager instance = new SessionManager();
 
     private SessionManager() {
@@ -37,14 +37,14 @@ public class SessionManager {
     }
 
     public void persistence(Session session) {
-        synchronized (LOCK) {
+        synchronized (lock) {
             this.sessionMap.put(session.getTerminalId(), session);
             sessionIdTerminalIdMapping.put(session.getId(), session.getTerminalId());
         }
     }
 
     public void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason) {
-        synchronized (LOCK) {
+        synchronized (lock) {
             sessionIdTerminalIdMapping.remove(sessionId);
             sessionMap.remove(sessionId);
         }
@@ -62,7 +62,7 @@ public class SessionManager {
         }
 
         if (updateLastCommunicateTime) {
-            synchronized (LOCK) {
+            synchronized (lock) {
                 session.setLastCommunicateTimeStamp(System.currentTimeMillis());
             }
         }
@@ -76,7 +76,7 @@ public class SessionManager {
 
     private boolean checkStatus(Session session) {
         if (!session.getChannel().isActive()) {
-            synchronized (LOCK) {
+            synchronized (lock) {
                 this.sessionMap.remove(session.getId());
                 sessionIdTerminalIdMapping.remove(session.getId());
                 session.getChannel().close();

@@ -13,9 +13,7 @@ import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,7 +22,7 @@ import java.util.concurrent.ConcurrentMap;
  * Created At 2020-02-01 5:58 下午
  */
 @Slf4j
-public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
+public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
 
     private Set<MsgType> supportedMsgTypes = new HashSet<>();
     private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
@@ -34,6 +32,10 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
     public CustomReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
         this.argumentResolver = argumentResolver;
         this.responseMsgBodyConverter = responseMsgBodyConverter;
+    }
+
+    public Map<MsgType, HandlerMethod> getHandlerMethodMapping() {
+        return Collections.unmodifiableMap(mapping);
     }
 
     @Override

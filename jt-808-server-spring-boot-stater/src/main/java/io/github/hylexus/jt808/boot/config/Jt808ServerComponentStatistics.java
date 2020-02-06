@@ -9,10 +9,14 @@ import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
+import io.github.hylexus.jt808.converter.impl.CustomReflectionBasedRequestMsgBodyConverter;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.support.MsgConverterMapping;
@@ -29,6 +33,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ClassUtils;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
@@ -63,20 +70,21 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         this.msgHandlerMapping = msgHandlerMapping;
     }
 
-    private final Set<Class<?>> classSet = Sets.newLinkedHashSet(Lists.newArrayList(
-        BytesEncoder.class,
-        MsgTypeParser.class,
-        AuthCodeValidator.class,
-        RequestMsgDispatcher.class,
-        RequestMsgQueue.class,
-        RequestMsgQueueListener.class,
-        Jt808ServerConfigure.class,
-        ResponseMsgBodyConverter.class,
-        HandlerMethodArgumentResolver.class
-    ));
+    private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
+            Lists.newArrayList(
+                    BytesEncoder.class,
+                    MsgTypeParser.class,
+                    AuthCodeValidator.class,
+                    RequestMsgDispatcher.class,
+                    RequestMsgQueue.class,
+                    RequestMsgQueueListener.class,
+                    Jt808ServerConfigure.class,
+                    ResponseMsgBodyConverter.class,
+                    HandlerMethodArgumentResolver.class
+            ));
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -85,20 +93,20 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         detectConvertAndHandlerMappings(1, stringBuilder);
 
         stringBuilder
-            .append(END_OF_LINE).append(line(2, "Other Components:")).append(END_OF_LINE)
-            .append("----------------------------------------------------------------------")
-            .append("----------------------------------------------------------------------")
-            .append(END_OF_LINE);
+                .append(END_OF_LINE).append(line(2, "Other Components:")).append(END_OF_LINE)
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append(END_OF_LINE);
         for (Class<?> cls : classSet) {
             stringBuilder.append(String.format("%1$-36s", cls.getSimpleName()))
-                .append("|\t")
-                .append(formatClassName(applicationContext.getBean(cls), false))
-                .append(END_OF_LINE);
+                    .append("|\t")
+                    .append(formatClassName(applicationContext.getBean(cls), false, false))
+                    .append(END_OF_LINE);
         }
         stringBuilder
-            .append("----------------------------------------------------------------------")
-            .append("----------------------------------------------------------------------")
-            .append(END_OF_LINE);
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append(END_OF_LINE);
 
         appendBannerSuffix(stringBuilder);
 
@@ -106,48 +114,84 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private void detectConvertAndHandlerMappings(int no, StringBuilder stringBuilder) {
-        stringBuilder.append(line(no, "MsgConvert and MsgHandler MappingInfo:")).append(END_OF_LINE);
-        stringBuilder.append(String.format("%1$-35s\t|\t%2$-64s|\t%3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
-        stringBuilder.append("----------------------------------------------------------------------");
-        stringBuilder.append("----------------------------------------------------------------------");
+        stringBuilder.append(line(no, "RequestMsgBodyConverter and MsgHandler MappingInfo:")).append(END_OF_LINE);
+        stringBuilder.append(String.format("%1$-35s\t|\t%2$-92s|\t%3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
+        stringBuilder.append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+        ;
         stringBuilder.append(END_OF_LINE);
 
         final Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = initMappingInfo();
 
-        String[] headers = new String[]{"MsgId (MsgDesc)", "RequestMsgConverter", "MsgHandler"};
-
-        mappings.entrySet().stream()
-            .sorted(Map.Entry.comparingByKey(Comparator.comparing(MsgType::getMsgId)))
-            .forEach(entry -> {
-                MsgType msgType = entry.getKey();
-                MsgConverterAndHandlerMappingInfo mappingInfo = entry.getValue();
-                String content = String.format("%1$-30s\t|\t%2$-72s\t|\t%3$-64s\n", formatMsgType(msgType),
-                    formatClassName(mappingInfo.getConverter()),
-                    formatClassName(mappingInfo.getHandler()));
-                stringBuilder.append(content);
-            });
+        mappings.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.comparing(MsgType::getMsgId)))
+                .forEach(entry -> {
+                    MsgType msgType = entry.getKey();
+                    MsgConverterAndHandlerMappingInfo mappingInfo = entry.getValue();
+                    String content = String.format(
+                            "%1$-30s\t|\t%2$-125s\t|\t%3$-300s\n",
+                            formatMsgType(msgType),
+                            detectMsgConverter(mappingInfo),
+                            detectHandlerMethod(mappingInfo.getHandler(), msgType)
+                    );
+                    stringBuilder.append(content);
+                });
         stringBuilder
-            .append("----------------------------------------------------------------------")
-            .append("----------------------------------------------------------------------").append(END_OF_LINE);
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------").append(END_OF_LINE);
 
+    }
+
+    private String detectMsgConverter(MsgConverterAndHandlerMappingInfo mappingInfo) {
+        return formatClassName(mappingInfo.getConverter(), false, true) + formatEntityClassName(mappingInfo);
+    }
+
+    private String detectHandlerMethod(MsgHandler<?> handler, MsgType msgType) {
+        if (handler instanceof CustomReflectionBasedRequestMsgHandler) {
+            Map<MsgType, HandlerMethod> handlerMethodMapping = ((CustomReflectionBasedRequestMsgHandler) handler).getHandlerMethodMapping();
+            HandlerMethod handlerMethod = handlerMethodMapping.get(msgType);
+            if (handlerMethod == null) {
+                return "";
+            }
+            AnsiColor color = detectColor(handler.getClass());
+            return formatClassName(handlerMethod.getBeanInstance())
+                    + AnsiOutput.toString(color, "#" + handlerMethod.getMethod().getName());
+        }
+
+        return formatClassName(handler);
+    }
+
+    private String formatEntityClassName(MsgConverterAndHandlerMappingInfo mappingInfo) {
+        final Class<?> entityClass = mappingInfo.getEntityClass();
+        if (entityClass == null) {
+            return formatEntityClass(DEPRECATED_COMPONENT_COLOR, "UNKNOWN");
+        }
+
+        final AnsiColor color = detectColor(entityClass);
+        return formatEntityClass(color, entityClass.getSimpleName());
+    }
+
+    private String formatEntityClass(AnsiColor color, String simpleName) {
+        return AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "<", color, simpleName, DEPRECATED_COMPONENT_COLOR, ">");
     }
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
         stringBuilder.append(END_OF_LINE)
-            .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<\n"));
+                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<\n"));
     }
 
     private void appendBannerPrefix(StringBuilder stringBuilder) {
         stringBuilder
-            .append(END_OF_LINE)
-            .append(END_OF_LINE)
-            .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<"))
-            .append(END_OF_LINE);
+                .append(END_OF_LINE)
+                .append(END_OF_LINE)
+                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<"))
+                .append(END_OF_LINE);
         stringBuilder.append(AnsiOutput.toString(BUILTIN_COMPONENT_COLOR, "[(B)uiltin-Component]"))
-            .append(AnsiOutput.toString(CUSTOM_COMPONENT_COLOR, " [(C)ustom-Component] "))
-            .append(AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "[(D)eprecated-Component] "))
-            .append(AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "[(U)nknown-Component]"))
-            .append(END_OF_LINE);
+                .append(AnsiOutput.toString(CUSTOM_COMPONENT_COLOR, " [(C)ustom-Component] "))
+                .append(AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "[(D)eprecated-Component] "))
+                .append(AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "[(U)nknown-Component]"))
+                .append(END_OF_LINE);
     }
 
     private String line(int no, String content) {
@@ -167,17 +211,25 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private String formatClassName(Object instance) {
-        return formatClassName(instance, true);
+        return formatClassName(instance, true, false);
     }
 
-    private String formatClassName(Object instance, boolean shortenClassName) {
+    private String formatClassName(Object instance, boolean shortenClassName, boolean simpleName) {
         if (instance == null) {
             return AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "(U) NULL");
         }
         Class<?> userClass = ClassUtils.getUserClass(instance);
         AnsiColor color = detectColor(userClass);
-        return AnsiOutput.toString(color,
-            shortenClassName ? componentPrefix(color) + shortClassName(userClass) : componentPrefix(color) + userClass.getName());
+        return AnsiOutput.toString(
+                color,
+                simpleName
+                        ? componentPrefix(color) + userClass.getSimpleName()
+                        : (
+                        shortenClassName
+                                ? componentPrefix(color) + shortClassName(userClass)
+                                : componentPrefix(color) + userClass.getName()
+                )
+        );
     }
 
     private String componentPrefix(AnsiColor color) {
@@ -198,23 +250,27 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private Map<MsgType, MsgConverterAndHandlerMappingInfo> initMappingInfo() {
-        final Map<Integer, MsgHandler> handlerMappings = msgHandlerMapping.getHandlerMappings();
+        final Map<Integer, MsgHandler<? extends RequestMsgBody>> handlerMappings = msgHandlerMapping.getHandlerMappings();
 
         Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = msgConverterMapping.getMsgConverterMappings().entrySet().stream()
-            .map(entry -> {
-                MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
-                MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
-                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
-                info.setType(msgType);
-                info.setConverter(entry.getValue());
-                MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
-                info.setHandler(msgHandler);
-                return info;
-            }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
+                .map(entry -> {
+                    MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
+                    MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
+                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
+                    info.setType(msgType);
+                    RequestMsgBodyConverter<?> converter = entry.getValue();
+                    Class<?> entityClass = detectRequestMsgEntityClass(converter, msgType);
+                    info.setEntityClass(entityClass);
+                    info.setConverter(converter);
+
+                    MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
+                    info.setHandler(msgHandler);
+                    return info;
+                }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
 
         handlerMappings.forEach((msgId, msgHandler) -> {
             MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
+                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
             MsgConverterAndHandlerMappingInfo info = mappings.getOrDefault(msgType, new MsgConverterAndHandlerMappingInfo());
             if (info.getHandler() == null) {
                 info.setHandler(msgHandler);
@@ -222,6 +278,45 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
             }
         });
         return mappings;
+    }
+
+    private Class<?> detectRequestMsgEntityClass(RequestMsgBodyConverter<?> converter, MsgType msgType) {
+        if (converter instanceof CustomReflectionBasedRequestMsgBodyConverter) {
+            Map<Integer, Class<? extends RequestMsgBody>> mapping = ((CustomReflectionBasedRequestMsgBodyConverter) converter).getMsgBodyMapping();
+            return mapping.get(msgType.getMsgId());
+        }
+
+        final Class<?> cls = converter.getClass();
+
+        Type[] genericInterfaces = cls.getGenericInterfaces();
+        if (genericInterfaces != null && genericInterfaces.length > 0) {
+            Type type = genericInterfaces[0];
+            if (type instanceof ParameterizedType) {
+
+                Type[] arguments = ((ParameterizedType) type).getActualTypeArguments();
+                return tryGetGenericType(arguments);
+            }
+        }
+
+        Type superclass = cls.getGenericSuperclass();
+        if (superclass instanceof ParameterizedType) {
+            Type[] arguments = ((ParameterizedType) superclass).getActualTypeArguments();
+            return tryGetGenericType(arguments);
+        }
+
+        return null;
+    }
+
+    private Class<?> tryGetGenericType(Type[] arguments) {
+        if (arguments == null || arguments.length == 0) {
+            return null;
+        }
+        // ignore WildcardType
+        // ?, ? extends Number, or ? super Integer
+        if (arguments[0] instanceof WildcardType) {
+            return null;
+        }
+        return arguments[0] instanceof Class ? (Class<?>) arguments[0] : null;
     }
 
 
@@ -236,6 +331,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         private MsgType type;
         private RequestMsgBodyConverter<?> converter;
         private MsgHandler<?> handler;
+        private Class<?> entityClass;
     }
 
     //    public static void main(String[] args) {

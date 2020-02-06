@@ -22,7 +22,7 @@ import static java.util.Optional.of;
  */
 @Slf4j
 @BuiltinComponent
-public class BuiltinHeartBeatMsgHandler extends AbstractMsgHandler {
+public class BuiltinHeartBeatMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
 
     @Override
     public int getOrder() {
