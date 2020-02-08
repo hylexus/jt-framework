@@ -31,12 +31,13 @@ import static io.netty.util.ReferenceCountUtil.release;
 @ChannelHandler.Sharable
 public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
-    private Decoder decoder = new Decoder();
-    private RequestMsgDispatcher msgDispatcher;
-    private MsgTypeParser msgTypeParser;
-    private BytesEncoder bytesEncoder;
+    private final Decoder decoder;
+    private final RequestMsgDispatcher msgDispatcher;
+    private final MsgTypeParser msgTypeParser;
+    private final BytesEncoder bytesEncoder;
 
     public Jt808ChannelHandlerAdapter(RequestMsgDispatcher msgDispatcher, MsgTypeParser msgTypeParser, BytesEncoder bytesEncoder) {
+        this.decoder = new Decoder();
         this.msgDispatcher = msgDispatcher;
         this.msgTypeParser = msgTypeParser;
         this.bytesEncoder = bytesEncoder;
@@ -63,7 +64,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             final int msgId = header.getMsgId();
             final Optional<MsgType> msgType = this.msgTypeParser.parseMsgType(msgId);
             if (!msgType.isPresent()) {
-                log.warn("received unknown msg, msgId={}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
+                log.warn("received unknown msg, msgId = {}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
                 return;
             }
             metadata.setMsgType(msgType.get());

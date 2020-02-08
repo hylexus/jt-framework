@@ -20,6 +20,7 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.BuiltInNoReplyMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinAuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinHeartBeatMsgHandler;
+import io.github.hylexus.jt808.handler.impl.exception.DelegateExceptionHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.BuiltinReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
@@ -28,9 +29,10 @@ import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
+import io.github.hylexus.jt808.support.exception.scan.Jt808ExceptionHandlerScanner;
 import io.github.hylexus.jt808.support.handler.scan.Jt808MsgHandlerScanner;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808NettyChildHandlerInitializer;
@@ -89,8 +91,8 @@ public class Jt808ServerAutoConfigure {
     private Jt808ServerConfigure configure;
 
     @Bean
-    public MsgConverterMapping msgConverterMapping() {
-        MsgConverterMapping mapping = new MsgConverterMapping();
+    public RequestMsgBodyConverterMapping msgConverterMapping() {
+        RequestMsgBodyConverterMapping mapping = new RequestMsgBodyConverterMapping();
         configure.configureMsgConverterMapping(mapping);
         // Default converters for debug
         if (serverProps.getEntityScan().isRegisterBuiltinRequestMsgConverters()) {
@@ -118,7 +120,7 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnProperty(prefix = "jt808.entity-scan", name = "enabled", havingValue = "true")
-    public Jt808EntityScanner jt808EntityScanner(MsgConverterMapping msgConverterMapping) throws IOException {
+    public Jt808EntityScanner jt808EntityScanner(RequestMsgBodyConverterMapping msgConverterMapping) throws IOException {
         final Jt808EntityScanProps entityScan = serverProps.getEntityScan();
 
         final Jt808EntityScanner scanner = new Jt808EntityScanner(
@@ -133,29 +135,39 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
+    public DelegateExceptionHandler exceptionHandlerRegistry() {
+        return new DelegateExceptionHandler();
+    }
+
+    @Bean
     @ConditionalOnProperty(prefix = "jt808.handler-scan", name = "enabled", havingValue = "true")
     public Jt808MsgHandlerScanner jt808MsgHandlerScanner(
             MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver,
-            ResponseMsgBodyConverter responseMsgBodyConverter) throws IllegalAccessException, IOException, InstantiationException {
+            ResponseMsgBodyConverter responseMsgBodyConverter,
+            DelegateExceptionHandler delegateExceptionHandler) throws IllegalAccessException, IOException, InstantiationException {
 
         final Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
         final Jt808EntityScanProps entityScanProps = serverProps.getEntityScan();
 
         final Jt808MsgHandlerScanner scanner = new Jt808MsgHandlerScanner(
                 handlerScan.getBasePackages(), configure.supplyMsgTypeParser(),
-                msgHandlerMapping, argumentResolver, responseMsgBodyConverter,
-                new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter)
+                msgHandlerMapping, new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
         );
 
         if (entityScanProps.isEnableBuiltinEntity() && handlerScan.isRegisterBuiltinMsgHandlers()) {
             scanner.doHandlerScan(
                     // TODO Add packages to scan if there is a builtin MsgHandler implemented by BuiltinReflectionBasedRequestMsgHandler
                     Sets.newHashSet(""),
-                    new BuiltinReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter)
+                    new BuiltinReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
             );
         }
 
         return scanner;
+    }
+
+    @Bean
+    public Jt808ExceptionHandlerScanner exceptionHandlerScanner(DelegateExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
+        return new Jt808ExceptionHandlerScanner(exceptionHandler, argumentResolver);
     }
 
     @Bean
@@ -198,7 +210,7 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
-    public RequestMsgDispatcher requestMsgDispatcher(MsgConverterMapping msgConverterMapping, RequestMsgQueue requestMsgQueue) {
+    public RequestMsgDispatcher requestMsgDispatcher(RequestMsgBodyConverterMapping msgConverterMapping, RequestMsgQueue requestMsgQueue) {
         return new LocalEventBusDispatcher(msgConverterMapping, requestMsgQueue);
     }
 
@@ -240,7 +252,7 @@ public class Jt808ServerAutoConfigure {
     @ConditionalOnProperty(prefix = "jt808", name = "print-component-statistics", havingValue = "true")
     public Jt808ServerComponentStatistics jt808ServerComponentStatistics(
             MsgTypeParser msgTypeParser,
-            MsgConverterMapping msgConverterMapping,
+            RequestMsgBodyConverterMapping msgConverterMapping,
             MsgHandlerMapping msgHandlerMapping) {
 
         return new Jt808ServerComponentStatistics(msgTypeParser, msgConverterMapping, msgHandlerMapping);

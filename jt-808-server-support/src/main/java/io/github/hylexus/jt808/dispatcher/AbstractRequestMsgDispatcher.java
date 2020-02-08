@@ -4,7 +4,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgWrapper;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
@@ -16,9 +16,9 @@ import java.util.Optional;
 @Slf4j
 public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatcher {
 
-    private MsgConverterMapping msgConverterMapping;
+    private RequestMsgBodyConverterMapping msgConverterMapping;
 
-    public AbstractRequestMsgDispatcher(MsgConverterMapping msgConverterMapping) {
+    public AbstractRequestMsgDispatcher(RequestMsgBodyConverterMapping msgConverterMapping) {
         this.msgConverterMapping = msgConverterMapping;
     }
 

@@ -21,9 +21,9 @@ public interface OrderedComponent {
         return DEFAULT_ORDER;
     }
 
-    default boolean shouldBeReplacedBy(OrderedComponent other) {
+    default boolean shouldBeReplacedBy(OrderedComponent another) {
         // 数字越小优先级越高
         // 数字小的覆盖数字大的
-        return this.getOrder() > other.getOrder();
+        return this.getOrder() > another.getOrder();
     }
 }

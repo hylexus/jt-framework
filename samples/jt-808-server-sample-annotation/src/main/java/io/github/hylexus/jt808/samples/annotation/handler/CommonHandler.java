@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.samples.annotation.handler;
 
+import io.github.hylexus.jt.annotation.exception.Jt808ExceptionHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgMapping;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
@@ -8,6 +9,7 @@ import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinTerminalCommonReplyMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
+import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
@@ -25,7 +27,24 @@ public class CommonHandler {
     @Jt808RequestMsgMapping(msgType = 0x0102)
     public RespMsgBody processAuthMsg(AuthRequestMsgBody msgBody, RequestMsgHeader header) {
         log.info("处理鉴权消息 terminalId = {}, authCode = {}", header.getTerminalId(), msgBody.getAuthCode());
+        if (header.getTerminalId().equals("")) {
+            throw new UnsupportedOperationException("terminal [" + header.getTerminalId() + "] was locked.");
+        }
         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
+    }
+
+    @Jt808ExceptionHandler
+    public RespMsgBody processUnsupportedOperationException(RequestMsgMetadata metadata, Session session, UnsupportedOperationException exception) {
+        assert metadata.getHeader().getTerminalId().equals(session.getTerminalId());
+        log.info("exception", exception);
+        return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;
+    }
+
+    @Jt808ExceptionHandler
+    public RespMsgBody processException(RequestMsgMetadata metadata, Session session, Exception exception) {
+        assert metadata.getHeader().getTerminalId().equals(session.getTerminalId());
+        log.info("exception", exception);
+        return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;
     }
 
     // 处理MsgId为0x0200的消息

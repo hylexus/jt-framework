@@ -19,8 +19,8 @@ import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.Handler
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
 import lombok.Data;
 import lombok.Setter;
@@ -58,13 +58,13 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private static final String END_OF_LINE = "\n";
 
-    private MsgConverterMapping msgConverterMapping;
+    private RequestMsgBodyConverterMapping msgConverterMapping;
 
     private MsgHandlerMapping msgHandlerMapping;
 
     private MsgTypeParser msgTypeParser;
 
-    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, MsgConverterMapping msgConverterMapping, MsgHandlerMapping msgHandlerMapping) {
+    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping, MsgHandlerMapping msgHandlerMapping) {
         this.msgTypeParser = msgTypeParser;
         this.msgConverterMapping = msgConverterMapping;
         this.msgHandlerMapping = msgHandlerMapping;

@@ -18,6 +18,10 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
  */
 public class ReflectionUtils {
 
+    public static boolean isVoidReturnType(Method method) {
+        return method.getReturnType() == Void.TYPE;
+    }
+
     public static Optional<Field> findFieldByName(Class<?> cls, String fieldName) {
         try {
             return Optional.of(cls.getDeclaredField(fieldName));

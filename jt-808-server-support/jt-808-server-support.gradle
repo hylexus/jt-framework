@@ -14,6 +14,6 @@ dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
 
-    testCompile group: 'junit', name: 'junit'
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 
 }

@@ -7,10 +7,8 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
-import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +22,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import static io.github.hylexus.jt.utils.ReflectionUtils.isVoidReturnType;
+
 /**
  * @author hylexus
  * Created At 2020-02-01 3:31 下午
@@ -34,20 +34,15 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
     private final Set<String> packagesToScan;
     private final MsgTypeParser msgTypeParser;
     private final MsgHandlerMapping msgHandlerMapping;
-    private final HandlerMethodArgumentResolver argumentResolver;
-    private final ResponseMsgBodyConverter responseMsgBodyConverter;
     private final CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler;
 
     public Jt808MsgHandlerScanner(
             Set<String> packagesToScan, MsgTypeParser msgTypeParser,
-            MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter,
-            CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler) {
+            MsgHandlerMapping msgHandlerMapping, CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler) {
 
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgHandlerMapping = msgHandlerMapping;
-        this.argumentResolver = argumentResolver;
-        this.responseMsgBodyConverter = responseMsgBodyConverter;
         this.reflectionBasedRequestMsgHandler = reflectionBasedRequestMsgHandler;
     }
 
@@ -97,10 +92,6 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
             }
             msgHandlerMapping.registerHandler(handler, false);
         }
-    }
-
-    private boolean isVoidReturnType(Method method) {
-        return method.getReturnType() == Void.TYPE;
     }
 
     private boolean isSupportedReturnType(Method method) {

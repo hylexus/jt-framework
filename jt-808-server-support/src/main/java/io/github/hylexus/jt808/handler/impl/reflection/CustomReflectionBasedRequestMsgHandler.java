@@ -2,14 +2,15 @@ package io.github.hylexus.jt808.handler.impl.reflection;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
-import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.ExceptionHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,10 +29,12 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
     private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
     private final HandlerMethodArgumentResolver argumentResolver;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
+    private final ExceptionHandler exceptionHandler;
 
-    public CustomReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
+    public CustomReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter, ExceptionHandler exceptionHandler) {
         this.argumentResolver = argumentResolver;
         this.responseMsgBodyConverter = responseMsgBodyConverter;
+        this.exceptionHandler = exceptionHandler;
     }
 
     public Map<MsgType, HandlerMethod> getHandlerMethodMapping() {
@@ -62,35 +65,33 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
             return Optional.empty();
         }
 
-        final Object[] args = this.resolveArgs(handlerMethod, metadata, msg, session);
-
-        final Object result;
+        Object result;
         try {
-            result = invokeHandlerMethod(handlerMethod, args);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return Optional.empty();
+            result = this.invokeHandlerMethod(handlerMethod, metadata, msg, session);
+        } catch (Throwable e) {
+            try {
+                result = this.exceptionHandler.handleException(metadata, session, handlerMethod, msg, e);
+            } catch (Throwable throwable) {
+                log.error("An unexpected exception occurred while invoke ExceptionHandler", throwable);
+                return Optional.of(VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT);
+            }
         }
 
         // [userType] --> RespMsgBody
         return this.responseMsgBodyConverter.convert(result, session, metadata);
     }
 
-    private Object[] resolveArgs(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
-        final Object[] args = new Object[handlerMethod.getParameters().length];
-        for (int i = 0; i < handlerMethod.getParameters().length; i++) {
-            final MethodParameter parameter = handlerMethod.getParameters()[i];
-
-            try {
-                args[i] = this.argumentResolver.resolveArgument(parameter, metadata, session, msg);
-            } catch (ArgumentResolveException e) {
-                log.error("Can not resolve argument for Method : {}, MethodParameter : {} ", e.getParameter().getMethod(), e.getParameter());
-            }
-        }
-        return args;
+    private Object invokeHandlerMethod(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) throws InvocationTargetException, IllegalAccessException {
+        final Object[] args = this.resolveArgs(handlerMethod, metadata, msg, session);
+        return doInvoke(handlerMethod, args);
     }
 
-    private Object invokeHandlerMethod(HandlerMethod handlerMethod, Object[] args) throws IllegalAccessException, InvocationTargetException {
+    private Object[] resolveArgs(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+        return CommonUtils.resolveArguments(handlerMethod, metadata, msg, session, this.argumentResolver);
+    }
+
+
+    private Object doInvoke(HandlerMethod handlerMethod, Object[] args) throws IllegalAccessException, InvocationTargetException {
         final Object result = handlerMethod.getMethod().invoke(handlerMethod.getBeanInstance(), args);
 
         if (result == null && handlerMethod.isVoidReturnType()) {

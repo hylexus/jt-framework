@@ -5,8 +5,8 @@ import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelOption;
@@ -28,7 +28,7 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 @Slf4j
 public class Jt808ServerConfigure {
 
-    public void configureMsgConverterMapping(MsgConverterMapping mapping) {
+    public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
     }
 
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {

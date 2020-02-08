@@ -6,8 +6,8 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
 import io.netty.bootstrap.ServerBootstrap;
@@ -34,7 +34,7 @@ public class Jt808Config extends Jt808ServerConfigure {
     }
 
     @Override
-    public void configureMsgConverterMapping(MsgConverterMapping mapping) {
+    public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
         super.configureMsgConverterMapping(mapping);
         mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
     }

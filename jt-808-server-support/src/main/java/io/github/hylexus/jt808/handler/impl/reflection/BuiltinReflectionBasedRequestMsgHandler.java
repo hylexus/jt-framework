@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.handler.impl.reflection;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
+import io.github.hylexus.jt808.handler.ExceptionHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 
 /**
@@ -11,8 +12,8 @@ import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.Handler
 @BuiltinComponent
 public class BuiltinReflectionBasedRequestMsgHandler extends CustomReflectionBasedRequestMsgHandler {
 
-    public BuiltinReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter) {
-        super(argumentResolver, responseMsgBodyConverter);
+    public BuiltinReflectionBasedRequestMsgHandler(HandlerMethodArgumentResolver argumentResolver, ResponseMsgBodyConverter responseMsgBodyConverter, ExceptionHandler exceptionHandler) {
+        super(argumentResolver, responseMsgBodyConverter, exceptionHandler);
     }
 
     @Override

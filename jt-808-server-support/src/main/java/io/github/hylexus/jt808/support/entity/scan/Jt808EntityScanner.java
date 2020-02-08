@@ -7,7 +7,7 @@ import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.impl.CustomReflectionBasedRequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.support.MsgConverterMapping;
+import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,13 +24,13 @@ import java.util.Set;
 public class Jt808EntityScanner implements InitializingBean {
 
     private final Set<String> packagesToScan;
-    private final MsgConverterMapping msgConverterMapping;
+    private final RequestMsgBodyConverterMapping msgConverterMapping;
     private final MsgTypeParser msgTypeParser;
     private final CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter;
 
     public Jt808EntityScanner(
             Set<String> packagesToScan, MsgTypeParser msgTypeParser,
-            MsgConverterMapping msgConverterMapping, CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter) {
+            RequestMsgBodyConverterMapping msgConverterMapping, CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter) {
 
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;

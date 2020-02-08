@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.handler.impl.reflection;
 
 import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.hylexus.jt808.support.OrderedComponent;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,7 +25,7 @@ import java.lang.reflect.WildcardType;
 @ToString
 @Accessors(chain = true)
 @Slf4j
-public class HandlerMethod {
+public class HandlerMethod implements OrderedComponent {
 
     private final Object beanInstance;
     private final Method method;
@@ -37,6 +38,11 @@ public class HandlerMethod {
         this.method = method;
         this.parameters = this.initMethodParameters(method);
         this.isVoidReturnType = isVoidReturnType;
+    }
+
+    @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
     }
 
     private MethodParameter[] initMethodParameters(Method method) {

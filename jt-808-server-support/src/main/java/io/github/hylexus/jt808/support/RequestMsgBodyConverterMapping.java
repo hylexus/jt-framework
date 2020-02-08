@@ -15,12 +15,12 @@ import java.util.Optional;
  * Created At 2019-08-22 21:21
  */
 @Slf4j
-public class MsgConverterMapping {
+public class RequestMsgBodyConverterMapping {
 
     //private Map<MsgType, RequestMsgBodyConverter> mapping;
     private Map<Integer, RequestMsgBodyConverter<? extends RequestMsgBody>> mapping;
 
-    public MsgConverterMapping() {
+    public RequestMsgBodyConverterMapping() {
         this.mapping = new HashMap<>();
     }
 
@@ -28,11 +28,11 @@ public class MsgConverterMapping {
         return Optional.ofNullable(mapping.get(msgType.getMsgId()));
     }
 
-    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter) {
+    public RequestMsgBodyConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter) {
         return registerConverter(msgType, converter, false);
     }
 
-    public MsgConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter, boolean forceOverride) {
+    public RequestMsgBodyConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter, boolean forceOverride) {
 
         final int msgId = msgType.getMsgId();
         if (containsConverter(msgType)) {
