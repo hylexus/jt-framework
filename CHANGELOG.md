@@ -1,7 +1,22 @@
 
-## 2020-02-03
+## 2020-02-09
+### Other Changes
+- ExceptionHandler
+
+
+## 2020-02-08
+### Other Changes
+- ExceptionHandler
+
+
+## 2020-02-06
 ### Other Changes
 - docs
+
+
+## 2020-02-05
+### Other Changes
+- CustomReflectionBasedRequestMsgBodyConverter
 
 
 ## 2020-02-02
@@ -44,7 +59,6 @@
 
 ## 2020-01-28
 ### Other Changes
-- tmp
 - docs
 - BytesEncoder
 - docs
@@ -141,7 +155,6 @@
 ## 2019-09-22
 ### Other Changes
 - RequestMsgHeaderAware
-- tmp
 
 
 ## 2019-09-18
@@ -176,15 +189,9 @@
 - init spring-boot-starter
 
 
-## 2019-08-25
-### Other Changes
-- tmp
-
-
 ## 2019-08-24
 ### Other Changes
 - bug-fix
-- sessionManager
 - sessionManager
 - eventBus
 
