@@ -102,7 +102,7 @@ this.workerGroup = new NioEventLoopGroup(workThreadCount);
 - 类型：`boolean`
 - 默认值：`true`
 
-是否启用基于注解的MsgHandler功能。启用后，消息处理可以用 `@Jt808RequestMsgMapping` 来处理。
+是否启用基于注解的MsgHandler功能。启用后，消息处理可以用 `@Jt808RequestMsgHandlerMapping` 来处理。
 
 使用基于注解的 `MsgHandler` [请参考这里](../guide/annotation-based-dev/msg-handler-register.md)。
 
@@ -120,6 +120,30 @@ this.workerGroup = new NioEventLoopGroup(workThreadCount);
 
 是否自动注册内置的 `MsgHandler` 。
 
+## exception-handler-scan
+
+### enabled
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否启用全局异常处理机制。启用后，可以用类似于 `Spring` 的全局异常处理的方式来处理异常。
+
+使用基于注解的 `ExceptionHandler` [请参考这里](../guide/annotation-based-dev/exception-handler.md)。
+
+### base-packages
+
+- 类型：`String`
+- 默认值：`""`
+
+基于注解的 `ExceptionHandler` 所在的包名，多个以逗号分隔。
+
+### register-builtin-exception-handlers
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否自动注册内置的 `ExceptionHandler` 。
 
 ## msg-processor.thread-pool
 

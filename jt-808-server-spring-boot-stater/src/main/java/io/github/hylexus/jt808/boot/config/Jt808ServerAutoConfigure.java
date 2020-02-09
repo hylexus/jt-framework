@@ -3,12 +3,14 @@ package io.github.hylexus.jt808.boot.config;
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
-import io.github.hylexus.jt808.boot.props.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
+import io.github.hylexus.jt808.boot.props.exception.handler.scan.Jt808ExceptionHandlerScanProps;
 import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
-import io.github.hylexus.jt808.boot.props.processor.MsgProcessorThreadPoolProps;
+import io.github.hylexus.jt808.boot.props.msg.processor.MsgProcessorThreadPoolProps;
+import io.github.hylexus.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
+import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
@@ -30,6 +32,7 @@ import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
+import io.github.hylexus.jt808.support.OrderedComponent;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
 import io.github.hylexus.jt808.support.exception.scan.Jt808ExceptionHandlerScanner;
@@ -87,6 +90,11 @@ public class Jt808ServerAutoConfigure {
         return new BytesEncoder.DefaultBytesEncoder();
     }
 
+    @Bean
+    public Encoder encoder(BytesEncoder bytesEncoder) {
+        return new Encoder(bytesEncoder);
+    }
+
     @Autowired
     private Jt808ServerConfigure configure;
 
@@ -135,7 +143,7 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public DelegateExceptionHandler exceptionHandlerRegistry() {
+    public DelegateExceptionHandler delegateExceptionHandler() {
         return new DelegateExceptionHandler();
     }
 
@@ -166,8 +174,16 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public Jt808ExceptionHandlerScanner exceptionHandlerScanner(DelegateExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
-        return new Jt808ExceptionHandlerScanner(exceptionHandler, argumentResolver);
+    @ConditionalOnProperty(prefix = "jt808.exception-handler-scan", name = "enabled", havingValue = "true")
+    public Jt808ExceptionHandlerScanner exceptionHandlerScanner(DelegateExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver)
+            throws IllegalAccessException, IOException, InstantiationException {
+
+        final Jt808ExceptionHandlerScanProps props = serverProps.getExceptionHandlerScan();
+        final Jt808ExceptionHandlerScanner scanner = new Jt808ExceptionHandlerScanner(props.getBasePackages(), exceptionHandler, argumentResolver);
+        if (props.isRegisterBuiltinExceptionHandlers()) {
+            scanner.doScan(Sets.newHashSet("io.github.hylexus.jt808.handler.impl.exception.builtin"), OrderedComponent.BUILTIN_COMPONENT_ORDER);
+        }
+        return scanner;
     }
 
     @Bean
@@ -204,8 +220,11 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
-    public RequestMsgQueueListener msgQueueListener(MsgHandlerMapping msgHandlerMapping, RequestMsgQueue requestMsgQueue) {
-        return new LocalEventBusListener(msgHandlerMapping, (LocalEventBus) requestMsgQueue);
+    public RequestMsgQueueListener msgQueueListener(
+            MsgHandlerMapping msgHandlerMapping, RequestMsgQueue requestMsgQueue,
+            DelegateExceptionHandler exceptionHandler, Encoder encoder, ResponseMsgBodyConverter responseMsgBodyConverter) {
+
+        return new LocalEventBusListener(msgHandlerMapping, (LocalEventBus) requestMsgQueue, exceptionHandler, responseMsgBodyConverter, encoder);
     }
 
     @Bean

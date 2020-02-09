@@ -14,6 +14,10 @@ jt808:
       enabled: true
       base-packages:
       register-builtin-msg-handlers: true
+  exception-handler-scan:
+    enabled: true
+    base-packages:
+    register-builtin-exception-handlers: true
   msg-processor:
     thread-pool:
       # core-pool-size: Runtime.getRuntime().availableProcessors() + 1

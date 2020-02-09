@@ -9,7 +9,7 @@ Jt-808协议服务端。
 ```sh
 .
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
-├── docs            # 本文档源码 (vue-press)
+├── docs            # 文档 (vue-press)
 ├── gradle
 ├── jt-808-server
 ├── jt-808-server-spring-boot-stater
@@ -27,5 +27,7 @@ Jt-808协议服务端。
 ```shell script
 ./gradlew clean build
 ```
+
+<script src="https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca.js"></script>
 
 文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)

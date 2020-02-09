@@ -2,9 +2,7 @@ package io.github.hylexus.jt808.handler.impl.reflection.argument.resolver;
 
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
-import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.ArgumentContext;
 
 /**
  * 抄袭自 org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -16,6 +14,6 @@ public interface HandlerMethodArgumentResolver {
 
     boolean supportsParameter(MethodParameter methodParameter);
 
-    Object resolveArgument(MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) throws ArgumentResolveException;
+    Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws ArgumentResolveException;
 
 }

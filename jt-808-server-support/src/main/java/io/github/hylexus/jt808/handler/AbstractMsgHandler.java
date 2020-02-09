@@ -10,9 +10,7 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import io.github.hylexus.jt808.support.handler.scan.BytesEncoderAware;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
+import io.github.hylexus.jt808.utils.ClientUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -44,16 +42,13 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
 
         final RespMsgBody respBody = respInfo.get();
         byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
-        this.send2Client(session.getChannel(), respBytes);
+        this.send2Client(session, respBytes);
 
         log.debug("<<<<<<<<<<<<<<< : {}", HexStringUtils.bytes2HexString(respBytes));
     }
 
-    protected void send2Client(Channel channel, byte[] bytes) throws InterruptedException {
-        ChannelFuture future = channel.writeAndFlush(Unpooled.copiedBuffer(bytes)).sync();
-        if (!future.isSuccess()) {
-            log.error("ERROR : 'send data to client:'", future.cause());
-        }
+    protected void send2Client(Session session, byte[] bytes) throws InterruptedException {
+        ClientUtils.sendBytesToClient(session, bytes);
     }
 
     protected abstract Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, T msg, Session session);

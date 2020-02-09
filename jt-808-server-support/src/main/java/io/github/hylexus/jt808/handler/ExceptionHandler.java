@@ -1,8 +1,6 @@
 package io.github.hylexus.jt808.handler;
 
-import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.ArgumentContext;
 import io.github.hylexus.jt808.support.OrderedComponent;
 
 import java.util.Collections;
@@ -18,6 +16,6 @@ public interface ExceptionHandler extends OrderedComponent {
         return Collections.emptySet();
     }
 
-    Object handleException(RequestMsgMetadata metadata, Session session, Object handlerMethod, RequestMsgBody msg, Throwable throwable) throws Throwable;
+    Object handleException(Object handler, ArgumentContext argumentContext) throws Throwable;
 
 }

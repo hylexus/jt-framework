@@ -1,10 +1,7 @@
 package io.github.hylexus.jt808.exception;
 
 import io.github.hylexus.jt.exception.AbstractJtException;
-import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
-import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.ArgumentContext;
 import lombok.Getter;
 
 /**
@@ -13,49 +10,29 @@ import lombok.Getter;
  */
 @Getter
 public class ArgumentResolveException extends AbstractJtException {
-    private final MethodParameter parameter;
-    private final RequestMsgMetadata metadata;
-    private final Session session;
-    private final RequestMsgBody msg;
+    private final ArgumentContext argumentContext;
 
-    public ArgumentResolveException(MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
-        this.parameter = parameter;
-        this.metadata = metadata;
-        this.session = session;
-        this.msg = msg;
+    public ArgumentResolveException(ArgumentContext argumentContext) {
+        this.argumentContext = argumentContext;
     }
 
-    public ArgumentResolveException(String message, MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(String message, ArgumentContext argumentContext) {
         super(message);
-        this.parameter = parameter;
-        this.metadata = metadata;
-        this.session = session;
-        this.msg = msg;
+        this.argumentContext = argumentContext;
     }
 
-    public ArgumentResolveException(String message, Throwable cause, MethodParameter parameter,
-                                    RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(String message, Throwable cause, ArgumentContext argumentContext) {
         super(message, cause);
-        this.parameter = parameter;
-        this.metadata = metadata;
-        this.session = session;
-        this.msg = msg;
+        this.argumentContext = argumentContext;
     }
 
-    public ArgumentResolveException(Throwable cause, MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(Throwable cause, ArgumentContext argumentContext) {
         super(cause);
-        this.parameter = parameter;
-        this.metadata = metadata;
-        this.session = session;
-        this.msg = msg;
+        this.argumentContext = argumentContext;
     }
 
-    public ArgumentResolveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-                                    MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public ArgumentResolveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, ArgumentContext argumentContext) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.parameter = parameter;
-        this.metadata = metadata;
-        this.session = session;
-        this.msg = msg;
+        this.argumentContext = argumentContext;
     }
 }

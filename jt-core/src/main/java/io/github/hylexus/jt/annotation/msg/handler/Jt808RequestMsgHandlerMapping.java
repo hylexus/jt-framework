@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808RequestMsgMapping {
+public @interface Jt808RequestMsgHandlerMapping {
 
     int[] msgType();
 

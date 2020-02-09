@@ -4,9 +4,6 @@ import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
-import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.session.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +25,7 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
         resolvers.addResolver(new RequestMsgHeaderArgumentResolver());
         resolvers.addResolver(new RequestMsgMetadataArgumentResolver());
         resolvers.addResolver(new SessionArgumentResolver());
+        resolvers.addResolver(new ExceptionArgumentResolver());
     }
 
     public DelegateHandlerMethodArgumentResolvers() {
@@ -41,12 +39,12 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) {
+    public Object resolveArgument(MethodParameter parameter, ArgumentContext context) {
         final HandlerMethodArgumentResolver resolver = this.getResolver(parameter);
         if (resolver != null) {
-            return resolver.resolveArgument(parameter, metadata, session, msg);
+            return resolver.resolveArgument(parameter, context);
         }
-        throw new ArgumentResolveException(parameter, metadata, session, msg);
+        throw new ArgumentResolveException(context);
     }
 
     private HandlerMethodArgumentResolver getResolver(MethodParameter methodParameter) {

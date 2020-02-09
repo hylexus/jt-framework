@@ -4,8 +4,6 @@ import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.session.Session;
 
 /**
  * @author hylexus
@@ -18,7 +16,7 @@ public class RequestMsgBodyArgumentResolver implements HandlerMethodArgumentReso
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, RequestMsgMetadata metadata, Session session, RequestMsgBody msg) throws ArgumentResolveException {
-        return msg;
+    public Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws ArgumentResolveException {
+        return context.getMsg();
     }
 }

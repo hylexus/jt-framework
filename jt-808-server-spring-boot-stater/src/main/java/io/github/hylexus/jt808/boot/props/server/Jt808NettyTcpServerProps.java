@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.boot.props;
+package io.github.hylexus.jt808.boot.props.server;
 
 import lombok.Getter;
 import lombok.Setter;

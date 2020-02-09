@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.annotation.exception;
+package io.github.hylexus.jt.annotation.msg.handler;
 
 import java.lang.annotation.*;
 
@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808ExceptionHandlers {
+public @interface Jt808RequestMsgHandlerAdvice {
 }

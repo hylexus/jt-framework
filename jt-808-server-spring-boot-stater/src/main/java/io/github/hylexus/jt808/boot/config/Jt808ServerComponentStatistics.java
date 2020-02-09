@@ -64,7 +64,8 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private MsgTypeParser msgTypeParser;
 
-    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping, MsgHandlerMapping msgHandlerMapping) {
+    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping,
+                                          MsgHandlerMapping msgHandlerMapping) {
         this.msgTypeParser = msgTypeParser;
         this.msgConverterMapping = msgConverterMapping;
         this.msgHandlerMapping = msgHandlerMapping;

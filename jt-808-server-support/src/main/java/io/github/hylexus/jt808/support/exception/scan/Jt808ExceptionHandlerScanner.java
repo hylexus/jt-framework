@@ -2,14 +2,15 @@ package io.github.hylexus.jt808.support.exception.scan;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.annotation.exception.Jt808ExceptionHandler;
-import io.github.hylexus.jt.annotation.exception.Jt808ExceptionHandlers;
+import io.github.hylexus.jt.annotation.msg.handler.Jt808ExceptionHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
+import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandlerAdvice;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.handler.impl.exception.DelegateExceptionHandler;
 import io.github.hylexus.jt808.handler.impl.exception.ExceptionHandlerMethodExceptionHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt808.support.OrderedComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -35,18 +36,18 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean {
     private final DelegateExceptionHandler exceptionHandler;
     private final HandlerMethodArgumentResolver argumentResolver;
 
-    public Jt808ExceptionHandlerScanner(DelegateExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
+    public Jt808ExceptionHandlerScanner(Set<String> packagesToScan, DelegateExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
+        this.packagesToScan = packagesToScan;
         this.exceptionHandler = exceptionHandler;
         this.argumentResolver = argumentResolver;
-        this.packagesToScan = Sets.newHashSet("io.github.hylexus.jt808.samples.annotation");
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.doScan(this.packagesToScan);
+        this.doScan(this.packagesToScan, OrderedComponent.DEFAULT_ORDER);
     }
 
-    private void doScan(Set<String> packagesToScan) throws IOException, InstantiationException, IllegalAccessException {
+    public void doScan(Set<String> packagesToScan, int order) throws IOException, InstantiationException, IllegalAccessException {
         if (CollectionUtils.isEmpty(packagesToScan)) {
             log.info("[jt808.exception-handler-scan.base-packages] is empty. Skip...");
             return;
@@ -66,15 +67,10 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean {
 
                 final Set<Class<? extends Throwable>> supportedExceptionTypes = this.getSupportedExceptionTypes(method);
 
-                final ExceptionHandlerMethod handlerMethod = new ExceptionHandlerMethod(beanInstance, method, isVoidReturnType(method),
-                        supportedExceptionTypes) {
-                    @Override
-                    public int getOrder() {
-                        return DEFAULT_ORDER;
-                    }
-                };
+                final ExceptionHandlerMethod handlerMethod =
+                        new ExceptionHandlerMethod(beanInstance, method, isVoidReturnType(method), supportedExceptionTypes);
 
-                this.exceptionHandler.addExceptionHandler(new ExceptionHandlerMethodExceptionHandler(handlerMethod, argumentResolver));
+                this.exceptionHandler.addExceptionHandler(new ExceptionHandlerMethodExceptionHandler(handlerMethod, argumentResolver, order));
             }
         }
     }
@@ -100,10 +96,10 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private void tryDetectExceptionTypeFromMethodArguments(Method method, Set<Class<? extends Throwable>> result) {
         for (Class<?> parameterType : method.getParameterTypes()) {
             if (Throwable.class.isAssignableFrom(parameterType)) {
-                // noinspection unchecked
                 result.add((Class<? extends Throwable>) parameterType);
             }
         }
@@ -123,6 +119,6 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean {
 
     private boolean isExceptionHandlerClass(Class<?> cls) {
         return AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandler.class)
-                || AnnotatedElementUtils.isAnnotated(cls, Jt808ExceptionHandlers.class);
+                || AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandlerAdvice.class);
     }
 }

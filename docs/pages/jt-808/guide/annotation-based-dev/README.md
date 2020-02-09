@@ -19,4 +19,5 @@
 - [请求消息映射](./req-msg-mapping.md)
 - [消息处理器注册](./msg-handler-register.md)
 - [响应消息映射](./resp-msg-mapping.md)
+- [异常处理](./exception-handler.md)
 - [位置上传报文解析示例](./location-msg-parse-demo.md)

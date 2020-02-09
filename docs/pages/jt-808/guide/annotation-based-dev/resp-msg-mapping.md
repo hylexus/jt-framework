@@ -9,7 +9,7 @@
 @Jt808RequestMsgHandler
 public class CommonHandler {
 
-    @Jt808RequestMsgMapping(msgType = 0x0102)
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0102)
     public RespMsgBody processAuthMsg(AuthRequestMsgBody msgBody, RequestMsgHeader header) {
         log.info("处理鉴权消息 terminalId = {}, authCode = {}", header.getTerminalId(), msgBody.getAuthCode());
         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
@@ -70,7 +70,7 @@ public class CommonReplyMsgBody implements RespMsgBody {
 ::: tip 以下情况不会发送数据给客户端：
 - 手动实现的 `MsgHandler` 
     - 返回 `Optional.empty()`
-- 基于 `@Jt808RequestMsgMapping` 实现的 `MsgHandler`
+- 基于 `@Jt808RequestMsgHandlerMapping` 实现的 `MsgHandler`
     - 方法返回类型为 `void`
     - 方法返回值为 `VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT`
 :::

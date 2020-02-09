@@ -17,10 +17,10 @@ public class CommonHandler {
 }
 ```
 
-## @Jt808RequestMsgMapping
+## @Jt808RequestMsgHandlerMapping
 
 - 该注解类似于 `SpringMVC` 的 `@RequestMapping`。
-- `@Jt808RequestMsgMapping` 只能标注于 `方法` 上，表示被注解的方法是一个 `MsgHandler` 方法。
+- `@Jt808RequestMsgHandlerMapping` 只能标注于 `方法` 上，表示被注解的方法是一个 `MsgHandler` 方法。
 - 从逻辑上来理解，被其注解的方法相当于一个实现了 `MsgHandler` 接口的处理器类。
 
 ```java
@@ -28,7 +28,7 @@ public class CommonHandler {
 @Jt808RequestMsgHandler
 public class CommonHandler {
     // 处理MsgId为0x0200的消息
-    @Jt808RequestMsgMapping(msgType = 0x0200)
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
     public RespMsgBody processLocationMsg(
             Session session, RequestMsgMetadata metadata,
             RequestMsgHeader header, LocationUploadMsgBody msgBody) {

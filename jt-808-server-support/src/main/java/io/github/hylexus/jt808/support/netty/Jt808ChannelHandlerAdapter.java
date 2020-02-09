@@ -16,6 +16,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 import static io.github.hylexus.jt808.session.Session.generateSessionId;
@@ -55,7 +56,6 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             buf.readBytes(unescaped);
             log.debug("\nreceive msg:");
             log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
-            // final byte[] escaped = ProtocolUtils.doEscape4ReceiveJt808Msg(unescaped, 0, unescaped.length);
             final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
             log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
 
@@ -75,6 +75,14 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
             RequestMsgWrapper requestMsgWrapper = new RequestMsgWrapper().setMetadata(metadata);
             this.msgDispatcher.doDispatch(requestMsgWrapper);
+        } catch (InvocationTargetException e) {
+            // TODO exception handler
+            log.error("InvocationTargetException", e);
+            throw e;
+        } catch (Throwable throwable) {
+            // TODO exception handler
+            log.error(throwable.getMessage(), throwable);
+            throw throwable;
         } finally {
             release(msg);
         }

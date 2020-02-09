@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.support.handler.scan;
 
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
-import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgMapping;
+import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandlerMapping;
 import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
@@ -82,7 +82,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
                 }
 
                 final HandlerMethod handlerMethod = new HandlerMethod(createBeanInstance(cls), method, isVoidReturnType(method));
-                final Jt808RequestMsgMapping mappingAnnotation = method.getAnnotation(Jt808RequestMsgMapping.class);
+                final Jt808RequestMsgHandlerMapping mappingAnnotation = method.getAnnotation(Jt808RequestMsgHandlerMapping.class);
 
                 for (int msgId : mappingAnnotation.msgType()) {
                     MsgType msgType = msgTypeParser.parseMsgType(msgId)
@@ -119,7 +119,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
 
 
     private boolean isRequestMsgMappingMethod(Method method) {
-        return method.getAnnotation(Jt808RequestMsgMapping.class) != null;
+        return method.getAnnotation(Jt808RequestMsgHandlerMapping.class) != null;
     }
 
     private boolean isHandlerClass(Class<?> cls) {

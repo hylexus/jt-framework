@@ -201,7 +201,7 @@ public interface MsgHandler<T extends RequestMsgBody> extends OrderedComponent {
 
 ::: danger MsgHandler
 - 自定义的消息处理器 `必须` 实现 `MsgHandler` 这个泛型接口
-- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/msg-handler-register.md#@Jt808RequestMsgMapping) 使用 `基于注解` 的方式来实现 `MsgHandler` 的功能。
+- 当然，这种实现接口并手动注册的方式显得非常繁琐，你完全可以 [参考这里](../annotation-based-dev/msg-handler-register.md#@jt808requestmsghandlermapping) 使用 `基于注解` 的方式来实现 `MsgHandler` 的功能。
 :::
 
 消息处理完成后对客户端的响应也是一个 `byte[]` ，可以通过 `handleMsg()` 方法的 `Session` 参数中拿到 `Netty` 的 `Channel`，然后通过 `Channel` 发送给客户端。
@@ -310,7 +310,7 @@ public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
 ```
 
 ::: tip 传送门
-基于注解来实现MsgHandler的功能 [请移步这里](../annotation-based-dev/msg-handler-register.md#@Jt808RequestMsgMapping)
+基于注解来实现MsgHandler的功能 [请移步这里](../annotation-based-dev/msg-handler-register.md#@Jt808RequestMsgHandlerMapping)
 :::
 
 ## Netty相关配置

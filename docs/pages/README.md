@@ -20,7 +20,7 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ```sh
 .
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
-├── docs            # 本文档源码 (vue-press)
+├── docs            # 文档 (vue-press)
 ├── gradle
 ├── jt-808-server
 ├── jt-808-server-spring-boot-stater

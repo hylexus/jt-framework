@@ -32,7 +32,8 @@ public class RequestMsgBodyConverterMapping {
         return registerConverter(msgType, converter, false);
     }
 
-    public RequestMsgBodyConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter, boolean forceOverride) {
+    public RequestMsgBodyConverterMapping registerConverter(
+            MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter, boolean forceOverride) {
 
         final int msgId = msgType.getMsgId();
         if (containsConverter(msgType)) {

@@ -2,6 +2,9 @@ package io.github.hylexus.jt808.queue.listener;
 
 import com.google.common.eventbus.Subscribe;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt808.codec.Encoder;
+import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
+import io.github.hylexus.jt808.handler.ExceptionHandler;
 import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
@@ -18,12 +21,17 @@ import java.io.IOException;
 @BuiltinComponent
 public class LocalEventBusListener extends AbstractRequestMsgQueueListener<LocalEventBus> {
 
-    public LocalEventBusListener(MsgHandlerMapping msgHandlerMapping, LocalEventBus queue) {
-        super(msgHandlerMapping, queue);
+
+    public LocalEventBusListener(
+            MsgHandlerMapping msgHandlerMapping, LocalEventBus queue, ExceptionHandler exceptionHandler,
+            ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder) {
+
+        super(msgHandlerMapping, queue, exceptionHandler, responseMsgBodyConverter, encoder);
     }
 
     @PostConstruct
     public void init() {
+        //noinspection UnstableApiUsage
         queue.register(this);
     }
 
