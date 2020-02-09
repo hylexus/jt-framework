@@ -30,7 +30,7 @@ Jt-808协议服务端。
 
 ## TODO
 
-[TODO list](https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca.js)
+[TODO list](https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca)
 
 <script src="https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca.js"></script>
 
