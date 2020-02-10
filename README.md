@@ -30,8 +30,18 @@ Jt-808协议服务端。
 
 ## TODO
 
-[TODO list](https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca)
+[jt-framework-gist](https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca)
 
-<script src="https://gist.github.com/hylexus/fbd2101575ab1c35bc4f102871da84ca.js"></script>
+- `基于注解` 的请求消息体转换器
+   - [ ] 代码重构
+- `基于注解` 的响应消息体转换器
+   - [ ] 封装通用的响应消息体
+   - [x] `服务端通用应答消息` 的注解实现
+- 异常处理
+    - 处理机制并不完善
+        - [x] 处理 `消息转换为实体类` 之后的异常
+        - [ ] 如有必要，再处理消息转换之前的异常
+    - [ ] 代码重构
+
 
 文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)

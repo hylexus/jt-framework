@@ -17,7 +17,7 @@ module.exports = {
         nav: navConfig(),
         sidebar: sidebarConfig(),
         sidebarDepth: 1,
-        displayAllHeaders: true,
+        displayAllHeaders: false,
         activeHeaderLinks: true,
         lastUpdated: false,
 
