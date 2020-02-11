@@ -3,16 +3,22 @@ import java.nio.charset.StandardCharsets
 buildscript {
     repositories {
         mavenLocal()
-        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://repo.spring.io/plugins-release" }
+        [
+                'http://maven.aliyun.com/nexus/content/repositories/jcenter',
+                'http://maven.aliyun.com/nexus/content/groups/public/',
+                "https://plugins.gradle.org/m2/",
+                "https://repo.spring.io/plugins-release",
+        ].each { repo ->
+            maven { url repo }
+        }
         mavenCentral()
     }
+
     dependencies {
         classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
         classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE"
+        classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
     }
 }
 
@@ -34,7 +40,7 @@ ext {
     jar_version_hibernate_validator = "6.0.17.Final"
 
     defaultCharset = StandardCharsets.UTF_8.name()
-    defaultJavaVersion = 1.8
+    defaultJavaVersion = JavaVersion.VERSION_1_8
 }
 
 configurations {
@@ -52,8 +58,8 @@ configure(rootProject) {
 }
 
 configure(allprojects) { project ->
-    group = "io.github.hylexus.jt"
-    version = "1.0-SNAPSHOT"
+    group = projectGroup
+    version = projectVersion
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -65,15 +71,23 @@ configure(allprojects) { project ->
 configure(subprojects.findAll {
     (it.name != "docs") && (it.name != 'samples')
 }) { subProject ->
-    apply from: "${project(":build-script").projectDir}/script/common-java-env-config.gradle"
+    apply from: getBuildScriptPath("common-java-env-config.gradle")
 }
 
 // 2. maven config
-apply from: "${project(":build-script").projectDir}/script/repo-credentials.gradle"
+apply from: getBuildScriptPath("repo-credentials.gradle")
+
 def modulesToPublishToMavenRepo = ["jt-core", "jt-spring", "jt-808-server-support", "jt-808-server-spring-boot-stater"]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)
 }) { subProject ->
-    apply from: "${project(":build-script").projectDir}/script/common-maven-config.gradle"
+    apply from: getBuildScriptPath("common-maven-config.gradle")
+}
+
+// 3. changelog.md
+apply from: getBuildScriptPath("change-log-config.gradle")
+
+def getBuildScriptPath(String path) {
+    return "${project(":build-script").projectDir}/script/${path}"
 }
 
