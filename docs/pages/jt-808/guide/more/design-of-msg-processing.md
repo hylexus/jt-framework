@@ -9,6 +9,17 @@
 组件关系图源文件位于： [jt-808.graffle](https://github.com/hylexus/jt-framework/tree/master/docs/help/jt-808.graffle)
 
 ## 时序图
-::: tip TODO
-TODO
-:::
+
+### MsgDispatcher
+
+<p class="demo">
+    <img :src="$withBase('/img/design/dispatch-msg.png')" alt="dispatch-msg.png">
+</p>
+
+### MsgConsumer
+
+<p class="demo">
+    <img :src="$withBase('/img/design/consume-msg.png')" alt="consume-msg.png">
+</p>
+
+

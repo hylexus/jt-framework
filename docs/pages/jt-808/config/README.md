@@ -15,7 +15,7 @@ sidebarDepth: 3
     <img :src="$withBase('/img/default-config-property-source.png')" alt="default-config-property-source">
 </p> 
 
-## 基本配置
+## 配置项
 
 ```yaml
 jt808:
@@ -23,6 +23,10 @@ jt808:
   server:
     # ...
   entity-scan:
+    # ...
+  handler-scan:
+    # ...
+  exception-handler-scan:
     # ...
   msg-processor:
     thread-pool:

@@ -26,7 +26,6 @@ jt808:
       blocking-queue-size: 20
       thread-name-format: '808-msg-processor-%d'
 logging:
-  level: info
   level.io.github.hylexus: debug
   level.jt-808.msg.req.decoder: debug
   level.jt-808.msg.req.handler.abstract-msg-handler: debug

@@ -58,11 +58,11 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private static final String END_OF_LINE = "\n";
 
-    private RequestMsgBodyConverterMapping msgConverterMapping;
+    private final RequestMsgBodyConverterMapping msgConverterMapping;
 
-    private MsgHandlerMapping msgHandlerMapping;
+    private final MsgHandlerMapping msgHandlerMapping;
 
-    private MsgTypeParser msgTypeParser;
+    private final MsgTypeParser msgTypeParser;
 
     public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping,
                                           MsgHandlerMapping msgHandlerMapping) {
@@ -100,7 +100,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                 .append(END_OF_LINE);
         for (Class<?> cls : classSet) {
             stringBuilder.append(String.format("%1$-36s", cls.getSimpleName()))
-                    .append("|\t")
+                    .append("|  ")
                     .append(formatClassName(applicationContext.getBean(cls), false, false))
                     .append(END_OF_LINE);
         }
@@ -116,7 +116,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private void detectConvertAndHandlerMappings(int no, StringBuilder stringBuilder) {
         stringBuilder.append(line(no, "RequestMsgBodyConverter and MsgHandler MappingInfo:")).append(END_OF_LINE);
-        stringBuilder.append(String.format("%1$-35s\t|\t%2$-92s|\t%3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
+        stringBuilder.append(String.format("%1$-35s\t|  %2$-92s|  %3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
         stringBuilder.append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
@@ -130,7 +130,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     MsgType msgType = entry.getKey();
                     MsgConverterAndHandlerMappingInfo mappingInfo = entry.getValue();
                     String content = String.format(
-                            "%1$-30s\t|\t%2$-125s\t|\t%3$-300s\n",
+                            "%1$-30s\t|  %2$-125s  |  %3$-30s\n",
                             formatMsgType(msgType),
                             detectMsgConverter(mappingInfo),
                             detectHandlerMethod(mappingInfo.getHandler(), msgType)

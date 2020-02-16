@@ -117,7 +117,7 @@ public MsgTypeParser supplyMsgTypeParser() {
 
 ::: danger 注意
 - 该组件 `当且仅当` 你使用了内置的 `AuthMsgHandler` 来处理 `鉴权消息` 时才有效。
-- 如果你覆盖/未启用了内置的 `AuthMsgHandler`，那么你也 `不用` 提供 `AuthCodeValidator`。因为此时的鉴权逻辑已经完全交由你自定的 `AuthMsgHandler` 来处理了。
+- 如果你覆盖了/未启用内置的 `AuthMsgHandler`，那么你也 `不用` 提供 `AuthCodeValidator`。因为此时的鉴权逻辑已经完全交由你自定的 `AuthMsgHandler` 来处理了。
 :::
 
 ```java
