@@ -18,9 +18,14 @@ jar {
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from sourceSets.main.allSource
     // Don't include or exclude anything explicitly by default. See SPR-12085.
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set("javadoc")
+    from javadoc
 }
 
 artifacts {
@@ -42,11 +47,13 @@ publishing {
 
             from components.java
             artifact sourcesJar
+            artifact javadocJar
 
             pom {
                 name = project.name
                 packaging = 'jar'
                 description = "${project.description}"
+                url = "${projectScmUrl}"
 
                 licenses {
                     license {
@@ -172,6 +179,10 @@ def customizePom(pom, gradleProject) {
             }
         }
     }
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
 
 def isSnapshot() {

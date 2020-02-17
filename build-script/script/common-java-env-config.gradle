@@ -46,6 +46,28 @@ compileJava {
     options.encoding = "${defaultCharset}"
 }
 
+javadoc {
+    description = "Generates project-level javadoc for use in -javadoc jar"
+
+    options.encoding = "UTF-8"
+    options.memberLevel = JavadocMemberLevel.PROTECTED
+    options.author = true
+    options.header = project.name
+    options.use = true
+    options.addStringOption("Xdoclint:none", "-quiet")
+    options.charSet = 'UTF-8'
+    options.addStringOption("charset", "UTF-8")
+
+    options{
+        version true
+        links "http://docs.oracle.com/javase/8/docs/api"
+    }
+    // Suppress warnings due to cross-module @see and @link references.
+    // Note that global 'api' task does display all warnings.
+    logging.captureStandardError LogLevel.INFO
+    logging.captureStandardOutput LogLevel.INFO  // suppress "## warnings" message
+}
+
 apply plugin: "checkstyle"
 checkstyle {
     toolVersion = "8.23"
