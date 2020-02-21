@@ -55,6 +55,7 @@ configurations {
 
 configure(rootProject) {
     configurations.archives.artifacts.clear()
+    apply from: getBuildScriptPath("ide.gradle")
 }
 
 configure(allprojects) { project ->
@@ -72,6 +73,7 @@ configure(subprojects.findAll {
     (it.name != "docs") && (it.name != 'samples')
 }) { subProject ->
     apply from: getBuildScriptPath("common-java-env-config.gradle")
+    apply from: getBuildScriptPath("ide.gradle")
 }
 
 // 2. maven config

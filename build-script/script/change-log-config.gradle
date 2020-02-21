@@ -12,7 +12,7 @@ changelog {
     versionNum "${project.version}" //Guesses next version using commits content and defaults to an empty string.
 
     //version name
-    versionText "V-${project.version}" //Defaults to an empty string.
+//    versionText "V-${project.version}" //Defaults to an empty string.
 
     //URL of the repository where the commits can be found. Plugin will append /commits at the end.
 //    repoUrl "https://github.com/marcpoppleton/gradle-changelog-plugin" //Defaults to an empty string.
@@ -21,7 +21,7 @@ changelog {
 //    trackerUrl "https://github.com/marcpoppleton/gradle-changelog-plugin" //Defaults to an empty string.
 
     //lower limit to filter the git log command
-    from "5fbeec28" //Defaults to previous git tag found or first commit if none found.
+    from "3dcf26db" //Defaults to previous git tag found or first commit if none found.
 
     //upper limito filter the git log command.
     to "HEAD" //Defaults to HEAD.
