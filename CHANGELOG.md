@@ -1,3 +1,10 @@
+<a name="1.0.1-RELEASE"></a>
+# 1.0.1-RELEASE (2020/03/06)
+
+
+## Bug Fixes
+
+* **decoder:** 嵌套类型丢失数据 (#b1a8eaca, closes #2)
 
 ## 2020-02-09
 ### Other Changes
