@@ -88,6 +88,8 @@ public class ExtraFieldDecoder {
                 if (converterInfo.isPresent()) {
                     DataTypeConverter converter = converterInfo.get();
                     Object value = converter.convert(byte[].class, info.getFieldMetadata().getFieldType(), bodyBytes);
+                    // fix https://github.com/hylexus/jt-framework/issues/2
+                    info.getFieldMetadata().setFieldValue(instance, value);
                     splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
                 } else {
                     log.error("No converter found for filed {}", info.getFieldMetadata().getFieldType().getName());
