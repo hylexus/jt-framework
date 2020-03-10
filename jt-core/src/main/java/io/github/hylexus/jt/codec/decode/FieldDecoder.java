@@ -16,6 +16,7 @@ import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
 import io.github.hylexus.jt.utils.ReflectionUtils;
 import io.github.hylexus.oaks.utils.Bytes;
+import io.netty.util.internal.StringUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,9 +103,9 @@ public class FieldDecoder {
         BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
         final MsgDataType dataType = annotation.dataType();
         final Class<?> fieldType = fieldMetadata.getFieldType();
-        final int startIndex = annotation.startIndex();
 
-        int length = getBasicFieldLength(cls, instance, annotation, dataType);
+        final int startIndex = getBasicFieldStartIndex(cls, instance, annotation);
+        final int length = getBasicFieldLength(cls, instance, annotation, dataType);
 
         final Class<? extends ReqMsgFieldConverter> converterClass = annotation.customerDataTypeConverterClass();
         // 1. 优先使用用户自定义的属性转换器
@@ -162,6 +163,14 @@ public class FieldDecoder {
             }
         }
         return converter;
+    }
+
+    private Integer getBasicFieldStartIndex(Class<?> cls, Object instance, BasicField annotation) throws InvocationTargetException, IllegalAccessException {
+        if (StringUtil.isNullOrEmpty(annotation.startIndexMethod())) {
+            return annotation.startIndex();
+        }
+        final Method method = getLengthMethod(cls, annotation.startIndexMethod());
+        return getLengthFromByteCountMethod(instance, method);
     }
 
     private Integer getBasicFieldLength(Class<?> cls, Object instance, BasicField annotation, MsgDataType dataType)

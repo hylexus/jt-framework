@@ -16,6 +16,8 @@ public @interface BasicField {
 
     int startIndex() default 0;
 
+    String startIndexMethod() default "";
+
     MsgDataType dataType();
 
     /**
