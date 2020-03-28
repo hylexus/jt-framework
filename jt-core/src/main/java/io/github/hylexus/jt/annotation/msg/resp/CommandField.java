@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.annotation.msg.resp;
 
 import io.github.hylexus.jt.data.MsgDataType;
+import io.github.hylexus.jt.data.converter.resp.entity.RespMsgFieldConverter;
 
 import java.lang.annotation.*;
 
@@ -15,4 +16,7 @@ public @interface CommandField {
 
     MsgDataType targetMsgDataType() default UNKNOWN;
 
+    boolean isNestedCommandField() default false;
+
+    Class<? extends RespMsgFieldConverter> customerDataTypeConverterClass() default RespMsgFieldConverter.NoOpsConverter.class;
 }

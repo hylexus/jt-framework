@@ -17,6 +17,17 @@ public class DecoderTest {
     private Decoder decoder = new Decoder();
 
     @Test
+    public void bugFix7() {
+        // 7E00020000978290002147029E7D017E
+        String hex = "00020000978290002147029E7D01";
+        BytesEncoder bytesEncoder = new BytesEncoder.DefaultBytesEncoder();
+        byte[] data = HexStringUtils.hexString2Bytes(hex);
+        byte[] bytes = bytesEncoder.doEscapeForReceive(data, 0, data.length - 1);
+        System.out.println(hex);
+        System.out.println(HexStringUtils.bytes2HexString(bytes));
+    }
+
+    @Test
     public void testDecodeLocationUploadMsg() throws Exception {
         //String hex = "0200003C01371786195514780000000000000002026161D806EE1828000000000000140806024007010"
         //      + "40000000033182A4D30302C31352C31303430323130383736353433323123B6";

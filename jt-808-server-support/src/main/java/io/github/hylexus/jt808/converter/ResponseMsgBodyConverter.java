@@ -5,6 +5,7 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import io.github.hylexus.jt808.support.OrderedComponent;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -15,6 +16,10 @@ public interface ResponseMsgBodyConverter extends OrderedComponent {
 
     boolean supportsMsgBody(Object msgBody);
 
-    Optional<RespMsgBody> convert(Object msgBody, Session session, RequestMsgMetadata metadata);
+    Optional<RespMsgBody> convert(Object msgBody, @Nullable Session session, @Nullable RequestMsgMetadata metadata);
+
+    default Optional<RespMsgBody> convert(Object msgBody) {
+        return this.convert(msgBody, null, null);
+    }
 
 }

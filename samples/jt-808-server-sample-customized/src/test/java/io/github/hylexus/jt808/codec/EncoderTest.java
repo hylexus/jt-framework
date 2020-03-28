@@ -5,7 +5,7 @@ import io.github.hylexus.jt.data.resp.DwordBytesValueWrapper;
 import io.github.hylexus.jt.data.resp.StringBytesValueWrapper;
 import io.github.hylexus.jt.data.resp.WordBytesValueWrapper;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt808.codec.entity.req.resp.RespTerminalSettings;
+import io.github.hylexus.jt808.samples.customized.msg.resp.RespTerminalSettings;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,10 +25,10 @@ public class EncoderTest {
     public void test1() throws IllegalAccessException, InstantiationException {
         RespTerminalSettings param = new RespTerminalSettings();
         ArrayList<RespTerminalSettings.ParamItem> paramList = Lists.newArrayList(
-                new RespTerminalSettings.ParamItem(DwordBytesValueWrapper.of(0x0001), DwordBytesValueWrapper.of(789)),
-                new RespTerminalSettings.ParamItem(DwordBytesValueWrapper.of(0x0010), StringBytesValueWrapper.of("124")),
-                new RespTerminalSettings.ParamItem(DwordBytesValueWrapper.of(0x0081), WordBytesValueWrapper.of(456)),
-                new RespTerminalSettings.ParamItem(DwordBytesValueWrapper.of(0x0110), BytesBytesValueWrapper.of("123".getBytes()))
+                new RespTerminalSettings.ParamItem(0x0001, DwordBytesValueWrapper.of(789)),
+                new RespTerminalSettings.ParamItem(0x0010, StringBytesValueWrapper.of("124")),
+                new RespTerminalSettings.ParamItem(0x0081, WordBytesValueWrapper.of(456)),
+                new RespTerminalSettings.ParamItem(0x0110, BytesBytesValueWrapper.of("123".getBytes()))
         );
         param.setParamList(paramList);
         param.setTotalParamCount(paramList.size());
@@ -41,7 +41,7 @@ public class EncoderTest {
     public void test2() throws IllegalAccessException, InstantiationException {
         RespTerminalSettings param = new RespTerminalSettings();
         List<RespTerminalSettings.ParamItem> paramList = Lists.newArrayList(
-                new RespTerminalSettings.ParamItem(DwordBytesValueWrapper.of(0x0029), DwordBytesValueWrapper.of(100))
+                new RespTerminalSettings.ParamItem(0x0029, DwordBytesValueWrapper.of(100))
         );
 
         param.setParamList(paramList);

@@ -35,8 +35,6 @@ public class ExtraFieldDecoder {
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InstantiationException {
 
-        final ExtraField extraFieldAnnotation = fieldMetadata.getAnnotation(ExtraField.class);
-
         final Class<?> extraFieldClass = fieldMetadata.getFieldType();
 
         Object extraFieldInstance = extraFieldClass.newInstance();
@@ -44,10 +42,12 @@ public class ExtraFieldDecoder {
         fieldMetadata.getField().set(instance, extraFieldInstance);
 
         Map<Integer, NestedFieldMappingInfo> mappingInfo = getMappingInfo(extraFieldClass);
-
+        ExtraMsgBody extraMsgBodyInfo = extraFieldClass.getAnnotation(ExtraMsgBody.class);
+        int byteCountOfMsgId = extraMsgBodyInfo.byteCountOfMsgId();
+        int byteCountOfContentLength = extraMsgBodyInfo.byteCountOfContentLength();
         decodeNestedField(
                 bytes, startIndex, length, extraFieldInstance, mappingInfo,
-                extraFieldAnnotation.byteCountOfMsgId(), extraFieldAnnotation.byteCountOfContentLength()
+                byteCountOfMsgId, byteCountOfContentLength
         );
     }
 

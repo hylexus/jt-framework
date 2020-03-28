@@ -13,6 +13,6 @@ public @interface Jt808RespMsgBody {
 
     int respMsgId();
 
-    String desc();
+    String desc() default "";
 
 }
