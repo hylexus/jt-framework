@@ -28,8 +28,8 @@ public class ExtraFieldDecoder {
 
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private static final ConcurrentMap<Class<?>, ConcurrentMap<Integer, NestedFieldMappingInfo>> cache = new ConcurrentHashMap<>();
-    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
-    private SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
+    private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
+    private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 
     public void decodeExtraField(
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)

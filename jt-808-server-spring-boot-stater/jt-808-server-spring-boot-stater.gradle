@@ -1,7 +1,7 @@
-
 dependencies {
-    implementation(project(":jt-808-server-support"))
-    implementation(project(":jt-core"))
+    compile(project(":jt-808-server-support"))
+    compile(project(":jt-core"))
+
 
     implementation "org.springframework.boot:spring-boot-starter"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

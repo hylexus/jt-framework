@@ -30,9 +30,10 @@ public class LocationUploadMsgBody implements RequestMsgBody {
 | 属性      | 解释                | 取值示例 |
 | --------- | ------------------- | -------- |
 | `startIndex` | 起始字节索引 | 0、4、12   |
+| `startIndexMethod` | 作用和startIndex相同，当startIndex无法直接指定时可根据该属性定义的方法名返回字节数 | `"getLength"`   |
 | `dataType` | 数据类型 | WORD、DWORD   |
 | `length` | 长度，字节数 | 4、6   |
-| `byteCountMethod` | 作用和length相同，当length无法直接指定时可根据该属性定义的方法名返回字节数 | getLength   |
+| `byteCountMethod` | 作用和length相同，当length无法直接指定时可根据该属性定义的方法名返回字节数 | `"getLength"`   |
 | `customerDataTypeConverterClass` | 自定义的类型转换器 |    |
 
 ```java

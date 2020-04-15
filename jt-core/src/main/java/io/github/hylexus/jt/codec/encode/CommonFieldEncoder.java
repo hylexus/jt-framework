@@ -123,20 +123,4 @@ public class CommonFieldEncoder {
         return bytes;
     }
 
-    private byte[] processSpecificDataType(MsgDataType targetMsgDataType, Object value) {
-        final Class<?> targetClass = value.getClass();
-        switch (targetMsgDataType) {
-            case BYTE:
-                return IntBitOps.intTo1Byte((Integer) value);
-            case WORD:
-                return IntBitOps.intTo2Bytes((Integer) value);
-            case DWORD:
-                return IntBitOps.intTo4Bytes((Integer) value);
-            default: {
-                log.debug("Can not encode value {} to {}", value, targetMsgDataType);
-                return null;
-            }
-        }
-    }
-
 }

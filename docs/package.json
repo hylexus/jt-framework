@@ -18,8 +18,7 @@
   "devDependencies": {
     "vuepress": "^1.1.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "docs:dev": "vuepress dev pages --no-cache",
     "docs:build": "vuepress build pages"

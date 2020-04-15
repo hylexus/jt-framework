@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.utils;
 
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
 import io.github.hylexus.jt.annotation.msg.resp.CommandField;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
@@ -63,7 +65,11 @@ public class JavaBeanMetadataUtils {
 
             JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
-            if (javaBeanFieldMetadata.isAnnotationPresent(CommandField.class)) {
+            if (javaBeanFieldMetadata.isAnnotationPresent(BasicField.class)) {
+                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(BasicField.class).order());
+            } else if (javaBeanFieldMetadata.isAnnotationPresent(ExtraField.class)) {
+                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(ExtraField.class).order());
+            } else if (javaBeanFieldMetadata.isAnnotationPresent(CommandField.class)) {
                 javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(CommandField.class).order());
             }
 

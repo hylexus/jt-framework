@@ -1,3 +1,9 @@
+---
+themeConfig:
+    sidebarDepth: 3
+sidebarDepth: 2
+---
+
 # 位置上传报文解析示例
 
 ::: tip 传送门
@@ -72,6 +78,15 @@ public class LocationUploadMsgBody implements RequestMsgBody {
     // 经度(使用转换器除以10^6转为Double类型)
     @BasicField(startIndex = 12, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
     private Double lng;
+
+    // 经度(startIndexMethod使用示例)
+    @BasicField(startIndexMethod = "getLngStartIndex", dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
+    private Double lngByStartIndexMethod;
+
+    public int getLngStartIndex() {
+        log.info("消息体总长度:{}", this.requestMsgMetadata.getHeader().getMsgBodyLength());
+        return 12;
+    }
 
     // 高度
     @BasicField(startIndex = 16, dataType = WORD)
@@ -224,7 +239,8 @@ public class LngLatReqMsgFieldConverter implements ReqMsgFieldConverter<Double> 
 @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
 private Double lat;
 ```
-## 解析位置附加项列表
+
+## 关于位置附加项的解析
 
 <p class="demo">
     <img :src="$withBase('/img/doc-img/0102-003.png')" alt="精简版位置报文">
@@ -234,17 +250,43 @@ private Double lat;
 
 还好附加项报文的格式也是有迹可循的：
 
-- 整体是一个 `List` 结构，暂且将 `List` 的每一个元素称之为 'Item'
+- 整体是一个 `List` 结构，暂且将 `List` 的每一个元素称之为 `Item`
 - 每个 `Item` 内部结构也是一致的
     - `Id (byte)`
     - `length (byte)`
     - `content (类型不固定)`
 - 但是如果将这个附加项解析为一个 `List` 的话
     - 个人感觉取值不是很方便，另外如果附加项内部有嵌套的时候也不好处理
-    - 所以提供了一个 `@ExtraField` 注解来映射为一个可嵌套的实体
+    - 所以额外提供了一个 `@ExtraField` 注解来映射为一个可嵌套的实体
     - 有得必有失，这样一来，有多少个附加项就要定义多少个字段，比较繁琐
 
-## 附加项实体类的定义
+### 使用@BasicField解析
+
+由于附加项的类型不固定，仅仅用一个类是无法定义确切类型。
+所以，此处的内容自动定义成了`byte[]`。
+
+```java
+@Data
+public class ExtraInfoItem {
+    @BasicField(startIndex = 0, dataType = BYTE)
+    private Integer id;
+
+    @BasicField(order = 1, startIndex = 1, dataType = BYTE)
+    private Integer length;
+
+    // 类型不固定 仅仅用一个类无法定义确切类型
+    @BasicField(order = 2, startIndex = 2, dataType = BYTES, byteCountMethod = "getLength")
+    private byte[] rawBytes;
+
+}
+```
+
+```java
+@BasicField(startIndex = 28,byteCountMethod = "getExtraInfoLength",dataType = LIST)
+private List<ExtraInfoItem> extraInfoItemList;
+```
+
+### 使用@ExtraField解析
 
 <p class="demo">
     <img :src="$withBase('/img/doc-img/0102-004.png')" alt="精简版位置报文">

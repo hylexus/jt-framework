@@ -23,7 +23,7 @@
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.0-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.3-SNAPSHOT"
     // ...
 }
 ```
@@ -31,12 +31,11 @@ dependencies {
 - maven
 
 ```xml
-<parent>
+<dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.0-RELEASE</version>
-    <relativePath/>
-</parent>
+    <version>1.0.3-SNAPSHOT</version>
+</dependency>
 ```
 
 ## 配置

@@ -10,12 +10,16 @@ import io.github.hylexus.jt.data.converter.Jt808MsgDataTypeConverter;
 import io.github.hylexus.jt.data.converter.registry.DataTypeConverterRegistry;
 import io.github.hylexus.jt.data.converter.registry.DefaultDataTypeConverterRegistry;
 import io.github.hylexus.jt.data.converter.req.entity.ReqMsgFieldConverter;
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.exception.JtUnsupportedTypeException;
 import io.github.hylexus.jt.mata.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.mata.JavaBeanMetadata;
 import io.github.hylexus.jt.utils.JavaBeanMetadataUtils;
+import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt.utils.ReflectionUtils;
 import io.github.hylexus.oaks.utils.Bytes;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.util.internal.StringUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author hylexus
@@ -34,14 +36,14 @@ import java.util.Optional;
 @Slf4j(topic = "jt-808.msg.req.decoder")
 public class FieldDecoder {
 
-    private DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
+    private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
 
     private Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
-    private AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
-    private ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
-    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
-    private SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
+    private final AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
+    private final ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
+    private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
+    private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 
     public <T> T decode(@NonNull Object instance, @NonNull byte[] bytes) throws IllegalAccessException, InstantiationException,
             InvocationTargetException {
@@ -51,11 +53,11 @@ public class FieldDecoder {
 
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
             if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
-                processBasicField(instance, bytes, cls, fieldMetadata);
+                processBasicField(cls, instance, fieldMetadata, bytes);
             } else if (fieldMetadata.isAnnotationPresent(ExtraField.class)) {
-                processExtraField(instance, bytes, cls, fieldMetadata);
+                processExtraField(cls, instance, fieldMetadata, bytes);
             } else if (fieldMetadata.isAnnotationPresent(AdditionalField.class)) {
-                processAdditionalField(instance, bytes, cls, fieldMetadata);
+                processAdditionalField(cls, instance, fieldMetadata, bytes);
             }
         }
         slicedFromDecoder.processAllSlicedFromField(instance);
@@ -65,7 +67,7 @@ public class FieldDecoder {
         return instance1;
     }
 
-    private void processExtraField(@NonNull Object instance, @NonNull byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+    private void processExtraField(Class<?> cls, @NonNull Object instance, JavaBeanFieldMetadata fieldMetadata, @NonNull byte[] bytes)
             throws InvocationTargetException, IllegalAccessException, InstantiationException {
 
         ExtraField annotation = fieldMetadata.getAnnotation(ExtraField.class);
@@ -73,7 +75,7 @@ public class FieldDecoder {
         extraFieldDecoder.decodeExtraField(bytes, annotation.startIndex(), extraFieldLength, instance, fieldMetadata);
     }
 
-    private void processAdditionalField(Object instance, byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+    private void processAdditionalField(Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata, byte[] bytes)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
         AdditionalField annotation = fieldMetadata.getAnnotation(AdditionalField.class);
@@ -89,15 +91,15 @@ public class FieldDecoder {
         this.additionalFieldDecoder.decodeAdditionalField(instance, bytes, startIndex, totalLength, fieldMetadata);
     }
 
-    private void processBasicField(@NonNull Object instance, @NonNull byte[] bytes, Class<?> cls, JavaBeanFieldMetadata fieldMetadata)
+    private void processBasicField(Class<?> cls, @NonNull Object instance, JavaBeanFieldMetadata fieldMetadata, @NonNull byte[] bytes)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
-        Object value = processBasicField(cls, bytes, instance, fieldMetadata);
+        Object value = processBasicFieldInternal(cls, instance, fieldMetadata, bytes);
         splittableFieldDecoder.processSplittableField(instance, fieldMetadata, value);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private Object processBasicField(Class<?> cls, byte[] bytes, Object instance, JavaBeanFieldMetadata fieldMetadata)
+    private Object processBasicFieldInternal(Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata, byte[] bytes)
             throws IllegalAccessException, InvocationTargetException, InstantiationException {
 
         BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
@@ -114,31 +116,78 @@ public class FieldDecoder {
             return populateFieldByCustomerConverter(bytes, instance, field, converterClass, startIndex, length);
         }
 
-        // 2. 默认的属性转换策略
-        if (dataType.getExpectedTargetClassType().contains(fieldType)) {
-            ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(dataType, fieldType);
-            Optional<DataTypeConverter<?, ?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
-            if (converterInfo.isPresent()) {
-                DataTypeConverter converter = converterInfo.get();
-                final Object value;
-                if (converter instanceof Jt808MsgDataTypeConverter) {
-                    value = ((Jt808MsgDataTypeConverter) converter).convert(bytes, startIndex, length);
-                } else {
-                    log.warn("converter missing match for type:{}", field);
-                    value = converter.convert(byte[].class, fieldType, Bytes.subSequence(bytes, startIndex, length));
-                }
-                log.debug("Convert field {}({}) by converter : {}, result : {}",
-                        field.getName(), fieldType.getSimpleName(),
-                        converter.getClass().getSimpleName(), value);
-                fieldMetadata.setFieldValue(instance, value);
-                return value;
-            }
-            //return ReflectionUtils.populateBasicField(bytes, instance, fieldMetadata, dataType, startIndex, length);
+        // 2. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
+        if (!dataType.getExpectedTargetClassType().contains(fieldType)) {
+            throw new JtIllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
+                    + fieldType + " for field " + field);
+
+        }
+        // 3. 默认的属性转换策略
+        // 3.1 LIST 特殊处理
+        if (dataType == MsgDataType.LIST) {
+            final ByteBuf buf = Unpooled.wrappedBuffer(Bytes.subSequence(bytes, startIndex, length));
+            final List<Object> list = processListDataType(fieldMetadata, length, buf);
+            fieldMetadata.setFieldValue(instance, list);
+            return list;
         }
 
-        // 3. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
-        throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
-                + fieldType + " for field " + field);
+        // 3.2 其他类型
+        final ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(dataType, fieldType);
+        final Optional<DataTypeConverter<?, ?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
+        if (!converterInfo.isPresent()) {
+            // 3.2.1 没有配置【自定义属性转换器】&& 是【支持的目标类型】但是没有内置转换器
+            throw new JtIllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
+                    + fieldType + " for field " + field);
+        }
+
+        final DataTypeConverter converter = converterInfo.get();
+        final Object value;
+        if (converter instanceof Jt808MsgDataTypeConverter) {
+            value = ((Jt808MsgDataTypeConverter) converter).convert(bytes, startIndex, length);
+        } else {
+            log.warn("Converter missing match for type:{}", field);
+            value = converter.convert(byte[].class, fieldType, Bytes.subSequence(bytes, startIndex, length));
+        }
+        log.debug("Convert field {}({}) by converter : {}, result : {}",
+                field.getName(), fieldType.getSimpleName(),
+                converter.getClass().getSimpleName(), value);
+        fieldMetadata.setFieldValue(instance, value);
+        return value;
+    }
+
+    private List<Object> processListDataType(JavaBeanFieldMetadata fieldMetadata, int itemTotalLength, ByteBuf buf)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+
+        final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
+        final JavaBeanMetadata itemBeanMetadata = JavaBeanMetadataUtils.getBeanMetadata(itemClass);
+
+        final List<Object> list = new ArrayList<>();
+
+        List<JavaBeanFieldMetadata> fieldMetadataList = itemBeanMetadata.getFieldMetadataList();
+        int totalProcessedBytesCount = 0;
+        while (totalProcessedBytesCount < itemTotalLength && buf.isReadable()) {
+            // process item of list
+            final Object itemInstance = itemClass.newInstance();
+            int processedBytesCount = 0;
+            for (JavaBeanFieldMetadata itemFieldMetadata : fieldMetadataList) {
+                final BasicField itemAnnotation = itemFieldMetadata.getAnnotation(BasicField.class);
+                final int itemLength = getBasicFieldLength(itemClass, itemInstance, itemAnnotation, itemAnnotation.dataType());
+                int retainedLength = itemLength + processedBytesCount;
+                if (!buf.isReadable(retainedLength)) {
+                    log.error("ba{}", buf);
+                    break;
+                }
+                processedBytesCount += itemLength;
+                byte[] itemBytes = ProtocolUtils.byteBufToByteArray(buf.retainedSlice(totalProcessedBytesCount, retainedLength), retainedLength);
+                Object result = processBasicFieldInternal(itemClass, itemInstance, itemFieldMetadata, itemBytes);
+                log.debug("Process LIST DataType for item {}, result:{}", itemInstance, result);
+                splittableFieldDecoder.processSplittableField(itemInstance, itemFieldMetadata, result);
+            }
+            totalProcessedBytesCount += processedBytesCount;
+
+            list.add(itemInstance);
+        }
+        return list;
     }
 
     private Object populateFieldByCustomerConverter(

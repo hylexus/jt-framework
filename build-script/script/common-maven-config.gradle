@@ -182,7 +182,9 @@ def customizePom(pom, gradleProject) {
 }
 
 signing {
-    sign publishing.publications.mavenJava
+    if (!isSnapshot()) {
+        sign publishing.publications.mavenJava
+    }
 }
 
 def isSnapshot() {

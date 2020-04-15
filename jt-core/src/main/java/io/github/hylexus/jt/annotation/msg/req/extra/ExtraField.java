@@ -21,6 +21,11 @@ public @interface ExtraField {
     int DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH = 1;
 
     /**
+     * @return 赋值顺序，值越小优先级越高
+     */
+    int order() default Integer.MIN_VALUE + 1000;
+
+    /**
      * @see BasicField#startIndex()
      */
     int startIndex();
