@@ -1,6 +1,7 @@
-<a name="1.0.1-RELEASE"></a>
-# 1.0.1-RELEASE (2020/03/06)
+# 1.0.3-SNAPSHOT
 
+- `maven` 版 `jt-808-server-spring-boot-stater`的 `scope` 改为 `compile`
+- `MsgDataType` 新增 `List` 类型
 
 ## Bug Fixes
 

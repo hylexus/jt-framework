@@ -28,14 +28,12 @@ public class ExtraFieldDecoder {
 
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private static final ConcurrentMap<Class<?>, ConcurrentMap<Integer, NestedFieldMappingInfo>> cache = new ConcurrentHashMap<>();
-    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
-    private SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
+    private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
+    private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 
     public void decodeExtraField(
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)
             throws IllegalAccessException, InstantiationException {
-
-        final ExtraField extraFieldAnnotation = fieldMetadata.getAnnotation(ExtraField.class);
 
         final Class<?> extraFieldClass = fieldMetadata.getFieldType();
 
@@ -44,10 +42,12 @@ public class ExtraFieldDecoder {
         fieldMetadata.getField().set(instance, extraFieldInstance);
 
         Map<Integer, NestedFieldMappingInfo> mappingInfo = getMappingInfo(extraFieldClass);
-
+        ExtraMsgBody extraMsgBodyInfo = extraFieldClass.getAnnotation(ExtraMsgBody.class);
+        int byteCountOfMsgId = extraMsgBodyInfo.byteCountOfMsgId();
+        int byteCountOfContentLength = extraMsgBodyInfo.byteCountOfContentLength();
         decodeNestedField(
                 bytes, startIndex, length, extraFieldInstance, mappingInfo,
-                extraFieldAnnotation.byteCountOfMsgId(), extraFieldAnnotation.byteCountOfContentLength()
+                byteCountOfMsgId, byteCountOfContentLength
         );
     }
 

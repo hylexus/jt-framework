@@ -47,4 +47,8 @@ public class ExtraEntity {
 
     @ExtraField.NestedFieldMapping(msgId = 0xf3, isNestedExtraField = true)
     private ObdData obdData;
+
+    // f3 -- 243
+    @ExtraField.NestedFieldMapping(msgId = 0xf3, dataType = BYTES)
+    private byte[] field0xf3;
 }

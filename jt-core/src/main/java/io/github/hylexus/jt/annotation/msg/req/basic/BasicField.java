@@ -14,6 +14,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface BasicField {
 
+    /**
+     * @return 赋值顺序，值越小优先级越高
+     */
+    int order() default Integer.MIN_VALUE;
+
     int startIndex() default 0;
 
     String startIndexMethod() default "";

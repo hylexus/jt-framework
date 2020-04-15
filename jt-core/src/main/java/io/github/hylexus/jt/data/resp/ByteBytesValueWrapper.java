@@ -1,9 +1,12 @@
 package io.github.hylexus.jt.data.resp;
 
+import lombok.Value;
+
 /**
  * @author hylexus
  * Created At 2019-10-19 7:51 下午
  */
+@Value
 public class ByteBytesValueWrapper implements BytesValueWrapper<Byte> {
     private byte value;
 

@@ -16,7 +16,9 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.converter.impl.*;
 import io.github.hylexus.jt808.converter.impl.resp.DelegateRespMsgBodyConverter;
+import io.github.hylexus.jt808.dispatcher.CommandSender;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt808.dispatcher.impl.DefaultCommandSender;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.handler.impl.BuiltInNoReplyMsgHandler;
@@ -196,6 +198,11 @@ public class Jt808ServerAutoConfigure {
     public ResponseMsgBodyConverter responseMsgBodyConverter(MsgTypeParser msgTypeParser) {
         // 如果有必要 --> 再提供自定义注册
         return new DelegateRespMsgBodyConverter(msgTypeParser);
+    }
+
+    @Bean
+    public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder) {
+        return new DefaultCommandSender(responseMsgBodyConverter, encoder);
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)

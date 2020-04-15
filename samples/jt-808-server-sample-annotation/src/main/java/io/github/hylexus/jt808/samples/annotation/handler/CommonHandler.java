@@ -7,11 +7,13 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
+import io.github.hylexus.jt808.msg.req.BuiltinEmptyRequestMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinTerminalCommonReplyMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
 import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.LocationUploadRequestMsgBody;
+import io.github.hylexus.jt808.samples.annotation.entity.req.PassthroughPack;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,10 +64,20 @@ public class CommonHandler {
         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
     }
 
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0900)
+    public RespMsgBody process0x0900(PassthroughPack body) {
+        log.info("bug-fix --> 0x0900: {}", body);
+        return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;
+    }
+
     // 此处会覆盖内置的终端通用应答消息处理器(如果启用了的话)
     @Jt808RequestMsgHandlerMapping(msgType = 0x0001)
     public void processTerminalCommonReplyMsg(Session session, BuiltinTerminalCommonReplyMsgBody msgBody) {
         log.info("处理终端通用应答消息 terminalId = {}, msgBody = {}", session.getTerminalId(), msgBody);
     }
 
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0002)
+    public void processTerminalHearBeatMsg(BuiltinEmptyRequestMsgBody heartBeatMsgBody) {
+        log.info("bug-fix --> https://github.com/hylexus/jt-framework/issues/7 : {}", heartBeatMsgBody);
+    }
 }

@@ -21,7 +21,7 @@ public class RespMsgEncoder {
 
     public byte[] encodeRespMsgBody(Object msgBody) throws InstantiationException, IllegalAccessException {
         final List<byte[]> result = Lists.newArrayList();
-        return Bytes.concatAll(commonFieldEncoder.encodeMsgBodyRecursively(msgBody, result));
         // TODO 其他类型注解的处理
+        return Bytes.concatAll(commonFieldEncoder.encodeMsgBodyRecursively(msgBody, result));
     }
 }

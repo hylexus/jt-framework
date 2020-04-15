@@ -26,7 +26,7 @@ import static io.github.hylexus.jt.annotation.msg.req.AdditionalField.ROOT_GROUP
 public class AdditionalFieldDecoder {
 
     private static final ConcurrentMap<Field, Map<Integer, AdditionalFieldInfo>> FIELD_INFO_CACHE = new ConcurrentHashMap<>();
-    private SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
+    private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
 
     public void decodeAdditionalField(
             Object instance, byte[] bytes, int startIndex, int totalLength,

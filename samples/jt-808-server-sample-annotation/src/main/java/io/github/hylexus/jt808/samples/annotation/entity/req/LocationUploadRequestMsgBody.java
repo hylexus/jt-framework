@@ -14,6 +14,9 @@ import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import static io.github.hylexus.jt.data.MsgDataType.*;
 
@@ -21,6 +24,7 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
  * @author hylexus
  * Created At 2020-01-29 12:03 下午
  */
+@Slf4j
 @Data
 @Accessors(chain = true)
 @Jt808ReqMsgBody(msgType = 0x0200)
@@ -75,6 +79,16 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
     @BasicField(startIndex = 12, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
     private Double lng;
 
+    // 经度(startIndexMethod使用示例)
+    @BasicField(startIndexMethod = "getLngStartIndex", dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
+    private Double lngByStartIndexMethod;
+
+    // a sample for https://github.com/hylexus/jt-framework/issues/9
+    public int getLngStartIndex() {
+        log.info("消息体总长度:{}", this.requestMsgMetadata.getHeader().getMsgBodyLength());
+        return 12;
+    }
+
     // 高度
     @BasicField(startIndex = 16, dataType = WORD)
     private Integer height;
@@ -102,6 +116,10 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
         int totalLength = this.requestMsgMetadata.getHeader().getMsgBodyLength();
         return totalLength - 28;
     }
+
+    // 也可将将附加项解析为一个List
+    @BasicField(startIndex = 28,byteCountMethod = "getExtraInfoLength",dataType = LIST)
+    private List<ExtraInfoItem> extraInfoItemList;
 
     @Data
     // 切记@ExtraMsgBody注解不能丢

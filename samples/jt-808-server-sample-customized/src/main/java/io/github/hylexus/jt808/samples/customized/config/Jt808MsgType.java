@@ -15,8 +15,13 @@ import java.util.Optional;
 @Getter
 @ToString
 public enum Jt808MsgType implements MsgType {
+    CLIENT_COMMON_REPLY(0x0001, "终端通用应答"),
     CLIENT_AUTH(0x0102, "终端鉴权"),
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
+
+    RESP_TERMINAL_PARAM_SETTINGS(0x8103, "设置终端参数"),
+    RESP_QUERY_TERMINAL_PROPERTIES(0x8107, "查询终端属性(EMPTY)"),
+    CLIENT_QUERY_TERMINAL_PROPERTIES_REPLY(0x0107, "查询终端属性应答"),
     ;
     private int msgId;
     private String desc;

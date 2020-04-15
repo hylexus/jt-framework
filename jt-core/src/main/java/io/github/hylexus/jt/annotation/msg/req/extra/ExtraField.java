@@ -21,6 +21,11 @@ public @interface ExtraField {
     int DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH = 1;
 
     /**
+     * @return 赋值顺序，值越小优先级越高
+     */
+    int order() default Integer.MIN_VALUE + 1000;
+
+    /**
      * @see BasicField#startIndex()
      */
     int startIndex();
@@ -36,13 +41,23 @@ public @interface ExtraField {
     String byteCountMethod() default "";
 
     /**
+     * 计划在 1.0.4-RELEASE中删除该属性，请使用 {@link ExtraMsgBody#byteCountOfMsgId() } 代替。
+     * 详情见 https://github.com/hylexus/jt-framework/issues/8
+     *
      * @return 附加消息中表示消息ID的字段字节数，例如BYTE --> 1, WORD --> 2 (808文档中默认为BYTE，即1字节)
+     * @see ExtraMsgBody#byteCountOfMsgId()
      */
+    @Deprecated
     int byteCountOfMsgId() default DEFAULT_BYTE_COUNT_OF_MSG_ID;
 
     /**
+     * 计划在 1.0.4-RELEASE中删除该属性，请使用 {@link ExtraMsgBody#byteCountOfContentLength()} () } 代替。
+     * 详情见 https://github.com/hylexus/jt-framework/issues/8
+     *
      * @return 附加消息中表示消息长度的字段的字节数，例如BYTE --> 1, WORD --> 2 (808文档中默认为BYTE，即1字节)
+     * @see ExtraMsgBody#byteCountOfContentLength()
      */
+    @Deprecated
     int byteCountOfContentLength() default DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH;
 
     @Target({ElementType.FIELD})

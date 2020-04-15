@@ -9,6 +9,7 @@ import io.github.hylexus.jt.annotation.msg.req.slice.SplittableField;
 import io.github.hylexus.jt.data.converter.req.entity.LngLatReqMsgFieldConverter;
 import io.github.hylexus.jt.data.msg.AdditionalItemEntity;
 import io.github.hylexus.jt808.codec.entity.req.location.ExtraEntity;
+import io.github.hylexus.jt808.codec.entity.req.location.ExtraItem;
 import io.github.hylexus.jt808.codec.entity.req.location.LocationUploadStatus;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
@@ -83,10 +84,14 @@ public class LocationUploadRequestMsgBodyForDebug implements RequestMsgBody, Req
     private List<AdditionalItemEntity> additionalInfo;
 
     @ExtraField(
+            order = 1,
             startIndex = 28,
             byteCountMethod = "getExtraInfoLength"
     )
     private ExtraEntity extraEntity;
+
+    @BasicField(order = 2, startIndex = 28, byteCountMethod = "getExtraInfoLength", dataType = LIST)
+    private List<ExtraItem> extraItemList;
 
     @Override
     public void setRequestMsgMetadata(RequestMsgMetadata metadata) {

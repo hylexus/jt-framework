@@ -2,6 +2,7 @@ package io.github.hylexus.jt.utils;
 
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.oaks.utils.Bytes;
+import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -42,8 +43,14 @@ public class ProtocolUtils {
                     outputStream.write(bs[i]);
                 }
             }
-            for (int i = end - 1; i < bs.length; i++) {
-                outputStream.write(bs[i]);
+            if (bs[end - 1] == 0x7d && bs[end] == 0x01) {
+                outputStream.write(0x7d);
+            } else if (bs[end - 1] == 0x7d && bs[end] == 0x02) {
+                outputStream.write(0x7e);
+            } else {
+                for (int i = end - 1; i < bs.length; i++) {
+                    outputStream.write(bs[i]);
+                }
             }
             return outputStream.toByteArray();
         }
@@ -84,5 +91,11 @@ public class ProtocolUtils {
             log.error(e.getMessage(), e);
             return defaultVal;
         }
+    }
+
+    public static byte[] byteBufToByteArray(ByteBuf buf, int length) {
+        byte[] tmp = new byte[length];
+        buf.readBytes(tmp);
+        return tmp;
     }
 }
