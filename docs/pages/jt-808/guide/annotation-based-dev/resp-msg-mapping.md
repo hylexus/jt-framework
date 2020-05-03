@@ -1,3 +1,9 @@
+---
+themeConfig:
+    sidebarDepth: 3
+sidebarDepth: 2
+---
+
 # 响应消息映射
 
 本节内容是 [基于注解的消息处理器](./msg-handler-register.md) 的后续内容。
@@ -77,8 +83,65 @@ public class CommonReplyMsgBody implements RespMsgBody {
 
 ## @Jt808RespMsgBody
 
-`MsgHandler` 除了直接返回 `RespMsgBody` 外，还以返回 被 `@Jt808RespMsgBody` 标记的实体类。
+`MsgHandler` 除了直接返回 `RespMsgBody` 外，还可以返回 被 `@Jt808RespMsgBody` 标记的实体类。
 
-::: tip TODO
-这部分可用的注解和其解析逻辑还在开发中……😂😂😂😂😂😂😂😂
-:::
+### 示例代码
+
+- 以下为终端通用应答的示例代码：
+
+```java
+@Value
+// MsgId 0x8001
+@Jt808RespMsgBody(respMsgId = 0x8001)
+public class ServerCommonReplyMsgBody {
+    // 1. [0-1] 应答流水号 WORD terminal flowId
+    @CommandField(order = 0, targetMsgDataType = WORD)
+    int replyFlowId;
+    // 2. [2-3] 应答id WORD 0x0102 ... 
+    @CommandField(order = 1, targetMsgDataType = WORD)
+    int replyMsgId;
+    // 3. [4] 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持 
+    @CommandField(order = 2, targetMsgDataType = BYTE)
+    byte result;
+}
+```
+- 以下为对应的Handler返回
+
+```java
+@Slf4j
+@Jt808RequestMsgHandler
+public class CommonHandler {
+
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
+    public ServerCommonReplyMsgBody processLocationMsg(
+            Session session, RequestMsgMetadata metadata,
+            RequestMsgHeader header, LocationUploadRequestMsgBody msgBody) {
+
+        assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
+        assert session.getTerminalId().equals(header.getTerminalId());
+        assert session.getTerminalId().equals(metadata.getHeader().getTerminalId());
+        assert metadata.getHeader() == header;
+
+        log.info("处理位置上报消息 terminalId = {}, msgBody = {}", header.getTerminalId(), msgBody);
+//         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
+        return new ServerCommonReplyMsgBody(header.getFlowId(), CLIENT_LOCATION_INFO_UPLOAD.getMsgId(), (byte) 0);
+    }
+}
+```
+
+### 属性解释
+
+| 属性        | 解释                     | 取值示例 |
+| ----------- | ------------------------ | -------- |
+| `respMsgId` | 服务端下发消息的 `MsgId` | `0x8001` |
+| `desc`      | 描述                     |          |
+
+### @CommandField
+
+| 属性                             | 解释                                                         | 取值示例        |
+| -------------------------------- | ------------------------------------------------------------ | --------------- |
+| `order`                          | 字节顺序，值越小越先编码                                     | `-1`、`0`、`2`  |
+| `targetMsgDataType`              | 数据类型                                                     | `DWORD`         |
+| `isNestedCommandField`           | 是否是嵌套类型，`true` 表示被修饰的字段类型是一个 `@CommandField` 嵌套的类型 | 默认值: `false` |
+| `customerDataTypeConverterClass` | 客户自定义给字段的编码实现                                   |                 |
+

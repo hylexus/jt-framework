@@ -66,6 +66,7 @@ function jt808GuideSidebarConfig() {
                 'annotation-based-dev/req-msg-mapping',
                 'annotation-based-dev/msg-handler-register',
                 'annotation-based-dev/resp-msg-mapping',
+                'annotation-based-dev/msg-push',
                 'annotation-based-dev/exception-handler',
                 'annotation-based-dev/location-msg-parse-demo'
             ]

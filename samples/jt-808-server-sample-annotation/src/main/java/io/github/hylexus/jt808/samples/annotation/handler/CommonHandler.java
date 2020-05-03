@@ -14,8 +14,11 @@ import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.AuthRequestMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.req.PassthroughPack;
+import io.github.hylexus.jt808.samples.annotation.entity.resp.ServerCommonReplyMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.github.hylexus.jt808.samples.annotation.config.Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD;
 
 /**
  * @author hylexus
@@ -51,7 +54,7 @@ public class CommonHandler {
 
     // 处理MsgId为0x0200的消息
     @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
-    public RespMsgBody processLocationMsg(
+    public ServerCommonReplyMsgBody processLocationMsg(
             Session session, RequestMsgMetadata metadata,
             RequestMsgHeader header, LocationUploadRequestMsgBody msgBody) {
 
@@ -61,7 +64,8 @@ public class CommonHandler {
         assert metadata.getHeader() == header;
 
         log.info("处理位置上报消息 terminalId = {}, msgBody = {}", header.getTerminalId(), msgBody);
-        return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
+//         return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
+        return new ServerCommonReplyMsgBody(header.getFlowId(), CLIENT_LOCATION_INFO_UPLOAD.getMsgId(), (byte) 0);
     }
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0900)
