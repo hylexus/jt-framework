@@ -9,7 +9,7 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
  */
 public class EmptyRespMsgBody implements RespMsgBody {
 
-    private MsgType msgType;
+    private final MsgType msgType;
 
     public EmptyRespMsgBody(MsgType msgType) {
         this.msgType = msgType;

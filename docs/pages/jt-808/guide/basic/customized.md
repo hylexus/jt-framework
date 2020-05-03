@@ -65,8 +65,8 @@ public enum Jt808MsgType implements MsgType {
     CLIENT_AUTH(0x0102, "终端鉴权"),
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     ;
-    private int msgId;
-    private String desc;
+    private final int msgId;
+    private final String desc;
 
     Jt808MsgType(int msgId, String desc) {
         this.msgId = msgId;

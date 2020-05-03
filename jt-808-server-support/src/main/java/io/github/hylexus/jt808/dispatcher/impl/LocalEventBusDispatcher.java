@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @BuiltinComponent
 public class LocalEventBusDispatcher extends AbstractRequestMsgDispatcher {
 
-    private RequestMsgQueue eventBus;
+    private final RequestMsgQueue eventBus;
 
     public LocalEventBusDispatcher(RequestMsgBodyConverterMapping msgConverterMapping, RequestMsgQueue eventBus) {
         super(msgConverterMapping);

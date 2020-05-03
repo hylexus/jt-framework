@@ -28,7 +28,7 @@ import static java.util.Optional.of;
 public class MsgHandlerMapping {
 
     //private Map<MsgType, MsgHandler> mapping;
-    private Map<Integer, MsgHandler<? extends RequestMsgBody>> mapping;
+    private final Map<Integer, MsgHandler<? extends RequestMsgBody>> mapping;
     private final BytesEncoder bytesEncoder;
 
     @Setter

@@ -21,7 +21,7 @@ public class CommandWaitingPool {
     private CommandWaitingPool() {
     }
 
-    private BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
+    private final BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
 
     public void putIfNecessary(CommandKey commandKey, Object msg) {
         final String waitingFlag = commandKey.getWaitingFlag();

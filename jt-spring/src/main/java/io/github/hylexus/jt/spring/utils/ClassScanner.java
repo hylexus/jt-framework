@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("rawtypes")
 public class ClassScanner {
 
-    private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-    private MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
+    private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+    private final MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
 
     public Set<Class> doScan(Set<String> packagesToScan, Predicate<Class<?>> classFilter) throws IOException {
         String[] strings = packagesToScan.toArray(new String[packagesToScan.size()]);

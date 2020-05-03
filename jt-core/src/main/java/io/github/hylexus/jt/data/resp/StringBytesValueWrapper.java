@@ -6,7 +6,7 @@ import lombok.Value;
 @Value
 public class StringBytesValueWrapper implements BytesValueWrapper<String> {
 
-    private final String value;
+    String value;
 
     private StringBytesValueWrapper(String value) {
         this.value = value;

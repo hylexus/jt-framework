@@ -38,7 +38,7 @@ public class FieldDecoder {
 
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
 
-    private Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
+    private final Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
     private final AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
     private final ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();

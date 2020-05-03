@@ -42,6 +42,7 @@ public class DelegateExceptionHandler implements ExceptionHandler {
     @Override
     public Object handleException(Object handler, ArgumentContext argumentContext) throws Throwable {
         final Throwable throwable = argumentContext.getThrowable();
+        assert throwable != null;
         final Class<? extends Throwable> targetExceptionClass = throwable.getClass();
 
         ExceptionHandler exceptionHandler = this.getExceptionHandler(targetExceptionClass, false);

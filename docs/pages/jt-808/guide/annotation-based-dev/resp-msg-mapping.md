@@ -33,7 +33,7 @@ public class CommonReplyMsgBody implements RespMsgBody {
     // 2. 应答id WORD 0x0102 ...
     private int replyMsgId;
     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
-    private byte result = SUCCESS;
+    private final byte result = SUCCESS;
 
     private CommonReplyMsgBody() {
     }

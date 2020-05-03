@@ -29,8 +29,8 @@ public enum Jt808MsgType implements MsgType {
     REQ_QUERY_LOCK_PARAM_REPLY(0x0104, "查询锁参数应答"),
     ;
 
-    private int msgId;
-    private String desc;
+    private final int msgId;
+    private final String desc;
 
     Jt808MsgType(int msgId, String desc) {
         this.msgId = msgId;

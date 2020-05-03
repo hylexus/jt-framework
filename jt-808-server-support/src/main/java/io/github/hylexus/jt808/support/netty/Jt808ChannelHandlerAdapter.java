@@ -28,7 +28,7 @@ import static io.netty.util.ReferenceCountUtil.release;
  * @author hylexus
  * createdAt 2018/12/28
  **/
-@Slf4j
+@Slf4j(topic = "jt-808.channel.handler.adapter")
 @ChannelHandler.Sharable
 public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 

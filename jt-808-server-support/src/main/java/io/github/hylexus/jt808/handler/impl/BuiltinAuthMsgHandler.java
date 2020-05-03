@@ -27,7 +27,7 @@ import static java.util.Optional.of;
 @BuiltinComponent
 public class BuiltinAuthMsgHandler extends AbstractMsgHandler<BuiltinAuthRequestMsgBody> {
 
-    private AuthCodeValidator authCodeValidator;
+    private final AuthCodeValidator authCodeValidator;
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {

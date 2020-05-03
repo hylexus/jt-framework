@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 public class DwordBytesValueWrapper implements BytesValueWrapper<Integer> {
-    private final Integer value;
+    Integer value;
 
     private DwordBytesValueWrapper(int value) {
         this.value = value;

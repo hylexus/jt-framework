@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class ByteArrayToStringDataConverter implements Jt808MsgDataTypeConverter<String> {
 
-    private Charset charset;
+    private final Charset charset;
 
     public ByteArrayToStringDataConverter() {
         this(JtProtocolConstant.JT_808_STRING_ENCODING);

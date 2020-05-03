@@ -18,7 +18,7 @@ import java.util.Optional;
 public class RequestMsgBodyConverterMapping {
 
     //private Map<MsgType, RequestMsgBodyConverter> mapping;
-    private Map<Integer, RequestMsgBodyConverter<? extends RequestMsgBody>> mapping;
+    private final Map<Integer, RequestMsgBodyConverter<? extends RequestMsgBody>> mapping;
 
     public RequestMsgBodyConverterMapping() {
         this.mapping = new HashMap<>();

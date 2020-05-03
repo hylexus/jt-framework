@@ -23,8 +23,8 @@ public enum Jt808MsgType implements MsgType {
     RESP_QUERY_TERMINAL_PROPERTIES(0x8107, "查询终端属性(EMPTY)"),
     CLIENT_QUERY_TERMINAL_PROPERTIES_REPLY(0x0107, "查询终端属性应答"),
     ;
-    private int msgId;
-    private String desc;
+    private final int msgId;
+    private final String desc;
 
     Jt808MsgType(int msgId, String desc) {
         this.msgId = msgId;

@@ -9,7 +9,7 @@ import lombok.Value;
  */
 @Value
 public class BcdBytesValueWrapper implements BytesValueWrapper<String> {
-    private String value;
+    String value;
 
     private BcdBytesValueWrapper(String value) {
         this.value = value;

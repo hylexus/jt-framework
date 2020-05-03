@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class SessionManager {
     private final Object lock = new Object();
-    private static volatile SessionManager instance = new SessionManager();
+    private static final SessionManager instance = new SessionManager();
 
     private SessionManager() {
     }
@@ -24,9 +24,9 @@ public class SessionManager {
     }
 
     // <terminalId,Session>
-    private Map<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
     // <sessionId,terminalId>
-    private Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
+    private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
 
     public void persistenceIfNecessary(String terminalId, Channel channel) {
         Optional<Session> session = findByTerminalId(terminalId, true);

@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
 
-    private Set<MsgType> supportedMsgTypes = new HashSet<>();
-    private ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
+    private final Set<MsgType> supportedMsgTypes = new HashSet<>();
+    private final ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
     private final HandlerMethodArgumentResolver argumentResolver;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
     private final ExceptionHandler exceptionHandler;

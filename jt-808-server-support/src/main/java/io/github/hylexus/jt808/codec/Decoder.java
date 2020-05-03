@@ -85,7 +85,7 @@ public class Decoder {
         return header;
     }
 
-    private FieldDecoder fieldDecoder = new FieldDecoder();
+    private final FieldDecoder fieldDecoder = new FieldDecoder();
 
     public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgMetadata metadata)
             throws IllegalAccessException, InstantiationException, InvocationTargetException {

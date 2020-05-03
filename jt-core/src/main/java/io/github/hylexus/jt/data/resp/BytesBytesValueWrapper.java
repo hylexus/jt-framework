@@ -9,7 +9,7 @@ import lombok.Value;
  */
 @Value
 public class BytesBytesValueWrapper implements BytesValueWrapper<byte[]> {
-    private byte[] value;
+    byte[] value;
 
     private BytesBytesValueWrapper(byte[] value, int start, int length) {
         this.value = Bytes.subSequence(value, start, length);

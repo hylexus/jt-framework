@@ -19,13 +19,13 @@ import java.util.Optional;
 @Slf4j
 public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgBodyConverter<RequestMsgBody> {
 
-    private Decoder decoder = new Decoder();
+    private final Decoder decoder = new Decoder();
     /**
      * <pre>
      *     MsgType -> RequestMsgBody.class
      * </pre>
      */
-    private Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
+    private final Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
 
     public Map<Integer, Class<? extends RequestMsgBody>> getMsgBodyMapping() {
         return Collections.unmodifiableMap(msgTypeMsgBodyClassMapping);

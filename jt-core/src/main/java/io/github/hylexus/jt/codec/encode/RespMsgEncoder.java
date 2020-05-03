@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 public class RespMsgEncoder {
 
-    private CommonFieldEncoder commonFieldEncoder;
+    private final CommonFieldEncoder commonFieldEncoder;
 
     public RespMsgEncoder() {
         this.commonFieldEncoder = new CommonFieldEncoder();

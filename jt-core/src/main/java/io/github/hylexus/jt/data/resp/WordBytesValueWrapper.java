@@ -6,7 +6,7 @@ import lombok.Value;
 @Value
 public class WordBytesValueWrapper implements BytesValueWrapper<Short> {
 
-    private final Short value;
+    Short value;
 
     private WordBytesValueWrapper(short value) {
         this.value = value;

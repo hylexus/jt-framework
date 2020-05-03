@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
  **/
 @Slf4j
 public abstract class AbstractRunner {
-    private String name;
+    private final String name;
 
     public AbstractRunner(String name) {
         this.name = name;

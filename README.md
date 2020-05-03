@@ -11,7 +11,6 @@ Jt-808协议服务端。
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
 ├── docs            # 文档 (vue-press)
 ├── gradle
-├── jt-808-server
 ├── jt-808-server-spring-boot-stater
 ├── jt-808-server-support
 ├── jt-core

@@ -21,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 public class ReflectionBasedRespMsgBodyConverter extends AbstractBuiltinRespBodyConverter {
 
-    private RespMsgEncoder respMsgEncoder;
+    private final RespMsgEncoder respMsgEncoder;
     private final MsgTypeParser msgTypeParser;
 
     public ReflectionBasedRespMsgBodyConverter(MsgTypeParser msgTypeParser) {

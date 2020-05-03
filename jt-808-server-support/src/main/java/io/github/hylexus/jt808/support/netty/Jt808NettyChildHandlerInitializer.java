@@ -9,8 +9,8 @@ import io.netty.channel.socket.SocketChannel;
  **/
 public class Jt808NettyChildHandlerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
-    private Jt808ServerConfigure serverConfigure;
+    private final Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
+    private final Jt808ServerConfigure serverConfigure;
 
     public Jt808NettyChildHandlerInitializer(Jt808ServerConfigure serverConfigure, Jt808ChannelHandlerAdapter msgDispatcher) {
         this.serverConfigure = serverConfigure;

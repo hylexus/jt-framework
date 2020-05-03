@@ -16,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatcher {
 
-    private RequestMsgBodyConverterMapping msgConverterMapping;
+    private final RequestMsgBodyConverterMapping msgConverterMapping;
 
     public AbstractRequestMsgDispatcher(RequestMsgBodyConverterMapping msgConverterMapping) {
         this.msgConverterMapping = msgConverterMapping;

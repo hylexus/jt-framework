@@ -8,7 +8,7 @@ import lombok.Value;
  */
 @Value
 public class ByteBytesValueWrapper implements BytesValueWrapper<Byte> {
-    private byte value;
+    byte value;
 
     private ByteBytesValueWrapper(byte value) {
         this.value = value;

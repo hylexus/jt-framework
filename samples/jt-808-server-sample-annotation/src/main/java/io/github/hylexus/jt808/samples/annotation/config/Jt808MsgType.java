@@ -20,8 +20,8 @@ public enum Jt808MsgType implements MsgType {
     CLIENT_DATA_UP_TRANSPARENT(0x0900, "数据上行透传"),
     ;
 
-    private int msgId;
-    private String desc;
+    private final int msgId;
+    private final String desc;
 
     Jt808MsgType(int msgId, String desc) {
         this.msgId = msgId;

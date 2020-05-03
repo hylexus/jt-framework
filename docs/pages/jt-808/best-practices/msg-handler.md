@@ -43,7 +43,7 @@ public class AuthMsgHandler extends AbstractMsgHandler<AuthRequestMsgBody> {
 @Slf4j
 @BuiltinComponent
 public class ReflectionBasedRequestMsgHandler extends AbstractMsgHandler {
-    private Set<MsgType> supportedMsgTypes = new HashSet<>();
+    private final Set<MsgType> supportedMsgTypes = new HashSet<>();
 
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
