@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.dispatcher.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RespMsgBody;
@@ -11,6 +12,7 @@ import java.util.Optional;
  * @author hylexus
  * Created At 2020-03-11 22:09
  */
+@BuiltinComponent
 public class DefaultCommandSender extends AbstractCommandSender {
 
     private final ResponseMsgBodyConverter respMsgBodyConverter;

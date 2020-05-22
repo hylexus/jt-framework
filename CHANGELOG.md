@@ -2,6 +2,8 @@
 
 - `maven` 版 `jt-808-server-spring-boot-stater`的 `scope` 改为 `compile`
 - `MsgDataType` 新增 `List` 类型
+- Handler返回类型支持 `@Jt808RespMsgBody`
+- 支持下发消息
 
 ## Bug Fixes
 

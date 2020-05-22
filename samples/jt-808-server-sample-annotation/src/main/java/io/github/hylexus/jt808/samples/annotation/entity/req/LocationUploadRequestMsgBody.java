@@ -151,6 +151,9 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
 
         @ExtraField.NestedFieldMapping(msgId = 0xE6, dataType = BYTE)
         private byte field0xe6;
+
+        @ExtraField.NestedFieldMapping(msgId = 0x53,dataType = BYTES)
+        private byte[] field0x53;
     }
 
     @Data

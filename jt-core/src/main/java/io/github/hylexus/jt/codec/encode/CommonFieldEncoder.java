@@ -71,15 +71,15 @@ public class CommonFieldEncoder {
 
         switch (targetMsgDataType) {
             case BYTE: {
-                byteList.add(IntBitOps.intTo1Byte((byte) value));
+                byteList.add(IntBitOps.intTo1Byte(((Number) (value)).intValue()));
                 break;
             }
             case WORD: {
-                byteList.add(IntBitOps.intTo2Bytes((Integer) value));
+                byteList.add(IntBitOps.intTo2Bytes(((Number) (value)).intValue()));
                 break;
             }
             case DWORD: {
-                byteList.add(IntBitOps.intTo4Bytes((Integer) value));
+                byteList.add(IntBitOps.intTo4Bytes(((Number) (value)).intValue()));
                 break;
             }
             case BYTES: {
