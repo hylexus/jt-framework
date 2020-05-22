@@ -125,7 +125,7 @@ public class Jt808ServerSampleBareApplication {
 ## Reporting Issues
 
 - GitHub提交Issue
-- QQ交流群
+- QQ交流群 : 1072477383
 
 ## Community
 
