@@ -129,4 +129,4 @@ public class Jt808ServerSampleBareApplication {
 
 ## Community
 
-![QQ交流群](http://hylexus.github.io/jt-framework/img/QQ-Group.jpeg)
+![QQ交流群](https://hylexus.github.io/jt-framework/img/QQ-Group.jpeg)
