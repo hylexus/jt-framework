@@ -76,6 +76,7 @@ public class SessionManager {
 
     private boolean checkStatus(Session session) {
         if (!session.getChannel().isActive()) {
+            //if (!session.getChannel().isOpen()) {
             synchronized (lock) {
                 this.sessionMap.remove(session.getId());
                 sessionIdTerminalIdMapping.remove(session.getId());

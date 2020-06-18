@@ -14,10 +14,12 @@ import java.util.Optional;
 @Getter
 public enum Jt808MsgType implements MsgType {
     CLIENT_AUTH(0x0102, "终端鉴权"),
+    CLIENT_REGISTER(0x0100, "终端注册"),
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     REQ_QUERY_LOCK_PARAM_REPLY(0x0104, "查询锁参数应答"),
     // bug-fix --> https://github.com/hylexus/jt-framework/issues/8
     CLIENT_DATA_UP_TRANSPARENT(0x0900, "数据上行透传"),
+    CLIENT_LOCATION_INFO_BATCH_UPLOAD(0x0704, "位置批量上传"),
     ;
 
     private final int msgId;

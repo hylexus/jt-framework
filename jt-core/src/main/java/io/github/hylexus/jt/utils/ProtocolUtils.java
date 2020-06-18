@@ -65,7 +65,7 @@ public class ProtocolUtils {
             for (int i = 0; i < start; i++) {
                 outputStream.write(bs[i]);
             }
-            for (int i = start; i < end; i++) {
+            for (int i = start; i <= end; i++) {
                 if (bs[i] == 0x7e) {
                     outputStream.write(0x7d);
                     outputStream.write(0x02);
@@ -73,7 +73,7 @@ public class ProtocolUtils {
                     outputStream.write(bs[i]);
                 }
             }
-            for (int i = end; i < bs.length; i++) {
+            for (int i = end + 1; i < bs.length; i++) {
                 outputStream.write(bs[i]);
             }
             return outputStream.toByteArray();

@@ -92,14 +92,13 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), SERVER_EXCEPTION_OCCURRED);
-        super.exceptionCaught(ctx, cause);
+        log.error("[exceptionCaught]", cause);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.warn("remove session, channelInactive [Jt808ChannelHandlerAdapter]");
         SessionManager.getInstance().removeBySessionIdAndClose(generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
-        super.channelInactive(ctx);
     }
 
 }

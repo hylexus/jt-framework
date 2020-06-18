@@ -42,7 +42,7 @@ public class Jt808ServerConfigure {
     }
 
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
-        ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(20, 0, 0, TimeUnit.MINUTES));
+        ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(20, 20, 20, TimeUnit.MINUTES));
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, new HeatBeatHandler());
         ch.pipeline().addLast(
                 NETTY_HANDLER_NAME_808_FRAME,
