@@ -10,6 +10,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author hylexus
  * createdAt 2018/12/28
@@ -20,9 +22,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Session {
     private String id;
-    private Channel channel = null;
+    private Channel channel;
     private String terminalId;
-    private int currentFlowId = 0;
+    private AtomicInteger currentFlowId = new AtomicInteger(0);
     private long lastCommunicateTimeStamp = 0L;
 
     public void sendMsgToClient(byte[] bytes) throws InterruptedException, JtCommunicationException {
@@ -53,10 +55,15 @@ public class Session {
         return currentFlowId();
     }
 
-    private synchronized int currentFlowId() {
-        if (currentFlowId >= 0xffff) {
-            currentFlowId = 0;
+    private int currentFlowId() {
+        final int flowId = this.currentFlowId.getAndIncrement();
+        if (flowId >= 0xffff) {
+            if (currentFlowId.compareAndSet(flowId, 0)) {
+                return 0;
+            }
+            return currentFlowId.get();
         }
-        return currentFlowId++;
+
+        return flowId;
     }
 }

@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.session;
 
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +28,14 @@ public class SessionManager {
     private final Map<String, Session> sessionMap = new ConcurrentHashMap<>();
     // <sessionId,terminalId>
     private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
+
+    public Optional<Session> findBySessionId(String sessionId) {
+        String terminalId = sessionIdTerminalIdMapping.get(sessionId);
+        if (StringUtils.isEmpty(terminalId)) {
+            return Optional.empty();
+        }
+        return findByTerminalId(terminalId, false);
+    }
 
     public void persistenceIfNecessary(String terminalId, Channel channel) {
         Optional<Session> session = findByTerminalId(terminalId, true);
