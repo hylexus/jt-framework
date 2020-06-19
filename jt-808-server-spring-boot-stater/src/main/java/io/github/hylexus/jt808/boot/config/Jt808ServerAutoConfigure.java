@@ -25,7 +25,6 @@ import io.github.hylexus.jt808.handler.impl.BuiltInNoReplyMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinAuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinHeartBeatMsgHandler;
 import io.github.hylexus.jt808.handler.impl.exception.DelegateExceptionHandler;
-import io.github.hylexus.jt808.handler.impl.reflection.BuiltinReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.DelegateHandlerMethodArgumentResolvers;
@@ -154,25 +153,15 @@ public class Jt808ServerAutoConfigure {
     public Jt808MsgHandlerScanner jt808MsgHandlerScanner(
             MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver,
             ResponseMsgBodyConverter responseMsgBodyConverter,
-            DelegateExceptionHandler delegateExceptionHandler) throws IllegalAccessException, IOException, InstantiationException {
+            DelegateExceptionHandler delegateExceptionHandler) {
 
         final Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
-        final Jt808EntityScanProps entityScanProps = serverProps.getEntityScan();
 
-        final Jt808MsgHandlerScanner scanner = new Jt808MsgHandlerScanner(
+        return new Jt808MsgHandlerScanner(
                 handlerScan.getBasePackages(), configure.supplyMsgTypeParser(),
                 msgHandlerMapping, new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
         );
 
-        if (entityScanProps.isEnableBuiltinEntity() && handlerScan.isRegisterBuiltinMsgHandlers()) {
-            scanner.doHandlerScan(
-                    // TODO Add packages to scan if there is a builtin MsgHandler implemented by BuiltinReflectionBasedRequestMsgHandler
-                    Sets.newHashSet(""),
-                    new BuiltinReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
-            );
-        }
-
-        return scanner;
     }
 
     @Bean

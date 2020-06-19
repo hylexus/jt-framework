@@ -151,18 +151,31 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private String detectHandlerMethod(MsgHandler<?> handler, MsgType msgType) {
+        String prefix = "-";
+
         if (handler instanceof CustomReflectionBasedRequestMsgHandler) {
             Map<MsgType, HandlerMethod> handlerMethodMapping = ((CustomReflectionBasedRequestMsgHandler) handler).getHandlerMethodMapping();
             HandlerMethod handlerMethod = handlerMethodMapping.get(msgType);
             if (handlerMethod == null) {
                 return "";
             }
+            if (containsBean(handlerMethod.getBeanInstance())) {
+                prefix = "+";
+            }
             AnsiColor color = detectColor(handler.getClass());
-            return formatClassName(handlerMethod.getBeanInstance())
+            return prefix + formatClassName(handlerMethod.getBeanInstance())
                     + AnsiOutput.toString(color, "#" + handlerMethod.getMethod().getName());
         }
 
-        return formatClassName(handler);
+        if (containsBean(handler)) {
+            prefix = "+";
+        }
+        return prefix + formatClassName(handler);
+    }
+
+    private boolean containsBean(Object handler) {
+        String[] names = applicationContext.getBeanNamesForType(handler.getClass());
+        return names != null && names.length != 0;
     }
 
     private String formatEntityClassName(MsgConverterAndHandlerMappingInfo mappingInfo) {

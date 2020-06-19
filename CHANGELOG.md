@@ -1,3 +1,7 @@
+# 1.0.4-SNAPSHOT
+
+- `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他Bean
+
 # 1.0.3-SNAPSHOT
 
 - `maven` 版 `jt-808-server-spring-boot-stater`的 `scope` 改为 `compile`

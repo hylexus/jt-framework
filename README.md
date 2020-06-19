@@ -10,10 +10,7 @@ Jt-808协议服务端。
 
 ## ChangeLog
 
-- `maven` 版 `jt-808-server-spring-boot-stater`的 `scope` 改为 `compile`
-- `MsgDataType` 新增 `List` 类型
-- Handler返回类型支持 `@Jt808RespMsgBody` 注解
-- 支持下发消息
+- `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他Bean
 
 ## QuickStart
 
@@ -102,8 +99,6 @@ public class Jt808ServerSampleBareApplication {
 ```shell script
 ./gradlew.bat clean build
 ```
-
-文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)
 
 ## Modules
 

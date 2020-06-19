@@ -14,9 +14,10 @@ import io.github.hylexus.jt808.samples.annotation.entity.req.*;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.RegisterReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.ServerCommonReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.serivce.TerminalService;
-import io.github.hylexus.jt808.samples.annotation.util.SpringUtils;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static io.github.hylexus.jt.data.msg.BuiltinJt808MsgType.CLIENT_HEART_BEAT;
 import static io.github.hylexus.jt808.samples.annotation.config.Jt808MsgType.*;
@@ -27,9 +28,11 @@ import static io.github.hylexus.jt808.samples.annotation.config.Jt808MsgType.*;
  */
 @Slf4j
 @Jt808RequestMsgHandler
+@Component
 public class CommonHandler {
 
-    private TerminalService terminalService = SpringUtils.getBean(TerminalService.class);
+    @Autowired
+    private TerminalService terminalService;//= SpringUtils.getBean(TerminalService.class);
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100)
     public RegisterReplyMsgBody processRegisterMsg(RegisterMsg msg, RequestMsgHeader header) {
@@ -44,7 +47,7 @@ public class CommonHandler {
         if (header.getTerminalId().equals(System.getProperty("debug-terminal-id"))) {
             throw new UnsupportedOperationException("terminal [" + header.getTerminalId() + "] was locked.");
         }
-        log.info("{}",terminalService);
+        log.info("{}", terminalService);
         // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
         return new ServerCommonReplyMsgBody(header.getFlowId(), CLIENT_AUTH.getMsgId(), (byte) 0);
     }

@@ -13,6 +13,7 @@ import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -39,10 +40,13 @@ public class Jt808Config extends Jt808ServerConfigure {
         mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
     }
 
+    @Autowired
+    private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
+
     @Override
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
         super.configureMsgHandlerMapping(mapping);
-        mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationInfoUploadMsgHandler());
+        mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, locationInfoUploadMsgHandler);
     }
 
     @Override

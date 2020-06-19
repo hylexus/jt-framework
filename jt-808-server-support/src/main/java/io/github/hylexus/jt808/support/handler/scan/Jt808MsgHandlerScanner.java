@@ -13,7 +13,10 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -21,6 +24,7 @@ import org.springframework.util.ReflectionUtils;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.github.hylexus.jt.utils.ReflectionUtils.isVoidReturnType;
 
@@ -29,12 +33,13 @@ import static io.github.hylexus.jt.utils.ReflectionUtils.isVoidReturnType;
  * Created At 2020-02-01 3:31 下午
  */
 @Slf4j(topic = "jt-808.handler-scan")
-public class Jt808MsgHandlerScanner implements InitializingBean {
+public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationContextAware {
 
     private final Set<String> packagesToScan;
     private final MsgTypeParser msgTypeParser;
     private final MsgHandlerMapping msgHandlerMapping;
     private final CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler;
+    private ApplicationContext applicationContext;
 
     public Jt808MsgHandlerScanner(
             Set<String> packagesToScan, MsgTypeParser msgTypeParser,
@@ -48,11 +53,14 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        doHandlerScan(packagesToScan, reflectionBasedRequestMsgHandler);
+        // 通过普通注解扫描 [MsgHandler], 不会加入Spring容器
+        detectMsgHandlerByAnnotation();
+
+        // 从Spring容器中获取 [MsgHandler], 针对于受Spring管理的 [MsgHandler]
+        detectMsgHandlerFromSpringContainer();
     }
 
-    public void doHandlerScan(Set<String> packagesToScan, CustomReflectionBasedRequestMsgHandler handler) throws IOException, InstantiationException,
-            IllegalAccessException {
+    private void detectMsgHandlerByAnnotation() throws IOException, InstantiationException, IllegalAccessException {
         if (CollectionUtils.isEmpty(packagesToScan)) {
             log.info("[jt808.handler-scan.base-packages] is empty. Skip...");
             return;
@@ -60,10 +68,22 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
 
         final ClassScanner scanner = new ClassScanner();
         @SuppressWarnings("rawtypes") final Set<Class> handlerClassList = scanner.doScan(packagesToScan, this::isHandlerClass);
-        if (CollectionUtils.isEmpty(handlerClassList)) {
-            log.info("No MsgBodyEntity found for Jt808");
-            return;
+        if (CollectionUtils.isNotEmpty(handlerClassList)) {
+            detectMsgHandler(reflectionBasedRequestMsgHandler, handlerClassList);
         }
+    }
+
+    private void detectMsgHandlerFromSpringContainer() throws IOException, InstantiationException, IllegalAccessException {
+        @SuppressWarnings("rawtypes") final Set<Class> handlerClassListFromSpringContainer = applicationContext
+                .getBeansWithAnnotation(Jt808RequestMsgHandler.class)
+                .values().stream().map(Object::getClass).collect(Collectors.toSet());
+        if (!handlerClassListFromSpringContainer.isEmpty()) {
+            detectMsgHandler(reflectionBasedRequestMsgHandler, handlerClassListFromSpringContainer);
+        }
+    }
+
+    public void detectMsgHandler(CustomReflectionBasedRequestMsgHandler handler, Set<Class> handlerClassList) throws IOException, InstantiationException,
+            IllegalAccessException {
 
         //final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter);
         for (Class<?> cls : handlerClassList) {
@@ -114,6 +134,10 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
     }
 
     private Object createBeanInstance(Class<?> cls) throws InstantiationException, IllegalAccessException {
+        String[] names = applicationContext.getBeanNamesForType(cls);
+        if (names.length != 0) {
+            return applicationContext.getBean(cls);
+        }
         return cls.newInstance();
     }
 
@@ -126,4 +150,8 @@ public class Jt808MsgHandlerScanner implements InitializingBean {
         return AnnotationUtils.findAnnotation(cls, Jt808RequestMsgHandler.class) != null;
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

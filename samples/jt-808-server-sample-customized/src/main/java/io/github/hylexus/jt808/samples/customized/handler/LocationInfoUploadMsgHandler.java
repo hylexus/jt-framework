@@ -7,6 +7,7 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
  * Created At 2019-09-19 11:31 下午
  */
 @Slf4j
+@Component
 public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUploadRequestMsgBody> {
 
     @Override
