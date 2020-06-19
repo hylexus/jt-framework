@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.utils;
 
 import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.exception.MsgEscapeException;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class ProtocolUtils {
             for (int i = 0; i < start; i++) {
                 outputStream.write(bs[i]);
             }
-            for (int i = start; i < end - 1; i++) {
+            for (int i = start; i < end - 2; i++) {
                 if (bs[i] == 0x7d && bs[i + 1] == 0x01) {
                     outputStream.write(0x7d);
                     i++;
@@ -43,16 +44,19 @@ public class ProtocolUtils {
                     outputStream.write(bs[i]);
                 }
             }
-            if (bs[end - 1] == 0x7d && bs[end] == 0x01) {
+            // https://github.com/hylexus/jt-framework/issues/17
+            if (bs[end - 2] == 0x7d && bs[end - 1] == 0x01) {
                 outputStream.write(0x7d);
-            } else if (bs[end - 1] == 0x7d && bs[end] == 0x02) {
+            } else if (bs[end - 2] == 0x7d && bs[end - 1] == 0x02) {
                 outputStream.write(0x7e);
             } else {
-                for (int i = end - 1; i < bs.length; i++) {
+                for (int i = end - 2; i < bs.length; i++) {
                     outputStream.write(bs[i]);
                 }
             }
             return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new MsgEscapeException(e);
         }
     }
 
@@ -73,10 +77,13 @@ public class ProtocolUtils {
                     outputStream.write(bs[i]);
                 }
             }
+            // https://github.com/hylexus/jt-framework/issues/17
             for (int i = end + 1; i < bs.length; i++) {
                 outputStream.write(bs[i]);
             }
             return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new MsgEscapeException(e);
         }
     }
 
