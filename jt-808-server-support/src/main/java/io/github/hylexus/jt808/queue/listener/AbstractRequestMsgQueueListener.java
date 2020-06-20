@@ -11,11 +11,10 @@ import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
-import io.github.hylexus.jt808.session.Session;
-import io.github.hylexus.jt808.session.SessionManager;
+import io.github.hylexus.jt808.session.Jt808Session;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.utils.ArgumentUtils;
-import io.github.hylexus.jt808.utils.ClientUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 
@@ -33,16 +32,18 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
     private final ExceptionHandler exceptionHandler;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
     private final Encoder encoder;
+    private final Jt808SessionManager sessionManager;
 
     public AbstractRequestMsgQueueListener(
             MsgHandlerMapping msgHandlerMapping, T queue, ExceptionHandler exceptionHandler,
-            ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder) {
+            ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder, Jt808SessionManager sessionManager) {
 
         this.msgHandlerMapping = msgHandlerMapping;
         this.queue = queue;
         this.exceptionHandler = exceptionHandler;
         this.responseMsgBodyConverter = responseMsgBodyConverter;
         this.encoder = encoder;
+        this.sessionManager = sessionManager;
     }
 
     @Override
@@ -55,7 +56,7 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
         }
 
         final MsgHandler<? extends RequestMsgBody> msgHandler = handlerInfo.get();
-        Session session = null;
+        Jt808Session session = null;
 
         try {
 
@@ -82,22 +83,22 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
 
             // 返回值的处理暂时只考虑RespMsgBody
             // 如有必要的话，后期重构增加其他类型返回值的处理
-            final Session session = argumentContext.getSession();
+            final Jt808Session session = argumentContext.getSession();
             final RequestMsgMetadata metadata = argumentContext.getMetadata();
             final Optional<RespMsgBody> respMsgBodyInfo = responseMsgBodyConverter.convert(result, session, metadata);
 
             if (respMsgBodyInfo.isPresent() && session != null && metadata != null) {
                 byte[] respBytes = this.encoder.encodeRespMsg(respMsgBodyInfo.get(), session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
-                ClientUtils.sendBytesToClient(session, respBytes);
+                session.sendMsgToClient(respBytes);
             }
         } catch (Throwable throwable) {
             log.error("An unexpected exception occurred while invoke ExceptionHandler", throwable);
         }
     }
 
-    protected Session getSession(RequestMsgMetadata metadata) {
+    protected Jt808Session getSession(RequestMsgMetadata metadata) {
         final String terminalId = metadata.getHeader().getTerminalId();
-        Optional<Session> session = SessionManager.getInstance().findByTerminalId(terminalId);
+        Optional<Jt808Session> session = sessionManager.findByTerminalId(terminalId);
         if (session.isPresent()) {
             return session.get();
         }

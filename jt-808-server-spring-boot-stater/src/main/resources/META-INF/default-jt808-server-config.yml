@@ -16,14 +16,14 @@ jt808:
       register-builtin-msg-handlers: true
   exception-handler-scan:
     enabled: true
-    base-packages:
+    base-packages: ${jt808.handler-scan.base-packages:}
     register-builtin-exception-handlers: true
   msg-processor:
     thread-pool:
       # core-pool-size: Runtime.getRuntime().availableProcessors() + 1
       # maximum-pool-size: 2 * corePoolSize
       keep-alive-time: 60s
-      blocking-queue-size: 20
+      blocking-queue-size: 100
       thread-name-format: '808-msg-processor-%d'
 logging:
   level.io.github.hylexus: debug

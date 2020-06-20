@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.converter.impl.resp;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class NoOpsRespMsgBodyConverter extends AbstractBuiltinRespBodyConverter 
     }
 
     @Override
-    public Optional<RespMsgBody> convert(Object msgBody, Session session, RequestMsgMetadata metadata) {
+    public Optional<RespMsgBody> convert(Object msgBody, Jt808Session session, RequestMsgMetadata metadata) {
         // mosBody 本身就是 RespMsgBody 类型
         return Optional.of((RespMsgBody) msgBody);
     }

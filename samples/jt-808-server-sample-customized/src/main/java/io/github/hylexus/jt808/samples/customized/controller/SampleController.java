@@ -8,8 +8,8 @@ import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.dispatcher.CommandSender;
 import io.github.hylexus.jt808.msg.resp.CommandMsg;
 import io.github.hylexus.jt808.samples.customized.msg.resp.RespTerminalSettings;
-import io.github.hylexus.jt808.session.Session;
-import io.github.hylexus.jt808.session.SessionManager;
+import io.github.hylexus.jt808.session.Jt808Session;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +32,8 @@ import static io.github.hylexus.jt808.samples.customized.config.Jt808MsgType.*;
 public class SampleController {
 
     // private Encoder encoder = new Encoder(new BytesEncoder.DefaultBytesEncoder());
-
+    @Autowired
+    private Jt808SessionManager sessionManager;
     @Autowired
     private CommandSender commandSender;
 
@@ -70,8 +71,8 @@ public class SampleController {
         return commandSender.sendCommandAndWaitingForReply(commandMsg, timeout, TimeUnit.SECONDS);
     }
 
-    private Session getSession(String terminalId) {
-        return SessionManager.getInstance().findByTerminalId(terminalId)
+    private Jt808Session getSession(String terminalId) {
+        return sessionManager.findByTerminalId(terminalId)
                 .orElseThrow(() -> new JtSessionNotFoundException(terminalId));
     }
 

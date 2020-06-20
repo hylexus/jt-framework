@@ -29,8 +29,8 @@ public class MsgProcessorThreadPoolProps {
 
     private Duration keepAliveTime = Duration.ofSeconds(60);
 
-    @Min(value = 1, message = "blockingQueueSize >= 1, defaultValue = 20")
-    private int blockingQueueSize = 20;
+    @Min(value = 1, message = "blockingQueueSize >= 1, defaultValue = 100")
+    private int blockingQueueSize = 100;
 
     @NotEmpty(message = "threadNameFormat is null or empty. defaultConfig = '808-msg-dispatcher-%d' ")
     private String threadNameFormat = "808-msg-processor-%d";

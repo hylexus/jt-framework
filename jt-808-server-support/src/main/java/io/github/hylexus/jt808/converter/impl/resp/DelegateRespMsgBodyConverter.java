@@ -5,7 +5,7 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class DelegateRespMsgBodyConverter extends AbstractBuiltinRespBodyConvert
     }
 
     @Override
-    public Optional<RespMsgBody> convert(Object msgBody, Session session, RequestMsgMetadata metadata) {
+    public Optional<RespMsgBody> convert(Object msgBody, Jt808Session session, RequestMsgMetadata metadata) {
         final ResponseMsgBodyConverter converter = this.getConverter(msgBody);
         if (converter != null) {
             return converter.convert(msgBody, session, metadata);

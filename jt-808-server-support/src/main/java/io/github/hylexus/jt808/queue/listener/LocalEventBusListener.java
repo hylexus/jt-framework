@@ -7,6 +7,7 @@ import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.handler.ExceptionHandler;
 import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,9 +25,10 @@ public class LocalEventBusListener extends AbstractRequestMsgQueueListener<Local
 
     public LocalEventBusListener(
             MsgHandlerMapping msgHandlerMapping, LocalEventBus queue, ExceptionHandler exceptionHandler,
-            ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder) {
+            ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder,
+            Jt808SessionManager sessionManager) {
 
-        super(msgHandlerMapping, queue, exceptionHandler, responseMsgBodyConverter, encoder);
+        super(msgHandlerMapping, queue, exceptionHandler, responseMsgBodyConverter, encoder, sessionManager);
     }
 
     @PostConstruct

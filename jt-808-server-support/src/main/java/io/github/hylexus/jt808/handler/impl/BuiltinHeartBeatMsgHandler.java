@@ -7,7 +7,7 @@ import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class BuiltinHeartBeatMsgHandler extends AbstractMsgHandler<RequestMsgBod
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Jt808Session session) {
         log.debug("client heart beat, terminalId = {}", metadata.getHeader().getTerminalId());
         return of(commonSuccessReply(metadata, BuiltinJt808MsgType.CLIENT_HEART_BEAT));
     }

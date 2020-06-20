@@ -8,7 +8,7 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.AnnotationBasedCommonReplyMsgBodyWrapper;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 
@@ -36,7 +36,7 @@ public class ReflectionBasedRespMsgBodyConverter extends AbstractBuiltinRespBody
     }
 
     @Override
-    public Optional<RespMsgBody> convert(Object msgBody, Session session, RequestMsgMetadata metadata) {
+    public Optional<RespMsgBody> convert(Object msgBody, Jt808Session session, RequestMsgMetadata metadata) {
 
         final MsgType respMsgType = getRespMsgType(msgBody);
         final byte[] bodyBytes;

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommandMsg;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.Nullable;
@@ -28,7 +28,7 @@ public class CommandMsgBodyConverter extends AbstractBuiltinRespBodyConverter {
     }
 
     @Override
-    public Optional<RespMsgBody> convert(Object msg, @Nullable Session session, @Nullable RequestMsgMetadata metadata) {
+    public Optional<RespMsgBody> convert(Object msg, @Nullable Jt808Session session, @Nullable RequestMsgMetadata metadata) {
         final CommandMsg commandMsg = (CommandMsg) msg;
         final Class<?> bodyClass = commandMsg.getBody().getClass();
         if (RespMsgBody.class.isAssignableFrom(bodyClass)) {

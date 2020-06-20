@@ -9,7 +9,7 @@ import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class BuiltinAuthMsgHandler extends AbstractMsgHandler<BuiltinAuthRequest
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) {
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Jt808Session session) {
         log.debug("receive AuthMsg : {}", body);
         boolean valid = authCodeValidator.validateAuthCode(session, metadata, body);
         if (valid) {

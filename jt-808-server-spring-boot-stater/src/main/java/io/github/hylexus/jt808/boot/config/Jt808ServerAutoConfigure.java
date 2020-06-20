@@ -32,6 +32,8 @@ import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManagerFactoryBean;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.OrderedComponent;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
@@ -53,7 +55,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 
 import java.io.IOException;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -78,6 +80,12 @@ public class Jt808ServerAutoConfigure {
 
     @Autowired
     private Jt808ServerProps serverProps;
+
+    @Bean
+    @ConditionalOnMissingBean(Jt808SessionManager.class)
+    public Jt808SessionManagerFactoryBean jt808SessionManager() {
+        return new Jt808SessionManagerFactoryBean();
+    }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerConfigure.class)
@@ -190,8 +198,8 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder) {
-        return new DefaultCommandSender(responseMsgBodyConverter, encoder);
+    public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder, Jt808SessionManager sessionManager) {
+        return new DefaultCommandSender(responseMsgBodyConverter, encoder, sessionManager);
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
@@ -207,7 +215,7 @@ public class Jt808ServerAutoConfigure {
                 poolProps.getMaximumPoolSize(),
                 poolProps.getKeepAliveTime().getSeconds(),
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(poolProps.getBlockingQueueSize()),
+                new LinkedBlockingQueue<>(poolProps.getBlockingQueueSize()),
                 threadFactory,
                 new ThreadPoolExecutor.AbortPolicy()
         );
@@ -218,9 +226,13 @@ public class Jt808ServerAutoConfigure {
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     public RequestMsgQueueListener msgQueueListener(
             MsgHandlerMapping msgHandlerMapping, RequestMsgQueue requestMsgQueue,
-            DelegateExceptionHandler exceptionHandler, Encoder encoder, ResponseMsgBodyConverter responseMsgBodyConverter) {
+            DelegateExceptionHandler exceptionHandler, Encoder encoder, ResponseMsgBodyConverter responseMsgBodyConverter,
+            Jt808SessionManager sessionManager) {
 
-        return new LocalEventBusListener(msgHandlerMapping, (LocalEventBus) requestMsgQueue, exceptionHandler, responseMsgBodyConverter, encoder);
+        return new LocalEventBusListener(
+                msgHandlerMapping, (LocalEventBus) requestMsgQueue,
+                exceptionHandler, responseMsgBodyConverter, encoder, sessionManager
+        );
     }
 
     @Bean
@@ -231,8 +243,10 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
-    public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder) {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder);
+    public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(
+            RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder,
+            Jt808SessionManager sessionManager) {
+        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder, sessionManager);
     }
 
     @Bean

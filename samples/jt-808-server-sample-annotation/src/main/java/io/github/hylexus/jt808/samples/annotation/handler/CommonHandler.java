@@ -14,10 +14,14 @@ import io.github.hylexus.jt808.samples.annotation.entity.req.*;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.RegisterReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.ServerCommonReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.serivce.TerminalService;
+import io.github.hylexus.jt808.session.Jt808Session;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import static io.github.hylexus.jt.data.msg.BuiltinJt808MsgType.CLIENT_HEART_BEAT;
 import static io.github.hylexus.jt808.samples.annotation.config.Jt808MsgType.*;
@@ -33,6 +37,8 @@ public class CommonHandler {
 
     @Autowired
     private TerminalService terminalService;//= SpringUtils.getBean(TerminalService.class);
+    @Autowired
+    private Jt808SessionManager sessionManager;
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100)
     public RegisterReplyMsgBody processRegisterMsg(RegisterMsg msg, RequestMsgHeader header) {
@@ -42,12 +48,16 @@ public class CommonHandler {
 
     // 此处会覆盖内置的鉴权消息处理器(如果启用了的话)
     @Jt808RequestMsgHandlerMapping(msgType = 0x0102)
-    public ServerCommonReplyMsgBody processAuthMsg(AuthRequestMsgBody msgBody, RequestMsgHeader header) {
+    public ServerCommonReplyMsgBody processAuthMsg(AuthRequestMsgBody msgBody, RequestMsgHeader header, Jt808Session abstractSession, Session session) {
         log.info("处理鉴权消息 terminalId = {}, authCode = {}", header.getTerminalId(), msgBody.getAuthCode());
         if (header.getTerminalId().equals(System.getProperty("debug-terminal-id"))) {
             throw new UnsupportedOperationException("terminal [" + header.getTerminalId() + "] was locked.");
         }
         log.info("{}", terminalService);
+        Optional<Jt808Session> sessionInfo = sessionManager.findByTerminalId(header.getTerminalId());
+        assert sessionInfo.isPresent();
+        assert sessionInfo.get() == abstractSession;
+        assert sessionInfo.get() == session;
         // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
         return new ServerCommonReplyMsgBody(header.getFlowId(), CLIENT_AUTH.getMsgId(), (byte) 0);
     }
@@ -55,7 +65,7 @@ public class CommonHandler {
     // 处理MsgId为0x0200的消息
     @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
     public ServerCommonReplyMsgBody processLocationMsg(
-            Session session, RequestMsgMetadata metadata,
+            Jt808Session session, RequestMsgMetadata metadata,
             RequestMsgHeader header, LocationUploadRequestMsgBody msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
@@ -76,7 +86,7 @@ public class CommonHandler {
 
     // 此处会覆盖内置的终端通用应答消息处理器(如果启用了的话)
     @Jt808RequestMsgHandlerMapping(msgType = 0x0001)
-    public void processTerminalCommonReplyMsg(Session session, BuiltinTerminalCommonReplyMsgBody msgBody) {
+    public void processTerminalCommonReplyMsg(Jt808Session session, BuiltinTerminalCommonReplyMsgBody msgBody) {
         log.info("处理终端通用应答消息 terminalId = {}, msgBody = {}", session.getTerminalId(), msgBody);
     }
 
@@ -96,14 +106,14 @@ public class CommonHandler {
     }
 
     @Jt808ExceptionHandler
-    public RespMsgBody processUnsupportedOperationException(RequestMsgMetadata metadata, Session session, UnsupportedOperationException exception) {
+    public RespMsgBody processUnsupportedOperationException(RequestMsgMetadata metadata, Jt808Session session, UnsupportedOperationException exception) {
         assert metadata.getHeader().getTerminalId().equals(session.getTerminalId());
         log.error("出异常了:{}", exception.getMessage());
         return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;
     }
 
     @Jt808ExceptionHandler
-    public RespMsgBody processException(RequestMsgMetadata metadata, Session session, Exception exception) {
+    public RespMsgBody processException(RequestMsgMetadata metadata, Jt808Session session, Exception exception) {
         assert metadata.getHeader().getTerminalId().equals(session.getTerminalId());
         log.info("exception", exception);
         return VoidRespMsgBody.NO_DATA_WILL_BE_SENT_TO_CLIENT;

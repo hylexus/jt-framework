@@ -10,7 +10,7 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import io.github.hylexus.jt808.utils.ArgumentUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,7 +62,7 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
     }
 
     @Override
-    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+    protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Jt808Session session) {
 
         final MsgType msgType = metadata.getMsgType();
         final HandlerMethod handlerMethod = mapping.get(msgType);
@@ -88,12 +88,12 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
         return this.responseMsgBodyConverter.convert(result, session, metadata);
     }
 
-    private Object invokeHandlerMethod(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) throws Throwable {
+    private Object invokeHandlerMethod(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Jt808Session session) throws Throwable {
         final Object[] args = this.resolveArgs(handlerMethod, metadata, msg, session);
         return doInvoke(handlerMethod, args);
     }
 
-    private Object[] resolveArgs(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Session session) {
+    private Object[] resolveArgs(HandlerMethod handlerMethod, RequestMsgMetadata metadata, RequestMsgBody msg, Jt808Session session) {
         final ArgumentContext argumentContext = new ArgumentContext(metadata, session, msg, null);
         return ArgumentUtils.resolveArguments(handlerMethod, argumentContext, this.argumentResolver);
     }

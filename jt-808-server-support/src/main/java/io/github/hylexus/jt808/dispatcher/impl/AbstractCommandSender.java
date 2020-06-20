@@ -6,8 +6,8 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.dispatcher.CommandSender;
 import io.github.hylexus.jt808.msg.resp.CommandMsg;
-import io.github.hylexus.jt808.session.Session;
-import io.github.hylexus.jt808.session.SessionManager;
+import io.github.hylexus.jt808.session.Jt808Session;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +19,11 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractCommandSender implements CommandSender {
 
     private final CommandWaitingPool commandWaitingPool = CommandWaitingPool.getInstance();
-    private final SessionManager sessionManager = SessionManager.getInstance();
+    private final Jt808SessionManager sessionManager;
+
+    protected AbstractCommandSender(Jt808SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
 
     @Override
     public Object sendCommandAndWaitingForReply(CommandMsg commandMsg, boolean withFlowId, Long timeout, TimeUnit unit)
@@ -28,7 +32,7 @@ public abstract class AbstractCommandSender implements CommandSender {
         final String terminalId = commandMsg.getTerminalId();
         final MsgType msgType = commandMsg.getExpectedReplyMsgType();
 
-        final Session session = getSession(terminalId);
+        final Jt808Session session = getSession(terminalId);
         final int flowId = session.getCurrentFlowId();
 
         final byte[] bytes = this.encode(commandMsg, terminalId, flowId);
@@ -48,19 +52,19 @@ public abstract class AbstractCommandSender implements CommandSender {
 
     @Override
     public void sendCommand(String terminalId, byte[] data, long time, TimeUnit unit) throws InterruptedException {
-        final Session session = getSession(terminalId);
+        final Jt808Session session = getSession(terminalId);
         session.sendMsgToClient(data);
     }
 
     @Override
     public void sendCommand(CommandMsg commandMsg, long time, TimeUnit unit) throws InterruptedException, IOException {
         final String terminalId = commandMsg.getTerminalId();
-        final Session session = getSession(terminalId);
+        final Jt808Session session = getSession(terminalId);
         final byte[] bytes = this.encode(commandMsg, terminalId, session.getCurrentFlowId());
         session.sendMsgToClient(bytes);
     }
 
-    private Session getSession(String terminalId) {
+    private Jt808Session getSession(String terminalId) {
         return sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
     }
 

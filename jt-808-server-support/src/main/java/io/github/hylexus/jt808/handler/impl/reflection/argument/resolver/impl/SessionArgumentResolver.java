@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl;
 import io.github.hylexus.jt808.exception.ArgumentResolveException;
 import io.github.hylexus.jt808.handler.impl.reflection.MethodParameter;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 
 /**
  * @author hylexus
@@ -12,7 +12,7 @@ import io.github.hylexus.jt808.session.Session;
 public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return Session.class.isAssignableFrom(methodParameter.getParameterType());
+        return Jt808Session.class.isAssignableFrom(methodParameter.getParameterType());
     }
 
     @Override

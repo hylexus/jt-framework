@@ -5,7 +5,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -32,7 +32,7 @@ public class SampleMsgHandler implements MsgHandler<BuiltinAuthRequestMsgBody> {
     }
 
     @Override
-    public void handleMsg(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Session session) throws InterruptedException {
+    public void handleMsg(RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body, Jt808Session session) throws InterruptedException {
         final String authCode = body.getAuthCode();
 
         // 鉴权逻辑
@@ -47,7 +47,7 @@ public class SampleMsgHandler implements MsgHandler<BuiltinAuthRequestMsgBody> {
         this.send2Client(session.getChannel(), respMsgBody);
     }
 
-    private byte[] encodeMsgBody(byte result, RequestMsgMetadata metadata, Session session) {
+    private byte[] encodeMsgBody(byte result, RequestMsgMetadata metadata, Jt808Session session) {
         // ...
         // 按文档格式组装字节数组
         return new byte[0];

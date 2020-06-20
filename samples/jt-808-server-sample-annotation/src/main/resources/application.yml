@@ -13,7 +13,7 @@ jt808:
     register-builtin-msg-handlers: true
   exception-handler-scan:
     enabled: true
-    base-packages: io.github.hylexus.jt808.samples.annotation.handler
+    base-packages: ${jt808.handler-scan.base-packages:}
     register-builtin-exception-handlers: true
 logging:
   level: debug

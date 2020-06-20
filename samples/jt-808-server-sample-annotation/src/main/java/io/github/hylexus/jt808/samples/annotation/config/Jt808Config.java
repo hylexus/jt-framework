@@ -4,7 +4,7 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.SessionManager;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
@@ -13,6 +13,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,6 +41,14 @@ public class Jt808Config extends Jt808ServerConfigure {
         };
     }
 
+    @Bean
+    public Jt808SessionManager sessionManager() {
+        return SessionManager.getInstance();
+    }
+
+    @Autowired
+    private Jt808SessionManager sessionManager;
+
     @Override
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         super.configureSocketChannel(ch, jt808ChannelHandlerAdapter);
@@ -54,7 +63,7 @@ public class Jt808Config extends Jt808ServerConfigure {
 
                 if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
                     System.out.println("disconnected idle connection");
-                    SessionManager.getInstance().removeBySessionIdAndClose(Session.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
+                    sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
                     ctx.channel().close();
                 }
             }

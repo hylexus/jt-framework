@@ -1,7 +1,6 @@
 package io.github.hylexus.jt808.support.netty;
 
-import io.github.hylexus.jt808.session.Session;
-import io.github.hylexus.jt808.session.SessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -17,6 +16,12 @@ import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
 @Slf4j
 public class HeatBeatHandler extends ChannelInboundHandlerAdapter {
 
+    private final Jt808SessionManager sessionManager;
+
+    public HeatBeatHandler(Jt808SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (!(evt instanceof IdleStateEvent)) {
@@ -26,7 +31,7 @@ public class HeatBeatHandler extends ChannelInboundHandlerAdapter {
 
         if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
             log.debug("disconnected idle connection");
-            SessionManager.getInstance().removeBySessionIdAndClose(Session.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
+            sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
             ctx.channel().close();
         }
     }

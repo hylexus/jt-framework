@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.boot.props.exception.handler.scan;
 
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,6 +20,6 @@ import java.util.Set;
 @Validated
 public class Jt808ExceptionHandlerScanProps {
     private boolean enabled = true;
-    private Set<String> basePackages;
+    private Set<String> basePackages = Sets.newHashSet("${jt808.handler-scan.base-packages:}");
     private boolean registerBuiltinExceptionHandlers = true;
 }

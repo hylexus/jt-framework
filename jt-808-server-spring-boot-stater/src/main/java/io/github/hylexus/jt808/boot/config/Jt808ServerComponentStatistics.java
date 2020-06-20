@@ -20,6 +20,7 @@ import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.Handler
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
@@ -74,6 +75,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
             Lists.newArrayList(
+                    Jt808SessionManager.class,
                     BytesEncoder.class,
                     MsgTypeParser.class,
                     AuthCodeValidator.class,

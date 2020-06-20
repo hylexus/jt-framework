@@ -8,9 +8,8 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
-import io.github.hylexus.jt808.session.Session;
+import io.github.hylexus.jt808.session.Jt808Session;
 import io.github.hylexus.jt808.support.handler.scan.BytesEncoderAware;
-import io.github.hylexus.jt808.utils.ClientUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -33,7 +32,7 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
     }
 
     @Override
-    public void handleMsg(RequestMsgMetadata metadata, T body, Session session) throws IOException, InterruptedException {
+    public void handleMsg(RequestMsgMetadata metadata, T body, Jt808Session session) throws IOException, InterruptedException {
         final Optional<RespMsgBody> respInfo = this.doProcess(metadata, body, session);
         if (!respInfo.isPresent()) {
             log.debug("MsgHandler return empty(). [SendResult2Client] canceled.");
@@ -47,11 +46,11 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
         log.debug("<<<<<<<<<<<<<<< : {}", HexStringUtils.bytes2HexString(respBytes));
     }
 
-    protected void send2Client(Session session, byte[] bytes) throws InterruptedException {
-        ClientUtils.sendBytesToClient(session, bytes);
+    protected void send2Client(Jt808Session session, byte[] bytes) throws InterruptedException {
+        session.sendMsgToClient(bytes);
     }
 
-    protected abstract Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, T msg, Session session);
+    protected abstract Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, T msg, Jt808Session session);
 
     protected RespMsgBody commonSuccessReply(RequestMsgMetadata metadata, MsgType replyFor) {
         return CommonReplyMsgBody.success(metadata.getHeader().getFlowId(), replyFor);
