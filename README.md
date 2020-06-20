@@ -11,6 +11,7 @@ Jt-808协议服务端。
 ## ChangeLog
 
 - `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他Bean
+- bug-fix: #16,#17
 
 ## QuickStart
 
@@ -27,7 +28,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.3-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.4-RELEASE"
     // ...
 }
 ```
@@ -38,7 +39,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.3-RELEASE</version>
+    <version>1.0.4-RELEASE</version>
 </dependency>
 ```
 

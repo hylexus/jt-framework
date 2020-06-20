@@ -52,18 +52,15 @@ public class Session {
     }
 
     public int getCurrentFlowId() {
-        return currentFlowId();
-    }
-
-    private int currentFlowId() {
         final int flowId = this.currentFlowId.getAndIncrement();
         if (flowId >= 0xffff) {
             if (currentFlowId.compareAndSet(flowId, 0)) {
                 return 0;
             }
-            return currentFlowId.get();
+            return currentFlowId.getAndIncrement();
         }
 
         return flowId;
     }
+
 }
