@@ -1,6 +1,21 @@
 # 1.0.4-SNAPSHOT
 
-- `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他Bean
+### ⭐ New Features
+
+- `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他的由Spring管理的Bean
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/16
+    - 默认读写空闲时间改为20分钟
+    - 修复示例代码中消息消息的返回值类型 
+- https://github.com/hylexus/jt-framework/issues/17
+    - 边界情况下默认转义逻辑bug
+
+### 🔨 Others
+
+- 优化 `Session#currentFlowId`
+- 新增 `SessionManager#findBySessionId`
 
 # 1.0.3-SNAPSHOT
 
