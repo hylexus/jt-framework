@@ -48,6 +48,10 @@ public interface Jt808Session {
 
     String getId();
 
+    default String getSessionId() {
+        return getId();
+    }
+
     Channel getChannel();
 
     String getTerminalId();

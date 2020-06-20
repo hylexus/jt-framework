@@ -2,7 +2,13 @@ package io.github.hylexus.jt808.session;
 
 import io.netty.channel.Channel;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Session管理器。
@@ -14,6 +20,61 @@ import java.util.Optional;
  * @author hylexus
  */
 public interface Jt808SessionManager {
+
+    /**
+     * @return 以 {@link Stream} 的形式返回当前 {@link Jt808Session} 列表
+     */
+    Stream<Jt808Session> list();
+
+    /**
+     * 以分页的形式获取 {@link Jt808SessionManager} 中的 {@link Jt808Session}
+     *
+     * @param page     当前页码，从1开始
+     * @param pageSize 每页大小
+     * @return 当前页的 {@link Jt808Session} 信息
+     * @see #list()
+     * @see #list(int, int, Predicate, Comparator, Function)
+     */
+    default List<Jt808Session> list(int page, int pageSize) {
+        return list(page, pageSize, session -> true);
+    }
+
+    /**
+     * 以分页的形式获取 {@link Jt808SessionManager} 中的 {@link Jt808Session}
+     *
+     * @param page     当前页码，从1开始
+     * @param pageSize 每页大小
+     * @param filter   过滤器
+     * @return 当前页的 {@link Jt808Session} 信息
+     * @see #list()
+     * @see #list(int, int, Predicate, Comparator, Function)
+     */
+    default List<Jt808Session> list(int page, int pageSize, Predicate<Jt808Session> filter) {
+        return list(page, pageSize, filter, Comparator.comparing(Jt808Session::getTerminalId), Function.identity());
+    }
+
+    /**
+     * 以分页的形式获取 {@link Jt808SessionManager} 中的 {@link Jt808Session}
+     *
+     * @param page      当前页码，从1开始
+     * @param pageSize  每页大小
+     * @param converter {@link Jt808Session} 到 {@link T} 的转换器
+     * @param filter    过滤器
+     * @param sorter    排序器
+     * @param <T>       结果类型
+     * @return 当前页的 {@link Jt808Session} 信息
+     * @see #list()
+     * @see #list(int, int)
+     */
+    default <T> List<T> list(int page, int pageSize, Predicate<Jt808Session> filter, Comparator<Jt808Session> sorter, Function<Jt808Session, T> converter) {
+        return list().filter(filter).sorted(sorter).skip((page - 1) * pageSize).limit(pageSize).map(converter).collect(Collectors.toList());
+    }
+
+    /**
+     * @return 当前活跃的 {@link Jt808Session} 总数。
+     */
+    long count();
+
     /**
      * @param channel Channel
      * @return sessionId
@@ -64,7 +125,7 @@ public interface Jt808SessionManager {
      * @param sessionId sessionId
      * @param reason    关闭原因
      */
-    void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason);
+    void removeBySessionIdAndClose(String sessionId, ISessionCloseReason reason);
 
     /**
      * @param sessionId sessionId

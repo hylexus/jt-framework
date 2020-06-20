@@ -30,6 +30,7 @@ import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
 @Configuration
 public class Jt808Config extends Jt808ServerConfigure {
 
+    // [[必须配置]] -- 自定义消息类型解析器
     @Override
     public MsgTypeParser supplyMsgTypeParser() {
         return msgType -> {
@@ -41,6 +42,7 @@ public class Jt808Config extends Jt808ServerConfigure {
         };
     }
 
+    // [非必须配置] -- 可替换内置SessionManager
     @Bean
     public Jt808SessionManager sessionManager() {
         return SessionManager.getInstance();
@@ -49,6 +51,7 @@ public class Jt808Config extends Jt808ServerConfigure {
     @Autowired
     private Jt808SessionManager sessionManager;
 
+    // [非必须配置] -- 可替换内置Netty相关配置
     @Override
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         super.configureSocketChannel(ch, jt808ChannelHandlerAdapter);
@@ -70,6 +73,7 @@ public class Jt808Config extends Jt808ServerConfigure {
         });
     }
 
+    // [非必须配置] -- 可替换内置转义逻辑
     @Bean(BEAN_NAME_JT808_BYTES_ENCODER)
     public BytesEncoder bytesEncoder() {
         return new BytesEncoder.DefaultBytesEncoder();

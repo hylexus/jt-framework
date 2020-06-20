@@ -1,6 +1,5 @@
 package io.github.hylexus.jt808.samples.customized.config;
 
-import io.github.hylexus.jt.exception.MsgEscapeException;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
@@ -24,16 +23,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Jt808Config extends Jt808ServerConfigure {
 
+    // [[必须配置]] -- 自定义消息类型解析器
+    @Override
+    public MsgTypeParser supplyMsgTypeParser() {
+        return new Jt808MsgTypeParser();
+    }
+
+    // [非必须配置] -- 配置TCP相关参数
     @Override
     public void configureServerBootstrap(ServerBootstrap serverBootstrap) {
         super.configureServerBootstrap(serverBootstrap);
     }
 
+    // [非必须配置] -- 配置Netty相关参数
     @Override
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         super.configureSocketChannel(ch, jt808ChannelHandlerAdapter);
     }
 
+    // [非必须配置] -- 手动注册消息转换器
     @Override
     public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
         super.configureMsgConverterMapping(mapping);
@@ -43,30 +51,20 @@ public class Jt808Config extends Jt808ServerConfigure {
     @Autowired
     private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
 
+    // [非必须配置] -- 手动注册消息处理器
     @Override
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
         super.configureMsgHandlerMapping(mapping);
         mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, locationInfoUploadMsgHandler);
     }
 
+    // [非必须配置] -- 可替换内置转义逻辑
     @Override
     public BytesEncoder supplyBytesEncoder() {
-        return new BytesEncoder() {
-
-            private final BytesEncoder bytesEncoder = new BytesEncoder.DefaultBytesEncoder();
-
-            @Override
-            public byte[] doEscapeForReceive(byte[] bytes, int start, int end) throws MsgEscapeException {
-                return bytesEncoder.doEscapeForReceive(bytes, start, end);
-            }
-
-            @Override
-            public byte[] doEscapeForSend(byte[] bytes, int start, int end) throws MsgEscapeException {
-                return bytesEncoder.doEscapeForSend(bytes, start, end);
-            }
-        };
+        return new BytesEncoder.DefaultBytesEncoder();
     }
 
+    // [非必须配置] -- 配置鉴权鉴权消息处理器
     @Override
     public AuthCodeValidator supplyAuthCodeValidator() {
         return (session, requestMsgMetadata, authRequestMsgBody) -> {
@@ -76,11 +74,6 @@ public class Jt808Config extends Jt808ServerConfigure {
             log.info("AuthCode validate for terminal : {} with authCode : {}, result: {}", terminalId, authCode, true);
             return true;
         };
-    }
-
-    @Override
-    public MsgTypeParser supplyMsgTypeParser() {
-        return new Jt808MsgTypeParser();
     }
 
 }

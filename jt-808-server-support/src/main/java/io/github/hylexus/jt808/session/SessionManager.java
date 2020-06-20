@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Stream;
 
 /**
  * @author hylexus
@@ -16,8 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @BuiltinComponent
 public class SessionManager implements Jt808SessionManager {
-    private final Object lock = new Object();
     private static final Jt808SessionManager instance = new SessionManager();
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     private SessionManager() {
     }
@@ -30,6 +32,19 @@ public class SessionManager implements Jt808SessionManager {
     private final Map<String, Jt808Session> sessionMap = new ConcurrentHashMap<>();
     // <sessionId,terminalId>
     private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
+
+    public Stream<Jt808Session> list() {
+        this.lock.readLock().lock();
+        try {
+            return sessionMap.values().stream();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    public long count() {
+        return sessionMap.size();
+    }
 
     @Override
     public Session generateSession(Channel channel, String terminalId) {
@@ -56,17 +71,25 @@ public class SessionManager implements Jt808SessionManager {
 
     @Override
     public void persistence(Jt808Session session) {
-        synchronized (lock) {
+        lock.writeLock().lock();
+        try {
             this.sessionMap.put(session.getTerminalId(), session);
             sessionIdTerminalIdMapping.put(session.getId(), session.getTerminalId());
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
     @Override
-    public void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason) {
-        synchronized (lock) {
-            sessionIdTerminalIdMapping.remove(sessionId);
-            sessionMap.remove(sessionId);
+    public void removeBySessionIdAndClose(String sessionId, ISessionCloseReason reason) {
+        lock.writeLock().lock();
+        try {
+            final String terminalId = sessionIdTerminalIdMapping.remove(sessionId);
+            if (terminalId != null) {
+                sessionMap.remove(terminalId);
+            }
+        } finally {
+            lock.writeLock().unlock();
         }
         log.info("session removed [{}] , sessionId = {}", reason, sessionId);
     }
@@ -79,9 +102,7 @@ public class SessionManager implements Jt808SessionManager {
         }
 
         if (updateLastCommunicateTime) {
-            synchronized (lock) {
-                session.setLastCommunicateTimeStamp(System.currentTimeMillis());
-            }
+            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
         }
 
         if (!this.checkStatus(session)) {
@@ -92,17 +113,11 @@ public class SessionManager implements Jt808SessionManager {
     }
 
     private boolean checkStatus(Jt808Session session) {
+        //if (!session.getChannel().isOpen()) {
         if (!session.getChannel().isActive()) {
-            //if (!session.getChannel().isOpen()) {
-            synchronized (lock) {
-                this.sessionMap.remove(session.getId());
-                sessionIdTerminalIdMapping.remove(session.getId());
-                session.getChannel().close();
-                log.error("Close by server, terminalId = {}", session.getTerminalId());
-                return false;
-            }
+            this.removeBySessionIdAndClose(session.getId(), SessionCloseReason.CHANNEL_INACTIVE);
+            return false;
         }
-
         return true;
     }
 
