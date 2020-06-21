@@ -26,7 +26,7 @@ public abstract class AbstractCommandSender implements CommandSender {
     }
 
     @Override
-    public Object sendCommandAndWaitingForReply(CommandMsg commandMsg, boolean withFlowId, Long timeout, TimeUnit unit)
+    public Object sendCommandAndWaitingForReply(CommandMsg commandMsg, boolean withFlowId, Long timeout, TimeUnit timeUnit)
             throws IOException, InterruptedException {
 
         final String terminalId = commandMsg.getTerminalId();
@@ -40,24 +40,24 @@ public abstract class AbstractCommandSender implements CommandSender {
                 ? Jt808CommandKey.of(msgType, terminalId, flowId)
                 : Jt808CommandKey.of(msgType, terminalId);
 
-        this.sendCommand(terminalId, bytes, timeout, unit);
-        return commandWaitingPool.waitingForKey(commandKey, timeout, unit);
+        this.sendCommand(terminalId, bytes);
+        return commandWaitingPool.waitingForKey(commandKey, timeout, timeUnit);
     }
 
     @Override
-    public Object sendCommandAndWaitingForReply(Jt808CommandKey key, byte[] data, long time, TimeUnit unit) throws InterruptedException {
-        this.sendCommand(key.getTerminalId(), data, time, unit);
-        return commandWaitingPool.waitingForKey(key, time, unit);
+    public Object sendCommandAndWaitingForReply(Jt808CommandKey key, byte[] data, long timeout, TimeUnit timeUnit) throws InterruptedException {
+        this.sendCommand(key.getTerminalId(), data);
+        return commandWaitingPool.waitingForKey(key, timeout, timeUnit);
     }
 
     @Override
-    public void sendCommand(String terminalId, byte[] data, long time, TimeUnit unit) throws InterruptedException {
+    public void sendCommand(String terminalId, byte[] data) throws InterruptedException {
         final Jt808Session session = getSession(terminalId);
         session.sendMsgToClient(data);
     }
 
     @Override
-    public void sendCommand(CommandMsg commandMsg, long time, TimeUnit unit) throws InterruptedException, IOException {
+    public void sendCommand(CommandMsg commandMsg) throws InterruptedException, IOException {
         final String terminalId = commandMsg.getTerminalId();
         final Jt808Session session = getSession(terminalId);
         final byte[] bytes = this.encode(commandMsg, terminalId, session.getCurrentFlowId());

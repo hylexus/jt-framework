@@ -30,7 +30,7 @@ public class CommonHandler {
     // 处理MsgId为0x0200的消息
     @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
     public RespMsgBody processLocationMsg(
-            Session session, RequestMsgMetadata metadata,
+            Jt808Session session, RequestMsgMetadata metadata,
             RequestMsgHeader header, LocationUploadMsgBody msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
@@ -44,6 +44,38 @@ public class CommonHandler {
 
 }
 ```
+
+## 参数自动注入
+
+类似于 `SpringMVC` 的处理器参数注入，用 `@Jt808RequestMsgHandlerMapping` 注解的方法支持参数自动注入。
+
+目前支持自动注入的参数类型如下：
+
+- `RequestMsgBody`
+- `RequestMsgHeader`
+- `RequestMsgMetadata`
+- `Jt808Session`
+
+底层由 `HandlerMethodArgumentResolver` 来完成注入。
+所有支持的参数解析器都委托给了 `DelegateHandlerMethodArgumentResolvers`。
+
+```java
+public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgumentResolver {
+    // ...
+    static void addDefaultHandlerMethodArgumentResolver(DelegateHandlerMethodArgumentResolvers resolvers) {
+        resolvers.addResolver(new RequestMsgBodyArgumentResolver());
+        resolvers.addResolver(new RequestMsgHeaderArgumentResolver());
+        resolvers.addResolver(new RequestMsgMetadataArgumentResolver());
+        resolvers.addResolver(new SessionArgumentResolver());
+        resolvers.addResolver(new ExceptionArgumentResolver());
+    }
+    public DelegateHandlerMethodArgumentResolvers() {
+        addDefaultHandlerMethodArgumentResolver(this);
+    }
+    // ...
+}
+```
+
 ::: tip 传送门
 - 1. 本小节的示例代码可以在 [samples/jt-808-server-sample-annotation](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-annotation) 下找到对应代码。
 - 2. [点击这里了解 MsgHandler 的作用](../basic/customized.md#msghandler)。

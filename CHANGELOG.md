@@ -1,3 +1,17 @@
+# 1.0.5-SNAPSHOT
+
+### ⭐ New Features
+
+- `Jt808SessionManager` 重构，支持自定义
+
+### 🐞 Bug Fixes
+
+- SessionManager#removeBySessionIdAndClose 的bug
+
+### 🔨 Others
+
+- `CommandSender` 文档完善
+
 # 1.0.4-SNAPSHOT
 
 ### ⭐ New Features

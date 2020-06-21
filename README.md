@@ -13,6 +13,7 @@ Jt-808协议服务端。
 ### ⭐ New Features
 
 - `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他的由Spring管理的Bean
+- `Jt808SessionManager` 重构，支持自定义
 
 ### 🐞 Bug Fixes
 
@@ -21,11 +22,13 @@ Jt-808协议服务端。
     - 修复示例代码中消息消息的返回值类型 
 - https://github.com/hylexus/jt-framework/issues/17
     - 边界情况下默认转义逻辑bug
+- SessionManager#removeBySessionIdAndClose 的bug
 
 ### 🔨 Others
 
 - 优化 `Session#currentFlowId`
 - 新增 `SessionManager#findBySessionId`
+- `CommandSender` 文档完善
 
 ## QuickStart
 
@@ -91,8 +94,8 @@ public class Jt808ServerSampleBareApplication {
     - 基于注解的Handler，参数自动注入
     - 基于注解的响应消息映射
     - 基于注解的消息下发
-- 支持消息下发
-- [定制化](https://hylexus.github.io/jt-framework/jt-808/guide/basic/customized.html#application-yml)
+- [支持消息下发](https://hylexus.github.io/jt-framework/jt-808/guide/annotation-based-dev/msg-push.html)
+- [定制化](https://hylexus.github.io/jt-framework/jt-808/guide/basic/customized.html)
     - BytesEncoder：自定义转义逻辑
     - RequestMsgDispatcher：自定义 `MsgDispatcher`
     - RequestMsgQueue：自定义 `MsgQueue`，内置基于 `Google-EventBus` 的 MsgQueue
@@ -102,6 +105,8 @@ public class Jt808ServerSampleBareApplication {
     - ……
 
 ## Building from Source
+
+请事先安装 `Lombok` 插件。
 
 - Mac/Linux/Unix-Based System
 

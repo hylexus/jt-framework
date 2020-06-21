@@ -40,14 +40,14 @@ public class CommonHandler {
     @Autowired
     private Jt808SessionManager sessionManager;
 
-    @Jt808RequestMsgHandlerMapping(msgType = 0x0100)
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0100, desc = "终端注册")
     public RegisterReplyMsgBody processRegisterMsg(RegisterMsg msg, RequestMsgHeader header) {
         log.info("{}", msg);
         return new RegisterReplyMsgBody(header.getFlowId(), (byte) 0, "123456");
     }
 
     // 此处会覆盖内置的鉴权消息处理器(如果启用了的话)
-    @Jt808RequestMsgHandlerMapping(msgType = 0x0102)
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0102, desc = "终端鉴权")
     public ServerCommonReplyMsgBody processAuthMsg(AuthRequestMsgBody msgBody, RequestMsgHeader header, Jt808Session abstractSession, Session session) {
         log.info("处理鉴权消息 terminalId = {}, authCode = {}", header.getTerminalId(), msgBody.getAuthCode());
         if (header.getTerminalId().equals(System.getProperty("debug-terminal-id"))) {
@@ -57,6 +57,7 @@ public class CommonHandler {
         Optional<Jt808Session> sessionInfo = sessionManager.findByTerminalId(header.getTerminalId());
         assert sessionInfo.isPresent();
         assert sessionInfo.get() == abstractSession;
+        // 不建议直接使用Session，建议使用Jt808Session
         assert sessionInfo.get() == session;
         // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
         return new ServerCommonReplyMsgBody(header.getFlowId(), CLIENT_AUTH.getMsgId(), (byte) 0);

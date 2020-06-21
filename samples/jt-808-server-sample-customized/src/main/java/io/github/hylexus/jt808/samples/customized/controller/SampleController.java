@@ -31,7 +31,6 @@ import static io.github.hylexus.jt808.samples.customized.config.Jt808MsgType.*;
 @RequestMapping("/demo")
 public class SampleController {
 
-    // private Encoder encoder = new Encoder(new BytesEncoder.DefaultBytesEncoder());
     @Autowired
     private Jt808SessionManager sessionManager;
     @Autowired

@@ -60,11 +60,5 @@ public interface Jt808Session {
 
     String toString();
 
-    Jt808Session setId(String id);
-
-    Jt808Session setChannel(Channel channel);
-
-    Jt808Session setTerminalId(String terminalId);
-
     Jt808Session setLastCommunicateTimeStamp(long lastCommunicateTimeStamp);
 }
