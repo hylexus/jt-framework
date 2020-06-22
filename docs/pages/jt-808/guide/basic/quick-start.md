@@ -23,7 +23,7 @@
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.4-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.6-RELEASE"
     // ...
 }
 ```
@@ -34,7 +34,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.4-RELEASE</version>
+    <version>1.0.6-RELEASE</version>
 </dependency>
 ```
 

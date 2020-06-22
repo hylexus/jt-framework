@@ -33,7 +33,7 @@ import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.queue.impl.LocalEventBus;
 import io.github.hylexus.jt808.queue.listener.LocalEventBusListener;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
-import io.github.hylexus.jt808.session.Jt808SessionManagerFactoryBean;
+import io.github.hylexus.jt808.session.SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.OrderedComponent;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
@@ -81,10 +81,16 @@ public class Jt808ServerAutoConfigure {
     @Autowired
     private Jt808ServerProps serverProps;
 
+    //@Bean
+    //@ConditionalOnMissingBean({Jt808SessionManager.class})
+    //public Jt808SessionManagerFactoryBean jt808SessionManager() {
+    //    return new Jt808SessionManagerFactoryBean();
+    //}
+
     @Bean
     @ConditionalOnMissingBean(Jt808SessionManager.class)
-    public Jt808SessionManagerFactoryBean jt808SessionManager() {
-        return new Jt808SessionManagerFactoryBean();
+    public Jt808SessionManager jt808SessionManager() {
+        return SessionManager.getInstance();
     }
 
     @Bean

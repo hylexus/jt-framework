@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.session;
 
+import io.github.hylexus.jt.annotation.DebugOnly;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.FactoryBean;
  *
  * @author hylexus
  */
+@DebugOnly
 public class Jt808SessionManagerFactoryBean implements FactoryBean<Jt808SessionManager> {
 
     @Override
