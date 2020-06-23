@@ -29,13 +29,13 @@ public class BuiltinAuthMsgHandler extends AbstractMsgHandler<BuiltinAuthRequest
 
     private final AuthCodeValidator authCodeValidator;
 
+    public BuiltinAuthMsgHandler(AuthCodeValidator authCodeValidator) {
+        this.authCodeValidator = authCodeValidator;
+    }
+
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return Collections.singleton(BuiltinJt808MsgType.CLIENT_AUTH);
-    }
-
-    public BuiltinAuthMsgHandler(AuthCodeValidator authCodeValidator) {
-        this.authCodeValidator = authCodeValidator;
     }
 
     @Override

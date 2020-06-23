@@ -10,7 +10,7 @@ import lombok.ToString;
  * Created At 2019-10-21 11:34 下午
  */
 @Data
-@ToString(of = {"sourceClass","targetClass","sourceDataType"})
+@ToString(of = {"sourceClass", "targetClass", "sourceDataType"})
 @EqualsAndHashCode(of = {"sourceClass", "sourceDataType", "targetClass"})
 public class ConvertibleMetadata {
 

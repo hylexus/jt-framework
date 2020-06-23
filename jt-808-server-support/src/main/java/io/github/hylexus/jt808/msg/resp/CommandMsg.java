@@ -24,6 +24,12 @@ public class CommandMsg {
     public CommandMsg() {
     }
 
+    public CommandMsg(String terminalId, MsgType expectedReplyMsgType, Object body) {
+        this.terminalId = terminalId;
+        this.expectedReplyMsgType = expectedReplyMsgType;
+        this.body = body;
+    }
+
     public static CommandMsg emptyRespMsgBody(String terminalId, MsgType respMsgType) {
         return emptyRespMsgBody(terminalId, null, respMsgType);
     }
@@ -34,11 +40,5 @@ public class CommandMsg {
 
     public static CommandMsg of(String terminalId, MsgType expectedReplyMsgType, Object body) {
         return new CommandMsg(terminalId, expectedReplyMsgType, body);
-    }
-
-    public CommandMsg(String terminalId, MsgType expectedReplyMsgType, Object body) {
-        this.terminalId = terminalId;
-        this.expectedReplyMsgType = expectedReplyMsgType;
-        this.body = body;
     }
 }

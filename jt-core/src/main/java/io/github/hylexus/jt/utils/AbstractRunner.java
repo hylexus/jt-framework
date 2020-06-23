@@ -12,12 +12,11 @@ import javax.annotation.PreDestroy;
 @Slf4j
 public abstract class AbstractRunner {
     private final String name;
+    protected volatile boolean isRunning = false;
 
     public AbstractRunner(String name) {
         this.name = name;
     }
-
-    protected volatile boolean isRunning = false;
 
     public abstract void doProcessBlocked() throws Exception;
 

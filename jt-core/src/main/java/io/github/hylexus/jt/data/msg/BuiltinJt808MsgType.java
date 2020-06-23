@@ -27,20 +27,20 @@ public enum BuiltinJt808MsgType implements MsgType {
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     ;
 
-    BuiltinJt808MsgType(int msgId, String desc) {
-        this.msgId = msgId;
-        this.desc = desc;
-    }
-
-    private final int msgId;
-    private final String desc;
-
     private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);
 
     static {
         for (BuiltinJt808MsgType builtinMsgType : values()) {
             mapping.put(builtinMsgType.msgId, builtinMsgType);
         }
+    }
+
+    private final int msgId;
+    private final String desc;
+
+    BuiltinJt808MsgType(int msgId, String desc) {
+        this.msgId = msgId;
+        this.desc = desc;
     }
 
     @Override

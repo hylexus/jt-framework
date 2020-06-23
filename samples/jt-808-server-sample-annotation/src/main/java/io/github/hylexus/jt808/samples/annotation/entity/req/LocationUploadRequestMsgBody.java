@@ -1,4 +1,3 @@
-
 package io.github.hylexus.jt808.samples.annotation.entity.req;
 
 import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
@@ -32,78 +31,52 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
 
     @ToString.Exclude
     private RequestMsgMetadata requestMsgMetadata;
-
-    @Override
-    public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
-        this.requestMsgMetadata = metadata;
-    }
-
     // 报警标志
     @BasicField(startIndex = 0, dataType = DWORD)
     private int alarmFlag;
-
     // 状态
     @BasicField(startIndex = 4, dataType = DWORD)
     @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
-
     private LocationUploadStatus statusInfo;
-
     @BasicField(startIndex = 4, dataType = BYTES, length = 4)
     private byte[] statusBytes;
-
     // 将上面的 status 字段的第0位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
     private int accIntStatus;
-
     // 将上面的 status 字段的第0位取出转为 boolean 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
     private Boolean accBooleanStatus;
-
     // 0 北纬;1 南纬
     // 将上面的 status 字段的第2位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 2)
     private int latType;
-
     // 纬度(尚未除以 10^6)
     @BasicField(startIndex = 8, dataType = DWORD)
     private Integer intLat;
     // 纬度(使用转换器除以10^6转为Double类型)
     @BasicField(startIndex = 8, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
     private Double lat;
-
     // 经度(尚未除以 10^6)
     @BasicField(startIndex = 12, dataType = DWORD)
     private Integer intLng;
     // 经度(使用转换器除以10^6转为Double类型)
     @BasicField(startIndex = 12, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
     private Double lng;
-
     // 经度(startIndexMethod使用示例)
     @BasicField(startIndexMethod = "getLngStartIndex", dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
     private Double lngByStartIndexMethod;
-
-    // a sample for https://github.com/hylexus/jt-framework/issues/9
-    public int getLngStartIndex() {
-        log.info("消息体总长度:{}", this.requestMsgMetadata.getHeader().getMsgBodyLength());
-        return 12;
-    }
-
     // 高度
     @BasicField(startIndex = 16, dataType = WORD)
     private Integer height;
-
     // 速度
     @BasicField(startIndex = 18, dataType = WORD)
     private int speed;
-
     // 方向
     @BasicField(startIndex = 20, dataType = WORD)
     private Integer direction;
-
     @BasicField(startIndex = 22, dataType = BCD, length = 6)
     private String time;
-
     @ExtraField(
             // 消息体中第28字节开始
             startIndex = 28,
@@ -111,15 +84,25 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
             byteCountMethod = "getExtraInfoLength"
     )
     private ExtraInfo extraInfo;
+    // 也可将将附加项解析为一个List
+    @BasicField(startIndex = 28, byteCountMethod = "getExtraInfoLength", dataType = LIST)
+    private List<ExtraInfoItem> extraInfoItemList;
+
+    @Override
+    public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
+        this.requestMsgMetadata = metadata;
+    }
+
+    // a sample for https://github.com/hylexus/jt-framework/issues/9
+    public int getLngStartIndex() {
+        log.info("消息体总长度:{}", this.requestMsgMetadata.getHeader().getMsgBodyLength());
+        return 12;
+    }
 
     public int getExtraInfoLength() {
         int totalLength = this.requestMsgMetadata.getHeader().getMsgBodyLength();
         return totalLength - 28;
     }
-
-    // 也可将将附加项解析为一个List
-    @BasicField(startIndex = 28,byteCountMethod = "getExtraInfoLength",dataType = LIST)
-    private List<ExtraInfoItem> extraInfoItemList;
 
     @Data
     // 切记@ExtraMsgBody注解不能丢
@@ -152,7 +135,7 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
         @ExtraField.NestedFieldMapping(msgId = 0xE6, dataType = BYTE)
         private byte field0xe6;
 
-        @ExtraField.NestedFieldMapping(msgId = 0x53,dataType = BYTES)
+        @ExtraField.NestedFieldMapping(msgId = 0x53, dataType = BYTES)
         private byte[] field0x53;
     }
 

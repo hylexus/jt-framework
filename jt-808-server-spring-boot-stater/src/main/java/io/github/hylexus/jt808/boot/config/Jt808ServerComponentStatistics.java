@@ -21,6 +21,7 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.queue.RequestMsgQueue;
 import io.github.hylexus.jt808.queue.RequestMsgQueueListener;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
@@ -33,6 +34,7 @@ import org.springframework.boot.ansi.AnsiColor;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -53,28 +55,16 @@ import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
  * Created At 2019-08-27 9:25 下午
  */
 @Slf4j
+@Order(200)
 public class Jt808ServerComponentStatistics implements CommandLineRunner, ApplicationContextAware {
 
-    @Setter
-    private ApplicationContext applicationContext;
-
     private static final String END_OF_LINE = "\n";
-
     private final RequestMsgBodyConverterMapping msgConverterMapping;
-
     private final MsgHandlerMapping msgHandlerMapping;
-
     private final MsgTypeParser msgTypeParser;
-
-    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping,
-                                          MsgHandlerMapping msgHandlerMapping) {
-        this.msgTypeParser = msgTypeParser;
-        this.msgConverterMapping = msgConverterMapping;
-        this.msgHandlerMapping = msgHandlerMapping;
-    }
-
     private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
             Lists.newArrayList(
+                    Jt808SessionManagerEventListener.class,
                     Jt808SessionManager.class,
                     BytesEncoder.class,
                     MsgTypeParser.class,
@@ -87,6 +77,15 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     HandlerMethodArgumentResolver.class,
                     CommandSender.class
             ));
+    @Setter
+    private ApplicationContext applicationContext;
+
+    public Jt808ServerComponentStatistics(MsgTypeParser msgTypeParser, RequestMsgBodyConverterMapping msgConverterMapping,
+                                          MsgHandlerMapping msgHandlerMapping) {
+        this.msgTypeParser = msgTypeParser;
+        this.msgConverterMapping = msgConverterMapping;
+        this.msgHandlerMapping = msgHandlerMapping;
+    }
 
     @Override
     public void run(String... args) {

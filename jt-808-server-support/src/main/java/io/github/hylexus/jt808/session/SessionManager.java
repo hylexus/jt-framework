@@ -20,6 +20,11 @@ import java.util.stream.Stream;
 public class SessionManager implements Jt808SessionManager {
     private static final Jt808SessionManager instance = new SessionManager();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    // <terminalId,Session>
+    private final Map<String, Jt808Session> sessionMap = new ConcurrentHashMap<>();
+    // <sessionId,terminalId>
+    private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
+    private Jt808SessionManagerEventListener listener = new DefaultJt808SessionManagerEventListener();
 
     private SessionManager() {
     }
@@ -27,11 +32,6 @@ public class SessionManager implements Jt808SessionManager {
     public static Jt808SessionManager getInstance() {
         return instance;
     }
-
-    // <terminalId,Session>
-    private final Map<String, Jt808Session> sessionMap = new ConcurrentHashMap<>();
-    // <sessionId,terminalId>
-    private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
 
     public Stream<Jt808Session> list() {
         this.lock.readLock().lock();
@@ -78,20 +78,38 @@ public class SessionManager implements Jt808SessionManager {
         } finally {
             lock.writeLock().unlock();
         }
+        listener.onSessionAdd(session);
+    }
+
+    @Override
+    public Jt808Session removeBySessionId(String sessionId) {
+        lock.writeLock().lock();
+        try {
+            final String terminalId = sessionIdTerminalIdMapping.remove(sessionId);
+            if (terminalId != null) {
+                final Jt808Session session = sessionMap.remove(terminalId);
+                listener.onSessionRemove(session);
+                return session;
+            }
+        } finally {
+            lock.writeLock().unlock();
+        }
+
+        return null;
     }
 
     @Override
     public void removeBySessionIdAndClose(String sessionId, ISessionCloseReason reason) {
         lock.writeLock().lock();
         try {
-            final String terminalId = sessionIdTerminalIdMapping.remove(sessionId);
-            if (terminalId != null) {
-                sessionMap.remove(terminalId);
+            final Jt808Session session = this.removeBySessionId(sessionId);
+            if (session != null) {
+                listener.onSessionClose(session, reason);
+                session.getChannel().close();
             }
         } finally {
             lock.writeLock().unlock();
         }
-        log.info("session removed [{}] , sessionId = {}", reason, sessionId);
     }
 
     @Override
@@ -121,4 +139,13 @@ public class SessionManager implements Jt808SessionManager {
         return true;
     }
 
+    @Override
+    public Jt808SessionManagerEventListener getEventListener() {
+        return this.listener;
+    }
+
+    @Override
+    public void setEventListener(Jt808SessionManagerEventListener listener) {
+        this.listener = listener;
+    }
 }

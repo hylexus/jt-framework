@@ -58,7 +58,7 @@ public interface Jt808Session {
 
     long getLastCommunicateTimeStamp();
 
-    String toString();
-
     Jt808Session setLastCommunicateTimeStamp(long lastCommunicateTimeStamp);
+
+    String toString();
 }

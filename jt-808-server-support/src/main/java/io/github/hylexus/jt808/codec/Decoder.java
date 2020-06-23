@@ -21,6 +21,8 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 @Slf4j
 public class Decoder {
 
+    private final FieldDecoder fieldDecoder = new FieldDecoder();
+
     public RequestMsgMetadata parseMsgMetadata(byte[] bytes) {
         final RequestMsgMetadata ret = new RequestMsgMetadata();
 
@@ -84,8 +86,6 @@ public class Decoder {
         }
         return header;
     }
-
-    private final FieldDecoder fieldDecoder = new FieldDecoder();
 
     public <T> T decodeRequestMsgBody(Class<T> cls, byte[] bytes, RequestMsgMetadata metadata)
             throws IllegalAccessException, InstantiationException, InvocationTargetException {

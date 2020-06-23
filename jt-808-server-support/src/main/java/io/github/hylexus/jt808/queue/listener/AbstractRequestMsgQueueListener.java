@@ -27,12 +27,12 @@ import java.util.Optional;
  */
 @Slf4j
 public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue> implements RequestMsgQueueListener {
-    protected MsgHandlerMapping msgHandlerMapping;
-    protected T queue;
     private final ExceptionHandler exceptionHandler;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
     private final Encoder encoder;
     private final Jt808SessionManager sessionManager;
+    protected MsgHandlerMapping msgHandlerMapping;
+    protected T queue;
 
     public AbstractRequestMsgQueueListener(
             MsgHandlerMapping msgHandlerMapping, T queue, ExceptionHandler exceptionHandler,

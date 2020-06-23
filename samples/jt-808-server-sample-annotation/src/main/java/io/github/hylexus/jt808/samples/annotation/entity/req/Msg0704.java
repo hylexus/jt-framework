@@ -25,23 +25,19 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
 public class Msg0704 implements RequestMsgBody, RequestMsgHeaderAware {
 
     private RequestMsgHeader requestMsgHeader;
+    @BasicField(startIndex = 0, dataType = WORD)
+    private int itemCount;
+    @BasicField(startIndex = 2, dataType = BYTE)
+    private byte locationType;
+    @BasicField(startIndex = 3, dataType = BYTES, byteCountMethod = "getLocationInfoByteCount")
+    private byte[] locationInfoBytes;
+    // 这部分List中每个元素的长度不固定，注解暂时无法支持，只能手动解析
+    @BasicField(startIndex = 3, dataType = BYTES, byteCountMethod = "getLocationInfoByteCount", customerDataTypeConverterClass = XxxConverter.class)
+    private List<LocationUploadRequestMsgBody> locationInfoByteList;
 
     public void setRequestMsgHeader(RequestMsgHeader requestMsgHeader) {
         this.requestMsgHeader = requestMsgHeader;
     }
-
-    @BasicField(startIndex = 0, dataType = WORD)
-    private int itemCount;
-
-    @BasicField(startIndex = 2, dataType = BYTE)
-    private byte locationType;
-
-    @BasicField(startIndex = 3, dataType = BYTES, byteCountMethod = "getLocationInfoByteCount")
-    private byte[] locationInfoBytes;
-
-    // 这部分List中每个元素的长度不固定，注解暂时无法支持，只能手动解析
-    @BasicField(startIndex = 3, dataType = BYTES, byteCountMethod = "getLocationInfoByteCount", customerDataTypeConverterClass = XxxConverter.class)
-    private List<LocationUploadRequestMsgBody> locationInfoByteList;
 
     public int getLocationInfoByteCount() {
         return requestMsgHeader.getMsgBodyLength() - 3;

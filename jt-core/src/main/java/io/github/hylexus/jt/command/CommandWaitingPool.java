@@ -13,15 +13,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CommandWaitingPool {
     private static final CommandWaitingPool instance = new CommandWaitingPool();
-
-    public static CommandWaitingPool getInstance() {
-        return instance;
-    }
+    private final BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
 
     private CommandWaitingPool() {
     }
 
-    private final BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
+    public static CommandWaitingPool getInstance() {
+        return instance;
+    }
 
     public void putIfNecessary(CommandKey commandKey, Object msg) {
         final String waitingFlag = commandKey.getWaitingFlag();

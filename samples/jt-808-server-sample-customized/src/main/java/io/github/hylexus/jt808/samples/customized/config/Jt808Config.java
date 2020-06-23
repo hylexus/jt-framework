@@ -23,6 +23,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Jt808Config extends Jt808ServerConfigure {
 
+    @Autowired
+    private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
+
     // [[必须配置]] -- 自定义消息类型解析器
     @Override
     public MsgTypeParser supplyMsgTypeParser() {
@@ -47,9 +50,6 @@ public class Jt808Config extends Jt808ServerConfigure {
         super.configureMsgConverterMapping(mapping);
         mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
     }
-
-    @Autowired
-    private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
 
     // [非必须配置] -- 手动注册消息处理器
     @Override

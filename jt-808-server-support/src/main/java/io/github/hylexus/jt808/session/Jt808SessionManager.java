@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.session;
 
 import io.netty.channel.Channel;
 
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -121,6 +122,9 @@ public interface Jt808SessionManager {
      */
     void persistence(Jt808Session session);
 
+    @Nullable
+    Jt808Session removeBySessionId(String sessionId);
+
     /**
      * @param sessionId sessionId
      * @param reason    关闭原因
@@ -152,4 +156,8 @@ public interface Jt808SessionManager {
     default void sendBytesToClient(Jt808Session session, byte[] bytes) throws InterruptedException {
         session.sendMsgToClient(bytes);
     }
+
+    Jt808SessionManagerEventListener getEventListener();
+
+    void setEventListener(Jt808SessionManagerEventListener listener);
 }

@@ -58,7 +58,7 @@ javadoc {
     options.charSet = 'UTF-8'
     options.addStringOption("charset", "UTF-8")
 
-    options{
+    options {
         version true
         links "http://docs.oracle.com/javase/8/docs/api"
     }
@@ -76,8 +76,8 @@ checkstyle {
 
 apply plugin: 'idea'
 
-idea{
-    module{
+idea {
+    module {
         inheritOutputDirs = false
         outputDir = compileJava.destinationDir
         testOutputDir = compileTestJava.destinationDir

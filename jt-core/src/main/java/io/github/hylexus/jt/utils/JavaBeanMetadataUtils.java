@@ -22,11 +22,11 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class JavaBeanMetadataUtils {
 
-    private static final ConcurrentMap<Class<?>, JavaBeanMetadata> CLASS_METADATA_CACHE = new ConcurrentHashMap<>();
     /**
      * 支持按bit拆分的类型
      */
     public static final Set<Class<?>> SLICED_TYPE;
+    private static final ConcurrentMap<Class<?>, JavaBeanMetadata> CLASS_METADATA_CACHE = new ConcurrentHashMap<>();
 
     static {
         final Set<Class<?>> set = Sets.newHashSet(

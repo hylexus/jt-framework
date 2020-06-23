@@ -29,15 +29,8 @@ public class PassthroughPack implements RequestMsgBody, RequestMsgMetadataAware 
 
     @ToString.Exclude
     private RequestMsgMetadata requestMsgMetadata;
-
-    @Override
-    public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
-        this.requestMsgMetadata = metadata;
-    }
-
     @BasicField(startIndex = 0, dataType = BYTE)
     private int msgType;
-
     @BasicField(startIndex = 1, dataType = BCD, length = 6)
     private String time;
     /**
@@ -47,7 +40,6 @@ public class PassthroughPack implements RequestMsgBody, RequestMsgMetadataAware 
      */
     @BasicField(startIndex = 7, dataType = BYTE)
     private int dataType;
-
     /**
      * 车辆类型
      * 0x01：商用车；
@@ -55,8 +47,6 @@ public class PassthroughPack implements RequestMsgBody, RequestMsgMetadataAware 
      */
     @BasicField(startIndex = 8, dataType = BYTE)
     private int vehicleType;
-
-
     /**
      * 消息子类
      * 0x01：OBD数据流上报；
@@ -75,24 +65,16 @@ public class PassthroughPack implements RequestMsgBody, RequestMsgMetadataAware 
      */
     @BasicField(startIndex = 9, dataType = BYTE)
     private int childMsgType;
-
     /**
      * 数据总数
      */
     @BasicField(startIndex = 10, dataType = BYTE)
     private int totalMsg;
-
     /**
      * 透传消息内容(子内容)
      */
     @BasicField(startIndex = 11, dataType = BYTES, byteCountMethod = "getContentLength")
     private byte[] content;
-
-    public int getContentLength() {
-        int totalLength = this.requestMsgMetadata.getHeader().getMsgBodyLength();
-        return totalLength - 11;
-    }
-
     @ExtraField(
             // 消息体中第11字节开始
             startIndex = 11,
@@ -100,6 +82,16 @@ public class PassthroughPack implements RequestMsgBody, RequestMsgMetadataAware 
             byteCountMethod = "getContentLength"
     )
     private ExtraData extraData;
+
+    @Override
+    public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
+        this.requestMsgMetadata = metadata;
+    }
+
+    public int getContentLength() {
+        int totalLength = this.requestMsgMetadata.getHeader().getMsgBodyLength();
+        return totalLength - 11;
+    }
 
     @Data
     // 切记@ExtraMsgBody注解不能丢

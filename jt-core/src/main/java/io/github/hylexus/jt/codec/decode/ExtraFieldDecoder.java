@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class ExtraFieldDecoder {
 
-    private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private static final ConcurrentMap<Class<?>, ConcurrentMap<Integer, NestedFieldMappingInfo>> cache = new ConcurrentHashMap<>();
+    private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
     private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 

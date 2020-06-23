@@ -32,7 +32,6 @@ public class HeatBeatHandler extends ChannelInboundHandlerAdapter {
         if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
             log.debug("disconnected idle connection");
             sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
-            ctx.channel().close();
         }
     }
 }

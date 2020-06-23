@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Accessors(chain = true)
 @BuiltinComponent
 public class Session implements Jt808Session {
+    private final AtomicInteger nextFlowId = new AtomicInteger(0);
     @Getter
     @Setter
     private String id;
@@ -33,8 +34,6 @@ public class Session implements Jt808Session {
     @Getter
     @Setter
     private long lastCommunicateTimeStamp = 0L;
-
-    private final AtomicInteger nextFlowId = new AtomicInteger(0);
 
     @Override
     public void sendMsgToClient(ByteBuf byteBuf) throws InterruptedException, JtCommunicationException {

@@ -4,8 +4,7 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.session.Jt808SessionManager;
-import io.github.hylexus.jt808.session.SessionManager;
+import io.github.hylexus.jt808.session.*;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
 import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_BYTES_ENCODER;
@@ -29,6 +29,9 @@ import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
  */
 @Configuration
 public class Jt808Config extends Jt808ServerConfigure {
+
+    @Autowired
+    private Jt808SessionManager sessionManager;
 
     // [[必须配置]] -- 自定义消息类型解析器
     @Override
@@ -48,8 +51,16 @@ public class Jt808Config extends Jt808ServerConfigure {
         return SessionManager.getInstance();
     }
 
-    @Autowired
-    private Jt808SessionManager sessionManager;
+    // [非必须配置] -- 可替换内置Jt808SessionManagerEventListener
+    @Bean
+    public Jt808SessionManagerEventListener jt808SessionManagerEventListener() {
+        return new Jt808SessionManagerEventListener() {
+            @Override
+            public void onSessionClose(@Nullable Jt808Session session, ISessionCloseReason closeReason) {
+                Jt808SessionManagerEventListener.super.onSessionClose(session, closeReason);
+            }
+        };
+    }
 
     // [非必须配置] -- 可替换内置Netty相关配置
     @Override
@@ -65,9 +76,7 @@ public class Jt808Config extends Jt808ServerConfigure {
                 }
 
                 if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
-                    System.out.println("disconnected idle connection");
                     sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
-                    ctx.channel().close();
                 }
             }
         });

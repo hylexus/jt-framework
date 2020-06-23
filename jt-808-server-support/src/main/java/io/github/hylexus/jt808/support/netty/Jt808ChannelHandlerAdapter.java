@@ -101,7 +101,6 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.warn("remove session, channelInactive [Jt808ChannelHandlerAdapter]");
         sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
     }
 

@@ -16,17 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class Jt808NettyTcpServer extends AbstractRunner {
 
+    private final Jt808ServerConfigure serverConfigure;
     private EventLoopGroup bossGroup = null;
     private EventLoopGroup workerGroup = null;
-
     private Integer port;
-
     private Integer workThreadCount;
-
     private Integer bossThreadCount;
-
-    private final Jt808ServerConfigure serverConfigure;
-
     private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
     public Jt808NettyTcpServer(

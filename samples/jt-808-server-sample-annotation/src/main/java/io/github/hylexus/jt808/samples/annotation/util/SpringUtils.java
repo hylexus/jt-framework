@@ -15,12 +15,12 @@ public class SpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
+    public static <T> T getBean(Class<T> requiredType) throws BeansException {
+        return applicationContext.getBean(requiredType);
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringUtils.applicationContext = applicationContext;
-    }
-
-    public static <T> T getBean(Class<T> requiredType) throws BeansException {
-        return applicationContext.getBean(requiredType);
     }
 }

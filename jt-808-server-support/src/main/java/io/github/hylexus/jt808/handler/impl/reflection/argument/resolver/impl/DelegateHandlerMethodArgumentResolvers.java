@@ -20,16 +20,16 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
     private final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
     private final ConcurrentMap<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
+    public DelegateHandlerMethodArgumentResolvers() {
+        addDefaultHandlerMethodArgumentResolver(this);
+    }
+
     static void addDefaultHandlerMethodArgumentResolver(DelegateHandlerMethodArgumentResolvers resolvers) {
         resolvers.addResolver(new RequestMsgBodyArgumentResolver());
         resolvers.addResolver(new RequestMsgHeaderArgumentResolver());
         resolvers.addResolver(new RequestMsgMetadataArgumentResolver());
         resolvers.addResolver(new SessionArgumentResolver());
         resolvers.addResolver(new ExceptionArgumentResolver());
-    }
-
-    public DelegateHandlerMethodArgumentResolvers() {
-        addDefaultHandlerMethodArgumentResolver(this);
     }
 
     @Override

@@ -26,14 +26,12 @@ public class Jt808DefaultEnvironmentPostProcessor implements EnvironmentPostProc
     private static final String DEFAULT_JT_808_SERVER_CONFIG_PROPERTY_SOURCE_NAME = "default-jt808-server-config";
 
     private static final String resourcePattern = "classpath*:META-INF/default-jt808-server-config.*";
+    private final YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader();
+    private final PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();
 
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE - 1;
     }
-
-    private final YamlPropertySourceLoader yamlPropertySourceLoader = new YamlPropertySourceLoader();
-    private final PropertiesPropertySourceLoader propertiesPropertySourceLoader = new PropertiesPropertySourceLoader();
-
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
