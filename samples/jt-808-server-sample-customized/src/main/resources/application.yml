@@ -20,4 +20,8 @@ jt808:
       keep-alive-time: 60s
       blocking-queue-size: 20
       thread-name-format: '808-msg-processor-%d'
+  handler-scan:
+    enabled: true
+    base-packages: io.github.hylexus.jt808.samples.customized.handler
+    register-builtin-msg-handlers: true
 

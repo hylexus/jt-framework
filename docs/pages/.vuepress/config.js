@@ -54,7 +54,21 @@ function jt808GuideSidebarConfig() {
                 ['/jt-808/guide/', '说明'],
                 '/jt-808/guide/basic/protocol-introduction',
                 '/jt-808/guide/basic/quick-start',
-                '/jt-808/guide/basic/customized'
+            ]
+        },
+        {
+            title: "定制化",
+            collapsable: false,
+            sidebarDepth: 1,
+            children: [
+                ['/jt-808/guide/customization/','说明'],
+                '/jt-808/guide/customization/session-config',
+                '/jt-808/guide/customization/netty-config',
+                '/jt-808/guide/customization/escape-config',
+                '/jt-808/guide/customization/msg-type-config',
+                '/jt-808/guide/customization/msg-converter-config',
+                '/jt-808/guide/customization/msg-handler-config',
+                '/jt-808/guide/customization/auth-validator-config',
             ]
         },
         {

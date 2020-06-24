@@ -76,6 +76,12 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
 }
 ```
 
+## MsgHandler注入到Spring容器
+
+从 `1.0.4-RELEASE` 开始，支持将 `MsgHandler` 交给Spring来管理，以便于在 `MsgHandler` 中使用Spring容器的其他bean。
+
+使用方法也很简单，给你的 `MsgHandler` 加一个 `@Component` 注解即可。
+
 ::: tip 传送门
 - 1. 本小节的示例代码可以在 [samples/jt-808-server-sample-annotation](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-annotation) 下找到对应代码。
 - 2. [点击这里了解 MsgHandler 的作用](../basic/customized.md#msghandler)。

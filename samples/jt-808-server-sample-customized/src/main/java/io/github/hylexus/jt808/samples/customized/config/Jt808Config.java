@@ -5,6 +5,10 @@ import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
+import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionManagerEventListener;
+import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
@@ -13,6 +17,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.socket.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -25,6 +30,18 @@ public class Jt808Config extends Jt808ServerConfigure {
 
     @Autowired
     private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
+
+    // [[非必须配置]] -- 替换内置 Jt808SessionManager
+    @Bean
+    public Jt808SessionManager sessionManager() {
+        return new MySessionManager();
+    }
+
+    // [[非必须配置]] -- 替换内置 Jt808SessionManagerEventListener
+    @Bean
+    public Jt808SessionManagerEventListener listener() {
+        return new MyJt808SessionManagerEventListener();
+    }
 
     // [[必须配置]] -- 自定义消息类型解析器
     @Override
