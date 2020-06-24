@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TerminalController {
 
     @Autowired
-    private Jt808SessionManager sessionManager;
+    private Jt808SessionManager jt808SessionManager;
 
     @GetMapping("/session-list")
     public Object sessionList(
@@ -26,7 +26,7 @@ public class TerminalController {
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @RequestParam(name = "keyword", required = false, defaultValue = "") String keyword) {
 
-        return sessionManager.list(page, pageSize, session -> {
+        return jt808SessionManager.list(page, pageSize, session -> {
             if (StringUtils.isEmpty(keyword)) {
                 return true;
             }

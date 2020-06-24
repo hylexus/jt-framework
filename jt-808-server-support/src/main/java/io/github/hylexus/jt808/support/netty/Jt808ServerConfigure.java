@@ -5,7 +5,6 @@ import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
-import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.netty.bootstrap.ServerBootstrap;
@@ -30,9 +29,6 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 @Slf4j
 public class Jt808ServerConfigure {
 
-    @Autowired
-    private Jt808SessionManager sessionManager;
-
     public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
     }
 
@@ -46,9 +42,12 @@ public class Jt808ServerConfigure {
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
     }
 
+    @Autowired
+    private HeatBeatHandler heatBeatHandler;
+
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(20, 20, 20, TimeUnit.MINUTES));
-        ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, new HeatBeatHandler(sessionManager));
+        ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, heatBeatHandler);
         ch.pipeline().addLast(
                 NETTY_HANDLER_NAME_808_FRAME,
                 new DelimiterBasedFrameDecoder(
@@ -75,14 +74,9 @@ public class Jt808ServerConfigure {
         return new BuiltinMsgTypeParser();
     }
 
-
-    //    private void warning(Class<?> actualCls, Class<?> superClass) {
-    //        String content = ">|< -- Using [{}], please consider to provide your own implementation of [{}]";
-    //        log.warn(tips(DEPRECATED_COMPONENT_COLOR, content), actualCls.getSimpleName(), superClass.getSimpleName());
-    //    }
-    //
-    //    private String tips(AnsiColor color, String content) {
-    //        return AnsiOutput.toString(color, content, AnsiColor.DEFAULT);
+    //    @Bean(name = BEAN_NAME_JT808_SESSION_MANAGER)
+    //    public Jt808SessionManager supplyJt808SessionManager() {
+    //        return SessionManager.getInstance();
     //    }
 
     @DebugOnly

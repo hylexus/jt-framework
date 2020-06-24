@@ -12,7 +12,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,9 +29,6 @@ import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
 @Configuration
 public class Jt808Config extends Jt808ServerConfigure {
 
-    @Autowired
-    private Jt808SessionManager sessionManager;
-
     // [[必须配置]] -- 自定义消息类型解析器
     @Override
     public MsgTypeParser supplyMsgTypeParser() {
@@ -47,7 +43,7 @@ public class Jt808Config extends Jt808ServerConfigure {
 
     // [非必须配置] -- 可替换内置SessionManager
     @Bean
-    public Jt808SessionManager sessionManager() {
+    public Jt808SessionManager jt808SessionManager() {
         return SessionManager.getInstance();
     }
 
@@ -75,8 +71,9 @@ public class Jt808Config extends Jt808ServerConfigure {
                     return;
                 }
 
+                final Jt808SessionManager manager = jt808SessionManager();
                 if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
-                    sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
+                    manager.removeBySessionIdAndClose(manager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
                 }
             }
         });

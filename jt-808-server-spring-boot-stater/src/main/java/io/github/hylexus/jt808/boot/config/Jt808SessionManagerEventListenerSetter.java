@@ -18,19 +18,19 @@ import org.springframework.core.annotation.Order;
 public class Jt808SessionManagerEventListenerSetter implements CommandLineRunner {
 
     @Autowired
-    private final Jt808SessionManager sessionManager;
+    private final Jt808SessionManager jt808SessionManager;
 
     @Autowired
     private final Jt808SessionManagerEventListener listener;
 
     public Jt808SessionManagerEventListenerSetter(Jt808SessionManager sessionManager, Jt808SessionManagerEventListener listener) {
-        this.sessionManager = sessionManager;
+        this.jt808SessionManager = sessionManager;
         this.listener = listener;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        sessionManager.setEventListener(listener);
-        log.info("Binding [{}] to [{}]", listener.getClass(), sessionManager.getClass());
+        jt808SessionManager.setEventListener(listener);
+        log.info("Binding [{}] to [{}]", listener.getClass(), jt808SessionManager.getClass());
     }
 }

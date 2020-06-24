@@ -37,8 +37,9 @@ public class CommonHandler {
 
     @Autowired
     private TerminalService terminalService;//= SpringUtils.getBean(TerminalService.class);
+
     @Autowired
-    private Jt808SessionManager sessionManager;
+    private Jt808SessionManager jt808SessionManager;
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, desc = "终端注册")
     public RegisterReplyMsgBody processRegisterMsg(RegisterMsg msg, RequestMsgHeader header) {
@@ -54,7 +55,7 @@ public class CommonHandler {
             throw new UnsupportedOperationException("terminal [" + header.getTerminalId() + "] was locked.");
         }
         log.info("{}", terminalService);
-        Optional<Jt808Session> sessionInfo = sessionManager.findByTerminalId(header.getTerminalId());
+        Optional<Jt808Session> sessionInfo = jt808SessionManager.findByTerminalId(header.getTerminalId());
         assert sessionInfo.isPresent();
         assert sessionInfo.get() == abstractSession;
         // 不建议直接使用Session，建议使用Jt808Session

@@ -32,7 +32,7 @@ import static io.github.hylexus.jt808.samples.customized.config.Jt808MsgType.*;
 public class SampleController {
 
     @Autowired
-    private Jt808SessionManager sessionManager;
+    private Jt808SessionManager jt808SessionManager;
     @Autowired
     private CommandSender commandSender;
 
@@ -71,7 +71,7 @@ public class SampleController {
     }
 
     private Jt808Session getSession(String terminalId) {
-        return sessionManager.findByTerminalId(terminalId)
+        return jt808SessionManager.findByTerminalId(terminalId)
                 .orElseThrow(() -> new JtSessionNotFoundException(terminalId));
     }
 

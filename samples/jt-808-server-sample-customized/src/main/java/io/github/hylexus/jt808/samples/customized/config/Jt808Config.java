@@ -6,8 +6,6 @@ import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionManagerEventListener;
-import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
-import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
@@ -32,10 +30,7 @@ public class Jt808Config extends Jt808ServerConfigure {
     private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
 
     // [[非必须配置]] -- 替换内置 Jt808SessionManager
-    @Bean
-    public Jt808SessionManager sessionManager() {
-        return new MySessionManager();
-    }
+
 
     // [[非必须配置]] -- 替换内置 Jt808SessionManagerEventListener
     @Bean

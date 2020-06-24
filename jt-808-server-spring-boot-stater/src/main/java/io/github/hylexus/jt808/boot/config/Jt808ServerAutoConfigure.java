@@ -42,10 +42,7 @@ import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
 import io.github.hylexus.jt808.support.exception.scan.Jt808ExceptionHandlerScanner;
 import io.github.hylexus.jt808.support.handler.scan.Jt808MsgHandlerScanner;
-import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
-import io.github.hylexus.jt808.support.netty.Jt808NettyChildHandlerInitializer;
-import io.github.hylexus.jt808.support.netty.Jt808NettyTcpServer;
-import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
+import io.github.hylexus.jt808.support.netty.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ansi.AnsiColor;
@@ -98,14 +95,20 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public Jt808SessionManagerEventListenerSetter listenerSetter(Jt808SessionManager sessionManager, Jt808SessionManagerEventListener listener) {
-        return new Jt808SessionManagerEventListenerSetter(sessionManager, listener);
+    public Jt808SessionManagerEventListenerSetter listenerSetter(Jt808SessionManager jt808SessionManager, Jt808SessionManagerEventListener listener) {
+        return new Jt808SessionManagerEventListenerSetter(jt808SessionManager, listener);
     }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerConfigure.class)
-    public Jt808ServerConfigure jt808NettyTcpServerConfigure() {
+    public Jt808ServerConfigure jt808NettyTcpServerConfigure(Jt808SessionManager sessionManager) {
         return new Jt808ServerConfigure.BuiltinNoOpsConfigure();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(HeatBeatHandler.class)
+    public HeatBeatHandler heatBeatHandler() {
+        return new HeatBeatHandler();
     }
 
     @Bean(BEAN_NAME_JT808_BYTES_ENCODER)
@@ -210,8 +213,8 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder, Jt808SessionManager sessionManager) {
-        return new DefaultCommandSender(responseMsgBodyConverter, encoder, sessionManager);
+    public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder, Jt808SessionManager jt808SessionManager) {
+        return new DefaultCommandSender(responseMsgBodyConverter, encoder, jt808SessionManager);
     }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
@@ -239,11 +242,11 @@ public class Jt808ServerAutoConfigure {
     public RequestMsgQueueListener msgQueueListener(
             MsgHandlerMapping msgHandlerMapping, RequestMsgQueue requestMsgQueue,
             DelegateExceptionHandler exceptionHandler, Encoder encoder, ResponseMsgBodyConverter responseMsgBodyConverter,
-            Jt808SessionManager sessionManager) {
+            Jt808SessionManager jt808SessionManager) {
 
         return new LocalEventBusListener(
                 msgHandlerMapping, (LocalEventBus) requestMsgQueue,
-                exceptionHandler, responseMsgBodyConverter, encoder, sessionManager
+                exceptionHandler, responseMsgBodyConverter, encoder, jt808SessionManager
         );
     }
 
@@ -257,8 +260,8 @@ public class Jt808ServerAutoConfigure {
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
     public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(
             RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder,
-            Jt808SessionManager sessionManager) {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder, sessionManager);
+            Jt808SessionManager jt808SessionManager) {
+        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder, jt808SessionManager);
     }
 
     @Bean

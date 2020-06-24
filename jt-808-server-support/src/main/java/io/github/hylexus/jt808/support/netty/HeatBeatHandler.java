@@ -6,6 +6,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
 
@@ -16,11 +18,14 @@ import static io.github.hylexus.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
 @Slf4j
 public class HeatBeatHandler extends ChannelInboundHandlerAdapter {
 
-    private final Jt808SessionManager sessionManager;
+    @Autowired
+    @Lazy
+    private Jt808SessionManager sessionManager;
 
-    public HeatBeatHandler(Jt808SessionManager sessionManager) {
-        this.sessionManager = sessionManager;
-    }
+
+    //    public HeatBeatHandler(Jt808SessionManager sessionManager) {
+    //        this.sessionManager = sessionManager;
+    //    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
