@@ -101,7 +101,7 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerConfigure.class)
-    public Jt808ServerConfigure jt808NettyTcpServerConfigure(Jt808SessionManager sessionManager) {
+    public Jt808ServerConfigure jt808NettyTcpServerConfigure() {
         return new Jt808ServerConfigure.BuiltinNoOpsConfigure();
     }
 

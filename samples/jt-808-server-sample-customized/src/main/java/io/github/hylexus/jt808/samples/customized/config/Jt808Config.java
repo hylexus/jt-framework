@@ -29,9 +29,6 @@ public class Jt808Config extends Jt808ServerConfigure {
     @Autowired
     private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
 
-    // [[非必须配置]] -- 替换内置 Jt808SessionManager
-
-
     // [[非必须配置]] -- 替换内置 Jt808SessionManagerEventListener
     @Bean
     public Jt808SessionManagerEventListener listener() {

@@ -54,6 +54,8 @@ public interface Jt808Session {
 
     Channel getChannel();
 
+    Jt808Session setChannel(Channel channel);
+
     String getTerminalId();
 
     long getLastCommunicateTimeStamp();

@@ -70,6 +70,24 @@ public class SessionManager implements Jt808SessionManager {
     }
 
     @Override
+    public Jt808Session persistenceIfNecessary(String terminalId, Channel channel, boolean updateLastCommunicateTime) {
+        final Optional<Jt808Session> session = findByTerminalId(terminalId, updateLastCommunicateTime);
+        if (session.isPresent()) {
+            Jt808Session oldSession = session.get();
+            if (oldSession.getChannel() != channel) {
+                log.warn("replace channel for terminal({}), new:{}, old:{}", terminalId, channel.remoteAddress(), oldSession.getChannel().remoteAddress());
+                // 单个终端一般来说不会有高并发的问题，这里就不加锁了
+                // 有必要的话，可以自己复写该方法或实现自己的SessionManager
+                oldSession.setChannel(channel);
+            }
+            return oldSession;
+        }
+        Jt808Session newSession = generateSession(channel, terminalId);
+        persistence(newSession);
+        return newSession;
+    }
+
+    @Override
     public void persistence(Jt808Session session) {
         lock.writeLock().lock();
         try {
