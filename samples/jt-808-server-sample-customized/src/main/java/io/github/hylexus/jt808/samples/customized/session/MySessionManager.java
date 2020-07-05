@@ -19,7 +19,15 @@ import java.util.stream.Stream;
  */
 public class MySessionManager implements Jt808SessionManager {
 
+    private static final MySessionManager instance = new MySessionManager();
     private final Jt808SessionManager sessionManager = SessionManager.getInstance();
+
+    private MySessionManager() {
+    }
+
+    public static Jt808SessionManager getInstance() {
+        return instance;
+    }
 
     @Override
     public Stream<Jt808Session> list() {

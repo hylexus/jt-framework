@@ -1,21 +1,19 @@
 package io.github.hylexus.jt808.samples.customized.config;
 
+import io.github.hylexus.jt808.boot.config.Jt808ServerConfigurationSupport;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionManagerEventListener;
+import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
+import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
-import io.github.hylexus.jt808.support.netty.Jt808ChannelHandlerAdapter;
-import io.github.hylexus.jt808.support.netty.Jt808ServerConfigure;
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.socket.SocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -24,14 +22,20 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-public class Jt808Config extends Jt808ServerConfigure {
+public class Jt808Configuration extends Jt808ServerConfigurationSupport {
 
     @Autowired
     private LocationInfoUploadMsgHandler locationInfoUploadMsgHandler;
 
+    // [[非必须配置]] -- 替换内置 Jt808SessionManager
+    @Override
+    public Jt808SessionManager supplyJt808SessionManager() {
+        return MySessionManager.getInstance();
+    }
+
     // [[非必须配置]] -- 替换内置 Jt808SessionManagerEventListener
-    @Bean
-    public Jt808SessionManagerEventListener listener() {
+    @Override
+    public Jt808SessionManagerEventListener supplyJt808SessionManagerEventListener() {
         return new MyJt808SessionManagerEventListener();
     }
 
@@ -41,17 +45,6 @@ public class Jt808Config extends Jt808ServerConfigure {
         return new Jt808MsgTypeParser();
     }
 
-    // [非必须配置] -- 配置TCP相关参数
-    @Override
-    public void configureServerBootstrap(ServerBootstrap serverBootstrap) {
-        super.configureServerBootstrap(serverBootstrap);
-    }
-
-    // [非必须配置] -- 配置Netty相关参数
-    @Override
-    public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
-        super.configureSocketChannel(ch, jt808ChannelHandlerAdapter);
-    }
 
     // [非必须配置] -- 手动注册消息转换器
     @Override

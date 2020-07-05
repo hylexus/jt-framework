@@ -61,7 +61,7 @@ function jt808GuideSidebarConfig() {
             collapsable: false,
             sidebarDepth: 1,
             children: [
-                ['/jt-808/guide/customization/','说明'],
+                ['/jt-808/guide/customization/', '说明'],
                 '/jt-808/guide/customization/session-config',
                 '/jt-808/guide/customization/netty-config',
                 '/jt-808/guide/customization/escape-config',

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt808.boot.annotation;
 
-import io.github.hylexus.jt808.boot.config.Jt808ServerAutoConfigure;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import io.github.hylexus.jt808.boot.config.DefaultJt808ServerAutoConfigure;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
@@ -13,6 +13,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 //@Import({Jt808ServerAutoConfigure.class})
-@ImportAutoConfiguration(Jt808ServerAutoConfigure.class)
+//@ImportAutoConfiguration(DefaultJt808ServerAutoConfigure.class)
+@Import(DefaultJt808ServerAutoConfigure.class)
 public @interface EnableJt808ServerAutoConfig {
 }

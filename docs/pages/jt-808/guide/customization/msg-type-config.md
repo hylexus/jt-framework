@@ -52,7 +52,7 @@ public enum Jt808MsgType implements MsgType {
 
 ```java
 @Configuration
-public class Jt808Config extends Jt808ServerConfigure { 
+public class Jt808Config extends Jt808ServerConfigurationSupport { 
     @Override
     public MsgTypeParser supplyMsgTypeParser() {
         return msgType -> {

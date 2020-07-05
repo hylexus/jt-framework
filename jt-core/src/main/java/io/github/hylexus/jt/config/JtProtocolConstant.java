@@ -21,6 +21,8 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
 
     String BEAN_NAME_JT808_SESSION_MANAGER = "jt808SessionManager";
+    String BEAN_NAME_JT808_SESSION_MANAGER_EVENT_LISTENER = "jt808SessionManagerEventListener";
+    String BEAN_NAME_JT808_COMMAND_SENDER = "jt808CommandSender";
 
     String NETTY_HANDLER_NAME_808_HEART_BEAT = "Jt808NettyHeartBeatHandler";
     String NETTY_HANDLER_NAME_808_IDLE_STATE = "Jt808NettyIdleStateHandler";

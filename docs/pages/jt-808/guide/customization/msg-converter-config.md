@@ -36,7 +36,7 @@ public class LocationUploadMsgBodyConverter2 implements RequestMsgBodyConverter<
 
 ```java
 @Configuration
-public class Jt808Config extends Jt808ServerConfigure { 
+public class Jt808Config extends Jt808ServerConfigurationSupport { 
     @Override
     public void configureMsgConverterMapping(MsgConverterMapping mapping) {
         super.configureMsgConverterMapping(mapping);

@@ -22,12 +22,22 @@ import java.util.concurrent.TimeUnit;
 import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 
 /**
- * @author hylexus
  * Created At 2019-08-27 16:53
+ * <p>
+ * 1.0.6-RELEASE 以及之前版本的自定义配置容易引发Spring的Bean之间循环依赖的问题。
+ * <p>
+ * 1.0.7-RELEASE 开始使用 Jt808ServerConfigurationSupport 代替。
+ *
+ * @author hylexus
+ * @see "Jt808ServerConfigurationSupport"
  */
 
 @Slf4j
+@Deprecated
 public class Jt808ServerConfigure {
+
+    @Autowired
+    private HeatBeatHandler heatBeatHandler;
 
     public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
     }
@@ -41,9 +51,6 @@ public class Jt808ServerConfigure {
                 .option(ChannelOption.SO_REUSEADDR, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
     }
-
-    @Autowired
-    private HeatBeatHandler heatBeatHandler;
 
     public void configureSocketChannel(SocketChannel ch, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
         ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(20, 20, 20, TimeUnit.MINUTES));

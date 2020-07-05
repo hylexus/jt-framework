@@ -8,7 +8,7 @@
 
 ```java
 @Configuration
-public class Jt808Config extends Jt808ServerConfigure {
+public class Jt808Config extends Jt808ServerConfigurationSupport {
     @Override
     public AuthCodeValidator supplyAuthCodeValidator() {
         return (session, requestMsgMetadata, authRequestMsgBody) -> {

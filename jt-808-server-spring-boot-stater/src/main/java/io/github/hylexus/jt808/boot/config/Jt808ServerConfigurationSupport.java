@@ -11,7 +11,6 @@ import io.github.hylexus.jt808.boot.props.msg.processor.MsgProcessorThreadPoolPr
 import io.github.hylexus.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Encoder;
-import io.github.hylexus.jt808.converter.BuiltinMsgTypeParser;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.converter.impl.*;
@@ -45,13 +44,10 @@ import io.github.hylexus.jt808.support.handler.scan.Jt808MsgHandlerScanner;
 import io.github.hylexus.jt808.support.netty.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ansi.AnsiColor;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -62,36 +58,52 @@ import java.util.concurrent.TimeUnit;
 import static io.github.hylexus.jt.config.JtProtocolConstant.*;
 
 /**
+ * Created At 2020-07-04 18:25
+ *
  * @author hylexus
- * Created At 2019-08-26 9:14 下午
  */
 @Slf4j
-//@Configuration
-@AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE - 100)
 @EnableConfigurationProperties({Jt808ServerProps.class})
-public class Jt808ServerAutoConfigure {
-
-    public static final AnsiColor SERVER_BANNER_COLOR = AnsiColor.BRIGHT_BLUE;
-    public static final AnsiColor BUILTIN_COMPONENT_COLOR = AnsiColor.BRIGHT_CYAN;
-    public static final AnsiColor CUSTOM_COMPONENT_COLOR = AnsiColor.GREEN;
-    public static final AnsiColor DEPRECATED_COMPONENT_COLOR = AnsiColor.RED;
-    public static final AnsiColor UNKNOWN_COMPONENT_TYPE_COLOR = AnsiColor.BRIGHT_RED;
+public abstract class Jt808ServerConfigurationSupport {
 
     @Autowired
     private Jt808ServerProps serverProps;
-    @Autowired
-    private Jt808ServerConfigure configure;
 
-    @Bean
-    @ConditionalOnMissingBean(Jt808SessionManagerEventListener.class)
-    public Jt808SessionManagerEventListener jt808SessionManagerEventListener() {
-        return new DefaultJt808SessionManagerEventListener();
+    public Jt808ServerConfigurationSupport() {
+        log.info("<<< Jt808ServerConfigSupport init ... [{}] >>>", this.getClass());
     }
 
-    @Bean
-    @ConditionalOnMissingBean(Jt808SessionManager.class)
-    public Jt808SessionManager jt808SessionManager() {
+    public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
+    }
+
+    public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
+    }
+
+    @Bean(name = BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
+    @ConditionalOnMissingBean(MsgTypeParser.class)
+    public abstract MsgTypeParser supplyMsgTypeParser();
+
+    @Bean(name = BEAN_NAME_JT808_AUTH_CODE_VALIDATOR)
+    public AuthCodeValidator supplyAuthCodeValidator() {
+        return new AuthCodeValidator.BuiltinAuthCodeValidatorForDebugging();
+    }
+
+    @Bean(BEAN_NAME_JT808_BYTES_ENCODER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_BYTES_ENCODER)
+    public BytesEncoder supplyBytesEncoder() {
+        return new BytesEncoder.DefaultBytesEncoder();
+    }
+
+    @Bean(BEAN_NAME_JT808_SESSION_MANAGER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_SESSION_MANAGER)
+    public Jt808SessionManager supplyJt808SessionManager() {
         return SessionManager.getInstance();
+    }
+
+    @Bean(BEAN_NAME_JT808_SESSION_MANAGER_EVENT_LISTENER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_SESSION_MANAGER_EVENT_LISTENER)
+    public Jt808SessionManagerEventListener supplyJt808SessionManagerEventListener() {
+        return new DefaultJt808SessionManagerEventListener();
     }
 
     @Bean
@@ -99,22 +111,10 @@ public class Jt808ServerAutoConfigure {
         return new Jt808SessionManagerEventListenerSetter(jt808SessionManager, listener);
     }
 
-    @Bean
-    @ConditionalOnMissingBean(Jt808ServerConfigure.class)
-    public Jt808ServerConfigure jt808NettyTcpServerConfigure() {
-        return new Jt808ServerConfigure.BuiltinNoOpsConfigure();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(HeatBeatHandler.class)
-    public HeatBeatHandler heatBeatHandler() {
-        return new HeatBeatHandler();
-    }
-
-    @Bean(BEAN_NAME_JT808_BYTES_ENCODER)
-    @ConditionalOnMissingBean(BytesEncoder.class)
-    public BytesEncoder bytesEncoder() {
-        return new BytesEncoder.DefaultBytesEncoder();
+    @Bean(NETTY_HANDLER_NAME_808_HEART_BEAT)
+    @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_HEART_BEAT)
+    public HeatBeatHandler heatBeatHandler(Jt808SessionManager jt808SessionManager) {
+        return new HeatBeatHandler(jt808SessionManager);
     }
 
     @Bean
@@ -125,7 +125,8 @@ public class Jt808ServerAutoConfigure {
     @Bean
     public RequestMsgBodyConverterMapping msgConverterMapping() {
         RequestMsgBodyConverterMapping mapping = new RequestMsgBodyConverterMapping();
-        configure.configureMsgConverterMapping(mapping);
+        this.configureMsgConverterMapping(mapping);
+
         // Default converters for debug
         if (serverProps.getEntityScan().isRegisterBuiltinRequestMsgConverters()) {
             mapping.registerConverter(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgBodyConverter())
@@ -137,12 +138,13 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public MsgHandlerMapping msgHandlerMapping(BytesEncoder bytesEncoder) {
+    public MsgHandlerMapping msgHandlerMapping(BytesEncoder bytesEncoder, AuthCodeValidator authCodeValidator) {
         MsgHandlerMapping mapping = new MsgHandlerMapping(bytesEncoder);
-        configure.configureMsgHandlerMapping(mapping);
+        this.configureMsgHandlerMapping(mapping);
+
         // Default handlers for debug
         if (serverProps.getHandlerScan().isRegisterBuiltinMsgHandlers()) {
-            mapping.registerHandler(new BuiltinAuthMsgHandler(configure.supplyAuthCodeValidator()))
+            mapping.registerHandler(new BuiltinAuthMsgHandler(authCodeValidator))
                     .registerHandler(new BuiltinHeartBeatMsgHandler())
                     .registerHandler(new BuiltInNoReplyMsgHandler())
             ;
@@ -152,11 +154,11 @@ public class Jt808ServerAutoConfigure {
 
     @Bean
     @ConditionalOnProperty(prefix = "jt808.entity-scan", name = "enabled", havingValue = "true")
-    public Jt808EntityScanner jt808EntityScanner(RequestMsgBodyConverterMapping msgConverterMapping) throws IOException {
+    public Jt808EntityScanner jt808EntityScanner(RequestMsgBodyConverterMapping msgConverterMapping, MsgTypeParser msgTypeParser) throws IOException {
         final Jt808EntityScanProps entityScan = serverProps.getEntityScan();
 
         final Jt808EntityScanner scanner = new Jt808EntityScanner(
-                entityScan.getBasePackages(), configure.supplyMsgTypeParser(), msgConverterMapping,
+                entityScan.getBasePackages(), msgTypeParser, msgConverterMapping,
                 new CustomReflectionBasedRequestMsgBodyConverter()
         );
 
@@ -167,24 +169,24 @@ public class Jt808ServerAutoConfigure {
     }
 
     @Bean
-    public DelegateExceptionHandler delegateExceptionHandler() {
-        return new DelegateExceptionHandler();
-    }
-
-    @Bean
     @ConditionalOnProperty(prefix = "jt808.handler-scan", name = "enabled", havingValue = "true")
     public Jt808MsgHandlerScanner jt808MsgHandlerScanner(
             MsgHandlerMapping msgHandlerMapping, HandlerMethodArgumentResolver argumentResolver,
             ResponseMsgBodyConverter responseMsgBodyConverter,
-            DelegateExceptionHandler delegateExceptionHandler) {
+            DelegateExceptionHandler delegateExceptionHandler, MsgTypeParser msgTypeParser) {
 
         final Jt808HandlerScanProps handlerScan = serverProps.getHandlerScan();
 
         return new Jt808MsgHandlerScanner(
-                handlerScan.getBasePackages(), configure.supplyMsgTypeParser(),
+                handlerScan.getBasePackages(), msgTypeParser,
                 msgHandlerMapping, new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
         );
 
+    }
+
+    @Bean
+    public DelegateExceptionHandler delegateExceptionHandler() {
+        return new DelegateExceptionHandler();
     }
 
     @Bean
@@ -212,7 +214,8 @@ public class Jt808ServerAutoConfigure {
         return new DelegateRespMsgBodyConverter(msgTypeParser);
     }
 
-    @Bean
+    @Bean(BEAN_NAME_JT808_COMMAND_SENDER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_COMMAND_SENDER)
     public CommandSender commandSender(ResponseMsgBodyConverter responseMsgBodyConverter, Encoder encoder, Jt808SessionManager jt808SessionManager) {
         return new DefaultCommandSender(responseMsgBodyConverter, encoder, jt808SessionManager);
     }
@@ -237,7 +240,7 @@ public class Jt808ServerAutoConfigure {
         return new LocalEventBus(executor);
     }
 
-    @Bean
+    @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     public RequestMsgQueueListener msgQueueListener(
             MsgHandlerMapping msgHandlerMapping, RequestMsgQueue requestMsgQueue,
@@ -250,7 +253,7 @@ public class Jt808ServerAutoConfigure {
         );
     }
 
-    @Bean
+    @Bean(BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
     public RequestMsgDispatcher requestMsgDispatcher(RequestMsgBodyConverterMapping msgConverterMapping, RequestMsgQueue requestMsgQueue) {
         return new LocalEventBusDispatcher(msgConverterMapping, requestMsgQueue);
@@ -260,17 +263,23 @@ public class Jt808ServerAutoConfigure {
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
     public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(
             RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder,
-            Jt808SessionManager jt808SessionManager) {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, configure.supplyMsgTypeParser(), bytesEncoder, jt808SessionManager);
+            Jt808SessionManager jt808SessionManager, MsgTypeParser msgTypeParser) {
+        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, msgTypeParser, bytesEncoder, jt808SessionManager);
     }
 
     @Bean
+    @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
+    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(heatBeatHandler, jt808ChannelHandlerAdapter);
+    }
+
+    @Bean(BEAN_NAME_JT808_NETTY_TCP_SERVER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_NETTY_TCP_SERVER)
-    public Jt808NettyTcpServer jt808NettyTcpServer(Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+    public Jt808NettyTcpServer jt808NettyTcpServer(Jt808ServerNettyConfigure configure) {
         Jt808NettyTcpServer server = new Jt808NettyTcpServer(
                 "808-tcp-server",
                 configure,
-                new Jt808NettyChildHandlerInitializer(configure, jt808ChannelHandlerAdapter)
+                new Jt808NettyChildHandlerInitializer(configure)
         );
 
         Jt808NettyTcpServerProps nettyProps = serverProps.getServer();
@@ -278,18 +287,6 @@ public class Jt808ServerAutoConfigure {
         server.setBossThreadCount(nettyProps.getBossThreadCount());
         server.setWorkThreadCount(nettyProps.getWorkerThreadCount());
         return server;
-    }
-
-    @Bean(name = BEAN_NAME_JT808_AUTH_CODE_VALIDATOR)
-    @ConditionalOnMissingBean(AuthCodeValidator.class)
-    public AuthCodeValidator supplyAuthCodeValidator() {
-        return new AuthCodeValidator.BuiltinAuthCodeValidatorForDebugging();
-    }
-
-    @Bean(name = BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER)
-    @ConditionalOnMissingBean(MsgTypeParser.class)
-    public MsgTypeParser supplyMsgTypeParser() {
-        return new BuiltinMsgTypeParser();
     }
 
     @Bean
@@ -301,5 +298,4 @@ public class Jt808ServerAutoConfigure {
 
         return new Jt808ServerComponentStatistics(msgTypeParser, msgConverterMapping, msgHandlerMapping);
     }
-
 }

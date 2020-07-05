@@ -23,7 +23,7 @@ public class AnnotationSamplesHandler {
     @Jt808RequestMsgHandlerMapping(msgType = 0x0102, desc = "鉴权")
     public CommonReplyMsgBody processAuthMsg(BuiltinAuthRequestMsgBody body, Jt808Session session) {
         log.info("Jt808Session 实现类 {}", session.getClass());
-        assert session instanceof MySession : "自定义Jt808SessionManager未生效";
+        assert session instanceof MySession;
         return CommonReplyMsgBody.success(session.getCurrentFlowId(), Jt808MsgType.CLIENT_AUTH);
     }
 }

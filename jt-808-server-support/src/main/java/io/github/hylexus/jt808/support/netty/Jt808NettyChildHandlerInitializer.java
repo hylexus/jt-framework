@@ -9,16 +9,14 @@ import io.netty.channel.socket.SocketChannel;
  **/
 public class Jt808NettyChildHandlerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
-    private final Jt808ServerConfigure serverConfigure;
+    private final Jt808ServerNettyConfigure configure;
 
-    public Jt808NettyChildHandlerInitializer(Jt808ServerConfigure serverConfigure, Jt808ChannelHandlerAdapter msgDispatcher) {
-        this.serverConfigure = serverConfigure;
-        this.jt808ChannelHandlerAdapter = msgDispatcher;
+    public Jt808NettyChildHandlerInitializer(Jt808ServerNettyConfigure configure) {
+        this.configure = configure;
     }
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        serverConfigure.configureSocketChannel(ch, jt808ChannelHandlerAdapter);
+        configure.configureSocketChannel(ch);
     }
 }

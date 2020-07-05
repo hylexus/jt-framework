@@ -122,8 +122,8 @@ public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUpl
 ### 注册自定义MsgHandler
 
 ```java
-@Override
-public class Jt808Config extends Jt808ServerConfigure { 
+public class Jt808Config extends Jt808ServerConfigurationSupport { 
+    @Override
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
         super.configureMsgHandlerMapping(mapping);
         // 如果你在这里注册了自定义的鉴权消息处理器，那么AuthCodeValidator也无需提供了

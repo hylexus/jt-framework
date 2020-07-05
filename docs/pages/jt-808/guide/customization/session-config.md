@@ -18,10 +18,11 @@ public class MySessionManager implements Jt808SessionManager {
 
 ```java
 @Configuration
-public class SomeConfigClass{
-    @Bean
-    public Jt808SessionManager sessionManager() {
-        return new MySessionManager();
+public class CustomizedDemoJt808Config extends Jt808ServerConfigurationSupport {
+    
+    @Override
+    public Jt808SessionManager supplyJt808SessionManager() {
+        return MySessionManager.getInstance();
     }
 }
 ```
@@ -45,10 +46,10 @@ public class MyJt808SessionManagerEventListener implements Jt808SessionManagerEv
 
 ```java
 @Configuration
-public class SomeConfigClass{
-    // [[非必须配置]] -- 替换内置 Jt808SessionManagerEventListener
-    @Bean
-    public Jt808SessionManagerEventListener listener() {
+public class CustomizedDemoJt808Config extends Jt808ServerConfigurationSupport {
+    
+    @Override
+    public Jt808SessionManagerEventListener supplyJt808SessionManagerEventListener() {
         return new MyJt808SessionManagerEventListener();
     }
 }

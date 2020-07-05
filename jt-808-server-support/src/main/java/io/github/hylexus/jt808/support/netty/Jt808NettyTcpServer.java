@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public class Jt808NettyTcpServer extends AbstractRunner {
 
-    private final Jt808ServerConfigure serverConfigure;
+    private final Jt808ServerNettyConfigure serverConfigure;
     private EventLoopGroup bossGroup = null;
     private EventLoopGroup workerGroup = null;
     private Integer port;
@@ -25,7 +25,7 @@ public class Jt808NettyTcpServer extends AbstractRunner {
     private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
     public Jt808NettyTcpServer(
-            String name, Jt808ServerConfigure serverConfigure,
+            String name, Jt808ServerNettyConfigure serverConfigure,
             Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
         super(name);
         this.serverConfigure = serverConfigure;
