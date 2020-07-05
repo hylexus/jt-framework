@@ -1,3 +1,22 @@
+# 1.0.7-SNAPSHOT
+
+### ⭐ New Features
+
+- 修改自定义配置的方式
+    - 旧版的`Jt808ServerConfigure` 容易引发Bean的循环依赖
+    - 从1.0.7-RELEASE开始，使用 `Jt808ServerConfigurationSupport` 来自定义配置
+- Maven依赖的 `scope` 从 `runtime` 改为 `compile`，涉及到的依赖如下：
+    - Netty
+    - oaks-lib
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/18
+
+### 🔨 Others
+
+- Jt808Session#setChannel
+
 # 1.0.5-SNAPSHOT
 
 ### ⭐ New Features

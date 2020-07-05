@@ -12,23 +12,21 @@ Jt-808协议服务端。
 
 ### ⭐ New Features
 
-- `MsgHandler` 可选择性地交给Spring管理，以便于在 `MsgHandler` 中调用其他的由Spring管理的Bean
-- `Jt808SessionManager` 重构，支持自定义
+- 修改自定义配置的方式
+    - 旧版的`Jt808ServerConfigure` 容易引发Bean的循环依赖
+    - 从1.0.7-RELEASE开始，使用 `Jt808ServerConfigurationSupport` 来自定义配置
+- Maven依赖的 `scope` 从 `runtime` 改为 `compile`，涉及到的依赖如下：
+    - Netty
+    - oaks-lib
 
 ### 🐞 Bug Fixes
 
-- https://github.com/hylexus/jt-framework/issues/16
-    - 默认读写空闲时间改为20分钟
-    - 修复示例代码中消息消息的返回值类型 
-- https://github.com/hylexus/jt-framework/issues/17
-    - 边界情况下默认转义逻辑bug
-- SessionManager#removeBySessionIdAndClose 的bug
+- https://github.com/hylexus/jt-framework/issues/18
 
 ### 🔨 Others
 
-- 优化 `Session#currentFlowId`
-- 新增 `SessionManager#findBySessionId`
-- `CommandSender` 文档完善
+- Jt808Session#setChannel
+
 
 ## QuickStart
 
@@ -45,7 +43,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.6-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.7-RELEASE"
     // ...
 }
 ```
@@ -56,7 +54,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.6-RELEASE</version>
+    <version>1.0.7-RELEASE</version>
 </dependency>
 ```
 
@@ -95,7 +93,7 @@ public class Jt808ServerSampleBareApplication {
     - 基于注解的响应消息映射
     - 基于注解的消息下发
 - [支持消息下发](https://hylexus.github.io/jt-framework/jt-808/guide/annotation-based-dev/msg-push.html)
-- [定制化](https://hylexus.github.io/jt-framework/jt-808/guide/basic/customized.html)
+- [定制化](https://hylexus.github.io/jt-framework/jt-808/guide/customization/)
     - BytesEncoder：自定义转义逻辑
     - RequestMsgDispatcher：自定义 `MsgDispatcher`
     - RequestMsgQueue：自定义 `MsgQueue`，内置基于 `Google-EventBus` 的 MsgQueue
