@@ -15,7 +15,7 @@ dependencies {
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
 
-    implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
 
     implementation(project(":jt-spring"))
     implementation(project(":jt-core"))

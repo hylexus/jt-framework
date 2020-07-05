@@ -2,7 +2,7 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-logging"
 
-    implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
     implementation group: 'com.github.sarveswaran-m', name: 'util.concurrent.blockingMap', version: "${jar_version_blocking_map}"
 
     compile "com.google.guava:guava:${jar_version_guava}"

@@ -5,11 +5,11 @@ dependencies {
 
     compile group: 'org.springframework', name: 'spring-context'
     implementation "org.springframework.boot:spring-boot-starter-logging"
-    implementation "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
     implementation 'org.apache.commons:commons-lang3'
     implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
 
-    implementation "io.netty:netty-all:${jar_version_netty}"
+    compile "io.netty:netty-all:${jar_version_netty}"
 
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'

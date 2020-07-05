@@ -52,7 +52,7 @@ publishing {
             pom {
                 name = project.name
                 packaging = 'jar'
-                description = "${project.description}"
+                description = project.description ?: project.name
                 url = "${projectScmUrl}"
 
                 licenses {

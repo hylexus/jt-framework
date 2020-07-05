@@ -8,7 +8,7 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
     implementation "com.google.guava:guava:${jar_version_guava}"
-    implementation "io.netty:netty-all:${jar_version_netty}"
+    compile "io.netty:netty-all:${jar_version_netty}"
 
     compile group: 'javax.validation', name: 'validation-api'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: "${jar_version_hibernate_validator}"
