@@ -4,6 +4,8 @@ import io.github.hylexus.jt808.boot.config.Jt808ServerConfigurationSupport;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
+import io.github.hylexus.jt808.ext.TerminalValidator;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.samples.customized.converter.LocationUploadMsgBodyConverter2;
 import io.github.hylexus.jt808.samples.customized.handler.LocationInfoUploadMsgHandler;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionManagerEventListener;
@@ -64,6 +66,22 @@ public class Jt808Configuration extends Jt808ServerConfigurationSupport {
     @Override
     public BytesEncoder supplyBytesEncoder() {
         return new BytesEncoder.DefaultBytesEncoder();
+    }
+
+    // [非必须配置] -- 可替换内置 TerminalValidator
+    @Override
+    public TerminalValidator terminalValidator() {
+        return new TerminalValidator() {
+            @Override
+            public boolean validateTerminal(RequestMsgMetadata metadata) {
+                return true;
+            }
+
+            @Override
+            public boolean needValidate(RequestMsgMetadata metadata, Integer msgId) {
+                return true;
+            }
+        };
     }
 
     // [非必须配置] -- 配置鉴权鉴权消息处理器

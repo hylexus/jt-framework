@@ -13,6 +13,7 @@ import io.github.hylexus.jt808.converter.impl.CustomReflectionBasedRequestMsgBod
 import io.github.hylexus.jt808.dispatcher.CommandSender;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
+import io.github.hylexus.jt808.ext.TerminalValidator;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
@@ -73,6 +74,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     Jt808SessionManager.class,
                     BytesEncoder.class,
                     MsgTypeParser.class,
+                    TerminalValidator.class,
                     AuthCodeValidator.class,
                     RequestMsgDispatcher.class,
                     RequestMsgQueue.class,
