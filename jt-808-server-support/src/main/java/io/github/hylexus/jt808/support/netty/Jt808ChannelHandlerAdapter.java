@@ -2,15 +2,12 @@ package io.github.hylexus.jt808.support.netty;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt808.codec.BytesEncoder;
-import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RequestMsgWrapper;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -31,39 +28,26 @@ import static io.netty.util.ReferenceCountUtil.release;
 @ChannelHandler.Sharable
 public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
 
-    private final Decoder decoder;
     private final RequestMsgDispatcher msgDispatcher;
     private final MsgTypeParser msgTypeParser;
-    private final BytesEncoder bytesEncoder;
     private final Jt808SessionManager sessionManager;
 
     public Jt808ChannelHandlerAdapter(
             RequestMsgDispatcher msgDispatcher, MsgTypeParser msgTypeParser,
-            BytesEncoder bytesEncoder, Jt808SessionManager sessionManager) {
-
+            Jt808SessionManager sessionManager) {
         this.sessionManager = sessionManager;
-        this.decoder = new Decoder();
         this.msgDispatcher = msgDispatcher;
         this.msgTypeParser = msgTypeParser;
-        this.bytesEncoder = bytesEncoder;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         try {
-            final ByteBuf buf = (ByteBuf) msg;
-            if (buf.readableBytes() <= 0) {
+            if (!(msg instanceof RequestMsgMetadata)) {
                 return;
             }
 
-            final byte[] unescaped = new byte[buf.readableBytes()];
-            buf.readBytes(unescaped);
-            log.debug("\nreceive msg:");
-            log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
-            final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
-            log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
-
-            final RequestMsgMetadata metadata = decoder.parseMsgMetadata(escaped);
+            final RequestMsgMetadata metadata = (RequestMsgMetadata) msg;
             final RequestMsgHeader header = metadata.getHeader();
             final int msgId = header.getMsgId();
             final Optional<MsgType> msgType = this.msgTypeParser.parseMsgType(msgId);

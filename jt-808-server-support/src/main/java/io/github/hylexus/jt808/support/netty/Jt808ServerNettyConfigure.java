@@ -26,10 +26,16 @@ public interface Jt808ServerNettyConfigure {
     @BuiltinComponent
     class DefaultJt808ServerNettyConfigure implements Jt808ServerNettyConfigure {
         private final HeatBeatHandler heatBeatHandler;
+        private final Jt808DecodeHandler decodeHandler;
+        private final TerminalValidatorHandler terminalValidatorHandler;
         private final Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
 
-        public DefaultJt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+        public DefaultJt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808DecodeHandler decodeHandler,
+                                                TerminalValidatorHandler terminalValidatorHandler,
+                                                Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
             this.heatBeatHandler = heatBeatHandler;
+            this.decodeHandler = decodeHandler;
+            this.terminalValidatorHandler = terminalValidatorHandler;
             this.jt808ChannelHandlerAdapter = jt808ChannelHandlerAdapter;
         }
 
@@ -53,6 +59,8 @@ public interface Jt808ServerNettyConfigure {
                             Unpooled.copiedBuffer(new byte[]{PACKAGE_DELIMITER, PACKAGE_DELIMITER})
                     )
             );
+            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_DECODE, decodeHandler);
+            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_TERMINAL_VALIDATOR, terminalValidatorHandler);
             ch.pipeline().addLast(NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER, jt808ChannelHandlerAdapter);
         }
     }
