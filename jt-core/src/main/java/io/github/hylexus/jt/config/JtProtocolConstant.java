@@ -16,6 +16,7 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_REQ_MSG_DISPATCHER = "jt808RequestMsgDispatcher";
     String BEAN_NAME_JT808_REQ_MSG_TYPE_PARSER = "jt808RequestMsgTypeParser";
     String BEAN_NAME_JT808_AUTH_CODE_VALIDATOR = "jt808AuthCodeValidator";
+    String BEAN_NAME_JT808_TERMINAL_VALIDATOR = "jt808TerminalValidator";
     String BEAN_NAME_JT808_BYTES_ENCODER = "jt808BytesEncoder";
 
     String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
@@ -25,6 +26,8 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_COMMAND_SENDER = "jt808CommandSender";
 
     String NETTY_HANDLER_NAME_808_HEART_BEAT = "Jt808NettyHeartBeatHandler";
+    String NETTY_HANDLER_NAME_808_DECODE = "Jt808NettyDecodeHandler";
+    String NETTY_HANDLER_NAME_808_TERMINAL_VALIDATOR = "Jt808NettyTerminalValidatorHandler";
     String NETTY_HANDLER_NAME_808_IDLE_STATE = "Jt808NettyIdleStateHandler";
     String NETTY_HANDLER_NAME_808_FRAME = "Jt808NettyHandler";
     String NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER = "Jt808NettyHandlerAdapter";

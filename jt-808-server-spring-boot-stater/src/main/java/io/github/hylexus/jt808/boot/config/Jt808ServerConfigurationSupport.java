@@ -20,6 +20,7 @@ import io.github.hylexus.jt808.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt808.dispatcher.impl.DefaultCommandSender;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
+import io.github.hylexus.jt808.ext.TerminalValidator;
 import io.github.hylexus.jt808.handler.impl.BuiltInNoReplyMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinAuthMsgHandler;
 import io.github.hylexus.jt808.handler.impl.BuiltinHeartBeatMsgHandler;
@@ -109,6 +110,24 @@ public abstract class Jt808ServerConfigurationSupport {
     @Bean
     public Jt808SessionManagerEventListenerSetter listenerSetter(Jt808SessionManager jt808SessionManager, Jt808SessionManagerEventListener listener) {
         return new Jt808SessionManagerEventListenerSetter(jt808SessionManager, listener);
+    }
+
+    @Bean(NETTY_HANDLER_NAME_808_DECODE)
+    @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_DECODE)
+    public Jt808DecodeHandler decodeHandler(BytesEncoder bytesEncoder) {
+        return new Jt808DecodeHandler(bytesEncoder);
+    }
+
+    @Bean(BEAN_NAME_JT808_TERMINAL_VALIDATOR)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_TERMINAL_VALIDATOR)
+    public TerminalValidator terminalValidator() {
+        return new TerminalValidator.BuiltinTerminalValidatorForDebugging();
+    }
+
+    @Bean(NETTY_HANDLER_NAME_808_TERMINAL_VALIDATOR)
+    @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_TERMINAL_VALIDATOR)
+    public TerminalValidatorHandler terminalValidatorHandler(TerminalValidator terminalValidator) {
+        return new TerminalValidatorHandler(terminalValidator);
     }
 
     @Bean(NETTY_HANDLER_NAME_808_HEART_BEAT)
@@ -262,15 +281,18 @@ public abstract class Jt808ServerConfigurationSupport {
     @Bean
     @ConditionalOnMissingBean(Jt808ChannelHandlerAdapter.class)
     public Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter(
-            RequestMsgDispatcher requestMsgDispatcher, BytesEncoder bytesEncoder,
-            Jt808SessionManager jt808SessionManager, MsgTypeParser msgTypeParser) {
-        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, msgTypeParser, bytesEncoder, jt808SessionManager);
+            RequestMsgDispatcher requestMsgDispatcher, Jt808SessionManager jt808SessionManager,
+            MsgTypeParser msgTypeParser) {
+        return new Jt808ChannelHandlerAdapter(requestMsgDispatcher, msgTypeParser, jt808SessionManager);
     }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
-    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
-        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(heatBeatHandler, jt808ChannelHandlerAdapter);
+    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808DecodeHandler decodeHandler,
+                                                               TerminalValidatorHandler terminalValidatorHandler,
+                                                               Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(heatBeatHandler, decodeHandler,
+                terminalValidatorHandler, jt808ChannelHandlerAdapter);
     }
 
     @Bean(BEAN_NAME_JT808_NETTY_TCP_SERVER)
