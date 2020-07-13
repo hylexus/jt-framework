@@ -21,14 +21,14 @@ public class Jt808DecodeHandler extends ChannelInboundHandlerAdapter {
     private final Decoder decoder;
     private final BytesEncoder bytesEncoder;
 
-    public Jt808DecodeHandler(BytesEncoder bytesEncoder){
+    public Jt808DecodeHandler(BytesEncoder bytesEncoder) {
         this.bytesEncoder = bytesEncoder;
         this.decoder = new Decoder();
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof ByteBuf){
+        if (msg instanceof ByteBuf) {
             final ByteBuf buf = (ByteBuf) msg;
             if (buf.readableBytes() <= 0) {
                 return;
