@@ -41,7 +41,7 @@ public class FieldDecoder {
     private final Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
     private final AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
-    private final ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder();
+    private final ExtraFieldDecoder extraFieldDecoder = new ExtraFieldDecoder(this);
     private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
     private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
 

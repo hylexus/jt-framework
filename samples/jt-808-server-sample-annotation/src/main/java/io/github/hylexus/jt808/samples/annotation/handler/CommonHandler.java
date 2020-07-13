@@ -10,7 +10,11 @@ import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinEmptyRequestMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinTerminalCommonReplyMsgBody;
 import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
-import io.github.hylexus.jt808.samples.annotation.entity.req.*;
+import io.github.hylexus.jt808.samples.annotation.entity.req.AuthRequestMsgBody;
+import io.github.hylexus.jt808.samples.annotation.entity.req.Msg0704;
+import io.github.hylexus.jt808.samples.annotation.entity.req.PassthroughPack;
+import io.github.hylexus.jt808.samples.annotation.entity.req.RegisterMsg;
+import io.github.hylexus.jt808.samples.annotation.entity.req.demo01.LocationUploadRequestMsgBodyDemo01;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.RegisterReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.entity.resp.ServerCommonReplyMsgBody;
 import io.github.hylexus.jt808.samples.annotation.serivce.TerminalService;
@@ -68,7 +72,7 @@ public class CommonHandler {
     @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
     public ServerCommonReplyMsgBody processLocationMsg(
             Jt808Session session, RequestMsgMetadata metadata,
-            RequestMsgHeader header, LocationUploadRequestMsgBody msgBody) {
+            RequestMsgHeader header, LocationUploadRequestMsgBodyDemo01 msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
         assert session.getTerminalId().equals(header.getTerminalId());

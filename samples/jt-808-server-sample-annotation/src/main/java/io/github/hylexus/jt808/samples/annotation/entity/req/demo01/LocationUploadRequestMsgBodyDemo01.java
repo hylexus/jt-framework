@@ -1,5 +1,6 @@
-package io.github.hylexus.jt808.samples.annotation.entity.req;
+package io.github.hylexus.jt808.samples.annotation.entity.req.demo01;
 
+import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraMsgBody;
@@ -23,8 +24,8 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
 @Slf4j
 @Data
 @Accessors(chain = true)
-//@Jt808ReqMsgBody(msgType = 0x0200)
-public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgMetadataAware {
+@Jt808ReqMsgBody(msgType = 0x0200)
+public class LocationUploadRequestMsgBodyDemo01 implements RequestMsgBody, RequestMsgMetadataAware {
 
     @ToString.Exclude
     private RequestMsgMetadata requestMsgMetadata;
@@ -72,8 +73,10 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
     // 方向
     @BasicField(startIndex = 20, dataType = WORD)
     private Integer direction;
+
     @BasicField(startIndex = 22, dataType = BCD, length = 6)
     private String time;
+
     @ExtraField(
             // 消息体中第28字节开始
             startIndex = 28,
@@ -81,9 +84,6 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
             byteCountMethod = "getExtraInfoLength"
     )
     private ExtraInfo extraInfo;
-    // 也可将将附加项解析为一个List
-    //@BasicField(startIndex = 28, byteCountMethod = "getExtraInfoLength", dataType = LIST)
-    //private List<ExtraInfoItem> extraInfoItemList;
 
     @Override
     public void setRequestMsgMetadata(RequestMsgMetadata metadata) {
@@ -108,12 +108,49 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
             byteCountOfContentLength = 1 // 附加项长度字段用1个字节表示
     )
     public static class ExtraInfo {
-        @ExtraField.NestedFieldMapping(msgId = 0x30, dataType = BYTE)
-        private int field0x30;
+        @ExtraField.NestedFieldMapping(msgId = 0x64, dataType = BYTES)
+        private byte[] field0x64;
 
-        @ExtraField.NestedFieldMapping(msgId = 0x31, dataType = BYTE)
-        private int field0x31;
+        @ExtraField.NestedFieldMapping(msgId = 0x65, isNestedExtraField = true)
+        private Extra0x65 field0x65;
 
+        //@ExtraField.NestedFieldMapping(msgId = 0x65, dataType = BYTES)
+        //private byte[] field0x65;
+
+        @ExtraField.NestedFieldMapping(msgId = 0x66, dataType = BYTES)
+        private byte[] field0x66;
+
+        @ExtraField.NestedFieldMapping(msgId = 0x67, dataType = BYTES)
+        private byte[] field0x67;
+
+    }
+
+    @Data
+    @ExtraMsgBody
+    public static class Extra0x65 {
+
+        // 1.0.6以及之前都不支持这种写法 --> ExtraMsgBody里的BasicField不会被解析
+        // 1.0.7 支持这种写法但是没发布  还在改………………
+        @BasicField(startIndex = 0, dataType = DWORD)
+        private Integer warningId;
+
+        @BasicField(startIndex = 4, dataType = BYTE)
+        private Integer status;
+
+        @BasicField(startIndex = 5, dataType = BYTE)
+        private Integer field5;
+
+        @BasicField(startIndex = 6, dataType = BYTE)
+        private Integer field6;
+
+        @BasicField(startIndex = 15, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
+        private Double lat;
+
+        @BasicField(startIndex = 19, dataType = DWORD, customerDataTypeConverterClass = LngLatReqMsgFieldConverter.class)
+        private Double lng;
+
+        @BasicField(startIndex = 23, dataType = BCD, length = 6)
+        private String time;
     }
 
     @Data

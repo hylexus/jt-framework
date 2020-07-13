@@ -14,6 +14,7 @@ import io.github.hylexus.oaks.utils.Bytes;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,6 +31,11 @@ public class ExtraFieldDecoder {
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
     private final SplittableFieldDecoder splittableFieldDecoder = new SplittableFieldDecoder();
     private final SlicedFromDecoder slicedFromDecoder = new SlicedFromDecoder();
+    private final FieldDecoder decoder;
+
+    public ExtraFieldDecoder(FieldDecoder decoder) {
+        this.decoder = decoder;
+    }
 
     public void decodeExtraField(
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)
@@ -81,6 +87,11 @@ public class ExtraFieldDecoder {
                 info.getFieldMetadata().setFieldValue(instance, newInstance);
 
                 decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
+                try {
+                    decoder.decode(newInstance, bodyBytes);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             } else {
                 // TODO auto-inject
                 ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(info.getDataType(), info.getFieldMetadata().getFieldType());
