@@ -30,19 +30,23 @@ public class Jt808DecodeHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof ByteBuf){
             final ByteBuf buf = (ByteBuf) msg;
-            if (buf.readableBytes() <= 0) {
-                return;
+            try {
+                if (buf.readableBytes() <= 0) {
+                    return;
+                }
+
+                final byte[] unescaped = new byte[buf.readableBytes()];
+                buf.readBytes(unescaped);
+                log.debug("\nreceive msg:");
+                log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
+                final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
+                log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
+
+                final RequestMsgMetadata metadata = decoder.parseMsgMetadata(escaped);
+                ctx.fireChannelRead(metadata);
+            } finally {
+                buf.release();
             }
-
-            final byte[] unescaped = new byte[buf.readableBytes()];
-            buf.readBytes(unescaped);
-            log.debug("\nreceive msg:");
-            log.debug(">>>>>>>>>>>>>>> : {}", HexStringUtils.bytes2HexString(unescaped));
-            final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
-            log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
-
-            final RequestMsgMetadata metadata = decoder.parseMsgMetadata(escaped);
-            ctx.fireChannelRead(metadata);
         } else {
             ctx.fireChannelRead(msg);
         }
