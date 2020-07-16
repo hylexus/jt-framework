@@ -30,6 +30,16 @@ public interface BytesEncoder {
      */
     byte[] doEscapeForSend(byte[] bytes, int start, int end) throws MsgEscapeException;
 
+    /**
+     * @param bs    要计算校验码的字节数组
+     * @param start 开始位置
+     * @param end   结束位置
+     * @return 校验码
+     */
+    default byte calculateCheckSum(byte[] bs, int start, int end) {
+        return ProtocolUtils.calculateCheckSum4Jt808(bs, start, end);
+    }
+
     @BuiltinComponent
     class DefaultBytesEncoder implements BytesEncoder {
 

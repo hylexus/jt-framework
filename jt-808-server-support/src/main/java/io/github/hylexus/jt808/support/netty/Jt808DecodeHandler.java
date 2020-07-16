@@ -21,9 +21,9 @@ public class Jt808DecodeHandler extends ChannelInboundHandlerAdapter {
     private final Decoder decoder;
     private final BytesEncoder bytesEncoder;
 
-    public Jt808DecodeHandler(BytesEncoder bytesEncoder) {
+    public Jt808DecodeHandler(BytesEncoder bytesEncoder, Decoder decoder) {
         this.bytesEncoder = bytesEncoder;
-        this.decoder = new Decoder();
+        this.decoder = decoder;
     }
 
     @Override

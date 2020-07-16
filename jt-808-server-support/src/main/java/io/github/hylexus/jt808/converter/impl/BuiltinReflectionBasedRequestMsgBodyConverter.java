@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.converter.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt808.codec.Decoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @BuiltinComponent
 public class BuiltinReflectionBasedRequestMsgBodyConverter extends CustomReflectionBasedRequestMsgBodyConverter {
+
+    public BuiltinReflectionBasedRequestMsgBodyConverter(Decoder decoder) {
+        super(decoder);
+    }
 
     @Override
     public int getOrder() {

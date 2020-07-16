@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class DecoderTest {
 
-    private final Decoder decoder = new Decoder();
+    private final Decoder decoder = new Decoder(new BytesEncoder.DefaultBytesEncoder());
 
     @Test
     public void bugFix7() {

@@ -3,7 +3,6 @@ package io.github.hylexus.jt808.codec;
 import com.google.common.collect.Lists;
 import io.github.hylexus.jt.codec.encode.CommonFieldEncoder;
 import io.github.hylexus.jt.config.JtProtocolConstant;
-import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
@@ -90,7 +89,7 @@ public class Encoder {
         int bodyProps = this.generateMsgBodyProps(body.length, 0b000, false, 0);
         byte[] header = this.generateMsgHeader4Resp(bodySupport.replyMsgType().getMsgId(), bodyProps, terminalPhone, flowId);
         byte[] headerAndBody = Bytes.concatAll(Lists.newArrayList(header, body));
-        byte checkSum = ProtocolUtils.calculateCheckSum4Jt808(headerAndBody, 0, headerAndBody.length);
+        byte checkSum = this.bytesEncoder.calculateCheckSum(headerAndBody, 0, headerAndBody.length);
         return doEncode(headerAndBody, checkSum, true);
     }
 }

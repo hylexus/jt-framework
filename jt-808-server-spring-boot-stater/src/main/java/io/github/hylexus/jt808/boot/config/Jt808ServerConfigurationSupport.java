@@ -10,6 +10,7 @@ import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
 import io.github.hylexus.jt808.boot.props.msg.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
+import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
@@ -114,8 +115,8 @@ public abstract class Jt808ServerConfigurationSupport {
 
     @Bean(NETTY_HANDLER_NAME_808_DECODE)
     @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_DECODE)
-    public Jt808DecodeHandler decodeHandler(BytesEncoder bytesEncoder) {
-        return new Jt808DecodeHandler(bytesEncoder);
+    public Jt808DecodeHandler decodeHandler(BytesEncoder bytesEncoder, Decoder decoder) {
+        return new Jt808DecodeHandler(bytesEncoder, decoder);
     }
 
     @Bean(BEAN_NAME_JT808_TERMINAL_VALIDATOR)
@@ -134,6 +135,11 @@ public abstract class Jt808ServerConfigurationSupport {
     @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_HEART_BEAT)
     public HeatBeatHandler heatBeatHandler(Jt808SessionManager jt808SessionManager) {
         return new HeatBeatHandler(jt808SessionManager);
+    }
+
+    @Bean
+    public Decoder decoder(BytesEncoder bytesEncoder) {
+        return new Decoder(bytesEncoder);
     }
 
     @Bean
@@ -173,16 +179,18 @@ public abstract class Jt808ServerConfigurationSupport {
 
     @Bean
     @ConditionalOnProperty(prefix = "jt808.entity-scan", name = "enabled", havingValue = "true")
-    public Jt808EntityScanner jt808EntityScanner(RequestMsgBodyConverterMapping msgConverterMapping, MsgTypeParser msgTypeParser) throws IOException {
+    public Jt808EntityScanner jt808EntityScanner(
+            RequestMsgBodyConverterMapping msgConverterMapping, MsgTypeParser msgTypeParser,
+            Decoder decoder) throws IOException {
         final Jt808EntityScanProps entityScan = serverProps.getEntityScan();
 
         final Jt808EntityScanner scanner = new Jt808EntityScanner(
                 entityScan.getBasePackages(), msgTypeParser, msgConverterMapping,
-                new CustomReflectionBasedRequestMsgBodyConverter()
+                new CustomReflectionBasedRequestMsgBodyConverter(decoder)
         );
 
         if (entityScan.isEnableBuiltinEntity() && entityScan.isRegisterBuiltinRequestMsgConverters()) {
-            scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinReflectionBasedRequestMsgBodyConverter());
+            scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinReflectionBasedRequestMsgBodyConverter(decoder));
         }
         return scanner;
     }

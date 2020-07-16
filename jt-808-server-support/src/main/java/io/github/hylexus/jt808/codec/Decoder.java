@@ -1,7 +1,6 @@
 package io.github.hylexus.jt808.codec;
 
 import io.github.hylexus.jt.codec.decode.FieldDecoder;
-import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgHeaderAware;
@@ -22,6 +21,11 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 public class Decoder {
 
     private final FieldDecoder fieldDecoder = new FieldDecoder();
+    private final BytesEncoder bytesEncoder;
+
+    public Decoder(BytesEncoder bytesEncoder) {
+        this.bytesEncoder = bytesEncoder;
+    }
 
     public RequestMsgMetadata parseMsgMetadata(byte[] bytes) {
         final RequestMsgMetadata ret = new RequestMsgMetadata();
@@ -47,7 +51,7 @@ public class Decoder {
     }
 
     private void validateCheckSum(byte[] bytes, RequestMsgHeader msgHeader, byte checkSumInPkg) {
-        final int calculatedCheckSum = ProtocolUtils.calculateCheckSum4Jt808(bytes, 0, bytes.length - 1);
+        final int calculatedCheckSum = this.bytesEncoder.calculateCheckSum(bytes, 0, bytes.length - 1);
         if (checkSumInPkg != calculatedCheckSum) {
             log.warn("检验码不一致,msgId:{},expected : {},calculated : {}", msgHeader.getMsgId(), checkSumInPkg, calculatedCheckSum);
         }
