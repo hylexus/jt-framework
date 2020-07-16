@@ -10,7 +10,7 @@ dependencies {
     provided "io.netty:netty-all:${jar_version_netty}"
 
     testCompile group: 'junit', name: 'junit'
-
+    compile group: 'javax.annotation', name: 'javax.annotation-api', version: "${jar_javax_annotation_api}"
 }
 
 test {
