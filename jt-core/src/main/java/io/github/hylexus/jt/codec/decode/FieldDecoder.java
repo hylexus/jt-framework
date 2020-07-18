@@ -20,6 +20,7 @@ import io.github.hylexus.jt.utils.ReflectionUtils;
 import io.github.hylexus.oaks.utils.Bytes;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.internal.StringUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -126,7 +127,12 @@ public class FieldDecoder {
         // 3.1 LIST 特殊处理
         if (dataType == MsgDataType.LIST) {
             final ByteBuf buf = Unpooled.wrappedBuffer(Bytes.subSequence(bytes, startIndex, length));
-            final List<Object> list = processListDataType(fieldMetadata, length, buf);
+            final List<Object> list;
+            try {
+                list = processListDataType(fieldMetadata, length, buf);
+            } finally {
+                ReferenceCountUtil.release(buf);
+            }
             fieldMetadata.setFieldValue(instance, list);
             return list;
         }

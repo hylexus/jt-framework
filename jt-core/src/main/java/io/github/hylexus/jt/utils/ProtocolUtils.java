@@ -30,10 +30,12 @@ public class ProtocolUtils {
                     + ",end=" + end + ",bytes length=" + bs.length + ")");
         }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            for (int i = 0; i < start; i++) {
+            int i = 0;
+            for (; i < start; i++) {
                 outputStream.write(bs[i]);
             }
-            for (int i = start; i < end - 2; i++) {
+            // 最后一个字节不应该是7d，否则就是编码错误
+            for (; i < end - 1; i++) {
                 if (bs[i] == 0x7d && bs[i + 1] == 0x01) {
                     outputStream.write(0x7d);
                     i++;
@@ -44,15 +46,10 @@ public class ProtocolUtils {
                     outputStream.write(bs[i]);
                 }
             }
+
             // https://github.com/hylexus/jt-framework/issues/17
-            if (bs[end - 2] == 0x7d && bs[end - 1] == 0x01) {
-                outputStream.write(0x7d);
-            } else if (bs[end - 2] == 0x7d && bs[end - 1] == 0x02) {
-                outputStream.write(0x7e);
-            } else {
-                for (int i = end - 2; i < bs.length; i++) {
-                    outputStream.write(bs[i]);
-                }
+            for (; i < bs.length; i++) {
+                outputStream.write(bs[i]);
             }
             return outputStream.toByteArray();
         } catch (IOException e) {
