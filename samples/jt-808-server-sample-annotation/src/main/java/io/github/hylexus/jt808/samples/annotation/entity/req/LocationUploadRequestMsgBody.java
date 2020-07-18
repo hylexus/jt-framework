@@ -81,9 +81,6 @@ public class LocationUploadRequestMsgBody implements RequestMsgBody, RequestMsgM
             byteCountMethod = "getExtraInfoLength"
     )
     private ExtraInfo extraInfo;
-    // 也可将将附加项解析为一个List
-    //@BasicField(startIndex = 28, byteCountMethod = "getExtraInfoLength", dataType = LIST)
-    //private List<ExtraInfoItem> extraInfoItemList;
 
     @Override
     public void setRequestMsgMetadata(RequestMsgMetadata metadata) {

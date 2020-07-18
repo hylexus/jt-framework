@@ -39,7 +39,7 @@ public class ExtraFieldDecoder {
 
     public void decodeExtraField(
             byte[] bytes, int startIndex, int length, Object instance, JavaBeanFieldMetadata fieldMetadata)
-            throws IllegalAccessException, InstantiationException {
+            throws IllegalAccessException, InstantiationException, InvocationTargetException {
 
         final Class<?> extraFieldClass = fieldMetadata.getFieldType();
 
@@ -60,7 +60,7 @@ public class ExtraFieldDecoder {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void decodeNestedField(
             byte[] bytes, int startIndex, int length, Object instance, Map<Integer, NestedFieldMappingInfo> mappingInfo,
-            int byteCountOfMsgId, int byteCountOfContentLength) throws IllegalAccessException, InstantiationException {
+            int byteCountOfMsgId, int byteCountOfContentLength) throws IllegalAccessException, InstantiationException, InvocationTargetException {
 
         int readerIndex = startIndex;
         while (readerIndex < length) {
@@ -87,11 +87,7 @@ public class ExtraFieldDecoder {
                 info.getFieldMetadata().setFieldValue(instance, newInstance);
 
                 decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
-                try {
-                    decoder.decode(newInstance, bodyBytes);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                decoder.decode(newInstance, bodyBytes);
             } else {
                 // TODO auto-inject
                 ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(info.getDataType(), info.getFieldMetadata().getFieldType());

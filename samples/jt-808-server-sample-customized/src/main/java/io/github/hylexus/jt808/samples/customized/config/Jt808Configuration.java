@@ -47,7 +47,6 @@ public class Jt808Configuration extends Jt808ServerConfigurationSupport {
         return new Jt808MsgTypeParser();
     }
 
-
     // [非必须配置] -- 手动注册消息转换器
     @Override
     public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
