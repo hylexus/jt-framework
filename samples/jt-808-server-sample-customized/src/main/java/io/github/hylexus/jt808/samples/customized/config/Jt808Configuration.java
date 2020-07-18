@@ -14,6 +14,7 @@ import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
+import io.github.hylexus.jt808.support.netty.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -95,4 +96,11 @@ public class Jt808Configuration extends Jt808ServerConfigurationSupport {
         };
     }
 
+    // [非必须配置] -- 可替换内置Netty相关配置
+    @Override
+    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
+            HeatBeatHandler heatBeatHandler, Jt808DecodeHandler decodeHandler,
+            TerminalValidatorHandler terminalValidatorHandler, Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+        return super.jt808ServerNettyConfigure(heatBeatHandler, decodeHandler, terminalValidatorHandler, jt808ChannelHandlerAdapter);
+    }
 }

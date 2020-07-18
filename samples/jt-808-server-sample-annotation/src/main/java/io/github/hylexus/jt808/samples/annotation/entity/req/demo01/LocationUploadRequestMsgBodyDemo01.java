@@ -130,7 +130,6 @@ public class LocationUploadRequestMsgBodyDemo01 implements RequestMsgBody, Reque
     public static class Extra0x65 {
 
         // 1.0.6以及之前都不支持这种写法 --> ExtraMsgBody里的BasicField不会被解析
-        // 1.0.7 支持这种写法但是没发布  还在改………………
         @BasicField(startIndex = 0, dataType = DWORD)
         private Integer warningId;
 

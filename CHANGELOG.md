@@ -12,10 +12,12 @@
 ### 🐞 Bug Fixes
 
 - https://github.com/hylexus/jt-framework/issues/18
+- BytesEncoder转义bug
 
 ### 🔨 Others
 
 - Jt808Session#setChannel
+- BytesEncoder支持校验码逻辑自定义
 
 # 1.0.5-SNAPSHOT
 
