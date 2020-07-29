@@ -37,6 +37,7 @@ public class LocationUploadRequestMsgBodyDemo01 implements RequestMsgBody, Reque
     @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
     private LocationUploadStatus statusInfo;
+
     @BasicField(startIndex = 4, dataType = BYTES, length = 4)
     private byte[] statusBytes;
     // 将上面的 status 字段的第0位取出转为 int 类型
@@ -108,20 +109,20 @@ public class LocationUploadRequestMsgBodyDemo01 implements RequestMsgBody, Reque
             byteCountOfContentLength = 1 // 附加项长度字段用1个字节表示
     )
     public static class ExtraInfo {
-        @ExtraField.NestedFieldMapping(msgId = 0x64, dataType = BYTES)
-        private byte[] field0x64;
+        @ExtraField.NestedFieldMapping(msgId = 0x01, dataType = DWORD)
+        private Integer field0x01; //里程，DWORD，1/10km，对应车上里程表读数
+
+        @ExtraField.NestedFieldMapping(msgId = 0x2b, dataType = DWORD)
+        private Integer field0x2b; //模拟量，bit0-15，AD0;bit16-31，AD1。
+
+        @ExtraField.NestedFieldMapping(msgId = 0x30, dataType = BYTE)
+        private byte field0x30; //BYTE，无线通信网络信号强度
+
+        @ExtraField.NestedFieldMapping(msgId = 0x31, dataType = BYTE)
+        private byte field0x31; //GNSS 定位卫星数
 
         @ExtraField.NestedFieldMapping(msgId = 0x65, isNestedExtraField = true)
         private Extra0x65 field0x65;
-
-        //@ExtraField.NestedFieldMapping(msgId = 0x65, dataType = BYTES)
-        //private byte[] field0x65;
-
-        @ExtraField.NestedFieldMapping(msgId = 0x66, dataType = BYTES)
-        private byte[] field0x66;
-
-        @ExtraField.NestedFieldMapping(msgId = 0x67, dataType = BYTES)
-        private byte[] field0x67;
 
     }
 
@@ -156,12 +157,17 @@ public class LocationUploadRequestMsgBodyDemo01 implements RequestMsgBody, Reque
     public static class LocationUploadStatus {
         @SplittableField.BitAt(bitIndex = 0)
         private boolean accStatus; // acc开?
+
         @SplittableField.BitAt(bitIndex = 1)
         private int bit1; //1:定位, 0:未定义
+
         @SplittableField.BitAt(bitIndex = 2)
         private Boolean isSouthLat;// 是否南纬?
+
+        // 0:东经
         @SplittableField.BitAt(bitIndex = 3)
         private Integer lngType;
+
         // 将第0位和第1位同时取出并转为int
         // 在此处无实际意义,只是演示可以这么使用
         @SplittableField.BitAtRange(startIndex = 0, endIndex = 1)

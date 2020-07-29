@@ -72,7 +72,9 @@ public class CommonHandler {
     @Jt808RequestMsgHandlerMapping(msgType = 0x0200)
     public ServerCommonReplyMsgBody processLocationMsg(
             Jt808Session session, RequestMsgMetadata metadata,
-            RequestMsgHeader header, LocationUploadRequestMsgBodyDemo01 msgBody) {
+            RequestMsgHeader header,
+            // LocationUploadRequestMsgBody msgBody,
+            LocationUploadRequestMsgBodyDemo01 msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
         assert session.getTerminalId().equals(header.getTerminalId());

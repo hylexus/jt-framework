@@ -4,6 +4,7 @@ import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
 import io.github.hylexus.jt808.boot.props.exception.handler.scan.Jt808ExceptionHandlerScanProps;
 import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
 import io.github.hylexus.jt808.boot.props.msg.processor.MsgProcessorProps;
+import io.github.hylexus.jt808.boot.props.protocol.ProtocolConfig;
 import io.github.hylexus.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,9 @@ import org.springframework.validation.annotation.Validated;
 public class Jt808ServerProps {
 
     private boolean printComponentStatistics = true;
+
+    @NestedConfigurationProperty
+    private ProtocolConfig protocol = new ProtocolConfig();
 
     @NestedConfigurationProperty
     private Jt808EntityScanProps entityScan = new Jt808EntityScanProps();

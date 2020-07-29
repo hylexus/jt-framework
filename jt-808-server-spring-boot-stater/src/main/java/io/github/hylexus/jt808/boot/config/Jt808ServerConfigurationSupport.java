@@ -116,7 +116,7 @@ public abstract class Jt808ServerConfigurationSupport {
     @Bean(NETTY_HANDLER_NAME_808_DECODE)
     @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_DECODE)
     public Jt808DecodeHandler decodeHandler(BytesEncoder bytesEncoder, Decoder decoder) {
-        return new Jt808DecodeHandler(bytesEncoder, decoder);
+        return new Jt808DecodeHandler(serverProps.getProtocol().getVersion(), bytesEncoder, decoder);
     }
 
     @Bean(BEAN_NAME_JT808_TERMINAL_VALIDATOR)

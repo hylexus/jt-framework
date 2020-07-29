@@ -52,7 +52,7 @@ public class ExtraFieldDecoder {
         int byteCountOfMsgId = extraMsgBodyInfo.byteCountOfMsgId();
         int byteCountOfContentLength = extraMsgBodyInfo.byteCountOfContentLength();
         decodeNestedField(
-                bytes, startIndex, length, extraFieldInstance, mappingInfo,
+                bytes, startIndex, bytes.length, extraFieldInstance, mappingInfo,
                 byteCountOfMsgId, byteCountOfContentLength
         );
     }
@@ -64,19 +64,20 @@ public class ExtraFieldDecoder {
 
         int readerIndex = startIndex;
         while (readerIndex < length) {
-            int msgId = IntBitOps.intFromBytes(bytes, readerIndex, byteCountOfMsgId);
+            // final for suppress [VariableDeclarationUsageDistance]
+            final int msgId = IntBitOps.intFromBytes(bytes, readerIndex, byteCountOfMsgId);
             readerIndex += byteCountOfMsgId;
-
-            final NestedFieldMappingInfo info = mappingInfo.get(msgId);
-            if (info == null) {
-                continue;
-            }
 
             int bodyLength = IntBitOps.intFromBytes(bytes, readerIndex, byteCountOfContentLength);
             readerIndex += byteCountOfContentLength;
 
             byte[] bodyBytes = Bytes.subSequence(bytes, readerIndex, bodyLength);
             readerIndex += bodyLength;
+
+            final NestedFieldMappingInfo info = mappingInfo.get(msgId);
+            if (info == null) {
+                continue;
+            }
 
             if (info.isNestedExtraField()) {
                 Map<Integer, NestedFieldMappingInfo> map = getMappingInfo(info.getFieldMetadata().getFieldType());
@@ -86,7 +87,9 @@ public class ExtraFieldDecoder {
                 Object newInstance = info.getFieldMetadata().getFieldType().newInstance();
                 info.getFieldMetadata().setFieldValue(instance, newInstance);
 
-                decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
+                if (!map.isEmpty()) {
+                    decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
+                }
                 decoder.decode(newInstance, bodyBytes);
             } else {
                 // TODO auto-inject

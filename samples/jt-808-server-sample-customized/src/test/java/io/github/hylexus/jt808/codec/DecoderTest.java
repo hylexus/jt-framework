@@ -8,6 +8,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.Test;
 
+import static io.github.hylexus.jt.config.Jt808ProtocolVersion.VERSION_2011;
+
 /**
  * @author hylexus
  * Created At 2019-09-23 9:57 下午
@@ -44,7 +46,7 @@ public class DecoderTest {
                 + "22000E019E000F018001000201E501010400000250010202033C010304000003F201040203E7010D020000010E0213BF010F02007D01100235C701120200000113020000011"
                 + "60200000050113141314A433534343452373235323336370051000052040000000C010C02079E34";
 
-        RequestMsgMetadata metadata = decoder.parseMsgMetadata(HexStringUtils.hexString2Bytes(hex));
+        RequestMsgMetadata metadata = decoder.parseMsgMetadata(VERSION_2011, HexStringUtils.hexString2Bytes(hex));
         byte[] bodyBytes = metadata.getBodyBytes();
 
         LocationUploadRequestMsgBodyForDebug y = decoder.decodeRequestMsgBody(LocationUploadRequestMsgBodyForDebug.class, bodyBytes, metadata);

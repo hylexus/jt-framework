@@ -1,5 +1,7 @@
 jt808:
   print-component-statistics: true
+  protocol:
+    version: auto_detection
   server:
     port: 6808
     boss-thread-count: 0

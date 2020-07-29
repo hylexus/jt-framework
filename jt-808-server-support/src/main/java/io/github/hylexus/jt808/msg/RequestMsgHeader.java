@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.msg;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -42,5 +43,6 @@ public class RequestMsgHeader {
     // 包序号 byte[12-13]
     // (word(16))这次发送的这个消息包是分包中的第几个消息包, 从 1 开始
     private long subPackageSeq;
+    private Jt808ProtocolVersion version;
 
 }

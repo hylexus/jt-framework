@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.support.netty;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Decoder;
@@ -18,10 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 @ChannelHandler.Sharable
 public class Jt808DecodeHandler extends ChannelInboundHandlerAdapter {
 
+    private final Jt808ProtocolVersion protocolVersion;
     private final Decoder decoder;
     private final BytesEncoder bytesEncoder;
 
-    public Jt808DecodeHandler(BytesEncoder bytesEncoder, Decoder decoder) {
+    public Jt808DecodeHandler(Jt808ProtocolVersion protocolVersion, BytesEncoder bytesEncoder, Decoder decoder) {
+        this.protocolVersion = protocolVersion;
         this.bytesEncoder = bytesEncoder;
         this.decoder = decoder;
     }
@@ -42,7 +45,7 @@ public class Jt808DecodeHandler extends ChannelInboundHandlerAdapter {
                 final byte[] escaped = this.bytesEncoder.doEscapeForReceive(unescaped, 0, unescaped.length);
                 log.debug("[escaped] : {}", HexStringUtils.bytes2HexString(escaped));
 
-                final RequestMsgMetadata metadata = decoder.parseMsgMetadata(escaped);
+                final RequestMsgMetadata metadata = decoder.parseMsgMetadata(protocolVersion, escaped);
                 ctx.fireChannelRead(metadata);
             } finally {
                 buf.release();
