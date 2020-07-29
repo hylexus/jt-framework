@@ -32,6 +32,14 @@ jt808:
     thread-pool:
       # ...
 ```
+## protocol
+
+### version
+
+- 类型：`enum`
+- 默认值：`auto_detection`
+
+808协议版本，可选值位于：`io.github.hylexus.jt.config.Jt808ProtocolVersion` 。
 
 ## server
 

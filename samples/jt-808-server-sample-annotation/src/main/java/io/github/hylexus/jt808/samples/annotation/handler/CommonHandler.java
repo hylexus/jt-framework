@@ -74,6 +74,7 @@ public class CommonHandler {
             Jt808Session session, RequestMsgMetadata metadata,
             RequestMsgHeader header,
             // LocationUploadRequestMsgBody msgBody,
+            //LocationUploadRequestMsgBodyDemo02 msgBody,
             LocationUploadRequestMsgBodyDemo01 msgBody) {
 
         assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();

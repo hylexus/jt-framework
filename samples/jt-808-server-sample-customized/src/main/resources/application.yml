@@ -5,6 +5,8 @@ logging:
   level.io.github.hylexus: debug
 jt808:
   print-component-statistics: true
+  protocol:
+    version: auto_detection
   entity-scan:
     enabled: true
     base-packages: io.github.hylexus.jt808.server.msg.req
