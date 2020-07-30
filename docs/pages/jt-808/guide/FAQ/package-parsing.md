@@ -10,4 +10,4 @@
 
 ## 转义字符处理问题
 
-[请移步自定义 BytesEncoder](../basic/customized.md#bytesencoder)
+[请移步自定义 BytesEncoder](../customization/escape-config.md)

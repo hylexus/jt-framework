@@ -128,7 +128,7 @@ public class Jt808Config extends Jt808ServerConfigurationSupport {
         super.configureMsgHandlerMapping(mapping);
         // 如果你在这里注册了自定义的鉴权消息处理器，那么AuthCodeValidator也无需提供了
         // 此处也可以从Spring容器中获取bean来注入，不一定要手动new一个Handler注册
-        mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
+        mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationInfoUploadMsgHandler());
     }
 }
 ```

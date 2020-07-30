@@ -23,5 +23,8 @@ public class Jt808Config extends Jt808ServerConfigurationSupport {
 - [Session相关配置](./session-config.md)
 - [Netty相关配置](./netty-config.md)
 - [转义相关配置](./escape-config.md)
+- [消息类型配置](./msg-type-config.md)
 - [消息转换器配置](./msg-converter-config.md)
 - [消息处理器配置](./msg-handler-config.md)
+- [TerminalValidator](./terminal-validator-config.md)
+- [AuthValidator](./auth-validator-config.md)
