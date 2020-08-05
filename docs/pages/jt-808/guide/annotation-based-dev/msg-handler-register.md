@@ -2,7 +2,7 @@
 
 ::: tip 传送门
 - 1. 本小节的示例代码可以在 [samples/jt-808-server-sample-annotation](https://github.com/hylexus/jt-framework/tree/master/samples/jt-808-server-sample-annotation) 下找到对应代码。
-- 2. [点击这里了解 MsgHandler 的作用](../basic/customized.md#msghandler)。
+- 2. [点击这里了解 MsgHandler 的作用](../customization/msg-handler-config.md)。
 :::
 
 ## @Jt808RequestMsgHandler

@@ -41,7 +41,7 @@ public interface RequestMsgMetadataAware {
 ## BytesEncoderAware
 
 ::: tip 提示
-有关 `BytesEncoder` 的内容，[请移步此处](../basic/customized.md#bytesencoder)。
+有关 `BytesEncoder` 的内容，[请移步此处](../customization/escape-config.md)。
 :::
 
 - `MsgHandler` 中可以实现该接口以注入 `BytesEncoder` 给处理器实例。

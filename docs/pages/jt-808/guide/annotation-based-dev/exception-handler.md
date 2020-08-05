@@ -4,7 +4,7 @@
 
 基于注解的 `MsgHandler` 的异常处理可以直接由注解实现。
 
-具体配置请移步 [配置文档]()
+具体配置请移步 [配置文档](../../config/#exception-handler-scan)
 
 ## @Jt808RequestMsgHandlerAdvice
 

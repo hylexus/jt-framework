@@ -12,22 +12,15 @@ Jt-808协议服务端。
 
 ### ⭐ New Features
 
-- 修改自定义配置的方式
-    - 旧版的`Jt808ServerConfigure` 容易引发Bean的循环依赖
-    - 从1.0.7-RELEASE开始，使用 `Jt808ServerConfigurationSupport` 来自定义配置
-- Maven依赖的 `scope` 从 `runtime` 改为 `compile`，涉及到的依赖如下：
-    - Netty
-    - oaks-lib
+- 支持2019版: [`jt808.protocol.version`](https://hylexus.github.io/jt-framework/jt-808/config/#version)
 
 ### 🐞 Bug Fixes
 
-- https://github.com/hylexus/jt-framework/issues/18
-- BytesEncoder转义bug
+- `@NestedFieldMapping` bug
 
 ### 🔨 Others
 
-- Jt808Session#setChannel
-- BytesEncoder支持校验码逻辑自定义
+- 文档更新
 
 
 ## QuickStart
@@ -45,7 +38,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.7-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.8-RELEASE"
     // ...
 }
 ```
@@ -56,7 +49,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.7-RELEASE</version>
+    <version>1.0.8-RELEASE</version>
 </dependency>
 ```
 

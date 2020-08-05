@@ -1,3 +1,17 @@
+# 1.0.8-SNAPSHOT
+
+### ⭐ New Features
+
+- 支持2019版: [`jt808.protocol.version`](https://hylexus.github.io/jt-framework/jt-808/config/#version)
+
+### 🐞 Bug Fixes
+
+- `@NestedFieldMapping` bug
+
+### 🔨 Others
+
+- 文档更新
+
 # 1.0.7-SNAPSHOT
 
 ### ⭐ New Features
