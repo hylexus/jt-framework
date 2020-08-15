@@ -75,6 +75,8 @@ public @interface ExtraField {
          */
         MsgDataType dataType() default MsgDataType.BYTES;
 
+        MsgDataType itemDataType() default MsgDataType.UNKNOWN;
+
         /**
          * @return 是不是嵌套的附加消息，如果是嵌套类型，那么嵌套类型应该被 {@link ExtraMsgBody} 注解修饰
          */

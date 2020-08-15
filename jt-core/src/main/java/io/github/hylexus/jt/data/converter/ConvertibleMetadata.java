@@ -23,11 +23,6 @@ public class ConvertibleMetadata {
         this.targetClass = targetClass;
     }
 
-    public static ConvertibleMetadata forJt808EncodeMsgDataType(Class<?> sourceType, MsgDataType targetDataType) {
-        ConvertibleMetadata convertibleMetadata = new ConvertibleMetadata(sourceType, byte[].class);
-        return convertibleMetadata;
-    }
-
     public static ConvertibleMetadata forJt808MsgDataType(MsgDataType sourceDataType, Class<?> targetType) {
         ConvertibleMetadata instance = new ConvertibleMetadata(byte[].class, targetType);
         instance.setSourceDataType(sourceDataType);

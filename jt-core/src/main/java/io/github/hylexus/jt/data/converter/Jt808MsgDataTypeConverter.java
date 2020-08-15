@@ -11,6 +11,6 @@ public interface Jt808MsgDataTypeConverter<T> extends DataTypeConverter<byte[], 
     @Override
     @Deprecated
     default T convert(Class<byte[]> sourceType, Class<T> targetType, byte[] sourceInstance) {
-        return convert(sourceInstance, 0, sourceInstance.length);
+        return this.convert(sourceInstance, 0, sourceInstance.length);
     }
 }

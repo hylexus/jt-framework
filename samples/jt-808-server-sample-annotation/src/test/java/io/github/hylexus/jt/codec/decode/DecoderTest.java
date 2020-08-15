@@ -6,6 +6,7 @@ import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
+import io.github.hylexus.jt808.samples.annotation.entity.req.Msg0104;
 import io.github.hylexus.jt808.samples.annotation.entity.req.demo01.LocationUploadRequestMsgBodyDemo01;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import org.junit.Assert;
@@ -82,5 +83,30 @@ public class DecoderTest {
         Assert.assertEquals(0x01EB1472, (int) (field0x65.getLat() * 100_0000));
         Assert.assertEquals(0x071E23D4, (int) (field0x65.getLng() * 100_0000));
         Assert.assertEquals("200706164830", field0x65.getTime());
+    }
+
+    @Test
+    public void testDecodeMsg0104() throws Exception {
+        // 瞎编的一条报文
+        String str =
+                "010401BA014594642815048C0002320000000104000000B40000000104000000B8"
+                        + "0000000204000000050000000304000000030000000404000000000000000504000000000000000604000000000000000704000000000000001005434D4E4554"
+                        + "00000011000000001200000000130E6A74312E6767687970742E6E6574000000140000000015000000001600000000170E6A74322E6767687970742E6E657400000"
+                        + "0180400001B60000000190400001B60000000200400000000000000210400000000000000220400000000000000280400000000000000270400000078000000"
+                        + "29040000001E0000002C040000000000000050040000000000000052040000000000000053040000000000000055040000006400000056040000000A0000005704"
+                        + "000038400000005804000000000000005904000004B00000005A04000000000000005B0200320000005C0207080000007004000000000000007104000000000000"
+                        + "0072040000000000000073040000000000000074040000000000000080040000008C00000081020035000000820209C4000000830CD4C6474353313233000000000"
+                        + "0000084010200000090010300001018010100001022040801000500001023010082";
+        byte[] bytes = HexStringUtils.hexString2Bytes(str);
+        RequestMsgMetadata metadata = decoder.parseMsgMetadata(Jt808ProtocolVersion.AUTO_DETECTION, bytes);
+        RequestMsgHeader header = metadata.getHeader();
+        System.out.println(header.getTerminalId());
+
+        final byte[] bodyBytes = metadata.getBodyBytes();
+        Assert.assertEquals(bodyBytes.length, header.getMsgBodyLength());
+
+        Msg0104 msgBody = decoder.decodeRequestMsgBody(Msg0104.class, bodyBytes, metadata);
+
+        System.out.println(msgBody);
     }
 }

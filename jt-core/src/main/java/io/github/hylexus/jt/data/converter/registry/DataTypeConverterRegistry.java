@@ -19,4 +19,6 @@ public interface DataTypeConverterRegistry {
     <S, T> Optional<DataTypeConverter<S, T>> getConverter(Class<S> sourceType, Class<T> targetType);
 
     Optional<DataTypeConverter<?, ?>> getConverter(ConvertibleMetadata convertibleMetadata);
+
+    void clear();
 }

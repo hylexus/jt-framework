@@ -15,10 +15,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegistry {
 
+    public DefaultDataTypeConverterRegistry(boolean autoRegisterDefaultConverter) {
+        if (autoRegisterDefaultConverter) {
+            registerDefaultConverter(this);
+        }
+    }
+
     private final Map<ConvertibleMetadata, DataTypeConverter<?, ?>> converterMap = new ConcurrentHashMap<>();
 
     public DefaultDataTypeConverterRegistry() {
-        registerDefaultConverter(this);
+        this(true);
     }
 
     static void registerDefaultConverter(DefaultDataTypeConverterRegistry registry) {
@@ -34,6 +40,8 @@ public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegist
         registry.registerConverter(new ByteArrayToByteDataTypeConverter());
 
         registry.registerConverter(new NoOpsByteArrayDataTypeConverter());
+
+        registry.registerConverter(new ByteArrayToListDataTypeConverter());
 
     }
 
@@ -60,5 +68,10 @@ public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegist
     @Override
     public Optional<DataTypeConverter<?, ?>> getConverter(ConvertibleMetadata convertibleMetadata) {
         return Optional.ofNullable(this.converterMap.get(convertibleMetadata));
+    }
+
+    @Override
+    public void clear() {
+        this.converterMap.clear();
     }
 }

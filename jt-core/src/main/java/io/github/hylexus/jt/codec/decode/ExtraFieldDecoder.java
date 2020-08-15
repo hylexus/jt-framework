@@ -79,13 +79,14 @@ public class ExtraFieldDecoder {
                 continue;
             }
 
+            final JavaBeanFieldMetadata targetFieldMetadata = info.getFieldMetadata();
             if (info.isNestedExtraField()) {
-                Map<Integer, NestedFieldMappingInfo> map = getMappingInfo(info.getFieldMetadata().getFieldType());
+                Map<Integer, NestedFieldMappingInfo> map = getMappingInfo(targetFieldMetadata.getFieldType());
 
-                ExtraMsgBody ex = info.getFieldMetadata().getFieldType().getAnnotation(ExtraMsgBody.class);
+                ExtraMsgBody ex = targetFieldMetadata.getFieldType().getAnnotation(ExtraMsgBody.class);
 
-                Object newInstance = info.getFieldMetadata().getFieldType().newInstance();
-                info.getFieldMetadata().setFieldValue(instance, newInstance);
+                Object newInstance = targetFieldMetadata.getFieldType().newInstance();
+                targetFieldMetadata.setFieldValue(instance, newInstance);
 
                 if (!map.isEmpty()) {
                     decodeNestedField(bodyBytes, 0, bodyBytes.length, newInstance, map, ex.byteCountOfMsgId(), ex.byteCountOfContentLength());
@@ -93,16 +94,17 @@ public class ExtraFieldDecoder {
                 decoder.decode(newInstance, bodyBytes);
             } else {
                 // TODO auto-inject
-                ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(info.getDataType(), info.getFieldMetadata().getFieldType());
+                ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(info.getDataType(), targetFieldMetadata.getFieldType());
                 Optional<DataTypeConverter<?, ?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
                 if (converterInfo.isPresent()) {
                     DataTypeConverter converter = converterInfo.get();
-                    Object value = converter.convert(byte[].class, info.getFieldMetadata().getFieldType(), bodyBytes);
-                    // fix https://github.com/hylexus/jt-framework/issues/2
-                    info.getFieldMetadata().setFieldValue(instance, value);
-                    splittableFieldDecoder.processSplittableField(instance, info.getFieldMetadata(), value);
+                    Object value = targetFieldMetadata.getFieldValue(instance, false);
+                    //Object value = converter.convert(byte[].class, info.getFieldMetadata().getFieldType(), bodyBytes);
+                    value = converter.convert(key, targetFieldMetadata, bodyBytes, value, info.getItemDataType());
+                    targetFieldMetadata.setFieldValue(instance, value);
+                    splittableFieldDecoder.processSplittableField(instance, targetFieldMetadata, value);
                 } else {
-                    log.error("No converter found for filed {}", info.getFieldMetadata().getFieldType().getName());
+                    log.error("No converter found for filed {}", targetFieldMetadata.getFieldType().getName());
                 }
                 //                Object value = populateBasicField(bodyBytes, instance, info.getFieldMetadata(), info.getDataType(), 0,
                 //                        bodyBytes.length);
@@ -136,6 +138,7 @@ public class ExtraFieldDecoder {
             NestedFieldMappingInfo info = new NestedFieldMappingInfo();
             info.setMsgId(nestedMetadata.msgId());
             info.setDataType(nestedMetadata.dataType());
+            info.setItemDataType(nestedMetadata.itemDataType());
             info.setNestedExtraField(nestedMetadata.isNestedExtraField());
             info.setByteCountOfMsgId(bodyProps.byteCountOfMsgId());
             info.setByteCountOfContentLength(bodyProps.byteCountOfContentLength());

@@ -14,6 +14,7 @@ import lombok.Data;
 public class NestedFieldMappingInfo {
     private int msgId;
     private MsgDataType dataType;
+    private MsgDataType itemDataType;
     private boolean isNestedExtraField = false;
     private int byteCountOfMsgId = ExtraMsgBody.DEFAULT_BYTE_COUNT_OF_MSG_ID;
     private int byteCountOfContentLength = ExtraMsgBody.DEFAULT_BYTE_COUNT_OF_CONTENT_LENGTH;
