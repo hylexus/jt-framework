@@ -24,7 +24,7 @@ public class ByteBytesValueWrapper implements BytesValueWrapper<Byte> {
 
     @Override
     public byte[] getAsBytes() {
-        return new byte[value];
+        return new byte[]{this.value};
     }
 
     @Override

@@ -50,8 +50,9 @@ public class Msg0104 implements RequestMsgBody, RequestMsgHeaderAware {
     )
     public static class ParamList {
         // https://github.com/hylexus/jt-framework/issues/25
+        // 这里写成List仅仅为了演示在msgId重复时可以使用List类型
         @ExtraField.NestedFieldMapping(msgId = 0x0001, dataType = LIST, itemDataType = DWORD)
-        private List<Integer> field0x0001; //终端心跳发送间隔，单位为秒(s)
+        private List<Integer> field0x0001;
 
         @ExtraField.NestedFieldMapping(msgId = 0x0003, dataType = DWORD)
         private Integer field0x0003;

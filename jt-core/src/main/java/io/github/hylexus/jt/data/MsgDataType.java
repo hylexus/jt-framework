@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.data;
 
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
+import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import lombok.Getter;
 
 import java.util.List;
@@ -21,7 +22,8 @@ public enum MsgDataType {
     BCD(0, "8421 码，n 字节", newHashSet(String.class)),
     STRING(0, "GBK 编码，若无数据，置空", newHashSet(String.class)),
     /**
-     * 目前只能用于 {@link BasicField#dataType()}
+     * 目前只能用于 {@link ExtraField.NestedFieldMapping#dataType()} ,
+     * 同时用 {@link ExtraField.NestedFieldMapping#itemDataType()} 指定List元素对应类型
      */
     LIST(0, "List", newHashSet(List.class)),
     UNKNOWN(0, "未知类型，用于占位符或默认值", newHashSet(String.class)),
