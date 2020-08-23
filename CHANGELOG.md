@@ -1,3 +1,16 @@
+# 1.0.9-SNAPSHOT
+
+### ⭐ New Features
+
+- `@NestedFieldMapping` 支持List类型 (https://github.com/hylexus/jt-framework/issues/25)
+
+### 🐞 Bug Fixes
+
+
+### 🔨 Others
+
+- 文档更新
+
 # 1.0.8-SNAPSHOT
 
 ### ⭐ New Features
