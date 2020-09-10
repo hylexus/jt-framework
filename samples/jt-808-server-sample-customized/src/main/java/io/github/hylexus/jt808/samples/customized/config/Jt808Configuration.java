@@ -52,14 +52,14 @@ public class Jt808Configuration extends Jt808ServerConfigurationSupport {
     @Override
     public void configureMsgConverterMapping(RequestMsgBodyConverterMapping mapping) {
         super.configureMsgConverterMapping(mapping);
-        mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
+//        mapping.registerConverter(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, new LocationUploadMsgBodyConverter2());
     }
 
     // [非必须配置] -- 手动注册消息处理器
     @Override
     public void configureMsgHandlerMapping(MsgHandlerMapping mapping) {
         super.configureMsgHandlerMapping(mapping);
-        mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, locationInfoUploadMsgHandler);
+//        mapping.registerHandler(Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD, locationInfoUploadMsgHandler);
     }
 
     // [非必须配置] -- 可替换内置转义逻辑

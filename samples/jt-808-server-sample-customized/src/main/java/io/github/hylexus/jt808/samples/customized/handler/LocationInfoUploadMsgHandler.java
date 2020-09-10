@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.samples.customized.handler;
 
+import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
@@ -23,6 +24,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
+@Jt808RequestMsgHandler(msgType = 0x0200)
 public class LocationInfoUploadMsgHandler extends AbstractMsgHandler<LocationUploadRequestMsgBody> implements ApplicationContextAware, InitializingBean {
 
     @Autowired

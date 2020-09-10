@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
+import io.github.hylexus.jt808.boot.props.converter.scan.Jt808ConverterScanProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
 import io.github.hylexus.jt808.boot.props.exception.handler.scan.Jt808ExceptionHandlerScanProps;
 import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
@@ -40,6 +41,7 @@ import io.github.hylexus.jt808.session.SessionManager;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import io.github.hylexus.jt808.support.OrderedComponent;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
+import io.github.hylexus.jt808.support.converter.scan.Jt808MsgConverterScanner;
 import io.github.hylexus.jt808.support.entity.scan.Jt808EntityScanner;
 import io.github.hylexus.jt808.support.exception.scan.Jt808ExceptionHandlerScanner;
 import io.github.hylexus.jt808.support.handler.scan.Jt808MsgHandlerScanner;
@@ -209,6 +211,14 @@ public abstract class Jt808ServerConfigurationSupport {
                 msgHandlerMapping, new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
         );
 
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "jt808.converter-scan", name = "enabled", havingValue = "true")
+    public Jt808MsgConverterScanner jt808MsgConverterScanner(MsgTypeParser msgTypeParser,
+                                                             RequestMsgBodyConverterMapping requestMsgBodyConverterMapping) {
+        final Jt808ConverterScanProps converterScan = serverProps.getConverterScan();
+        return new Jt808MsgConverterScanner(converterScan.getBasePackages(), msgTypeParser, requestMsgBodyConverterMapping);
     }
 
     @Bean

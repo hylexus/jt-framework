@@ -1,9 +1,11 @@
 package io.github.hylexus.jt808.samples.customized.converter;
 
+import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgConverter;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.oaks.utils.BcdOps;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -13,6 +15,7 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
  * @author hylexus
  * Created At 2019-09-24 11:12 下午
  */
+@Jt808RequestMsgConverter(msgType = 0x0200)
 public class LocationUploadMsgBodyConverter2 implements RequestMsgBodyConverter<LocationUploadRequestMsgBody> {
 
     @Override

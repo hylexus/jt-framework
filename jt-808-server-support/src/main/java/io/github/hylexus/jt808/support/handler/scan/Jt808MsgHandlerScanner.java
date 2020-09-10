@@ -7,6 +7,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
+import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
 import io.github.hylexus.jt808.msg.RespMsgBody;
@@ -23,6 +24,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,6 +91,14 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
         for (Class<?> cls : handlerClassList) {
             final Jt808RequestMsgHandler handlerAnnotation = AnnotationUtils.findAnnotation(cls, Jt808RequestMsgHandler.class);
             assert handlerAnnotation != null;
+
+            if (AbstractMsgHandler.class.isAssignableFrom(cls)) {
+                Optional<MsgType> optionalMsgType = msgTypeParser.parseMsgType(handlerAnnotation.msgType());
+                if (optionalMsgType.isPresent()) {
+                    msgHandlerMapping.registerHandler(optionalMsgType.get(), (AbstractMsgHandler) createBeanInstance(cls));
+                    continue;
+                }
+            }
 
             final Method[] declaredMethods = ReflectionUtils.getAllDeclaredMethods(ClassUtils.getUserClass(cls));
             for (Method method : declaredMethods) {

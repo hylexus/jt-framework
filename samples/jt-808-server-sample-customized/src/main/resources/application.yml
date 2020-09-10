@@ -26,4 +26,7 @@ jt808:
     enabled: true
     base-packages: io.github.hylexus.jt808.samples.customized.handler
     register-builtin-msg-handlers: true
+  converter-scan:
+    enabled: true
+    base-packages: io.github.hylexus.jt808.samples.customized.converter
 

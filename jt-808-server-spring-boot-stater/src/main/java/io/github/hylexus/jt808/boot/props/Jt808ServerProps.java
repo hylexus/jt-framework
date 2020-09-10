@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.boot.props;
 
+import io.github.hylexus.jt808.boot.props.converter.scan.Jt808ConverterScanProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
 import io.github.hylexus.jt808.boot.props.exception.handler.scan.Jt808ExceptionHandlerScanProps;
 import io.github.hylexus.jt808.boot.props.handler.scan.Jt808HandlerScanProps;
@@ -34,6 +35,9 @@ public class Jt808ServerProps {
 
     @NestedConfigurationProperty
     private Jt808HandlerScanProps handlerScan = new Jt808HandlerScanProps();
+
+    @NestedConfigurationProperty
+    private Jt808ConverterScanProps converterScan = new Jt808ConverterScanProps();
 
     @NestedConfigurationProperty
     private Jt808ExceptionHandlerScanProps exceptionHandlerScan = new Jt808ExceptionHandlerScanProps();
