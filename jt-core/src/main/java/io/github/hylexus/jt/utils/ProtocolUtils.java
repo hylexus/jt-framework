@@ -70,6 +70,9 @@ public class ProtocolUtils {
                 if (bs[i] == 0x7e) {
                     outputStream.write(0x7d);
                     outputStream.write(0x02);
+                } else if (bs[i] == 0x7d) {
+                    outputStream.write(0x7d);
+                    outputStream.write(0x01);
                 } else {
                     outputStream.write(bs[i]);
                 }
