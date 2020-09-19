@@ -5,6 +5,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.support.RequestMsgBodyConverterMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,7 +79,10 @@ public class Jt808MsgConverterScanner implements InitializingBean, ApplicationCo
             if (RequestMsgBodyConverter.class.isAssignableFrom(cls)) {
                 Optional<MsgType> optionalMsgType = msgTypeParser.parseMsgType(handlerAnnotation.msgType());
                 if (optionalMsgType.isPresent()) {
-                    requestMsgBodyConverterMapping.registerConverter(optionalMsgType.get(), (RequestMsgBodyConverter) createBeanInstance(cls));
+                    requestMsgBodyConverterMapping.registerConverter(
+                            optionalMsgType.get(),
+                            (RequestMsgBodyConverter<? extends RequestMsgBody>) createBeanInstance(cls)
+                    );
                 }
             }
         }

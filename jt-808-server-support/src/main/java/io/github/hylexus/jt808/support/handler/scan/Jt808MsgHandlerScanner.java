@@ -8,8 +8,10 @@ import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
+import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.support.MsgHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +97,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
             if (AbstractMsgHandler.class.isAssignableFrom(cls)) {
                 Optional<MsgType> optionalMsgType = msgTypeParser.parseMsgType(handlerAnnotation.msgType());
                 if (optionalMsgType.isPresent()) {
-                    msgHandlerMapping.registerHandler(optionalMsgType.get(), (AbstractMsgHandler) createBeanInstance(cls));
+                    msgHandlerMapping.registerHandler(optionalMsgType.get(), (MsgHandler<? extends RequestMsgBody>) createBeanInstance(cls));
                     continue;
                 }
             }

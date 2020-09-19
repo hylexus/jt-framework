@@ -5,7 +5,6 @@ import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.samples.customized.msg.req.LocationUploadRequestMsgBody;
 import io.github.hylexus.oaks.utils.BcdOps;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 

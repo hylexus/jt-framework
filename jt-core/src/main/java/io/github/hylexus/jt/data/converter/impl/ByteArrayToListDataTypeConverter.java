@@ -18,13 +18,14 @@ import java.util.*;
  */
 public class ByteArrayToListDataTypeConverter implements Jt808MsgDataTypeConverter<List<Object>> {
     private static final Set<ConvertibleMetadata> CONVERTIBLE_METADATA_SET;
-    private final DelegateDataTypeConverter delegateDataTypeConverter = new DelegateDataTypeConverter();
 
     static {
         Set<ConvertibleMetadata> set = new HashSet<>();
         set.add(ConvertibleMetadata.forJt808MsgDataType(MsgDataType.LIST, List.class));
         CONVERTIBLE_METADATA_SET = Collections.unmodifiableSet(set);
     }
+
+    private final DelegateDataTypeConverter delegateDataTypeConverter = new DelegateDataTypeConverter();
 
     @Override
     public Set<ConvertibleMetadata> getConvertibleTypes() {

@@ -15,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegistry {
 
+    private final Map<ConvertibleMetadata, DataTypeConverter<?, ?>> converterMap = new ConcurrentHashMap<>();
+
     public DefaultDataTypeConverterRegistry(boolean autoRegisterDefaultConverter) {
         if (autoRegisterDefaultConverter) {
             registerDefaultConverter(this);
         }
     }
-
-    private final Map<ConvertibleMetadata, DataTypeConverter<?, ?>> converterMap = new ConcurrentHashMap<>();
 
     public DefaultDataTypeConverterRegistry() {
         this(true);
