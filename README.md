@@ -12,14 +12,13 @@ Jt-808协议服务端。
 
 ### ⭐ New Features
 
-- `@NestedFieldMapping` 支持List类型 (https://github.com/hylexus/jt-framework/issues/25)
+- https://github.com/hylexus/jt-framework/pull/28
+    - @Jt808RequestMsgConverter
+    - @Jt808RequestMsgHandler
 
 ### 🐞 Bug Fixes
 
-
-### 🔨 Others
-
-- 文档更新
+- https://github.com/hylexus/jt-framework/issues/26
 
 
 ## QuickStart
@@ -37,7 +36,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
 	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.9-RELEASE"
+	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.10-RELEASE"
     // ...
 }
 ```
@@ -48,7 +47,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.9-RELEASE</version>
+    <version>1.0.10-RELEASE</version>
 </dependency>
 ```
 

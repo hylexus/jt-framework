@@ -1,3 +1,15 @@
+# 1.0.10-SNAPSHOT
+
+### ⭐ New Features
+
+- https://github.com/hylexus/jt-framework/pull/28
+    - @Jt808RequestMsgConverter
+    - @Jt808RequestMsgHandler
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/26
+
 # 1.0.9-SNAPSHOT
 
 ### ⭐ New Features
