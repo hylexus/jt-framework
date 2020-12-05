@@ -4,7 +4,7 @@ package io.github.hylexus.jt.exception;
  * @author hylexus
  * Created At 2020-01-28 7:05 下午
  */
-public class MsgEscapeException extends AbstractJtException {
+public class MsgEscapeException extends MsgEncodingException {
     public MsgEscapeException() {
     }
 

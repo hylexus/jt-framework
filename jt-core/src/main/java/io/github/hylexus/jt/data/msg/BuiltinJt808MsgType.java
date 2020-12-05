@@ -15,6 +15,7 @@ import java.util.Optional;
 @Getter
 public enum BuiltinJt808MsgType implements MsgType {
 
+    CLIENT_REPLY_PLACEHOLDER(-1, "终端消息上报占位符"),
     CLIENT_LOG_OUT(0x0003, "终端注销"),
     CLIENT_HEART_BEAT(0x0002, "终端心跳"),
 

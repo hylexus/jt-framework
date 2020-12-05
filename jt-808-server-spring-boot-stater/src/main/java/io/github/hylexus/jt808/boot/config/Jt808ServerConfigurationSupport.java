@@ -159,6 +159,7 @@ public abstract class Jt808ServerConfigurationSupport {
             mapping.registerConverter(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgBodyConverter())
                     .registerConverter(BuiltinJt808MsgType.CLIENT_COMMON_REPLY, new BuiltinTerminalCommonReplyRequestMsgBodyConverter())
                     .registerConverter(BuiltinJt808MsgType.CLIENT_HEART_BEAT, new BuiltinEmptyRequestMsgBodyConverter())
+                    .registerConverter(BuiltinJt808MsgType.CLIENT_REPLY_PLACEHOLDER, new BuiltinRawBytesRequestMsgBodyConverter())
             ;
         }
         return mapping;

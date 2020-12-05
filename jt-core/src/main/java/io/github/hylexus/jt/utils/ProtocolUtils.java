@@ -1,8 +1,11 @@
 package io.github.hylexus.jt.utils;
 
 import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.exception.MsgEncodingException;
 import io.github.hylexus.jt.exception.MsgEscapeException;
+import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
+import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +18,39 @@ import java.io.IOException;
  **/
 @Slf4j
 public class ProtocolUtils {
+
+    public static byte[] generateMsgHeaderForJt808RespMsg(int msgId, int bodyProps, String terminalId, int flowId) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            // 1. 消息ID word(16)
+            baos.write(IntBitOps.intTo2Bytes(msgId));
+            // 2. 消息体属性 word(16)
+            baos.write(IntBitOps.intTo2Bytes(bodyProps));
+            // 3. 终端手机号 bcd[6]
+            baos.write(BcdOps.bcdString2bytes(terminalId));
+            // 4. 消息流水号 word(16),按发送顺序从 0 开始循环累加
+            baos.write(IntBitOps.intTo2Bytes(flowId));
+            // 消息包封装项 此处不予考虑
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new MsgEncodingException(e);
+        }
+    }
+
+    public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, int reversedLastBit) {
+        if (msgBodySize >= 1024) {
+            log.warn("The max value of msgBodySize is 1024, but {} .", msgBodySize);
+        }
+
+        // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
+        int props = (msgBodySize & 0x3FF)
+                // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
+                | ((encryptionType << 10) & 0x1C00)
+                // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
+                | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
+                // [14-15] 1100,0000,0000,0000(C000)(保留位)
+                | ((reversedLastBit << 14) & 0xC000);
+        return props & 0xFFFF;
+    }
 
     public static byte calculateCheckSum4Jt808(byte[] bs, int start, int end) {
         byte sum = bs[start];
@@ -57,7 +93,7 @@ public class ProtocolUtils {
         }
     }
 
-    public static byte[] doEscape4SendJt808Msg(byte[] bs, int start, int end) throws IOException {
+    public static byte[] doEscape4SendJt808Msg(byte[] bs, int start, int end) {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("doEscape4Send error : index out of bounds(start=" + start
                     + ",end=" + end + ",bytes length=" + bs.length + ")");
