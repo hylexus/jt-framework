@@ -37,8 +37,8 @@ public abstract class AbstractCommandSender implements CommandSender {
 
         final byte[] bytes = this.encode(commandMsg, terminalId, flowId);
         final Jt808CommandKey commandKey = withFlowId
-                ? Jt808CommandKey.of(msgType, terminalId, flowId)
-                : Jt808CommandKey.of(msgType, terminalId);
+                ? Jt808CommandKey.of(terminalId, msgType, flowId)
+                : Jt808CommandKey.of(terminalId, msgType);
 
         this.sendCommand(terminalId, bytes);
         return commandWaitingPool.waitingForKey(commandKey, timeout, timeUnit);

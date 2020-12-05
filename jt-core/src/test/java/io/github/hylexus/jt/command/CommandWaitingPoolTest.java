@@ -17,7 +17,7 @@ public class CommandWaitingPoolTest {
     @Test
     public void waitingForKeyTest() throws InterruptedException {
         CommandWaitingPool waitingPool = CommandWaitingPool.getInstance();
-        final Jt808CommandKey commandKey = Jt808CommandKey.of(BuiltinJt808MsgType.CLIENT_AUTH, "123");
+        final Jt808CommandKey commandKey = Jt808CommandKey.of("123", BuiltinJt808MsgType.CLIENT_AUTH);
 
         int timeout = 5;
         putKeyFromOtherThread(waitingPool, commandKey, timeout);
