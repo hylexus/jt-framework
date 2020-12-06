@@ -74,15 +74,16 @@ public class Jt808CommandKey implements CommandKey {
         return terminalId;
     }
 
+    @Nullable
     @Override
     public Integer getFlowId() {
         return flowId;
     }
 
-    @Override
-    public String getKeyAsString() {
-        return PREFIX + CommandKey.super.getKeyAsString();
-    }
+    //    @Override
+    //    public String getKeyAsString() {
+    //        return PREFIX + CommandKey.super.getKeyAsString();
+    //    }
 
     @Override
     public boolean equals(Object o) {
