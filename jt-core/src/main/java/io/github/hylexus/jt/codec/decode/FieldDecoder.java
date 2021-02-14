@@ -39,6 +39,7 @@ public class FieldDecoder {
 
     private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
 
+    @SuppressWarnings("rawtypes")
     private final Map<Class<? extends ReqMsgFieldConverter>, ReqMsgFieldConverter> converterMapping = new HashMap<>();
 
     private final AdditionalFieldDecoder additionalFieldDecoder = new AdditionalFieldDecoder();
@@ -198,15 +199,17 @@ public class FieldDecoder {
 
     private Object populateFieldByCustomerConverter(
             byte[] bytes, Object instance, Field field,
-            Class<? extends ReqMsgFieldConverter> converterClass,
+            @SuppressWarnings("rawtypes") Class<? extends ReqMsgFieldConverter> converterClass,
             int start, int byteCount) throws InstantiationException, IllegalAccessException {
 
+        @SuppressWarnings("rawtypes")
         ReqMsgFieldConverter converter = getDataTypeConverter(converterClass);
         Object value = converter.convert(bytes, Bytes.subSequence(bytes, start, byteCount));
         ReflectionUtils.setFieldValue(instance, field, value);
         return value;
     }
 
+    @SuppressWarnings("rawtypes")
     private ReqMsgFieldConverter getDataTypeConverter(
             Class<? extends ReqMsgFieldConverter> converterClass) throws InstantiationException, IllegalAccessException {
 
@@ -220,7 +223,7 @@ public class FieldDecoder {
         return converter;
     }
 
-    private Integer getBasicFieldStartIndex(Class<?> cls, Object instance, BasicField annotation) throws InvocationTargetException, IllegalAccessException {
+    private int getBasicFieldStartIndex(Class<?> cls, Object instance, BasicField annotation) throws InvocationTargetException, IllegalAccessException {
         if (StringUtil.isNullOrEmpty(annotation.startIndexMethod())) {
             return annotation.startIndex();
         }
@@ -228,7 +231,7 @@ public class FieldDecoder {
         return getLengthFromByteCountMethod(instance, method);
     }
 
-    private Integer getBasicFieldLength(Class<?> cls, Object instance, BasicField annotation, MsgDataType dataType)
+    private int getBasicFieldLength(Class<?> cls, Object instance, BasicField annotation, MsgDataType dataType)
             throws IllegalAccessException, InvocationTargetException {
 
         final int length = dataType.getByteCount() == 0
@@ -270,10 +273,14 @@ public class FieldDecoder {
         return getLengthFromByteCountMethod(instance, lengthMethod);
     }
 
-    private <T> Integer getLengthFromByteCountMethod(T instance, Method lengthMethod)
+    private <T> int getLengthFromByteCountMethod(T instance, Method lengthMethod)
             throws IllegalAccessException, InvocationTargetException {
 
-        return (Integer) lengthMethod.invoke(instance);
+        final Object result = lengthMethod.invoke(instance);
+        if (result instanceof Number) {
+            return ((Number) result).intValue();
+        }
+        throw new JtIllegalArgumentException("byteCountMethod() return NaN");
     }
 
     private <T> Method getLengthMethod(Class<T> cls, String methodName) {
