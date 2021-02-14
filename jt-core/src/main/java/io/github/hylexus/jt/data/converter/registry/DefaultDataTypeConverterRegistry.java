@@ -29,6 +29,9 @@ public class DefaultDataTypeConverterRegistry implements DataTypeConverterRegist
 
     static void registerDefaultConverter(DefaultDataTypeConverterRegistry registry) {
 
+        // https://github.com/hylexus/jt-framework/issues/34
+        registry.registerConverter(new ByteArrayToLongDataTypeConverter());
+
         registry.registerConverter(new ByteArrayToIntegerDataTypeConverter());
 
         registry.registerConverter(new ByteArrayToShortDataTypeConverter());
