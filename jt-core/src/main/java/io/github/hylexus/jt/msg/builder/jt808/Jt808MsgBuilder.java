@@ -1,42 +1,38 @@
-package io.github.hylexus.jt.builder.jt808;
+package io.github.hylexus.jt.msg.builder.jt808;
 
 import com.google.common.collect.Lists;
 import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.utils.Assertions;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.oaks.utils.Bytes;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Created At 2020/12/5 2:35 下午
+ * Created At 2021/01/15 19:35
  *
  * @author hylexus
  */
 public class Jt808MsgBuilder {
 
-    private Jt808MsgHeaderSpec headerSpec;
-    private byte[] body;
     private static final Function<byte[], Byte> DEFAULT_CHECK_SUM_CALCULATOR = bytes -> ProtocolUtils.calculateCheckSum4Jt808(bytes, 0, bytes.length);
     private static final Function<byte[], byte[]> DEFAULT_ESCAPE_FUNCTION = bytes -> ProtocolUtils.doEscape4SendJt808Msg(bytes, 0, bytes.length - 1);
 
-    public Jt808MsgBuilder() {
-        this.headerSpec = new Jt808MsgHeaderSpec();
-    }
+    private MsgHeaderSpec headerSpec;
+    private byte[] body;
 
-    public static Jt808MsgBuilder newBuilder() {
+    public static Jt808MsgBuilder builder() {
         return new Jt808MsgBuilder();
     }
 
-    public Jt808MsgBuilder header(Jt808MsgHeaderSpec headerSpec) {
+    public Jt808MsgBuilder header(MsgHeaderSpec headerSpec) {
         this.headerSpec = headerSpec;
         return this;
     }
 
-    public Jt808MsgBuilder header(Consumer<Jt808MsgHeaderBuilder> headerBuilderConsumer) {
-        final Jt808MsgHeaderBuilder headerBuilder = Jt808MsgHeaderBuilder.newBuilder();
-        headerBuilderConsumer.accept(headerBuilder);
-        return header(headerBuilder.build());
+    public Jt808MsgBuilder header(Function<MsgHeaderSpec.MsgHeaderSpecBuilder, MsgHeaderSpec> builder) {
+        this.headerSpec = builder.apply(new MsgHeaderSpec.MsgHeaderSpecBuilder());
+        return this;
     }
 
     public Jt808MsgBuilder body(byte[] body) {
@@ -44,10 +40,9 @@ public class Jt808MsgBuilder {
         return this;
     }
 
-    public Jt808MsgBuilder body(Consumer<Jt808MsgBodyBuilder> msgBodyBuilderConsumer) {
-        final Jt808MsgBodyBuilder msgHeaderBuilder = Jt808MsgBodyBuilder.newBuilder();
-        msgBodyBuilderConsumer.accept(msgHeaderBuilder);
-        return body(msgHeaderBuilder.build());
+    public Jt808MsgBuilder body(Function<Jt808MsgBodyBuilder, byte[]> bodyBuilderFunction) {
+        this.body = bodyBuilderFunction.apply(Jt808MsgBodyBuilder.newBuilder());
+        return this;
     }
 
     public byte[] build() {
@@ -63,7 +58,13 @@ public class Jt808MsgBuilder {
     }
 
     public byte[] build(Function<byte[], Byte> checksumCalculator, Function<byte[], byte[]> escapeFunction) {
-        final byte[] header = headerSpec.toBytes(body.length);
+
+        Assertions.notNull(headerSpec, "[headerSpec] have not been set");
+        Assertions.notNull(body, "[body] have not been set");
+        Assertions.notNull(headerSpec.getMsgBodyPropsSpec(), "[header.msgBodyProps] have not been set");
+
+        headerSpec.getMsgBodyPropsSpec().setMsgBodyLength(body.length);
+        final byte[] header = headerSpec.toBytes();
         byte[] headerAndBody = Bytes.concatAll(Lists.newArrayList(header, body));
         byte checkSum = checksumCalculator.apply(headerAndBody);
         return doEncode(headerAndBody, checkSum, escapeFunction);
@@ -78,7 +79,7 @@ public class Jt808MsgBuilder {
                     new byte[]{JtProtocolConstant.PACKAGE_DELIMITER}// 0x7e
             ));
         }
-        final byte[] unescapedBytes = Bytes.concatAll(Lists.newArrayList(//
+        final byte[] unescapedBytes = Bytes.concatAll(Lists.newArrayList(
                 headerAndBody, // 消息头+ 消息体
                 new byte[]{checkSum}// 校验码
         ));
@@ -89,7 +90,6 @@ public class Jt808MsgBuilder {
                 escaped,
                 new byte[]{JtProtocolConstant.PACKAGE_DELIMITER} // 0x7e
         );
-        // return this.escapeFunction.doEscapeForSend(unescapedBytes, 1, unescapedBytes.length - 2);
     }
 
 }

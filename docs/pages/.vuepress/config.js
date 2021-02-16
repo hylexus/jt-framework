@@ -70,6 +70,7 @@ function jt808GuideSidebarConfig() {
                 '/jt-808/guide/customization/msg-handler-config',
                 '/jt-808/guide/customization/terminal-validator-config',
                 '/jt-808/guide/customization/auth-validator-config',
+                '/jt-808/guide/customization/msg-builder.md',
             ]
         },
         {
