@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.codec;
 
 import com.google.common.collect.Lists;
 import io.github.hylexus.jt.codec.encode.CommonFieldEncoder;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.oaks.utils.BcdOps;
@@ -55,12 +56,16 @@ public class Encoder {
         return props & 0xFFFF;
     }
 
-    private byte[] generateMsgHeader4Resp(int msgId, int bodyProps, String terminalId, int flowId) throws IOException {
+    private byte[] generateMsgHeader4Resp(int msgId, int bodyProps, String terminalId, int flowId, Jt808ProtocolVersion version) throws IOException {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             // 1. 消息ID word(16)
             baos.write(IntBitOps.intTo2Bytes(msgId));
             // 2. 消息体属性 word(16)
             baos.write(IntBitOps.intTo2Bytes(bodyProps));
+            // 协议版本
+            if (version == Jt808ProtocolVersion.VERSION_2019) {
+                baos.write(0x01);
+            }
             // 3. 终端手机号 bcd[6]
             baos.write(BcdOps.bcdString2bytes(terminalId));
             // 4. 消息流水号 word(16),按发送顺序从 0 开始循环累加
@@ -86,8 +91,17 @@ public class Encoder {
 
     public byte[] encodeRespMsg(RespMsgBody bodySupport, int flowId, String terminalPhone) throws IOException {
         byte[] body = bodySupport.toBytes();
-        int bodyProps = this.generateMsgBodyProps(body.length, 0b000, false, 0);
-        byte[] header = this.generateMsgHeader4Resp(bodySupport.replyMsgType().getMsgId(), bodyProps, terminalPhone, flowId);
+        int reversedLastBit = 0;
+        Jt808ProtocolVersion version = Jt808ProtocolVersion.VERSION_2011;
+        // 根据终端手机判断版本: BcdOps.bcd2String 中截断最前面的0,所以2019版本为19位
+        if (19 == terminalPhone.length()) {
+            // 2019 14bit=1
+            reversedLastBit = 1;
+            version = Jt808ProtocolVersion.VERSION_2019;
+        }
+
+        int bodyProps = this.generateMsgBodyProps(body.length, 0b000, false, reversedLastBit);
+        byte[] header = this.generateMsgHeader4Resp(bodySupport.replyMsgType().getMsgId(), bodyProps, terminalPhone, flowId, version);
         byte[] headerAndBody = Bytes.concatAll(Lists.newArrayList(header, body));
         byte checkSum = this.bytesEncoder.calculateCheckSum(headerAndBody, 0, headerAndBody.length);
         return doEncode(headerAndBody, checkSum, true);
