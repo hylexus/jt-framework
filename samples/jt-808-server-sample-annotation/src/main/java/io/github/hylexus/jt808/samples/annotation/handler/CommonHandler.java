@@ -42,6 +42,11 @@ public class CommonHandler {
     @Autowired
     private Jt808SessionManager jt808SessionManager;
 
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0107)
+    public void processMsg0107(Msg0107 msg0107) {
+        log.info("{}", msg0107);
+    }
+
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, desc = "终端注册")
     public RegisterReplyMsgBody processRegisterMsg(RegisterMsg msg, RequestMsgHeader header) {
         log.info("{}", msg);

@@ -1,8 +1,6 @@
 package io.github.hylexus.jt808.samples.customized.controller;
 
 import com.google.common.collect.Lists;
-import io.github.hylexus.jt.command.CommandWaitingPool;
-import io.github.hylexus.jt.command.Jt808CommandKey;
 import io.github.hylexus.jt.data.resp.DwordBytesValueWrapper;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.dispatcher.CommandSender;
@@ -73,17 +71,6 @@ public class SampleController {
     private Jt808Session getSession(String terminalId) {
         return jt808SessionManager.findByTerminalId(terminalId)
                 .orElseThrow(() -> new JtSessionNotFoundException(terminalId));
-    }
-
-    private void simulatePutResultByAnotherThread(Jt808CommandKey commandKey) {
-        new Thread(() -> {
-            try {
-                TimeUnit.SECONDS.sleep(2);
-                CommandWaitingPool.getInstance().putIfNecessary(commandKey, "result for " + commandKey.getKeyAsString());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
 }

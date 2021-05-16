@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.support;
 
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
@@ -25,7 +26,11 @@ public class RequestMsgBodyConverterMapping {
     }
 
     public Optional<RequestMsgBodyConverter<? extends RequestMsgBody>> getConverter(MsgType msgType) {
-        return Optional.ofNullable(mapping.get(msgType.getMsgId()));
+        final RequestMsgBodyConverter<? extends RequestMsgBody> converter = mapping.get(msgType.getMsgId());
+        if (converter != null) {
+            return Optional.of(converter);
+        }
+        return Optional.ofNullable(mapping.get(BuiltinJt808MsgType.CLIENT_REPLY_PLACEHOLDER.getMsgId()));
     }
 
     public RequestMsgBodyConverterMapping registerConverter(MsgType msgType, RequestMsgBodyConverter<? extends RequestMsgBody> converter) {

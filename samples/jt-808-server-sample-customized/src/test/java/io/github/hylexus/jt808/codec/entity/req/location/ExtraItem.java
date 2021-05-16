@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.codec.entity.req.location;
 
+import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import lombok.Data;
 
@@ -21,4 +22,7 @@ public class ExtraItem {
     @BasicField(order = 2, startIndex = 2, dataType = BYTES, byteCountMethod = "getLength")
     private byte[] rawBytes;
 
+    // fix: https://github.com/hylexus/jt-framework/issues/32
+    @Transient
+    private Object content;
 }

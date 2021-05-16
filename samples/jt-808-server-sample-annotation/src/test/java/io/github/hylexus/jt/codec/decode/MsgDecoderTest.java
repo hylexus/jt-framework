@@ -17,7 +17,7 @@ import org.junit.Test;
  *
  * @author hylexus
  */
-public class DecoderTest {
+public class MsgDecoderTest {
 
     private final BytesEncoder bytesEncoder = new BytesEncoder.DefaultBytesEncoder();
     private final Decoder decoder = new Decoder(bytesEncoder);

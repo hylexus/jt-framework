@@ -11,13 +11,13 @@ public interface CommandKey {
 
     Integer getFlowId();
 
-    default String getKeyAsString() {
-        return getFlowId() == null
-                ? String.format("%s_%s", getTerminalId(), getMsgId())
-                : String.format("%s_%s_%s", getTerminalId(), getMsgId(), getFlowId());
-    }
+    //    default String getKeyAsString() {
+    //        return getFlowId() == null
+    //                ? String.format("%s_%s", getTerminalId(), getMsgId())
+    //                : String.format("%s_%s_%s", getTerminalId(), getMsgId(), getFlowId());
+    //    }
 
-    default String getWaitingFlag() {
-        return "_" + getKeyAsString();
-    }
+    //    default String getWaitingFlag() {
+    //        return "_" + getKeyAsString();
+    //    }
 }

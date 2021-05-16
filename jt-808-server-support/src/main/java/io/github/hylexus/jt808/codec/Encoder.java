@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.github.hylexus.jt.codec.encode.CommonFieldEncoder;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
@@ -40,20 +41,7 @@ public class Encoder {
 
 
     public int generateMsgBodyProps(int msgBodySize, int encryptionType, boolean isSubPackage, int reversedLastBit) {
-
-        if (msgBodySize >= 1024) {
-            log.warn("The max value of msgBodySize is 1024, but {} .", msgBodySize);
-        }
-
-        // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
-        int props = (msgBodySize & 0x3FF)
-                // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
-                | ((encryptionType << 10) & 0x1C00)
-                // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
-                | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
-                // [14-15] 1100,0000,0000,0000(C000)(保留位)
-                | ((reversedLastBit << 14) & 0xC000);
-        return props & 0xFFFF;
+        return ProtocolUtils.generateMsgBodyPropsForJt808(msgBodySize, encryptionType, isSubPackage, reversedLastBit);
     }
 
     private byte[] generateMsgHeader4Resp(int msgId, int bodyProps, String terminalId, int flowId, Jt808ProtocolVersion version) throws IOException {

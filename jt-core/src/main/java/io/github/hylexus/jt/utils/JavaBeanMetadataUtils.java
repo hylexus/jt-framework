@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.utils;
 
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.annotation.msg.req.extra.ExtraField;
 import io.github.hylexus.jt.annotation.msg.req.slice.SlicedFrom;
@@ -63,6 +64,11 @@ public class JavaBeanMetadataUtils {
         for (Field field : cls.getDeclaredFields()) {
             Class<?> fieldType = field.getType();
 
+            // @see https://github.com/hylexus/jt-framework/issues/32
+            if (shouldBeIgnore(field)) {
+                continue;
+            }
+
             JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
             if (javaBeanFieldMetadata.isAnnotationPresent(BasicField.class)) {
@@ -104,5 +110,10 @@ public class JavaBeanMetadataUtils {
             }
         }
         return javaBeanFieldMetadata;
+    }
+
+    private static boolean shouldBeIgnore(Field field) {
+        return field.getAnnotation(Transient.class) != null
+                || field.getAnnotation(java.beans.Transient.class) != null;
     }
 }

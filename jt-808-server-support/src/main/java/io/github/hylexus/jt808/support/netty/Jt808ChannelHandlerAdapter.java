@@ -23,6 +23,8 @@ import static io.netty.util.ReferenceCountUtil.release;
 /**
  * @author hylexus
  * createdAt 2018/12/28
+ * @see TerminalValidatorHandler
+ * @see Jt808DecodeHandler
  **/
 @Slf4j(topic = "jt-808.channel.handler.adapter")
 @ChannelHandler.Sharable

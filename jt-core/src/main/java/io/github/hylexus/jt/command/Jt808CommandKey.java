@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -20,19 +21,47 @@ public class Jt808CommandKey implements CommandKey {
 
     private static final String PREFIX = "jt808:";
 
+    /**
+     * 终端ID
+     */
     private String terminalId;
+    /**
+     * 终端对下发消息的回复类型
+     */
     private MsgType msgType;
+    /**
+     * 流水号
+     */
+    @Nullable
     private Integer flowId;
 
     private Jt808CommandKey() {
     }
 
-    public static Jt808CommandKey of(MsgType msgType, String terminalId) {
-        return of(msgType, terminalId, null);
+    public static Jt808CommandKey of(String terminalId, MsgType msgType) {
+        return of(terminalId, msgType, null);
     }
 
-    public static Jt808CommandKey of(MsgType msgType, String terminalId, Integer flowId) {
+    /***
+     *
+     * @deprecated User {@link #of(String, MsgType)} instead.
+     */
+    @Deprecated
+    public static Jt808CommandKey of(MsgType msgType, String terminalId) {
+        return of(terminalId, msgType);
+    }
+
+    public static Jt808CommandKey of(String terminalId, MsgType msgType, Integer flowId) {
+        Objects.requireNonNull(msgType, "msgType is null");
         return new Jt808CommandKey().setMsgType(msgType).setTerminalId(terminalId).setFlowId(flowId);
+    }
+
+    /**
+     * @deprecated Use {@link #of(String, MsgType, Integer)} instead.
+     */
+    @Deprecated
+    public static Jt808CommandKey of(MsgType msgType, String terminalId, Integer flowId) {
+        return of(terminalId, msgType, flowId);
     }
 
     @Override
@@ -45,15 +74,16 @@ public class Jt808CommandKey implements CommandKey {
         return terminalId;
     }
 
+    @Nullable
     @Override
     public Integer getFlowId() {
         return flowId;
     }
 
-    @Override
-    public String getKeyAsString() {
-        return PREFIX + CommandKey.super.getKeyAsString();
-    }
+    //    @Override
+    //    public String getKeyAsString() {
+    //        return PREFIX + CommandKey.super.getKeyAsString();
+    //    }
 
     @Override
     public boolean equals(Object o) {

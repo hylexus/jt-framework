@@ -12,6 +12,8 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.NETTY_HANDLER_NAME_
 /**
  * @author lirenhao
  * date: 2020/7/12 4:42 下午
+ * @see Jt808DecodeHandler
+ * @see Jt808ChannelHandlerAdapter
  */
 @Slf4j(topic = "jt-808.channel.handler.adapter")
 @ChannelHandler.Sharable

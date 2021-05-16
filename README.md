@@ -12,14 +12,13 @@ Jt-808协议服务端。
 
 ### ⭐ New Features
 
-- https://github.com/hylexus/jt-framework/pull/28
-    - @Jt808RequestMsgConverter
-    - @Jt808RequestMsgHandler
+新增 `io.github.hylexus.jt.msg.builder.jt808.Jt808MsgBuilder`
 
 ### 🐞 Bug Fixes
 
-- https://github.com/hylexus/jt-framework/issues/26
-
+- https://github.com/hylexus/jt-framework/issues/32
+- https://github.com/hylexus/jt-framework/issues/33
+- https://github.com/hylexus/jt-framework/issues/34
 
 ## QuickStart
 
@@ -35,8 +34,8 @@ Jt-808协议服务端。
 
 ```groovy
 dependencies {
-	// ...
-	implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.10-RELEASE"
+    // ...
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.11-RELEASE"
     // ...
 }
 ```
@@ -44,10 +43,11 @@ dependencies {
 - maven
 
 ```xml
+
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.10-RELEASE</version>
+    <version>1.0.11-RELEASE</version>
 </dependency>
 ```
 
@@ -66,6 +66,7 @@ logging:
 - `@EnableJt808ServerAutoConfig` 启用自动配置
 
 ```java
+
 @SpringBootApplication
 // 启用自动配置
 @EnableJt808ServerAutoConfig
@@ -93,6 +94,7 @@ public class Jt808ServerSampleBareApplication {
     - RequestMsgQueueListener：自定义 `MsgQueueListener`，内置基于 `Google-EventBus` 的 MsgQueueListener
     - ResponseMsgBodyConverter：自定义消息转换器
     - HandlerMethodArgumentResolver：自定义参数解析器，类似于SpringMVC的 `HandlerMethodArgumentResolver`
+    - 报文构建器: `io.github.hylexus.jt.msg.builder.jt808.Jt808MsgBuilder`
     - ……
 
 ## Building from Source

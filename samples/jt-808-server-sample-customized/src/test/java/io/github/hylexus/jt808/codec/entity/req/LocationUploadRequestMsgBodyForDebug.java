@@ -38,6 +38,9 @@ public class LocationUploadRequestMsgBodyForDebug implements RequestMsgBody, Req
     @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
 
+    @BasicField(startIndex = 4, dataType = DWORD)
+    private long statusAsLong;
+
     private LocationUploadStatus statusInfo = new LocationUploadStatus();
 
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)

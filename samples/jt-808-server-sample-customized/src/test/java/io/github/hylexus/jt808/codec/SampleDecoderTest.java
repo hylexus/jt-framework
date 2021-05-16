@@ -14,7 +14,7 @@ import static io.github.hylexus.jt.config.Jt808ProtocolVersion.VERSION_2011;
  * @author hylexus
  * Created At 2019-09-23 9:57 下午
  */
-public class DecoderTest {
+public class SampleDecoderTest {
 
     private final Decoder decoder = new Decoder(new BytesEncoder.DefaultBytesEncoder());
 
@@ -51,26 +51,6 @@ public class DecoderTest {
 
         LocationUploadRequestMsgBodyForDebug y = decoder.decodeRequestMsgBody(LocationUploadRequestMsgBodyForDebug.class, bodyBytes, metadata);
         System.out.println(y);
-        //ExtraEntity extraEntity = y.getExtraEntity();
-        //System.out.println(extraEntity);
-        //System.out.println(extraEntity.getObdData());
-        //        System.out.println("Integer.toBinaryString(y.getStatus()) = " + Integer.toBinaryString(y.getStatus()));
-        //        System.out.println(y.getStatusInfo());
-        //        System.out.println("y.getAcc() = " + y.getAccStatus());
-        //        System.out.println("y.getAcc() = " + y.getAccStatus1());
-        //        System.out.println("y.getBit8to9() = " + y.getBit8to9());
-        //        System.out.println("y.getBit18() = " + y.getBit18());
-        //        System.out.println(y);
-        // System.out.println(JSON.toJSONString(extraEntity.getObdData(), true));
-        //        Optional<LocationUploadMsgBody> body = new LocationUploadMsgBodyConverter().convert2Entity(metadata);
-        //        System.out.println(body.get());
-        //        Optional<LocationUploadMsgBody> x = new LocationUploadMsgBodyConverter2().convert2Entity(metadata);
-        //        System.out.println(x.get());
-        //        List<AdditionalItemEntity> additionalItemEntity = y.getAdditionalInfo();
-        //        additionalItemEntity.forEach(msg -> {
-        //            System.out.println(HexStringUtils.int2HexString(msg.getMsgId(), 4, true) + " --> " + msg);
-        //        });
-        //System.out.println(JSON.toJSONString(y.getExtraMsg(), true));
     }
 
     @Test

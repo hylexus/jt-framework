@@ -17,7 +17,7 @@ import java.util.List;
  * @author hylexus
  * Created At 2019-10-19 7:55 下午
  */
-public class EncoderTest {
+public class SampleEncoderTest {
 
     private final Encoder encoder = new Encoder(new BytesEncoder.DefaultBytesEncoder());
 
