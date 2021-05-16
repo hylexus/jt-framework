@@ -9,6 +9,7 @@
 - https://github.com/hylexus/jt-framework/issues/32
 - https://github.com/hylexus/jt-framework/issues/33
 - https://github.com/hylexus/jt-framework/issues/34
+- https://github.com/hylexus/jt-framework/issues/37
 
 # 1.0.10-RELEASE
 
