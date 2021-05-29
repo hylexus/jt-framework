@@ -12,10 +12,9 @@ jt808:
     base-packages:
     register-builtin-request-msg-converters: true
   handler-scan:
+    enabled: true
     base-packages:
-      enabled: true
-      base-packages:
-      register-builtin-msg-handlers: true
+    register-builtin-msg-handlers: true
   exception-handler-scan:
     enabled: true
     base-packages: ${jt808.handler-scan.base-packages:}
