@@ -10,7 +10,6 @@ jt808:
       all-idle-time: 20m
   protocol:
     version: auto_detection
-    max-frame-length: 1024
   entity-scan:
     enabled: true
     base-packages: io.github.hylexus.jt808.samples.annotation.entity.req

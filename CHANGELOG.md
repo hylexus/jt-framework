@@ -1,3 +1,16 @@
+# 1.0.12-RELEASE
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/44
+
+### ⭐ New Features
+
+新增配置项：
+
+- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+- `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
+
 # 1.0.11-RELEASE
 
 ### ⭐ New Features

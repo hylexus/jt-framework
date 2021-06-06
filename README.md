@@ -10,16 +10,16 @@ Jt-808协议服务端。
 
 ## ChangeLog
 
-### ⭐ New Features
-
-新增 `io.github.hylexus.jt.msg.builder.jt808.Jt808MsgBuilder`
-
 ### 🐞 Bug Fixes
 
-- https://github.com/hylexus/jt-framework/issues/32
-- https://github.com/hylexus/jt-framework/issues/33
-- https://github.com/hylexus/jt-framework/issues/34
-- https://github.com/hylexus/jt-framework/issues/37
+- https://github.com/hylexus/jt-framework/issues/44
+
+### ⭐ New Features
+
+新增配置项：
+
+- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+- `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
 
 ## QuickStart
 
