@@ -37,9 +37,6 @@ public class ProtocolUtils {
     }
 
     public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, int reversedLastBit) {
-        if (msgBodySize >= 1024) {
-            log.warn("The max value of msgBodySize is 1024, but {} .", msgBodySize);
-        }
 
         // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
         int props = (msgBodySize & 0x3FF)

@@ -20,7 +20,7 @@ public interface AuthCodeValidator {
     class BuiltinAuthCodeValidatorForDebugging implements AuthCodeValidator {
         @Override
         public boolean validateAuthCode(Jt808Session session, RequestMsgMetadata metadata, BuiltinAuthRequestMsgBody body) {
-            log.info("[AuthCodeValidator] Always return true, authCode : {}", body.getAuthCode());
+            log.debug("[AuthCodeValidator] Always return true, authCode : {}", body.getAuthCode());
             return true;
         }
     }

@@ -310,8 +310,21 @@ public abstract class Jt808ServerConfigurationSupport {
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808DecodeHandler decodeHandler,
                                                                TerminalValidatorHandler terminalValidatorHandler,
                                                                Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+
+        final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = this.serverProps.getServer().getIdleStateHandler();
+        final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps
+                = new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps(
+                this.serverProps.getProtocol().getMaxFrameLength(),
+                new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.IdleStateHandlerProps(
+                        idleStateHandler.isEnabled(),
+                        idleStateHandler.getReaderIdleTime(),
+                        idleStateHandler.getWriterIdleTime(),
+                        idleStateHandler.getAllIdleTime()
+                )
+        );
+
         return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(heatBeatHandler, decodeHandler,
-                terminalValidatorHandler, jt808ChannelHandlerAdapter);
+                terminalValidatorHandler, jt808ChannelHandlerAdapter, serverBootstrapProps);
     }
 
     @Bean(BEAN_NAME_JT808_NETTY_TCP_SERVER)
