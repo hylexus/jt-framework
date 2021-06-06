@@ -7,7 +7,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.Data;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static io.github.hylexus.jt.config.JtProtocolConstant.*;
@@ -25,18 +27,46 @@ public interface Jt808ServerNettyConfigure {
 
     @BuiltinComponent
     class DefaultJt808ServerNettyConfigure implements Jt808ServerNettyConfigure {
+        @Data
+        public static class BuiltInServerBootstrapProps {
+            private final int maxFrameLength;
+            private final IdleStateHandlerProps idleStateHandlerProps;
+
+            public BuiltInServerBootstrapProps(int maxFrameLength, IdleStateHandlerProps idleStateHandlerProps) {
+                this.maxFrameLength = maxFrameLength;
+                this.idleStateHandlerProps = idleStateHandlerProps;
+            }
+        }
+
+        @Data
+        public static class IdleStateHandlerProps {
+            private boolean enabled;
+            private Duration readerIdleTime;
+            private Duration writerIdleTime;
+            private Duration allIdleTime;
+
+            public IdleStateHandlerProps(boolean enabled, Duration readerIdleTime, Duration writerIdleTime, Duration allIdleTime) {
+                this.enabled = enabled;
+                this.readerIdleTime = readerIdleTime;
+                this.writerIdleTime = writerIdleTime;
+                this.allIdleTime = allIdleTime;
+            }
+        }
+
         private final HeatBeatHandler heatBeatHandler;
         private final Jt808DecodeHandler decodeHandler;
         private final TerminalValidatorHandler terminalValidatorHandler;
         private final Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter;
+        private final BuiltInServerBootstrapProps serverBootstrapProps;
 
         public DefaultJt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808DecodeHandler decodeHandler,
                                                 TerminalValidatorHandler terminalValidatorHandler,
-                                                Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter) {
+                                                Jt808ChannelHandlerAdapter jt808ChannelHandlerAdapter, BuiltInServerBootstrapProps serverBootstrapProps) {
             this.heatBeatHandler = heatBeatHandler;
             this.decodeHandler = decodeHandler;
             this.terminalValidatorHandler = terminalValidatorHandler;
             this.jt808ChannelHandlerAdapter = jt808ChannelHandlerAdapter;
+            this.serverBootstrapProps = serverBootstrapProps;
         }
 
         @Override
@@ -49,12 +79,20 @@ public interface Jt808ServerNettyConfigure {
 
         @Override
         public void configureSocketChannel(SocketChannel ch) {
-            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_IDLE_STATE, new IdleStateHandler(20, 20, 20, TimeUnit.MINUTES));
+            if (serverBootstrapProps.getIdleStateHandlerProps().isEnabled()) {
+                final long readerIdleTime = serverBootstrapProps.getIdleStateHandlerProps().getReaderIdleTime().toMillis();
+                final long writerIdleTime = serverBootstrapProps.getIdleStateHandlerProps().getWriterIdleTime().toMillis();
+                final long allIdleTime = serverBootstrapProps.getIdleStateHandlerProps().getAllIdleTime().toMillis();
+                ch.pipeline().addLast(
+                        NETTY_HANDLER_NAME_808_IDLE_STATE,
+                        new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.MILLISECONDS)
+                );
+            }
             ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, heatBeatHandler);
             ch.pipeline().addLast(
                     NETTY_HANDLER_NAME_808_FRAME,
                     new DelimiterBasedFrameDecoder(
-                            MAX_PACKAGE_LENGTH,
+                            serverBootstrapProps.getMaxFrameLength(),
                             Unpooled.copiedBuffer(new byte[]{PACKAGE_DELIMITER}),
                             Unpooled.copiedBuffer(new byte[]{PACKAGE_DELIMITER, PACKAGE_DELIMITER})
                     )

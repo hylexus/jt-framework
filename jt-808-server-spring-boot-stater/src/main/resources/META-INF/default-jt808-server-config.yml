@@ -2,10 +2,16 @@ jt808:
   print-component-statistics: true
   protocol:
     version: auto_detection
+    max-frame-length: 2048
   server:
     port: 6808
     boss-thread-count: 0
     worker-thread-count: 0
+    idle-state-handler:
+      enabled: true
+      reader-idle-time: 20m
+      writer-idle-time: 20m
+      all-idle-time: 20m
   entity-scan:
     enabled: true
     enable-builtin-entity: true

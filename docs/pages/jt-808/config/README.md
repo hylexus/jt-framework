@@ -41,6 +41,10 @@ jt808:
 
 808协议版本，可选值位于：`io.github.hylexus.jt.config.Jt808ProtocolVersion` 。
 
+### max-frame-length
+
+对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。默认值：`1024`。
+
 ## server
 
 ### port
@@ -70,6 +74,12 @@ this.bossGroup = new NioEventLoopGroup(bossThreadCount);
 ```java
 this.workerGroup = new NioEventLoopGroup(workThreadCount);
 ```
+
+### idle-state-handler
+
+该配置项对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+
+如果你的项目不需要 `IdleStateHandler` 的话，将 `jt808.server.idle-state-handler.enabled` 配置为 `false` 即可。
 
 ## entity-scan
 
