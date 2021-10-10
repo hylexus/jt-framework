@@ -36,7 +36,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.11-RELEASE"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.12-RELEASE"
     // ...
 }
 ```
@@ -48,7 +48,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.11-RELEASE</version>
+    <version>1.0.12-RELEASE</version>
 </dependency>
 ```
 
