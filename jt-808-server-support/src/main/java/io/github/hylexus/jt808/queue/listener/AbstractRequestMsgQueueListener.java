@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.queue.listener;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
@@ -49,7 +50,8 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void consumeMsg(RequestMsgMetadata metadata, RequestMsgBody body) {
-        val handlerInfo = msgHandlerMapping.getHandler(metadata.getMsgType());
+        final Jt808ProtocolVersion version = metadata.getHeader().getVersion();
+        final Optional<MsgHandler<? extends RequestMsgBody>> handlerInfo = msgHandlerMapping.getHandler(metadata.getMsgType(), version);
         if (!handlerInfo.isPresent()) {
             log.error("No handler found for MsgType : {}", metadata.getMsgType());
             return;
@@ -88,7 +90,10 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
             final Optional<RespMsgBody> respMsgBodyInfo = responseMsgBodyConverter.convert(result, session, metadata);
 
             if (respMsgBodyInfo.isPresent() && session != null && metadata != null) {
-                byte[] respBytes = this.encoder.encodeRespMsg(respMsgBodyInfo.get(), session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
+                byte[] respBytes = this.encoder.encodeRespMsg(
+                        respMsgBodyInfo.get(), metadata.getHeader().getVersion(), session.getCurrentFlowId(),
+                        metadata.getHeader().getTerminalId()
+                );
                 session.sendMsgToClient(respBytes);
             }
         } catch (Throwable throwable) {

@@ -3,13 +3,14 @@ package io.github.hylexus.jt808.codec;
 import io.github.hylexus.jt.codec.decode.FieldDecoder;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.exception.JtUnsupportedProtocolVersionException;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgHeaderAware;
 import io.github.hylexus.jt808.support.entity.scan.RequestMsgMetadataAware;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
-import io.github.hylexus.oaks.utils.Numbers;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +44,7 @@ public class Decoder {
         // ret.setBodyBytes(Bytes.subSequence(bytes, msgBodyByteStartIndex, msgHeader.getMsgBodyLength()));
         ret.setBodyBytes(Bytes.range(bytes, msgBodyByteStartIndex, bytes.length - 1));
         if (msgHeader.getMsgBodyLength() != ret.getBodyBytes().length) {
-            log.error("parse MsgHeader error, expected(byte[2,3]) bodyLength is {}, actual : {}", msgHeader.getMsgBodyLength(), ret.getBodyBytes().length);
+            log.error("Parse MsgHeader error, expected byte[2,3][0-9](bodyLength) is {}, actual : {}", msgHeader.getMsgBodyLength(), ret.getBodyBytes().length);
         }
 
         // 3. 去掉分隔符之后，最后一位就是校验码
@@ -95,17 +96,27 @@ public class Decoder {
         header.setHasSubPackage(((bodyProps & 0x2000) >> 13) == 1);
         // [14-15] 1100,0000,0000,0000(C000)(保留位) (version-2011)
         header.setReservedBit(((bodyProps & 0xc000) >> 14));
+
+        // 2019版 消息体属性中第14位为1
+        final byte version = (byte) ((bodyProps & 0x4000) >> 14);
+        if (version == 1) {
+            header.setVersion(Jt808ProtocolVersion.VERSION_2019);
+        } else {
+            header.setVersion(Jt808ProtocolVersion.VERSION_2011);
+        }
         return header;
     }
 
     private RequestMsgHeader parseMsgHeaderFromBytes(Jt808ProtocolVersion version, byte[] bytes) {
         switch (version) {
-            case VERSION_2011:
-                return parseMsgHeaderFromBytesForVersion2011(bytes);
-            case VERSION_2019:
-                return parseMsgHeaderFromBytesForVersion2019(bytes);
             case AUTO_DETECTION: {
                 return parseMsgHeaderFromBytes(bytes);
+            }
+            case VERSION_2019: {
+                return parseMsgHeaderFromBytesForVersion2019(bytes);
+            }
+            case VERSION_2011: {
+                return parseMsgHeaderFromBytesForVersion2011(bytes);
             }
             default: {
                 throw new JtIllegalArgumentException("未知版本: " + version);
@@ -115,25 +126,27 @@ public class Decoder {
 
     private RequestMsgHeader parseMsgHeaderFromBytes(byte[] bytes) {
         final RequestMsgHeader header = this.parseMsgHeader(bytes);
-        //  byte[2-3]   消息体属性 word(16)
-        final int bodyProps = intFromBytes(bytes, 2, 2);
-        if (Numbers.getBitAt(bodyProps, 14) == 1) {
-            this.parseMsgHeaderTailForVersion2019(bytes, header);
-        } else {
-            this.parseMsgHeaderTailForVersion2011(bytes, header);
-        }
 
+        if (header.getVersion() == Jt808ProtocolVersion.VERSION_2019) {
+            this.parseMsgHeaderTailForVersion2019(bytes, header);
+        } else if (header.getVersion() == Jt808ProtocolVersion.VERSION_2011) {
+            this.parseMsgHeaderTailForVersion2011(bytes, header);
+        } else {
+            throw new JtUnsupportedProtocolVersionException("不支持的协议版本", bytes);
+        }
         return header;
     }
 
     private RequestMsgHeader parseMsgHeaderFromBytesForVersion2019(byte[] bytes) {
         final RequestMsgHeader header = this.parseMsgHeader(bytes);
+        if (header.getVersion() != Jt808ProtocolVersion.VERSION_2019) {
+            throw new JtIllegalStateException("Expected version : 2019, actual : " + header.getVersion());
+        }
         parseMsgHeaderTailForVersion2019(bytes, header);
         return header;
     }
 
     private void parseMsgHeaderTailForVersion2019(byte[] bytes, RequestMsgHeader header) {
-        header.setVersion(Jt808ProtocolVersion.VERSION_2019);
         //  byte[2-3]   消息体属性 word(16)
         final int bodyProps = intFromBytes(bytes, 2, 2);
         // [14] 0100,0000,0000,0000(C000)(保留位)
@@ -160,12 +173,14 @@ public class Decoder {
 
     private RequestMsgHeader parseMsgHeaderFromBytesForVersion2011(byte[] bytes) {
         final RequestMsgHeader header = this.parseMsgHeader(bytes);
+        if (header.getVersion() != Jt808ProtocolVersion.VERSION_2011) {
+            throw new JtIllegalStateException("expected version 2011, actual : " + header.getVersion());
+        }
         parseMsgHeaderTailForVersion2011(bytes, header);
         return header;
     }
 
     private void parseMsgHeaderTailForVersion2011(byte[] bytes, RequestMsgHeader header) {
-        header.setVersion(Jt808ProtocolVersion.VERSION_2011);
         // 3. byte[4-9]   终端手机号或设备ID bcd[6]
         header.setTerminalId(BcdOps.bytes2BcdString(bytes, 4, 6));
 

@@ -20,6 +20,11 @@ public class BuiltinTerminalCommonReplyRequestMsgBodyConverter extends AbstractB
     public static final byte RESULT_SUCCESS = 0;
 
     @Override
+    public int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
+    @Override
     public Optional<BuiltinTerminalCommonReplyMsgBody> convert2Entity(RequestMsgMetadata metadata) {
         final byte[] bytes = metadata.getBodyBytes();
 

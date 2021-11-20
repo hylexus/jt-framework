@@ -2,7 +2,9 @@ package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt808.boot.props.converter.scan.Jt808ConverterScanProps;
 import io.github.hylexus.jt808.boot.props.entity.scan.Jt808EntityScanProps;
@@ -23,10 +25,9 @@ import io.github.hylexus.jt808.dispatcher.impl.DefaultCommandSender;
 import io.github.hylexus.jt808.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
 import io.github.hylexus.jt808.ext.TerminalValidator;
-import io.github.hylexus.jt808.handler.impl.BuiltInNoReplyMsgHandler;
-import io.github.hylexus.jt808.handler.impl.BuiltinAuthMsgHandler;
-import io.github.hylexus.jt808.handler.impl.BuiltinHeartBeatMsgHandler;
+import io.github.hylexus.jt808.handler.impl.*;
 import io.github.hylexus.jt808.handler.impl.exception.DelegateExceptionHandler;
+import io.github.hylexus.jt808.handler.impl.reflection.BuiltinReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt808.handler.impl.reflection.argument.resolver.impl.DelegateHandlerMethodArgumentResolvers;
@@ -151,15 +152,20 @@ public abstract class Jt808ServerConfigurationSupport {
 
     @Bean
     public RequestMsgBodyConverterMapping msgConverterMapping() {
-        RequestMsgBodyConverterMapping mapping = new RequestMsgBodyConverterMapping();
+        final RequestMsgBodyConverterMapping mapping = new RequestMsgBodyConverterMapping();
         this.configureMsgConverterMapping(mapping);
 
         // Default converters for debug
         if (serverProps.getEntityScan().isRegisterBuiltinRequestMsgConverters()) {
-            mapping.registerConverter(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgBodyConverter())
+            final Jt808ProtocolVersion version = serverProps.getProtocol().getVersion();
+            mapping.registerConverterWhen(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgV2011BodyConverter(),
+                            version == Jt808ProtocolVersion.VERSION_2011 || version == Jt808ProtocolVersion.AUTO_DETECTION
+                    )
+                    .registerConverterWhen(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgV2019BodyConverter(),
+                            version == Jt808ProtocolVersion.VERSION_2019 || version == Jt808ProtocolVersion.AUTO_DETECTION
+                    )
                     .registerConverter(BuiltinJt808MsgType.CLIENT_COMMON_REPLY, new BuiltinTerminalCommonReplyRequestMsgBodyConverter())
                     .registerConverter(BuiltinJt808MsgType.CLIENT_HEART_BEAT, new BuiltinEmptyRequestMsgBodyConverter())
-                    .registerConverter(BuiltinJt808MsgType.CLIENT_REPLY_PLACEHOLDER, new BuiltinRawBytesRequestMsgBodyConverter())
             ;
         }
         return mapping;
@@ -172,8 +178,14 @@ public abstract class Jt808ServerConfigurationSupport {
 
         // Default handlers for debug
         if (serverProps.getHandlerScan().isRegisterBuiltinMsgHandlers()) {
-            mapping.registerHandler(new BuiltinAuthMsgHandler(authCodeValidator))
-                    .registerHandler(new BuiltinHeartBeatMsgHandler())
+            final Jt808ProtocolVersion version = serverProps.getProtocol().getVersion();
+            mapping.registerHandlerWhen(
+                            new BuiltinAuthRequestMsgV2011HandlerForDebugging(authCodeValidator),
+                            version == Jt808ProtocolVersion.VERSION_2011 || version == Jt808ProtocolVersion.AUTO_DETECTION
+                    ).registerHandlerWhen(
+                            new BuiltinAuthRequestMsgV2019HandlerForDebugging(authCodeValidator),
+                            version == Jt808ProtocolVersion.VERSION_2019 || version == Jt808ProtocolVersion.AUTO_DETECTION
+                    ).registerHandler(new BuiltinHeartBeatMsgHandler())
                     .registerHandler(new BuiltInNoReplyMsgHandler())
             ;
         }
@@ -209,8 +221,23 @@ public abstract class Jt808ServerConfigurationSupport {
 
         return new Jt808MsgHandlerScanner(
                 handlerScan.getBasePackages(), msgTypeParser,
-                msgHandlerMapping, new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler)
-        );
+                msgHandlerMapping,
+                new CustomReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler),
+                self -> {
+                    if (handlerScan.isRegisterBuiltinMsgHandlers()) {
+                        try {
+                            self.detectMsgHandler(
+                                    new BuiltinReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter, delegateExceptionHandler),
+                                    Sets.newHashSet(
+                                            BuiltinRegisterRequestMsgV2011HandlerForDebugging.class,
+                                            BuiltinRegisterRequestMsgV2019HandlerForDebugging.class
+                                    )
+                            );
+                        } catch (Exception e) {
+                            throw new JtIllegalStateException("扫描内置 MsgHandler 发生异常", e);
+                        }
+                    }
+                });
 
     }
 

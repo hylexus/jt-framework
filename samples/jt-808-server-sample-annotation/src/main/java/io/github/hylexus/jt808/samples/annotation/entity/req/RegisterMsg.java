@@ -20,18 +20,25 @@ import static io.github.hylexus.jt.data.MsgDataType.*;
 @Jt808ReqMsgBody(msgType = 0x0100)
 public class RegisterMsg implements RequestMsgBody, RequestMsgHeaderAware {
     private RequestMsgHeader requestMsgHeader;
+
     @BasicField(startIndex = 0, dataType = WORD)
     private int provinceId;
+
     @BasicField(startIndex = 2, dataType = WORD)
     private int cityId;
+
     @BasicField(startIndex = 4, dataType = BYTES, length = 5)
     private byte[] manufacturerId;
+
     @BasicField(startIndex = 9, dataType = BYTES, length = 20)
     private byte[] terminalType;
+
     @BasicField(startIndex = 29, dataType = BYTES, length = 7)
     private byte[] terminalId;
+
     @BasicField(startIndex = 36, dataType = BYTE)
     private byte color;
+
     @BasicField(startIndex = 37, dataType = STRING, byteCountMethod = "getCarIdentifierLength")
     private String carIdentifier;
 

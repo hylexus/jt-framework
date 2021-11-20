@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.handler.impl;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.AbstractBuiltinRequestMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
@@ -22,7 +22,7 @@ import static java.util.Optional.of;
  */
 @Slf4j
 @BuiltinComponent
-public class BuiltinHeartBeatMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
+public class BuiltinHeartBeatMsgHandler extends AbstractBuiltinRequestMsgHandler<RequestMsgBody> {
 
     @Override
     public int getOrder() {

@@ -3,11 +3,11 @@ package io.github.hylexus.jt808.support.handler.scan;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandlerMapping;
 import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
-import io.github.hylexus.jt808.handler.AbstractMsgHandler;
 import io.github.hylexus.jt808.handler.MsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.CustomReflectionBasedRequestMsgHandler;
 import io.github.hylexus.jt808.handler.impl.reflection.HandlerMethod;
@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static io.github.hylexus.jt.utils.ReflectionUtils.isVoidReturnType;
@@ -47,16 +48,22 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
 
     public Jt808MsgHandlerScanner(
             Set<String> packagesToScan, MsgTypeParser msgTypeParser,
-            MsgHandlerMapping msgHandlerMapping, CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler) {
+            MsgHandlerMapping msgHandlerMapping, CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler,
+            Consumer<Jt808MsgHandlerScanner> beforeInitializingBean) {
 
         this.packagesToScan = packagesToScan;
         this.msgTypeParser = msgTypeParser;
         this.msgHandlerMapping = msgHandlerMapping;
         this.reflectionBasedRequestMsgHandler = reflectionBasedRequestMsgHandler;
+        this.beforeInitializingBean = beforeInitializingBean;
     }
+
+    private final Consumer<Jt808MsgHandlerScanner> beforeInitializingBean;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        this.beforeInitializingBean.accept(this);
+
         // 通过普通注解扫描 [MsgHandler], 不会加入Spring容器
         detectMsgHandlerByAnnotation();
 
@@ -77,7 +84,7 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
         }
     }
 
-    private void detectMsgHandlerFromSpringContainer() throws IOException, InstantiationException, IllegalAccessException {
+    private void detectMsgHandlerFromSpringContainer() throws InstantiationException, IllegalAccessException {
         @SuppressWarnings("rawtypes") final Set<Class> handlerClassListFromSpringContainer = applicationContext
                 .getBeansWithAnnotation(Jt808RequestMsgHandler.class)
                 .values().stream().map(Object::getClass).collect(Collectors.toSet());
@@ -86,15 +93,15 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
         }
     }
 
-    public void detectMsgHandler(CustomReflectionBasedRequestMsgHandler handler, Set<Class> handlerClassList) throws IOException, InstantiationException,
-            IllegalAccessException {
+    public void detectMsgHandler(
+            CustomReflectionBasedRequestMsgHandler reflectionBasedRequestMsgHandler,
+            @SuppressWarnings("rawtypes") Set<Class> handlerClassList) throws InstantiationException, IllegalAccessException {
 
-        //final ReflectionBasedRequestMsgHandler defaultHandler = new ReflectionBasedRequestMsgHandler(argumentResolver, responseMsgBodyConverter);
         for (Class<?> cls : handlerClassList) {
             final Jt808RequestMsgHandler handlerAnnotation = AnnotationUtils.findAnnotation(cls, Jt808RequestMsgHandler.class);
             assert handlerAnnotation != null;
 
-            if (AbstractMsgHandler.class.isAssignableFrom(cls)) {
+            if (MsgHandler.class.isAssignableFrom(cls)) {
                 Optional<MsgType> optionalMsgType = msgTypeParser.parseMsgType(handlerAnnotation.msgType());
                 if (optionalMsgType.isPresent()) {
                     msgHandlerMapping.registerHandler(optionalMsgType.get(), (MsgHandler<? extends RequestMsgBody>) createBeanInstance(cls));
@@ -119,11 +126,14 @@ public class Jt808MsgHandlerScanner implements InitializingBean, ApplicationCont
                 for (int msgId : mappingAnnotation.msgType()) {
                     MsgType msgType = msgTypeParser.parseMsgType(msgId)
                             .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
-                    handler.addSupportedMsgType(msgType, handlerMethod);
+                    for (Jt808ProtocolVersion version : mappingAnnotation.versions()) {
+                        reflectionBasedRequestMsgHandler.addSupportedMsgType(msgType, version, handlerMethod);
+                        msgHandlerMapping.registerHandler(msgType, version, reflectionBasedRequestMsgHandler, false);
+                    }
                 }
             }
-            msgHandlerMapping.registerHandler(handler, false);
         }
+        // msgHandlerMapping.registerHandler(reflectionBasedRequestMsgHandler, false);
     }
 
     private boolean isSupportedReturnType(Method method) {

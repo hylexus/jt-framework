@@ -4,6 +4,7 @@ import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RespMsgBody;
+import io.github.hylexus.jt808.msg.resp.CommandMsg;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
 
 import java.io.IOException;
@@ -26,10 +27,10 @@ public class DefaultCommandSender extends AbstractCommandSender {
     }
 
     @Override
-    protected byte[] encode(Object object, String terminalId, int flowId) throws IOException {
-        final Optional<RespMsgBody> bodyInfo = respMsgBodyConverter.convert(object);
+    protected byte[] encode(CommandMsg commandMsg, String terminalId, int flowId) throws IOException {
+        final Optional<RespMsgBody> bodyInfo = respMsgBodyConverter.convert(commandMsg);
         if (bodyInfo.isPresent()) {
-            return this.encoder.encodeRespMsg(bodyInfo.get(), flowId, terminalId);
+            return this.encoder.encodeRespMsg(bodyInfo.get(), commandMsg.getVersion(), flowId, terminalId);
         }
         return new byte[0];
     }

@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.utils;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.exception.MsgEncodingException;
 import io.github.hylexus.jt.exception.MsgEscapeException;
 import io.github.hylexus.oaks.utils.BcdOps;
@@ -19,33 +21,55 @@ import java.io.IOException;
 @Slf4j
 public class ProtocolUtils {
 
-    public static byte[] generateMsgHeaderForJt808RespMsg(int msgId, int bodyProps, String terminalId, int flowId) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            // 1. 消息ID word(16)
-            baos.write(IntBitOps.intTo2Bytes(msgId));
-            // 2. 消息体属性 word(16)
-            baos.write(IntBitOps.intTo2Bytes(bodyProps));
-            // 3. 终端手机号 bcd[6]
-            baos.write(BcdOps.bcdString2bytes(terminalId));
-            // 4. 消息流水号 word(16),按发送顺序从 0 开始循环累加
-            baos.write(IntBitOps.intTo2Bytes(flowId));
-            // 消息包封装项 此处不予考虑
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new MsgEncodingException(e);
+    public static byte[] generateMsgHeaderForJt808RespMsg(int msgId, int bodyProps, Jt808ProtocolVersion version, String terminalId, int flowId) {
+        if (version == Jt808ProtocolVersion.VERSION_2011) {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                // 1. byte[0-1] 消息ID word(16)
+                baos.write(IntBitOps.intTo2Bytes(msgId));
+                // 2. byte[2-3] 消息体属性 word(16)
+                baos.write(IntBitOps.intTo2Bytes(bodyProps));
+                // 3. byte[4-9] 终端手机号 bcd[6]
+                baos.write(BcdOps.bcdString2bytes(terminalId));
+                // 4. byte[10-11] 消息流水号 word(16),按发送顺序从 0 开始循环累加
+                baos.write(IntBitOps.intTo2Bytes(flowId));
+                // 消息包封装项 此处不予考虑
+                return baos.toByteArray();
+            } catch (IOException e) {
+                throw new MsgEncodingException(e);
+            }
         }
+        if (version == Jt808ProtocolVersion.VERSION_2019) {
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+                // 1. byte[0-1] 消息ID word(16)
+                baos.write(IntBitOps.intTo2Bytes(msgId));
+                // 2. byte[2-3] 消息体属性 word(16)
+                baos.write(IntBitOps.intTo2Bytes(bodyProps));
+                // 3. byte[4]
+                baos.write(version.getVersionBit());
+                // 4. byte[5-14] 终端手机号 bcd[10]
+                baos.write(BcdOps.bcdString2bytes(terminalId));
+                // 5. byte[15-16] 消息流水号 word(16),按发送顺序从 0 开始循环累加
+                baos.write(IntBitOps.intTo2Bytes(flowId));
+                // 消息包封装项 此处不予考虑
+                return baos.toByteArray();
+            } catch (IOException e) {
+                throw new MsgEncodingException(e);
+            }
+        }
+        throw new JtIllegalArgumentException("不支持的版本" + version);
     }
 
-    public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, int reversedLastBit) {
-
+    public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, Jt808ProtocolVersion version, int reversedBit15) {
         // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
         int props = (msgBodySize & 0x3FF)
-                // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
-                | ((encryptionType << 10) & 0x1C00)
-                // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
-                | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
-                // [14-15] 1100,0000,0000,0000(C000)(保留位)
-                | ((reversedLastBit << 14) & 0xC000);
+                    // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
+                    | ((encryptionType << 10) & 0x1C00)
+                    // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
+                    | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
+                    // [14_ ]  0100,0000,0000,0000(4000)(保留位)
+                    | ((version.getVersionBit() << 14) & 0x4000)
+                    // [15_ ]  1000,0000,0000,0000(8000)(保留位)
+                    | ((reversedBit15 << 15) & 0x8000);
         return props & 0xFFFF;
     }
 
@@ -60,7 +84,7 @@ public class ProtocolUtils {
     public static byte[] doEscape4ReceiveJt808Msg(byte[] bs, int start, int end) throws Exception {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("doEscape4Receive error : index out of bounds(start=" + start
-                    + ",end=" + end + ",bytes length=" + bs.length + ")");
+                                                     + ",end=" + end + ",bytes length=" + bs.length + ")");
         }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             int i = 0;
@@ -93,7 +117,7 @@ public class ProtocolUtils {
     public static byte[] doEscape4SendJt808Msg(byte[] bs, int start, int end) {
         if (start < 0 || end > bs.length) {
             throw new ArrayIndexOutOfBoundsException("doEscape4Send error : index out of bounds(start=" + start
-                    + ",end=" + end + ",bytes length=" + bs.length + ")");
+                                                     + ",end=" + end + ",bytes length=" + bs.length + ")");
         }
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             for (int i = 0; i < start; i++) {

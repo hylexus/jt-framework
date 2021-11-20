@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.annotation.msg.handler;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+
 import java.lang.annotation.*;
 
 /**
@@ -14,5 +16,7 @@ public @interface Jt808RequestMsgHandlerMapping {
     int[] msgType();
 
     String desc() default "";
+
+    Jt808ProtocolVersion[] versions() default {Jt808ProtocolVersion.AUTO_DETECTION};
 
 }

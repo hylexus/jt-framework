@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.boot.config;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -42,12 +43,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 import static io.github.hylexus.jt.utils.CommonUtils.*;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.groupingBy;
 import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
 
 /**
@@ -127,26 +128,27 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private void detectConvertAndHandlerMappings(int no, StringBuilder stringBuilder) {
         stringBuilder.append(line(no, "RequestMsgBodyConverter and MsgHandler MappingInfo:")).append(END_OF_LINE);
-        stringBuilder.append(String.format("%1$-35s\t|  %2$-92s|  %3$-64s%n", "MsgId (MsgDesc)", "MsgConverter", "MsgHandler"));
+        stringBuilder.append(String.format("%1$-35s\t|  %2$-91s  |  %3$-30s\n", "MsgId (MsgDesc)  [Version]", "MsgConverter<RequestMsgBody>", "MsgHandler"));
+
         stringBuilder.append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
-                .append("----------------------------------------------------------------------")
-        ;
-        stringBuilder.append(END_OF_LINE);
+                .append("----------------------------------------------------------------------").append(END_OF_LINE);
 
-        final Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = initMappingInfo();
+        final Map<MsgType, List<MsgConverterAndHandlerMappingInfo>> mappings = initMappingInfo();
 
         mappings.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.comparing(MsgType::getMsgId)))
                 .forEach(entry -> {
-                    MsgType msgType = entry.getKey();
-                    MsgConverterAndHandlerMappingInfo mappingInfo = entry.getValue();
-                    String content = String.format(
-                            "%1$-30s\t|  %2$-125s  |  %3$-30s\n",
-                            formatMsgType(msgType),
-                            detectMsgConverter(mappingInfo),
-                            detectHandlerMethod(mappingInfo.getHandler(), msgType)
-                    );
-                    stringBuilder.append(content);
+                    entry.getValue().stream().sorted(Comparator.comparing(e -> e.getVersion().getVersionBit()))
+                            .forEach(mappingInfo -> {
+                                MsgType msgType = entry.getKey();
+                                String content = String.format(
+                                        "%1$-30s\t|  %2$-125s  |  %3$-30s\n",
+                                        formatMsgType(msgType) + " [" + mappingInfo.getVersion().getShortDesc() + "]",
+                                        detectMsgConverter(mappingInfo),
+                                        detectHandlerMethod(mappingInfo.getHandler(), msgType, mappingInfo.getVersion())
+                                );
+                                stringBuilder.append(content);
+                            });
                 });
         stringBuilder
                 .append("----------------------------------------------------------------------")
@@ -159,12 +161,11 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         return formatClassName(mappingInfo.getConverter(), false, true) + formatEntityClassName(mappingInfo);
     }
 
-    private String detectHandlerMethod(MsgHandler<?> handler, MsgType msgType) {
+    private String detectHandlerMethod(MsgHandler<?> handler, MsgType msgType, Jt808ProtocolVersion version) {
         String prefix = "-";
 
         if (handler instanceof CustomReflectionBasedRequestMsgHandler) {
-            Map<MsgType, HandlerMethod> handlerMethodMapping = ((CustomReflectionBasedRequestMsgHandler) handler).getHandlerMethodMapping();
-            HandlerMethod handlerMethod = handlerMethodMapping.get(msgType);
+            final HandlerMethod handlerMethod = ((CustomReflectionBasedRequestMsgHandler) handler).getHandlerMethod(msgType, version);
             if (handlerMethod == null) {
                 return "";
             }
@@ -173,7 +174,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
             }
             AnsiColor color = detectColor(handler.getClass());
             return prefix + formatClassName(handlerMethod.getBeanInstance())
-                    + AnsiOutput.toString(color, "#" + handlerMethod.getMethod().getName());
+                   + AnsiOutput.toString(color, "#" + handlerMethod.getMethod().getName());
         }
 
         if (containsBean(handler)) {
@@ -277,41 +278,32 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         return "";
     }
 
-    private Map<MsgType, MsgConverterAndHandlerMappingInfo> initMappingInfo() {
-        final Map<Integer, MsgHandler<? extends RequestMsgBody>> handlerMappings = msgHandlerMapping.getHandlerMappings();
+    private Map<MsgType, List<MsgConverterAndHandlerMappingInfo>> initMappingInfo() {
+        return msgConverterMapping.getMsgConverterMappings().entrySet().stream()
+                .flatMap(entry -> {
+                    final Integer msgId = entry.getKey();
+                    final MsgType msgType = msgTypeParser.parseMsgType(msgId)
+                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + msgId));
 
-        Map<MsgType, MsgConverterAndHandlerMappingInfo> mappings = msgConverterMapping.getMsgConverterMappings().entrySet().stream()
-                .map(entry -> {
-                    MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
-                    MsgType msgType = msgTypeParser.parseMsgType(entry.getKey())
-                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId : " + entry.getKey()));
-                    info.setType(msgType);
-                    RequestMsgBodyConverter<?> converter = entry.getValue();
-                    Class<?> entityClass = detectRequestMsgEntityClass(converter, msgType);
-                    info.setEntityClass(entityClass);
-                    info.setConverter(converter);
-
-                    MsgHandler<?> msgHandler = handlerMappings.get(msgType.getMsgId());
-                    info.setHandler(msgHandler);
-                    return info;
-                }).collect(toMap(MsgConverterAndHandlerMappingInfo::getType, Function.identity()));
-
-        handlerMappings.forEach((msgId, msgHandler) -> {
-            MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                    .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with  msgId : " + msgId));
-            MsgConverterAndHandlerMappingInfo info = mappings.getOrDefault(msgType, new MsgConverterAndHandlerMappingInfo());
-            if (info.getHandler() == null) {
-                info.setHandler(msgHandler);
-                mappings.put(msgType, info);
-            }
-        });
-        return mappings;
+                    final Map<Jt808ProtocolVersion, RequestMsgBodyConverter<? extends RequestMsgBody>> entryValue = entry.getValue();
+                    return entryValue.entrySet().stream().map(e -> {
+                        final RequestMsgBodyConverter<? extends RequestMsgBody> converter = e.getValue();
+                        final Jt808ProtocolVersion version = e.getKey();
+                        final MsgConverterAndHandlerMappingInfo info = new MsgConverterAndHandlerMappingInfo();
+                        info.setType(msgType);
+                        final Class<?> entityClass = detectRequestMsgEntityClass(converter, msgType, version);
+                        info.setConverter(converter);
+                        info.setEntityClass(entityClass);
+                        info.setVersion(version);
+                        msgHandlerMapping.getHandler(msgType, version).ifPresent(info::setHandler);
+                        return info;
+                    });
+                }).collect(groupingBy(MsgConverterAndHandlerMappingInfo::getType));
     }
 
-    private Class<?> detectRequestMsgEntityClass(RequestMsgBodyConverter<?> converter, MsgType msgType) {
+    private Class<?> detectRequestMsgEntityClass(RequestMsgBodyConverter<?> converter, MsgType msgType, Jt808ProtocolVersion version) {
         if (converter instanceof CustomReflectionBasedRequestMsgBodyConverter) {
-            Map<Integer, Class<? extends RequestMsgBody>> mapping = ((CustomReflectionBasedRequestMsgBodyConverter) converter).getMsgBodyMapping();
-            return mapping.get(msgType.getMsgId());
+            return ((CustomReflectionBasedRequestMsgBodyConverter) converter).getConverter(msgType.getMsgId(), version).orElse(null);
         }
 
         final Class<?> cls = converter.getClass();
@@ -349,7 +341,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
 
     private String formatMsgType(MsgType msgType) {
-        return String.format("%s (%s)", HexStringUtils.int2HexString(msgType.getMsgId(), 4, true), msgType.getDesc());
+        return String.format("%s (%s)", HexStringUtils.int2HexString(msgType.getMsgId(), 4, true), msgType.getDesc()).toUpperCase();
     }
 
 
@@ -360,18 +352,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         private RequestMsgBodyConverter<?> converter;
         private MsgHandler<?> handler;
         private Class<?> entityClass;
+        private Jt808ProtocolVersion version;
     }
 
-    //    public static void main(String[] args) {
-    //        String[] headers = new String[]{"MsgId (MsgDesc)", "RequestMsgConverter", "MsgHandler"};
-    //        String[][] data = new String[][]{
-    //            {"123", "Alfred Alan", "aalan@gmail.comxxxxxxxxxxxxxxxxxxxxxxxxxxxx"},
-    //            {"223", "Alison Smart", "asmart@gmail.com"},
-    //            {"256", "Ben Bessel", "benb@outlook.com"},
-    //            {"374", "John Roberts", "johnrob@company.com"},
-    //        };
-    //
-    //        String str = ASCIITable.fromData(headers, data).toString();
-    //        System.out.println(str);
-    //    }
 }

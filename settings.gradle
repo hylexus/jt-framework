@@ -15,6 +15,7 @@ include 'samples'
 include 'samples:jt-808-server-sample-bare'
 include 'samples:jt-808-server-sample-customized'
 include 'samples:jt-808-server-sample-annotation'
+include 'samples:jt-808-server-sample-mixed-version'
 
 rootProject.name = "jt-framework"
 // Change default "build.gradle" file to "${project.name}.gradle" recursively

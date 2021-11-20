@@ -65,8 +65,9 @@ public abstract class AbstractCommandSender implements CommandSender {
     }
 
     private Jt808Session getSession(String terminalId) {
-        return sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
+        return sessionManager.findByTerminalId(terminalId)
+                .orElseThrow(() -> new JtSessionNotFoundException("Session Not Found with TerminalId : [" + terminalId + " ]", terminalId));
     }
 
-    protected abstract byte[] encode(Object object, String terminalId, int flowId) throws IOException;
+    protected abstract byte[] encode(CommandMsg object, String terminalId, int flowId) throws IOException;
 }

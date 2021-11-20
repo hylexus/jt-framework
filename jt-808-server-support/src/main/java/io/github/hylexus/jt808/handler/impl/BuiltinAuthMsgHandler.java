@@ -4,7 +4,7 @@ import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.ext.AuthCodeValidator;
-import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.AbstractBuiltinRequestMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.req.BuiltinAuthRequestMsgBody;
@@ -20,12 +20,15 @@ import static io.github.hylexus.jt808.msg.RespMsgBody.AUTH_CODE_ERROR;
 import static java.util.Optional.of;
 
 /**
- * @author hylexus
  * Created At 2019-08-24 15:44
+ *
+ * @author hylexus
+ * @deprecated 使用 {@link BuiltinAuthRequestMsgV2011HandlerForDebugging} 代替
  */
 @Slf4j
+@Deprecated
 @BuiltinComponent
-public class BuiltinAuthMsgHandler extends AbstractMsgHandler<BuiltinAuthRequestMsgBody> {
+public class BuiltinAuthMsgHandler extends AbstractBuiltinRequestMsgHandler<BuiltinAuthRequestMsgBody> {
 
     private final AuthCodeValidator authCodeValidator;
 

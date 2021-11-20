@@ -52,7 +52,7 @@ public class SessionManager implements Jt808SessionManager {
     }
 
     protected Session buildSession(Channel channel, String terminalId) {
-        Session session = new Session();
+        final Session session = new Session();
         session.setChannel(channel);
         session.setId(generateSessionId(channel));
         session.setTerminalId(terminalId);

@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.handler.impl.reflection;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.handler.AbstractMsgHandler;
@@ -16,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author hylexus
@@ -27,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
 
     private final Set<MsgType> supportedMsgTypes = new HashSet<>();
-    private final ConcurrentMap<MsgType, HandlerMethod> mapping = new ConcurrentHashMap<>();
+    private final Map<MsgType, Map<Jt808ProtocolVersion, HandlerMethod>> mapping = new HashMap<>();
     private final HandlerMethodArgumentResolver argumentResolver;
     private final ResponseMsgBodyConverter responseMsgBodyConverter;
     private final ExceptionHandler exceptionHandler;
@@ -42,7 +41,7 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
         this.exceptionHandler = exceptionHandler;
     }
 
-    public Map<MsgType, HandlerMethod> getHandlerMethodMapping() {
+    public Map<MsgType, Map<Jt808ProtocolVersion, HandlerMethod>> getHandlerMethodMapping() {
         return Collections.unmodifiableMap(mapping);
     }
 
@@ -56,16 +55,26 @@ public class CustomReflectionBasedRequestMsgHandler extends AbstractMsgHandler<R
         return supportedMsgTypes;
     }
 
-    public void addSupportedMsgType(MsgType msgType, HandlerMethod handlerMethod) {
+    public void addSupportedMsgType(MsgType msgType, Jt808ProtocolVersion version, HandlerMethod handlerMethod) {
         this.supportedMsgTypes.add(msgType);
-        this.mapping.put(msgType, handlerMethod);
+        final Map<Jt808ProtocolVersion, HandlerMethod> map = this.mapping.computeIfAbsent(msgType, k -> new HashMap<>());
+        map.put(version, handlerMethod);
+        if (map.size() == Jt808ProtocolVersion.values().length) {
+            map.remove(Jt808ProtocolVersion.AUTO_DETECTION);
+        }
+    }
+
+    public HandlerMethod getHandlerMethod(MsgType msgType, Jt808ProtocolVersion version) {
+        return Optional.ofNullable(mapping.get(msgType))
+                .map(m -> m.getOrDefault(version, m.get(Jt808ProtocolVersion.AUTO_DETECTION)))
+                .orElse(null);
     }
 
     @Override
     protected Optional<RespMsgBody> doProcess(RequestMsgMetadata metadata, RequestMsgBody msg, Jt808Session session) {
 
         final MsgType msgType = metadata.getMsgType();
-        final HandlerMethod handlerMethod = mapping.get(msgType);
+        final HandlerMethod handlerMethod = this.getHandlerMethod(msgType, metadata.getHeader().getVersion());
         if (handlerMethod == null) {
             log.warn("No HandlerMethod found for msgType {}, ReflectionBasedRequestMsgHandler return empty().", msgType);
             return Optional.empty();

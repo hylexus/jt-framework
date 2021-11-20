@@ -54,7 +54,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             final int msgId = header.getMsgId();
             final Optional<MsgType> msgType = this.msgTypeParser.parseMsgType(msgId);
             if (!msgType.isPresent()) {
-                log.warn("received unknown msg, msgId = {}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
+                log.warn("Received unknown msg, msgId = {}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
                 return;
             }
             metadata.setMsgType(msgType.get());

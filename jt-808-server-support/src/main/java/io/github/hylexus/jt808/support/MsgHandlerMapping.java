@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.support;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt808.codec.BytesEncoder;
@@ -11,14 +12,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.function.Supplier;
-
-import static java.util.Optional.of;
 
 /**
  * @author hylexus
@@ -27,8 +22,8 @@ import static java.util.Optional.of;
 @Slf4j
 public class MsgHandlerMapping {
 
-    //private Map<MsgType, MsgHandler> mapping;
-    private final Map<Integer, MsgHandler<? extends RequestMsgBody>> mapping;
+    // <msgId,<version,handler>>
+    private final Map<Integer, Map<Jt808ProtocolVersion, MsgHandler<? extends RequestMsgBody>>> mappings;
     private final BytesEncoder bytesEncoder;
 
     @Setter
@@ -36,22 +31,29 @@ public class MsgHandlerMapping {
 
     public MsgHandlerMapping(BytesEncoder bytesEncoder) {
         this.bytesEncoder = bytesEncoder;
-        this.mapping = new ConcurrentHashMap<>();
+        this.mappings = new HashMap<>();
     }
 
-    private boolean containsHandler(@NonNull MsgType msgType) {
-        return mapping.containsKey(msgType.getMsgId());
+    private boolean containsHandler(@NonNull MsgType msgType, Jt808ProtocolVersion version) {
+        return Optional.ofNullable(mappings.get(msgType.getMsgId())).map(m -> m.get(version)).isPresent();
     }
 
-    private void registerWithAwareInterfaceCheck(@NonNull MsgHandler<? extends RequestMsgBody> handler, int msgId) {
+    private void registerWithAwareInterfaceCheck(@NonNull MsgHandler<? extends RequestMsgBody> handler, int msgId, Jt808ProtocolVersion version) {
         if (handler instanceof BytesEncoderAware) {
             ((BytesEncoderAware) handler).setBytesEncoder(this.bytesEncoder);
         }
-        this.mapping.put(msgId, handler);
+        final Map<Jt808ProtocolVersion, MsgHandler<? extends RequestMsgBody>> map = this.mappings.computeIfAbsent(msgId, k -> new HashMap<>());
+        map.put(version, handler);
+        if (map.size() == Jt808ProtocolVersion.values().length) {
+            map.remove(Jt808ProtocolVersion.AUTO_DETECTION);
+        }
     }
 
-    public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler<? extends RequestMsgBody> handler) {
-        return registerHandler(msgType, handler, false);
+    public MsgHandlerMapping registerHandlerWhen(@NonNull MsgHandler<? extends RequestMsgBody> handler, boolean register) {
+        if (register) {
+            this.registerHandler(handler);
+        }
+        return this;
     }
 
     public MsgHandlerMapping registerHandler(@NonNull MsgHandler<? extends RequestMsgBody> handler) {
@@ -68,36 +70,48 @@ public class MsgHandlerMapping {
         return this;
     }
 
+    public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler<? extends RequestMsgBody> handler) {
+        return registerHandler(msgType, handler, false);
+    }
+
     public MsgHandlerMapping registerHandler(@NonNull MsgType msgType, @NonNull MsgHandler<? extends RequestMsgBody> handler, boolean forceOverride) {
+        for (Jt808ProtocolVersion version : handler.getSupportedProtocolVersions()) {
+            this.registerHandler(msgType, version, handler, forceOverride);
+        }
+        return this;
+    }
+
+    public MsgHandlerMapping registerHandler(
+            @NonNull MsgType msgType, Jt808ProtocolVersion version, @NonNull MsgHandler<? extends RequestMsgBody> handler, boolean forceOverride) {
         final int msgId = msgType.getMsgId();
-        if (containsHandler(msgType)) {
-            MsgHandler<?> oldHandler = mapping.get(msgId);
+        final Map<Jt808ProtocolVersion, MsgHandler<? extends RequestMsgBody>> map = mappings.computeIfAbsent(msgId, k -> new HashMap<>());
+        if (map.containsKey(version)) {
+            final MsgHandler<? extends RequestMsgBody> oldHandler = map.get(version);
             if (forceOverride || oldHandler.shouldBeReplacedBy(handler)) {
                 log.warn("Duplicate MsgType : {}, the MsgHandler [{}] was replaced by {}", msgType, oldHandler.getClass(), handler);
-                this.registerWithAwareInterfaceCheck(handler, msgId);
+                this.registerWithAwareInterfaceCheck(handler, msgId, version);
             } else {
                 log.info("Duplicate MsgType  [{}] with [{}], the MsgHandler [{}] register is skipped.",
                         msgType, oldHandler.getClass(), handler);
             }
-            return this;
+        } else {
+            this.registerWithAwareInterfaceCheck(handler, msgId, version);
         }
-
-        this.registerWithAwareInterfaceCheck(handler, msgId);
         return this;
     }
 
-    public Optional<MsgHandler<? extends RequestMsgBody>> getHandler(MsgType msgType) {
-        MsgHandler<? extends RequestMsgBody> msgHandler = mapping.get(msgType.getMsgId());
-        if (msgHandler != null) {
-            return of(msgHandler);
+    public Optional<MsgHandler<? extends RequestMsgBody>> getHandler(MsgType msgType, Jt808ProtocolVersion version) {
+        final Optional<MsgHandler<? extends RequestMsgBody>> optional = Optional.ofNullable(mappings.get(msgType.getMsgId()))
+                .map(m -> m.getOrDefault(version, m.get(Jt808ProtocolVersion.AUTO_DETECTION)));
+        if (optional.isPresent()) {
+            return optional;
         }
-
         return defaultMsgHandlerSupplier == null
                 ? Optional.empty()
                 : Optional.ofNullable(defaultMsgHandlerSupplier.get());
     }
 
-    public Map<Integer, MsgHandler<? extends RequestMsgBody>> getHandlerMappings() {
-        return Collections.unmodifiableMap(this.mapping);
+    public Map<Integer, Map<Jt808ProtocolVersion, MsgHandler<? extends RequestMsgBody>>> getHandlerMappings() {
+        return Collections.unmodifiableMap(this.mappings);
     }
 }

@@ -11,13 +11,18 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * @author hylexus
  * createdAt 2018/12/28
+ *
+ * @author hylexus
+ * @see BuiltinAuthRequestMsgV2011
+ * @see BuiltinAuthRequestMsgV2019
+ * @deprecated 使用 {@link BuiltinAuthRequestMsgV2011} 代替
  **/
 @Data
 @Accessors(chain = true)
 @Jt808ReqMsgBody(msgType = 0x0102)
 @BuiltinComponent
+@Deprecated
 public class BuiltinAuthRequestMsgBody implements RequestMsgBody, RequestMsgHeaderAware {
 
     private RequestMsgHeader header;

@@ -3,7 +3,7 @@ package io.github.hylexus.jt808.handler.impl;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt808.handler.AbstractMsgHandler;
+import io.github.hylexus.jt808.handler.AbstractBuiltinRequestMsgHandler;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
@@ -22,7 +22,7 @@ import java.util.Set;
  */
 @Slf4j
 @BuiltinComponent
-public class BuiltInNoReplyMsgHandler extends AbstractMsgHandler<RequestMsgBody> {
+public class BuiltInNoReplyMsgHandler extends AbstractBuiltinRequestMsgHandler<RequestMsgBody> {
 
     @Override
     public int getOrder() {

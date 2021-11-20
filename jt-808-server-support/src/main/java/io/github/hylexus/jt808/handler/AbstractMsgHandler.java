@@ -5,6 +5,7 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Encoder;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
+import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.RespMsgBody;
 import io.github.hylexus.jt808.msg.resp.CommonReplyMsgBody;
@@ -40,7 +41,8 @@ public abstract class AbstractMsgHandler<T extends RequestMsgBody> implements Ms
         }
 
         final RespMsgBody respBody = respInfo.get();
-        byte[] respBytes = this.encoder.encodeRespMsg(respBody, session.getCurrentFlowId(), metadata.getHeader().getTerminalId());
+        final RequestMsgHeader requestMsgHeader = metadata.getHeader();
+        byte[] respBytes = this.encoder.encodeRespMsg(respBody, requestMsgHeader.getVersion(), session.getCurrentFlowId(), requestMsgHeader.getTerminalId());
         this.send2Client(session, respBytes);
 
         log.debug("<<<<<<<<<<<<<<< : {}", HexStringUtils.bytes2HexString(respBytes));

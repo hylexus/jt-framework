@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.dispatcher;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
@@ -35,7 +36,8 @@ public abstract class AbstractRequestMsgDispatcher implements RequestMsgDispatch
 
     private Optional<RequestMsgBody> tryParseMsgBody(RequestMsgWrapper wrapper) {
         final MsgType msgType = wrapper.getMetadata().getMsgType();
-        final Optional<RequestMsgBodyConverter<? extends RequestMsgBody>> converterInfo = this.msgConverterMapping.getConverter(msgType);
+        final Jt808ProtocolVersion version = wrapper.getMetadata().getHeader().getVersion();
+        final Optional<RequestMsgBodyConverter<? extends RequestMsgBody>> converterInfo = this.msgConverterMapping.getConverter(msgType, version);
         if (!converterInfo.isPresent()) {
             log.error("No [MsgConverter] found for msgType {}", msgType);
             return Optional.empty();

@@ -84,9 +84,9 @@ public class Jt808Configuration extends Jt808ServerConfigurationSupport {
     // [非必须配置] -- 配置鉴权鉴权消息处理器
     @Override
     public AuthCodeValidator supplyAuthCodeValidator() {
-        return (session, requestMsgMetadata, authRequestMsgBody) -> {
+        return (session, requestMsgMetadata, msgV2019) -> {
             final String terminalId = session.getTerminalId();
-            final String authCode = authRequestMsgBody.getAuthCode();
+            final String authCode = msgV2019.getAuthCode();
             // 从其他服务验证鉴权码是否正确
             log.info("AuthCode validate for terminal : {} with authCode : {}, result: {}", terminalId, authCode, true);
             return true;

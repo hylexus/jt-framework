@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.support.entity.scan;
 
 import io.github.hylexus.jt.annotation.msg.req.Jt808ReqMsgBody;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.spring.utils.ClassScanner;
@@ -43,37 +44,42 @@ public class Jt808EntityScanner implements InitializingBean {
         this.doEntityScan(this.packagesToScan, this.reflectionBasedRequestMsgBodyConverter);
     }
 
-    public void doEntityScan(Set<String> packagesToScan, CustomReflectionBasedRequestMsgBodyConverter converter) throws IOException {
+    public void doEntityScan(
+            Set<String> packagesToScan,
+            CustomReflectionBasedRequestMsgBodyConverter reflectionBasedRequestMsgBodyConverter) throws IOException {
+
         if (CollectionUtils.isEmpty(packagesToScan)) {
             log.info("[jt808.entity-scan.base-packages] is empty. Skip...");
             return;
         }
 
-        ClassScanner scanner = new ClassScanner();
-        Set<Class> entityClass = scanner.doScan(packagesToScan, cls -> AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class) != null);
+        final ClassScanner scanner = new ClassScanner();
+        final Set<Class> entityClass = scanner.doScan(packagesToScan, cls -> AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class) != null);
         if (CollectionUtils.isEmpty(entityClass)) {
             log.info("No MsgBodyEntity found for Jt808");
             return;
         }
 
-        // final ReflectionBasedRequestMsgBodyConverter defaultConverter = new ReflectionBasedRequestMsgBodyConverter();
         for (Class cls : entityClass) {
             final Jt808ReqMsgBody annotation = AnnotationUtils.findAnnotation(cls, Jt808ReqMsgBody.class);
             assert annotation != null;
 
-            int[] msgIds = annotation.msgType();
+            final int[] msgIds = annotation.msgType();
             for (int msgId : msgIds) {
                 if (!RequestMsgBody.class.isAssignableFrom(cls)) {
-                    log.error("Class {} marked by @Jt808MsgBody, but it not a implementation of {}", cls.getSimpleName(),
+                    log.error("Class {} marked by @{}, but it not a implementation of {}", cls.getSimpleName(), Jt808ReqMsgBody.class.getSimpleName(),
                             RequestMsgBody.class.getName());
                     continue;
                 }
-                MsgType msgType = msgTypeParser.parseMsgType(msgId)
+                final MsgType msgType = msgTypeParser.parseMsgType(msgId)
                         .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                 @SuppressWarnings("unchecked")
                 Class<? extends RequestMsgBody> cls1 = cls;
-                converter.addSupportedMsgBody(msgType, cls1);
-                msgConverterMapping.registerConverter(msgType, converter);
+                for (Jt808ProtocolVersion version : annotation.version()) {
+                    reflectionBasedRequestMsgBodyConverter.addSupportedMsgBody(msgType, version, cls1);
+                    msgConverterMapping.registerConverter(msgType, version, reflectionBasedRequestMsgBodyConverter, false);
+                }
+                // msgConverterMapping.registerConverter(msgType, reflectionBasedRequestMsgBodyConverter);
             }
         }
     }

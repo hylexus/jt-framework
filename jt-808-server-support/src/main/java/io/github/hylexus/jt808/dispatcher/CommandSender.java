@@ -18,7 +18,7 @@ public interface CommandSender {
      * 下发数据，--> 不等待 终端回复
      *
      * @param terminalId 终端ID
-     * @param data       要下发的数据。注意:该方法所需数据需要 1. 手动拼装为符合808协议格式的报文, 2. 手动转义
+     * @param data       要下发的数据。这里的字节数组需要手动拼装成符合报文格式的数组 并且 也要事先手动转义
      * @throws InterruptedException InterruptedException
      */
     void sendCommand(String terminalId, byte[] data) throws InterruptedException;
@@ -37,7 +37,7 @@ public interface CommandSender {
      * 下发数据，--> [[等待]] 终端回复
      *
      * @param key      {@link Jt808CommandKey}
-     * @param data     要下发的数据。注意:该方法所需数据需要 1. 手动拼装为符合808协议格式的报文, 2. 手动转义
+     * @param data     要下发的数据。这里的字节数组需要手动拼装成符合报文格式的数组 并且 也要事先手动转义
      * @param timeout  超时时间，等待终端回复的最大等待时间
      * @param timeUnit 超时时间单位
      * @return 终端回复的数据

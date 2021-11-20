@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.samples.customized.controller;
 
 import com.google.common.collect.Lists;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.resp.DwordBytesValueWrapper;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt808.dispatcher.CommandSender;
@@ -50,7 +51,7 @@ public class SampleController {
 
         // 【下发消息】的消息类型为: RESP_TERMINAL_PARAM_SETTINGS (0x8103)  --> RespTerminalSettings的类注解上指定了下发类型
         // 客户端对该【下发消息】的回复消息类型为: CLIENT_COMMON_REPLY (0x0001)
-        CommandMsg commandMsg = CommandMsg.of(terminalId, CLIENT_COMMON_REPLY, param);
+        CommandMsg commandMsg = CommandMsg.of(terminalId, CLIENT_COMMON_REPLY, param, Jt808ProtocolVersion.VERSION_2019);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandMsg, timeout, TimeUnit.SECONDS);
         log.info("resp: {}", resp);
         return resp;

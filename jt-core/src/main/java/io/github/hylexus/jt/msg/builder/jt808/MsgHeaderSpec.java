@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.msg.builder.jt808;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,9 +48,10 @@ public class MsgHeaderSpec {
                 msgBodyPropsSpec.getMsgBodyLength(),
                 msgBodyPropsSpec.getEncryptionType(),
                 msgBodyPropsSpec.isSubPackage(),
-                msgBodyPropsSpec.getReversedBit14AndBit15()
+                msgBodyPropsSpec.getVersion(),
+                msgBodyPropsSpec.reversedBit15
         );
-        return ProtocolUtils.generateMsgHeaderForJt808RespMsg(msgId, bodyProps, terminalId, flowId);
+        return ProtocolUtils.generateMsgHeaderForJt808RespMsg(msgId, bodyProps, msgBodyPropsSpec.getVersion(), terminalId, flowId);
     }
 
     // byte[2-3] 消息体属性 word(16)
@@ -69,14 +72,17 @@ public class MsgHeaderSpec {
         // 0：则消息头中无消息包封装项字段
         private final boolean isSubPackage;
 
-        // bit[14-15]  保留
-        private final int reversedBit14AndBit15;
+        // bit[14]  版本号
+        private final Jt808ProtocolVersion version;
+        // bit[15]  保留
+        private final int reversedBit15;
 
-        public MsgBodyPropsSpec(int msgBodyLength, int encryptionType, boolean isSubPackage, int reversedBit14AndBit15) {
+        public MsgBodyPropsSpec(int msgBodyLength, int encryptionType, boolean isSubPackage, Jt808ProtocolVersion version, int reversedBit15) {
             this.msgBodyLength = msgBodyLength;
             this.encryptionType = encryptionType;
             this.isSubPackage = isSubPackage;
-            this.reversedBit14AndBit15 = reversedBit14AndBit15;
+            this.version = version;
+            this.reversedBit15 = reversedBit15;
         }
     }
 
@@ -92,8 +98,11 @@ public class MsgHeaderSpec {
         // 0：则消息头中无消息包封装项字段
         private boolean isSubPackage = false;
 
-        // bit[14-15]  保留
-        private int reversedBit14AndBit15 = 0b00;
+        // bit[14]  版本号
+        private Jt808ProtocolVersion version = Jt808ProtocolVersion.VERSION_2011;
+
+        // bit[15]  保留
+        private int reversedBit15 = 0;
 
         public static MsgBodyPropsSpecBuilder builder() {
             return new MsgBodyPropsSpecBuilder();
@@ -120,13 +129,21 @@ public class MsgHeaderSpec {
             return this;
         }
 
-        public MsgBodyPropsSpecBuilder withReversedBit14AndBit15(int reversedBit14AndBit15) {
-            this.reversedBit14AndBit15 = reversedBit14AndBit15;
+        public MsgBodyPropsSpecBuilder withVersion(Jt808ProtocolVersion version) {
+            if (version == Jt808ProtocolVersion.AUTO_DETECTION) {
+                throw new JtIllegalArgumentException("消息体属性第14位的值非法");
+            }
+            this.version = version;
+            return this;
+        }
+
+        public MsgBodyPropsSpecBuilder withReversedBit15(int reversedBit15) {
+            this.reversedBit15 = reversedBit15;
             return this;
         }
 
         public MsgBodyPropsSpec build() {
-            return new MsgBodyPropsSpec(msgBodyLength, encryptionType, isSubPackage, reversedBit14AndBit15);
+            return new MsgBodyPropsSpec(msgBodyLength, encryptionType, isSubPackage, version, reversedBit15);
         }
 
     }

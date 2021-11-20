@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.converter.impl;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
@@ -7,10 +8,7 @@ import io.github.hylexus.jt808.msg.RequestMsgBody;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author hylexus
@@ -25,13 +23,14 @@ public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgB
      *     MsgType -> RequestMsgBody.class
      * </pre>
      */
-    private final Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
+    // private final Map<Integer, Class<? extends RequestMsgBody>> msgTypeMsgBodyClassMapping = new HashMap<>();
+    private final Map<Integer, Map<Jt808ProtocolVersion, Class<? extends RequestMsgBody>>> msgTypeMsgBodyClassMapping = new HashMap<>();
 
     public CustomReflectionBasedRequestMsgBodyConverter(Decoder decoder) {
         this.decoder = decoder;
     }
 
-    public Map<Integer, Class<? extends RequestMsgBody>> getMsgBodyMapping() {
+    public Map<Integer, Map<Jt808ProtocolVersion, Class<? extends RequestMsgBody>>> getMsgBodyMapping() {
         return Collections.unmodifiableMap(msgTypeMsgBodyClassMapping);
     }
 
@@ -41,38 +40,52 @@ public class CustomReflectionBasedRequestMsgBodyConverter implements RequestMsgB
     }
 
     public CustomReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
-            MsgType msgType, Class<? extends RequestMsgBody> cls, boolean forceOverride) {
+            MsgType msgType, Jt808ProtocolVersion version, Class<? extends RequestMsgBody> cls, boolean forceOverride) {
 
         int msgId = msgType.getMsgId();
-        if (msgTypeMsgBodyClassMapping.containsKey(msgId)) {
+        final Map<Jt808ProtocolVersion, Class<? extends RequestMsgBody>> map = msgTypeMsgBodyClassMapping.computeIfAbsent(msgId, k -> new HashMap<>());
+        if (map.containsKey(version)) {
             if (forceOverride) {
-                this.msgTypeMsgBodyClassMapping.put(msgId, cls);
+                map.put(version, cls);
             }
         } else {
-            msgTypeMsgBodyClassMapping.put(msgId, cls);
+            map.put(version, cls);
+        }
+        if (map.size() == Jt808ProtocolVersion.values().length) {
+            map.remove(Jt808ProtocolVersion.AUTO_DETECTION);
         }
         return this;
     }
 
-    public CustomReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(MsgType msgType, Class<? extends RequestMsgBody> cls) {
-        return addSupportedMsgBody(msgType, cls, false);
+    public CustomReflectionBasedRequestMsgBodyConverter addSupportedMsgBody(
+            MsgType msgType, Jt808ProtocolVersion version, Class<? extends RequestMsgBody> cls) {
+
+        return addSupportedMsgBody(msgType, version, cls, false);
     }
 
     @Override
     public Optional<RequestMsgBody> convert2Entity(RequestMsgMetadata metadata) {
-        byte[] bytes = metadata.getBodyBytes();
-        Class<? extends RequestMsgBody> targetBodyClass = msgTypeMsgBodyClassMapping.get(metadata.getMsgType().getMsgId());
-        if (targetBodyClass == null) {
+        final byte[] bytes = metadata.getBodyBytes();
+        final int msgId = metadata.getMsgType().getMsgId();
+        final Optional<Class<? extends RequestMsgBody>> optionalTargetBodyClass = getConverter(msgId, metadata.getHeader().getVersion());
+
+        if (!optionalTargetBodyClass.isPresent()) {
             log.warn("Can not convert {}", metadata.getMsgType());
             return Optional.empty();
         }
+
         try {
-            RequestMsgBody o = decoder.decodeRequestMsgBody(targetBodyClass, bytes, metadata);
+            RequestMsgBody o = decoder.decodeRequestMsgBody(optionalTargetBodyClass.get(), bytes, metadata);
             return Optional.of(o);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Optional.empty();
         }
+    }
+
+    public Optional<Class<? extends RequestMsgBody>> getConverter(int msgId, Jt808ProtocolVersion version) {
+        return Optional.ofNullable(msgTypeMsgBodyClassMapping.get(msgId))
+                .map(m -> m.getOrDefault(version, m.get(Jt808ProtocolVersion.AUTO_DETECTION)));
     }
 
 }

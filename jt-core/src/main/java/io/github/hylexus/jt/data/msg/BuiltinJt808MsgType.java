@@ -15,7 +15,6 @@ import java.util.Optional;
 @Getter
 public enum BuiltinJt808MsgType implements MsgType {
 
-    CLIENT_REPLY_PLACEHOLDER(-1, "终端消息上报占位符"),
     CLIENT_LOG_OUT(0x0003, "终端注销"),
     CLIENT_HEART_BEAT(0x0002, "终端心跳"),
 
@@ -23,7 +22,8 @@ public enum BuiltinJt808MsgType implements MsgType {
     SERVER_COMMON_REPLY(0x8001, "平台通用应答"),
 
     CLIENT_REGISTER(0x0100, "终端注册"),
-    CLIENT_REGISTER_REPLY(0x8100, "平台注册应答"),
+    CLIENT_REGISTER_REPLY(0x8100, "终端注册应答"),
+
     CLIENT_AUTH(0x0102, "终端鉴权"),
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
     ;
@@ -52,8 +52,8 @@ public enum BuiltinJt808MsgType implements MsgType {
     @Override
     public String toString() {
         return "BuiltInMsgType{"
-                + "msgId=" + msgId
-                + "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\''
-                + '}';
+               + "msgId=" + msgId
+               + "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\''
+               + '}';
     }
 }
