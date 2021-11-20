@@ -1,6 +1,5 @@
 ---
-themeConfig:
-sidebarDepth: 3 sidebarDepth: 2
+sidebarDepth: 3
 ---
 
 # 位置上传报文解析示例

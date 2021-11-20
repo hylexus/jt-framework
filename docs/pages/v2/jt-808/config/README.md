@@ -110,12 +110,40 @@ this.workerGroup=new NioEventLoopGroup(workThreadCount);
 
 `请求消息体实体类` 所在的包名，多个以逗号分隔。
 
-### register-builtin-request-msg-converters
+### register-builtin-request-msg-converters <Badge text="MOVED" type="error"/>
+
+`2.x` 版本中移到到了 [jt808.converter-scan.register-builtin-request-msg-converters](#register-builtin-request-msg-converters-2) 。
+
+## converter-scan
+
+### enabled
 
 - 类型：`boolean`
 - 默认值：`true`
 
-是否自动注册内置的 `RequestMsgBodyConverter`。
+使用基于注解的 `MsgHandler` [请参考这里](../guide/annotation-based-dev/msg-handler-register.md)。
+
+### base-packages
+
+- 类型：`String`
+- 默认值：`""`
+
+基于注解的 `RequestMsgBodyConverter` 所在的包名，多个以逗号分隔。
+
+::: danger
+
+- `1.x` 版本中该配置在 `jt808.entity-scan.register-builtin-request-msg-converters`；
+- `2.x` 版本中移动到了 `jt808.converter-scan.register-builtin-request-msg-converters`。
+
+:::
+
+
+### register-builtin-request-msg-converters <Badge text="2.0.0" type="info"/>
+
+- 类型：`boolean`
+- 默认值：`true`
+
+是否自动注册内置的 `RequestMsgBodyConverter` 。
 
 ## handler-scan
 

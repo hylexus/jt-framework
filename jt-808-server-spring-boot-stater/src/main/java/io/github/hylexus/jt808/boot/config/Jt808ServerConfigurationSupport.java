@@ -204,7 +204,7 @@ public abstract class Jt808ServerConfigurationSupport {
                 new CustomReflectionBasedRequestMsgBodyConverter(decoder)
         );
 
-        if (entityScan.isEnableBuiltinEntity() && serverProps.getConverterScan().isRegisterBuiltinRequestMsgConverters()) {
+        if (entityScan.isEnableBuiltinEntity()) {
             scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinReflectionBasedRequestMsgBodyConverter(decoder));
         }
         return scanner;

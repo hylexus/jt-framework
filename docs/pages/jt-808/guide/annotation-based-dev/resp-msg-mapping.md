@@ -1,7 +1,5 @@
 ---
-themeConfig:
-    sidebarDepth: 3
-sidebarDepth: 2
+sidebarDepth: 3
 ---
 
 # 响应消息映射
