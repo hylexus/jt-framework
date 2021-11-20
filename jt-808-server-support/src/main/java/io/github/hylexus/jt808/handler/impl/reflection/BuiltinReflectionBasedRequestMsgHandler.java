@@ -20,6 +20,6 @@ public class BuiltinReflectionBasedRequestMsgHandler extends CustomReflectionBas
 
     @Override
     public int getOrder() {
-        return LOWEST_PRECEDENCE;
+        return BUILTIN_COMPONENT_ORDER;
     }
 }

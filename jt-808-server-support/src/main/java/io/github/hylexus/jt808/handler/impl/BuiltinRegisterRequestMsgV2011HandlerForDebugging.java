@@ -23,10 +23,10 @@ import java.util.Set;
 @Jt808RequestMsgHandler(msgType = 0x0100)
 public class BuiltinRegisterRequestMsgV2011HandlerForDebugging extends AbstractBuiltinRequestMsgHandler<BuiltinRegisterRequestMsgV2011> {
 
-    @Override
-    public int getOrder() {
-        return LOWEST_PRECEDENCE;
-    }
+//    @Override
+//    public int getOrder() {
+//        return LOWEST_PRECEDENCE;
+//    }
 
     @Override
     public Set<Jt808ProtocolVersion> getSupportedProtocolVersions() {

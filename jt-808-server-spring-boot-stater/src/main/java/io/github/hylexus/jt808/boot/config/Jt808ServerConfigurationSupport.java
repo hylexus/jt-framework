@@ -156,7 +156,7 @@ public abstract class Jt808ServerConfigurationSupport {
         this.configureMsgConverterMapping(mapping);
 
         // Default converters for debug
-        if (serverProps.getEntityScan().isRegisterBuiltinRequestMsgConverters()) {
+        if (serverProps.getConverterScan().isRegisterBuiltinRequestMsgConverters()) {
             final Jt808ProtocolVersion version = serverProps.getProtocol().getVersion();
             mapping.registerConverterWhen(BuiltinJt808MsgType.CLIENT_AUTH, new BuiltinAuthRequestMsgV2011BodyConverter(),
                             version == Jt808ProtocolVersion.VERSION_2011 || version == Jt808ProtocolVersion.AUTO_DETECTION
@@ -204,7 +204,7 @@ public abstract class Jt808ServerConfigurationSupport {
                 new CustomReflectionBasedRequestMsgBodyConverter(decoder)
         );
 
-        if (entityScan.isEnableBuiltinEntity() && entityScan.isRegisterBuiltinRequestMsgConverters()) {
+        if (entityScan.isEnableBuiltinEntity() && serverProps.getConverterScan().isRegisterBuiltinRequestMsgConverters()) {
             scanner.doEntityScan(Sets.newHashSet("io.github.hylexus.jt808.msg.req"), new BuiltinReflectionBasedRequestMsgBodyConverter(decoder));
         }
         return scanner;

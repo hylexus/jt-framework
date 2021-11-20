@@ -9,8 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Set;
 
 /**
+ * @author 李仁豪
  * @author hylexus
- * Created At 2019-09-22 7:33 下午
  */
 @Getter
 @Setter
@@ -20,4 +20,5 @@ import java.util.Set;
 public class Jt808ConverterScanProps {
     private boolean enabled = true;
     private Set<String> basePackages;
+    private boolean registerBuiltinRequestMsgConverters = true;
 }

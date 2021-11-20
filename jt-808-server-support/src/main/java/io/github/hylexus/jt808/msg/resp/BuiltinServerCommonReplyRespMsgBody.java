@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.samples.mixedversion.entity.resp;
+package io.github.hylexus.jt808.msg.resp;
 
 import io.github.hylexus.jt.annotation.msg.resp.CommandField;
 import io.github.hylexus.jt.annotation.msg.resp.Jt808RespMsgBody;
@@ -9,12 +9,10 @@ import static io.github.hylexus.jt.data.MsgDataType.WORD;
 
 /**
  * @author hylexus
- * Created At 2020-05-03 19:08
  */
 @Value
-// MsgId 0x8001
 @Jt808RespMsgBody(respMsgId = 0x8001)
-public class ServerCommonReplyMsgBody {
+public class BuiltinServerCommonReplyRespMsgBody {
     // 1. 应答流水号 WORD terminal flowId
     @CommandField(order = 0, targetMsgDataType = WORD)
     int replyFlowId;
@@ -24,4 +22,21 @@ public class ServerCommonReplyMsgBody {
     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
     @CommandField(order = 2, targetMsgDataType = BYTE)
     byte result;
+
+    /**
+     * 成功/确认
+     */
+    public static final byte RESULT_SUCCESS = 0;
+    /**
+     * 失败
+     */
+    public static final byte RESULT_FAILURE = 1;
+    /**
+     * 消息有误
+     */
+    public static final byte RESULT_MSG_ERROR = 2;
+    /**
+     * 不支持
+     */
+    public static final byte RESULT_UNSUPPORTED = 3;
 }
