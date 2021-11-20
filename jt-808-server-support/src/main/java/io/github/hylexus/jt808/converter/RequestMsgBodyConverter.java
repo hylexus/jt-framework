@@ -16,6 +16,11 @@ public interface RequestMsgBodyConverter<E extends RequestMsgBody> extends Order
 
     Optional<E> convert2Entity(RequestMsgMetadata metadata);
 
+    /**
+     * @return 该处转换器可以处理的协议版本号
+     * @author hylexus
+     * @since 2.0.0
+     */
     default Set<Jt808ProtocolVersion> getSupportedProtocolVersion() {
         return Jt808ProtocolVersion.unmodifiableSetVersionAutoDetection();
     }

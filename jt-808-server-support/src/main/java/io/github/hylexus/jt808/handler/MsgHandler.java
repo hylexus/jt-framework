@@ -11,8 +11,9 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * @author hylexus
  * createdAt 2019/2/1
+ *
+ * @author hylexus
  **/
 public interface MsgHandler<T extends RequestMsgBody> extends OrderedComponent {
 
@@ -20,6 +21,11 @@ public interface MsgHandler<T extends RequestMsgBody> extends OrderedComponent {
         return Collections.emptySet();
     }
 
+    /**
+     * @return 该处理器可以处理的协议版本号
+     * @author hylexus
+     * @since 2.0.0
+     */
     default Set<Jt808ProtocolVersion> getSupportedProtocolVersions() {
         return Jt808ProtocolVersion.unmodifiableSetVersionAutoDetection();
     }

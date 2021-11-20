@@ -4,7 +4,7 @@ home: true
 heroText: JT-framework
 tagline: 808、809(TODO)
 actionText: 808 接入指南 →
-actionLink: /jt-808/guide/
+actionLink: /v2/jt-808/guide/
 features:
 - title: 基于Netty
   details: TCP处理基于Netty 4.x。
