@@ -19,10 +19,10 @@ public class RequestMsgMetadata {
     @Override
     public String toString() {
         return "RequestMsgMetadata{"
-                + "msgType=" + msgType
-                + ", header=" + header
-                //+ ", bodyBytes=" + Arrays.toString(bodyBytes)
-                + ", checkSum=" + checkSum
-                + '}';
+               + "msgType=" + msgType
+               + ", header=" + header
+               //+ ", bodyBytes=" + Arrays.toString(bodyBytes)
+               + ", checkSum=" + checkSum
+               + '}';
     }
 }

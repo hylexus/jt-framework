@@ -119,6 +119,6 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean {
 
     private boolean isExceptionHandlerClass(Class<?> cls) {
         return AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandler.class)
-                || AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandlerAdvice.class);
+               || AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandlerAdvice.class);
     }
 }

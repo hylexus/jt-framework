@@ -46,18 +46,18 @@ public class AdditionalItemEntity {
     @Override
     public String toString() {
         return "AdditionalItem {"
-                + "groupMsgId="
-                + "("
-                + HexStringUtils.int2HexString(groupMsgId, 4, true)
-                + ")"
-                + groupMsgId
-                + ", msgId="
-                + "("
-                + HexStringUtils.int2HexString(msgId, 4, true)
-                + ")"
-                + msgId
-                + ", length=" + length
-                + ", rawBytes=" + (rawBytes == null || rawBytes.length == 0 ? "" : "0x" + HexStringUtils.bytes2HexString(rawBytes))
-                + '}';
+               + "groupMsgId="
+               + "("
+               + HexStringUtils.int2HexString(groupMsgId, 4, true)
+               + ")"
+               + groupMsgId
+               + ", msgId="
+               + "("
+               + HexStringUtils.int2HexString(msgId, 4, true)
+               + ")"
+               + msgId
+               + ", length=" + length
+               + ", rawBytes=" + (rawBytes == null || rawBytes.length == 0 ? "" : "0x" + HexStringUtils.bytes2HexString(rawBytes))
+               + '}';
     }
 }

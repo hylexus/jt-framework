@@ -5,8 +5,6 @@ import io.github.hylexus.jt.annotation.msg.req.basic.BasicField;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.MsgDataType;
 import io.github.hylexus.jt808.msg.RequestMsgBody;
-import io.github.hylexus.jt808.msg.RequestMsgHeader;
-import io.github.hylexus.jt808.support.entity.scan.RequestMsgHeaderAware;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

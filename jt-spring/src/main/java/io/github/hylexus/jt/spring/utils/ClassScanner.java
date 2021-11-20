@@ -49,8 +49,8 @@ public class ClassScanner {
 
     public Set<Class> doScan(String basePackage, Predicate<Class<?>> classFilter) throws IOException {
         String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-                + ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage))
-                + "/**/*.class";
+                                   + ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage))
+                                   + "/**/*.class";
 
         Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
 

@@ -22,9 +22,9 @@ public class ReflectionTest {
             String fieldName = javaBeanFieldMetadata.getField().getName();
             boolean annotationPresent = javaBeanFieldMetadata.isAnnotationPresent(BasicField.class);
             System.out.println(typeName + " -- "
-                    + javaBeanFieldMetadata.getGenericType()
-                    + " -- " + fieldName
-                    + " -- " + annotationPresent
+                               + javaBeanFieldMetadata.getGenericType()
+                               + " -- " + fieldName
+                               + " -- " + annotationPresent
             );
         }
     }

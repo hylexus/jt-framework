@@ -114,6 +114,6 @@ public class JavaBeanMetadataUtils {
 
     private static boolean shouldBeIgnore(Field field) {
         return field.getAnnotation(Transient.class) != null
-                || field.getAnnotation(java.beans.Transient.class) != null;
+               || field.getAnnotation(java.beans.Transient.class) != null;
     }
 }

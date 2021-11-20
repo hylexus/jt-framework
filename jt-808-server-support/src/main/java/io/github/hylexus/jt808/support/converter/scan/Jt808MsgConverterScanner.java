@@ -98,7 +98,7 @@ public class Jt808MsgConverterScanner implements InitializingBean, ApplicationCo
 
     private boolean isConverterClass(Class<?> cls) {
         return AnnotationUtils.findAnnotation(cls, Jt808RequestMsgConverter.class) != null
-                && RequestMsgBodyConverter.class.isAssignableFrom(cls);
+               && RequestMsgBodyConverter.class.isAssignableFrom(cls);
     }
 
     @Override

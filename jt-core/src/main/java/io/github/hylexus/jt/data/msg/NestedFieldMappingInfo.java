@@ -23,12 +23,12 @@ public class NestedFieldMappingInfo {
     @Override
     public String toString() {
         return "NestedFieldMappingInfo{"
-                + "msgId=" + "(" + HexStringUtils.int2HexString(msgId, 2, true) + ")"
-                + msgId
-                + ", dataType=" + dataType
-                + ", isNestedExtraField=" + isNestedExtraField
-                + ", byteCountOfMsgId=" + byteCountOfMsgId
-                + ", byteCountOfContentLength=" + byteCountOfContentLength
-                + '}';
+               + "msgId=" + "(" + HexStringUtils.int2HexString(msgId, 2, true) + ")"
+               + msgId
+               + ", dataType=" + dataType
+               + ", isNestedExtraField=" + isNestedExtraField
+               + ", byteCountOfMsgId=" + byteCountOfMsgId
+               + ", byteCountOfContentLength=" + byteCountOfContentLength
+               + '}';
     }
 }

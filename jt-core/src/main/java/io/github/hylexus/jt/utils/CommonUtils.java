@@ -11,14 +11,14 @@ public class CommonUtils {
 
     public static boolean isBuiltinComponent(Class<?> userClass) {
         return userClass.isAnnotationPresent(BuiltinComponent.class)
-                || io.github.hylexus.jt.common.BuiltinComponent.class.isAssignableFrom(userClass);
+               || io.github.hylexus.jt.common.BuiltinComponent.class.isAssignableFrom(userClass);
     }
 
 
     public static boolean isDeprecatedClass(Class<?> userClass) {
         return userClass.isAnnotationPresent(Deprecated.class)
-                || userClass.isAnnotationPresent(DebugOnly.class)
-                || io.github.hylexus.jt.common.DebugOnly.class.isAssignableFrom(userClass);
+               || userClass.isAnnotationPresent(DebugOnly.class)
+               || io.github.hylexus.jt.common.DebugOnly.class.isAssignableFrom(userClass);
     }
 
     public static String shortClassName(Class<?> cls) {

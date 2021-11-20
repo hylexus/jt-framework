@@ -6,13 +6,10 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt.utils.ProtocolUtils;
 import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.oaks.utils.BcdOps;
 import io.github.hylexus.oaks.utils.Bytes;
-import io.github.hylexus.oaks.utils.IntBitOps;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 

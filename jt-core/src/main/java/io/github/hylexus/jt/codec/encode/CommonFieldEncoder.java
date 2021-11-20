@@ -66,7 +66,7 @@ public class CommonFieldEncoder {
         final MsgDataType targetMsgDataType = annotation.targetMsgDataType();
         if (!isSupportedType(fieldMetadata, targetMsgDataType, annotation)) {
             throw new IllegalArgumentException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
-                    + fieldMetadata.getFieldType() + " for field " + fieldMetadata.getField());
+                                               + fieldMetadata.getFieldType() + " for field " + fieldMetadata.getField());
         }
 
         switch (targetMsgDataType) {

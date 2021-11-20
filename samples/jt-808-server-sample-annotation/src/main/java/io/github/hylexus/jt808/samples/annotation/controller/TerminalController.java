@@ -32,7 +32,7 @@ public class TerminalController {
             }
             final String lowerCase = keyword.toLowerCase();
             return session.getTerminalId().toLowerCase().contains(lowerCase)
-                    || session.getSessionId().toLowerCase().contains(lowerCase);
+                   || session.getSessionId().toLowerCase().contains(lowerCase);
         });
 
     }

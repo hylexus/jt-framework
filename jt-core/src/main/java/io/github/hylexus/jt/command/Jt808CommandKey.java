@@ -95,8 +95,8 @@ public class Jt808CommandKey implements CommandKey {
         }
         Jt808CommandKey that = (Jt808CommandKey) o;
         return Objects.equals(terminalId, that.terminalId)
-                && Objects.equals(msgType.getMsgId(), that.msgType.getMsgId())
-                && Objects.equals(flowId, that.flowId);
+               && Objects.equals(msgType.getMsgId(), that.msgType.getMsgId())
+               && Objects.equals(flowId, that.flowId);
     }
 
     @Override

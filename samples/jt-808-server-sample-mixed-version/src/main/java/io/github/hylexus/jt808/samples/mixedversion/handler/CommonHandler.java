@@ -1,16 +1,9 @@
 package io.github.hylexus.jt808.samples.mixedversion.handler;
 
-import io.github.hylexus.jt.annotation.msg.handler.Jt808ExceptionHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandlerMapping;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
-import io.github.hylexus.jt808.msg.RequestMsgMetadata;
-import io.github.hylexus.jt808.msg.RespMsgBody;
-import io.github.hylexus.jt808.msg.req.BuiltinEmptyRequestMsgBody;
-import io.github.hylexus.jt808.msg.req.BuiltinTerminalCommonReplyMsgBody;
-import io.github.hylexus.jt808.msg.resp.VoidRespMsgBody;
 import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2011;
 import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2019;
 import io.github.hylexus.jt808.samples.mixedversion.entity.resp.ServerCommonReplyMsgBody;
@@ -23,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static io.github.hylexus.jt.data.msg.BuiltinJt808MsgType.CLIENT_HEART_BEAT;
 import static io.github.hylexus.jt808.samples.mixedversion.config.Jt808MsgType.CLIENT_AUTH;
 
 /**
