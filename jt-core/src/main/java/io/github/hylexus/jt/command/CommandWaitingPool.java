@@ -8,12 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author hylexus
- * Created At 2019-10-09 9:45 下午
  */
 @Slf4j
 public class CommandWaitingPool {
     private static final CommandWaitingPool instance = new CommandWaitingPool();
-    private final BlockingMap<Jt808CommandKey, Object> blockingMap = new BlockingHashMap<>();
+    private final BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
 
     private CommandWaitingPool() {
     }
@@ -23,29 +22,33 @@ public class CommandWaitingPool {
     }
 
     public void putIfNecessary(Jt808CommandKey commandKey, Object msg) {
-        if (!blockingMap.containsKey(commandKey)) {
-            log.warn("No waitingFlag found for key {}", commandKey);
+        final String waitingFlag = commandKey.getWaitingFlag();
+        final String key = commandKey.getKeyAsString();
+        if (!blockingMap.containsKey(waitingFlag)) {
+            log.warn("[<<<COMMAND>>> ---> ] No waitingFlag found for key [{}]", key);
             return;
         }
 
         // Put result into blockingMap if there is a waiting-flag for this key
-        this.blockingMap.put(commandKey, msg);
-        log.info("Put value for waitingFlag [{}]", commandKey);
+        this.blockingMap.put(key, msg);
+        log.info("[<<<COMMAND>>> ---> ] Put value for key [{}], {}", key, commandKey);
     }
 
     public Object waitingForKey(Jt808CommandKey commandKey, long time, TimeUnit unit) throws InterruptedException {
 
+        final String waitingFlag = commandKey.getWaitingFlag();
         // Put a waiting-flag for put operation
-        this.blockingMap.put(commandKey, null);
+        this.blockingMap.put(waitingFlag, System.currentTimeMillis());
 
         // Get result blocked
         Object result;
         try {
-            log.info("Waiting for key {}", commandKey);
-            result = this.blockingMap.take(commandKey, time, unit);
+            final String key = commandKey.getKeyAsString();
+            log.info("[<<<COMMAND>>> <--- ] Waiting for key [{}] {} {}", key, time, unit);
+            result = this.blockingMap.take(key, time, unit);
         } finally {
             // Remove tmp waiting-flag
-            this.blockingMap.remove(commandKey);
+            this.blockingMap.remove(waitingFlag);
         }
 
         return result;
