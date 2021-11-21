@@ -30,15 +30,15 @@ public abstract class AbstractCommandSender implements CommandSender {
             throws IOException, InterruptedException {
 
         final String terminalId = commandMsg.getTerminalId();
-        final MsgType msgType = commandMsg.getExpectedReplyMsgType();
+        final MsgType expectedReplyMsgType = commandMsg.getExpectedReplyMsgType();
 
         final Jt808Session session = getSession(terminalId);
-        final int flowId = session.getCurrentFlowId();
+        final int serverFlowId = session.getCurrentFlowId();
 
-        final byte[] bytes = this.encode(commandMsg, terminalId, flowId);
+        final byte[] bytes = this.encode(commandMsg, terminalId, serverFlowId);
         final Jt808CommandKey commandKey = withFlowId
-                ? Jt808CommandKey.of(terminalId, msgType, flowId)
-                : Jt808CommandKey.of(terminalId, msgType);
+                ? Jt808CommandKey.of(terminalId, expectedReplyMsgType, serverFlowId)
+                : Jt808CommandKey.of(terminalId, expectedReplyMsgType);
 
         this.sendCommand(terminalId, bytes);
         return commandWaitingPool.waitingForKey(commandKey, timeout, timeUnit);

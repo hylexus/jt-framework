@@ -9,7 +9,6 @@ import lombok.ToString;
 
 /**
  * @author hylexus
- * Created At 2020-03-14 9:43 下午
  */
 @Getter
 @Setter
@@ -27,14 +26,6 @@ public class CommandMsg {
     public CommandMsg() {
     }
 
-    /**
-     * @deprecated 使用 {@link #CommandMsg(String, MsgType, Object, Jt808ProtocolVersion)} 代替(明确指定版本)
-     */
-    @Deprecated
-    public CommandMsg(String terminalId, MsgType expectedReplyMsgType, Object body) {
-        this(terminalId, expectedReplyMsgType, body, Jt808ProtocolVersion.VERSION_2011);
-    }
-
     public CommandMsg(String terminalId, MsgType expectedReplyMsgType, Object body, Jt808ProtocolVersion version) {
         this.terminalId = terminalId;
         this.expectedReplyMsgType = expectedReplyMsgType;
@@ -43,32 +34,14 @@ public class CommandMsg {
         this.version = version;
     }
 
-    /**
-     * @deprecated 使用 {@link #of(String, MsgType, Object, Jt808ProtocolVersion)} 代替(明确指定版本)
-     */
-    @Deprecated
-    public static CommandMsg of(String terminalId, MsgType expectedReplyMsgType, Object body) {
-        return of(terminalId, expectedReplyMsgType, body, Jt808ProtocolVersion.VERSION_2011);
-    }
-
     public static CommandMsg of(String terminalId, MsgType expectedReplyMsgType, Object body, Jt808ProtocolVersion version) {
-        return new CommandMsg(terminalId, expectedReplyMsgType, body, version);
-    }
-
-    /**
-     * @deprecated 使用 {@link #emptyRespMsgBody(String, MsgType, Jt808ProtocolVersion)} 代替(明确指定版本)
-     */
-    @Deprecated
-    public static CommandMsg emptyRespMsgBody(String terminalId, MsgType respMsgType) {
-        return emptyRespMsgBody(terminalId, respMsgType, Jt808ProtocolVersion.VERSION_2011);
+        return body == null
+                ? emptyRespMsgBody(terminalId, expectedReplyMsgType, version)
+                : new CommandMsg(terminalId, expectedReplyMsgType, body, version);
     }
 
     public static CommandMsg emptyRespMsgBody(String terminalId, MsgType respMsgType, Jt808ProtocolVersion version) {
-        return of(terminalId, respMsgType, null, version);
-    }
-
-    public static CommandMsg emptyRespMsgBody(String terminalId, MsgType expectedReplyMsgType, MsgType respMsgType) {
-        return of(terminalId, expectedReplyMsgType, new EmptyRespMsgBody(respMsgType), Jt808ProtocolVersion.VERSION_2011);
+        return of(terminalId, respMsgType, new EmptyRespMsgBody(respMsgType), version);
     }
 
 }

@@ -9,15 +9,15 @@ public interface CommandKey {
 
     int getMsgId();
 
-    Integer getFlowId();
+    Integer getServerFlowId();
 
-    //    default String getKeyAsString() {
-    //        return getFlowId() == null
-    //                ? String.format("%s_%s", getTerminalId(), getMsgId())
-    //                : String.format("%s_%s_%s", getTerminalId(), getMsgId(), getFlowId());
-    //    }
+    default String getKeyAsString() {
+        return getServerFlowId() == null
+                ? String.format("%s_%s", getTerminalId(), getMsgId())
+                : String.format("%s_%s_%s", getTerminalId(), getMsgId(), getServerFlowId());
+    }
 
-    //    default String getWaitingFlag() {
-    //        return "_" + getKeyAsString();
-    //    }
+    default String getWaitingFlag() {
+        return "_" + getKeyAsString();
+    }
 }
