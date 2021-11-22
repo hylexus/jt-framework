@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.session;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtCommunicationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -14,26 +15,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author hylexus
- * createdAt 2018/12/28
  **/
-
 @ToString
 @Accessors(chain = true)
 @BuiltinComponent
 public class Session implements Jt808Session {
+    public Session() {
+    }
+
     private final AtomicInteger nextFlowId = new AtomicInteger(0);
     @Getter
     @Setter
     private String id;
+
     @Getter
     @Setter
     private Channel channel;
+
     @Getter
     @Setter
     private String terminalId;
+
     @Getter
     @Setter
-    private long lastCommunicateTimeStamp = 0L;
+    private long lastCommunicateTimestamp = 0L;
+
+    @Getter
+    @Setter
+    private Jt808ProtocolVersion protocolVersion;
 
     @Override
     public void sendMsgToClient(ByteBuf byteBuf) throws InterruptedException, JtCommunicationException {

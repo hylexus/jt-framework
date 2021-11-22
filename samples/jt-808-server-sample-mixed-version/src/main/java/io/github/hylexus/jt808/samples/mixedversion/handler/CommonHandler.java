@@ -7,6 +7,7 @@ import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.resp.BuiltinServerCommonReplyRespMsgBody;
 import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2011;
 import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2019;
+import io.github.hylexus.jt808.samples.mixedversion.entity.req.ReqMsg0701;
 import io.github.hylexus.jt808.session.Jt808Session;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Session;
@@ -29,6 +30,11 @@ public class CommonHandler {
 
     @Autowired
     private Jt808SessionManager jt808SessionManager;
+
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0701,versions = Jt808ProtocolVersion.VERSION_2011)
+    public void process0701(ReqMsg0701 msg0701){
+        log.info("{}",msg0701);
+    }
 
     // 此处会覆盖内置的鉴权消息处理器(如果启用了的话)
     @Jt808RequestMsgHandlerMapping(msgType = 0x0102, versions = Jt808ProtocolVersion.VERSION_2011, desc = "终端鉴权")

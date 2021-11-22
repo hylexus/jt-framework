@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.samples.customized.session;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt808.session.*;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -60,33 +61,34 @@ public class MySessionManager implements Jt808SessionManager {
     }
 
     @Override
-    public Jt808Session generateSession(Channel channel, String terminalId) {
-        return buildSession(channel, terminalId);
+    public Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
+        return buildSession(terminalId, version, channel);
     }
 
-    protected MySession buildSession(Channel channel, String terminalId) {
+    protected MySession buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
         MySession session = new MySession();
         session.setChannel(channel);
         session.setId(generateSessionId(channel));
         session.setTerminalId(terminalId);
-        session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+        session.setLastCommunicateTimestamp(System.currentTimeMillis());
+        session.setProtocolVersion(version);
         Object key = channel.attr(AttributeKey.valueOf("key")).get();
         session.setSomeField(key == null ? "" : key.toString());
         return session;
     }
 
     @Override
-    public Jt808Session persistenceIfNecessary(String terminalId, Channel channel) {
-        return persistenceIfNecessary(terminalId, channel, true);
+    public Jt808Session persistenceIfNecessary(String terminalId, Jt808ProtocolVersion version, Channel channel) {
+        return persistenceIfNecessary(terminalId, version, channel, true);
     }
 
     @Override
-    public Jt808Session persistenceIfNecessary(String terminalId, Channel channel, boolean updateLastCommunicateTime) {
+    public Jt808Session persistenceIfNecessary(String terminalId, Jt808ProtocolVersion version, Channel channel, boolean updateLastCommunicateTime) {
         final Optional<Jt808Session> session = findByTerminalId(terminalId, updateLastCommunicateTime);
         if (session.isPresent()) {
             return session.get();
         }
-        Jt808Session newSession = generateSession(channel, terminalId);
+        Jt808Session newSession = generateSession(terminalId, version, channel);
         persistence(newSession);
         return newSession;
     }

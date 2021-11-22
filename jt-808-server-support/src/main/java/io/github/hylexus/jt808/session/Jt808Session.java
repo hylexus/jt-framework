@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.session;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtCommunicationException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -58,9 +59,19 @@ public interface Jt808Session {
 
     String getTerminalId();
 
-    long getLastCommunicateTimeStamp();
+    /**
+     * @return 当前终端的协议版本号
+     * @author hylexus
+     * @since 2.0.0
+     */
+    Jt808ProtocolVersion getProtocolVersion();
 
-    Jt808Session setLastCommunicateTimeStamp(long lastCommunicateTimeStamp);
+    /**
+     * @return 上次通信时间
+     */
+    long getLastCommunicateTimestamp();
+
+    Jt808Session setLastCommunicateTimestamp(long lastCommunicateTimestamp);
 
     String toString();
 }

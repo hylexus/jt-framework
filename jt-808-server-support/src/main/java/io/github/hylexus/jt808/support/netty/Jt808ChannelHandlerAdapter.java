@@ -60,7 +60,7 @@ public class Jt808ChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
             metadata.setMsgType(msgType.get());
 
             final String terminalId = header.getTerminalId();
-            sessionManager.persistenceIfNecessary(terminalId, ctx.channel());
+            sessionManager.persistenceIfNecessary(terminalId, header.getVersion(), ctx.channel());
             log.debug("[decode] : {}, terminalId={}, msg = {}", msgType.get(), terminalId, metadata);
 
             RequestMsgWrapper requestMsgWrapper = new RequestMsgWrapper().setMetadata(metadata);

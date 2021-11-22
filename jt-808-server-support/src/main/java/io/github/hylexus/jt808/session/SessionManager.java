@@ -1,6 +1,7 @@
 package io.github.hylexus.jt808.session;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -47,16 +48,17 @@ public class SessionManager implements Jt808SessionManager {
     }
 
     @Override
-    public Session generateSession(Channel channel, String terminalId) {
-        return buildSession(channel, terminalId);
+    public Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
+        return buildSession(terminalId, version, channel);
     }
 
-    protected Session buildSession(Channel channel, String terminalId) {
+    protected Session buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
         final Session session = new Session();
         session.setChannel(channel);
         session.setId(generateSessionId(channel));
         session.setTerminalId(terminalId);
-        session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+        session.setLastCommunicateTimestamp(System.currentTimeMillis());
+        session.setProtocolVersion(version);
         return session;
     }
 
@@ -70,7 +72,7 @@ public class SessionManager implements Jt808SessionManager {
     }
 
     @Override
-    public Jt808Session persistenceIfNecessary(String terminalId, Channel channel, boolean updateLastCommunicateTime) {
+    public Jt808Session persistenceIfNecessary(String terminalId, Jt808ProtocolVersion version, Channel channel, boolean updateLastCommunicateTime) {
         final Optional<Jt808Session> session = findByTerminalId(terminalId, updateLastCommunicateTime);
         if (session.isPresent()) {
             Jt808Session oldSession = session.get();
@@ -82,7 +84,7 @@ public class SessionManager implements Jt808SessionManager {
             }
             return oldSession;
         }
-        Jt808Session newSession = generateSession(channel, terminalId);
+        Jt808Session newSession = generateSession(terminalId, version, channel);
         persistence(newSession);
         return newSession;
     }
@@ -138,7 +140,7 @@ public class SessionManager implements Jt808SessionManager {
         }
 
         if (updateLastCommunicateTime) {
-            session.setLastCommunicateTimeStamp(System.currentTimeMillis());
+            session.setLastCommunicateTimestamp(System.currentTimeMillis());
         }
 
         if (!this.checkStatus(session)) {

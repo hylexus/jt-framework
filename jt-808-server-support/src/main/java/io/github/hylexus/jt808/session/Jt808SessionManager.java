@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.session;
 
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.netty.channel.Channel;
 
 import javax.annotation.Nullable;
@@ -85,20 +86,22 @@ public interface Jt808SessionManager {
     }
 
     /**
-     * @param channel    Channel
      * @param terminalId 终端号(手机号)
+     * @param version    协议版本号
+     * @param channel    Channel
      * @return 生成的新Session
      */
-    Jt808Session generateSession(Channel channel, String terminalId);
+    Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel);
 
     /**
      * @param terminalId 终端号(手机号)
+     * @param version    协议版本号
      * @param channel    Channel
      * @return 如果已经存在，则刷新上次通信时间并返回Session。否则，生成新的Session并返回。
-     * @see #persistenceIfNecessary(String, Channel, boolean)
+     * @see #persistenceIfNecessary(String, Jt808ProtocolVersion, Channel, boolean)
      */
-    default Jt808Session persistenceIfNecessary(String terminalId, Channel channel) {
-        return persistenceIfNecessary(terminalId, channel, true);
+    default Jt808Session persistenceIfNecessary(String terminalId, Jt808ProtocolVersion version, Channel channel) {
+        return persistenceIfNecessary(terminalId, version, channel, true);
     }
 
     /**
@@ -107,12 +110,12 @@ public interface Jt808SessionManager {
      * @param updateLastCommunicateTime 是否更新上次通信时间
      * @return 如果已经存在，则刷新上次通信时间并返回Session。否则，生成新的Session并返回。
      */
-    default Jt808Session persistenceIfNecessary(String terminalId, Channel channel, boolean updateLastCommunicateTime) {
+    default Jt808Session persistenceIfNecessary(String terminalId, Jt808ProtocolVersion version, Channel channel, boolean updateLastCommunicateTime) {
         final Optional<Jt808Session> session = findByTerminalId(terminalId, updateLastCommunicateTime);
         if (session.isPresent()) {
             return session.get();
         }
-        Jt808Session newSession = generateSession(channel, terminalId);
+        Jt808Session newSession = generateSession(terminalId, version, channel);
         persistence(newSession);
         return newSession;
     }
