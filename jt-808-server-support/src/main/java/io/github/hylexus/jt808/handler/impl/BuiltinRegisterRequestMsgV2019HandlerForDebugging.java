@@ -23,11 +23,6 @@ import java.util.Set;
 @Jt808RequestMsgHandler(msgType = 0x0100)
 public class BuiltinRegisterRequestMsgV2019HandlerForDebugging extends AbstractBuiltinRequestMsgHandler<BuiltinRegisterRequestMsgV2019> {
 
-//    @Override
-//    public int getOrder() {
-//        return LOWEST_PRECEDENCE;
-//    }
-
     @Override
     public Set<Jt808ProtocolVersion> getSupportedProtocolVersions() {
         return Jt808ProtocolVersion.unmodifiableSetVersion2019();

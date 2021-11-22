@@ -9,7 +9,6 @@ import io.github.hylexus.jt808.samples.mixedversion.entity.req.RegisterRequestMs
 import io.github.hylexus.jt808.samples.mixedversion.entity.resp.RegisterRespMsgV2011;
 import io.github.hylexus.jt808.session.Jt808Session;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +18,7 @@ import java.util.Set;
  * Created At 2019-09-19 11:31 下午
  */
 @Slf4j
-@Component
+//@Component
 @Jt808RequestMsgHandler(msgType = 0x0100)
 public class RegisterMsgV2019MsgHandler extends AbstractMsgHandler<RegisterRequestMsgV2019> {
 

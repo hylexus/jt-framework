@@ -15,7 +15,6 @@ import java.util.Set;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-//@Deprecated
 @DebugOnly
 public @interface AdditionalField {
 
