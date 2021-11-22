@@ -1,3 +1,9 @@
+# 1.0.13-RELEASE
+
+### 🐞 Bug Fixes
+
+- 修复 `io.github.hylexus.jt.command.CommandWaitingPool.waitingForKey` 的等待逻辑
+
 # 1.0.12-RELEASE
 
 ### 🐞 Bug Fixes

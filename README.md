@@ -12,14 +12,7 @@ Jt-808协议服务端。
 
 ### 🐞 Bug Fixes
 
-- https://github.com/hylexus/jt-framework/issues/44
-
-### ⭐ New Features
-
-新增配置项：
-
-- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
-- `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
+- 修复 `io.github.hylexus.jt.command.CommandWaitingPool.waitingForKey` 的等待逻辑
 
 ## QuickStart
 
@@ -36,7 +29,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.12-RELEASE"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "1.0.13-RELEASE"
     // ...
 }
 ```
@@ -48,7 +41,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>1.0.12-RELEASE</version>
+    <version>1.0.13-RELEASE</version>
 </dependency>
 ```
 
