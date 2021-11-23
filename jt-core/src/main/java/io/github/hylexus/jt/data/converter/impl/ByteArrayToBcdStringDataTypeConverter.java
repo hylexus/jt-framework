@@ -21,7 +21,7 @@ public class ByteArrayToBcdStringDataTypeConverter implements Jt808MsgDataTypeCo
 
     @Override
     public String convert(byte[] bytes, int start, int length) {
-        return BcdOps.bytes2BcdString(bytes, start, length);
+        return BcdOps.bytes2BcdStringV2(bytes, start, length);
     }
 
 }

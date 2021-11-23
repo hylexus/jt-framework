@@ -18,6 +18,7 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_AUTH_CODE_VALIDATOR = "jt808AuthCodeValidator";
     String BEAN_NAME_JT808_TERMINAL_VALIDATOR = "jt808TerminalValidator";
     String BEAN_NAME_JT808_BYTES_ENCODER = "jt808BytesEncoder";
+    String BEAN_NAME_REQUEST_MSG_METADATA_DECODER = "defaultJt808RequestMsgMetadataDecoder";
 
     String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
 

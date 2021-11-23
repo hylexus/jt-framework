@@ -45,6 +45,7 @@ public class RequestMsgHeader {
     // 包序号 byte[14-15]
     // (word(16))这次发送的这个消息包是分包中的第几个消息包, 从 1 开始
     private long subPackageSeq;
+
     private Jt808ProtocolVersion version = Jt808ProtocolVersion.AUTO_DETECTION;
 
 }

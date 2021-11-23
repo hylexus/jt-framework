@@ -21,7 +21,7 @@ public class AdditionalItemEntity {
 
     public Optional<String> getAsBcdString() {
         try {
-            return Optional.of(BcdOps.bytes2BcdString(rawBytes, 0, length));
+            return Optional.of(BcdOps.bytes2BcdStringV2(rawBytes, 0, length));
         } catch (Exception e) {
             return Optional.empty();
         }

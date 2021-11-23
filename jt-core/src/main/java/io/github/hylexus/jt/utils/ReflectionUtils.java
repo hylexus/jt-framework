@@ -83,7 +83,7 @@ public class ReflectionUtils {
                 break;
             }
             case BCD: {
-                value = BcdOps.bytes2BcdString(bytes, startIndex, length);
+                value = BcdOps.bytes2BcdStringV2(bytes, startIndex, length);
                 break;
             }
             case STRING: {

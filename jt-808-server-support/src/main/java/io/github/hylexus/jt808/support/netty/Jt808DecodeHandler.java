@@ -12,8 +12,9 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author lirenhao
  * date: 2020/7/10 5:37 下午
+ *
+ * @author lirenhao
  * @see TerminalValidatorHandler
  * @see Jt808ChannelHandlerAdapter
  */

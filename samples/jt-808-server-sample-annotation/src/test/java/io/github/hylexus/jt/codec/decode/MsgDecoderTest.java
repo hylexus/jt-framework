@@ -4,6 +4,7 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Decoder;
+import io.github.hylexus.jt808.codec.impl.DefaultRequestMsgMetadataDecoder;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.samples.annotation.entity.req.Msg0104;
@@ -20,7 +21,7 @@ import org.junit.Test;
 public class MsgDecoderTest {
 
     private final BytesEncoder bytesEncoder = new BytesEncoder.DefaultBytesEncoder();
-    private final Decoder decoder = new Decoder(bytesEncoder);
+    private final Decoder decoder = new Decoder(new DefaultRequestMsgMetadataDecoder(bytesEncoder));
 
     @Test
     public void testDecodeLocationUpload() throws Exception {
@@ -39,7 +40,7 @@ public class MsgDecoderTest {
         Assert.assertEquals(174, header.getMsgBodyPropsField());
         Assert.assertEquals(174, header.getMsgBodyLength());
         Assert.assertEquals(0, header.getEncryptionType());
-        Assert.assertEquals("15312355616", header.getTerminalId());
+        Assert.assertEquals("015312355616", header.getTerminalId());
         Assert.assertEquals(0x0e36, header.getFlowId());
         Assert.assertFalse(header.isHasSubPackage());
 

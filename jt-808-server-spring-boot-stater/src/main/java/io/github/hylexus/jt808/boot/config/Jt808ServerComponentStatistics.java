@@ -7,6 +7,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.BytesEncoder;
+import io.github.hylexus.jt808.codec.RequestMsgMetadataDecoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.RequestMsgBodyConverter;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
@@ -74,6 +75,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     Jt808SessionManagerEventListener.class,
                     Jt808SessionManager.class,
                     BytesEncoder.class,
+                    RequestMsgMetadataDecoder.class,
                     MsgTypeParser.class,
                     TerminalValidator.class,
                     AuthCodeValidator.class,

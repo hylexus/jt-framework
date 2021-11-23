@@ -2,6 +2,7 @@ package io.github.hylexus.jt808.codec;
 
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.codec.entity.req.LocationUploadRequestMsgBodyForDebug;
+import io.github.hylexus.jt808.codec.impl.DefaultRequestMsgMetadataDecoder;
 import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +17,7 @@ import static io.github.hylexus.jt.config.Jt808ProtocolVersion.VERSION_2011;
  */
 public class SampleDecoderTest {
 
-    private final Decoder decoder = new Decoder(new BytesEncoder.DefaultBytesEncoder());
+    private final Decoder decoder = new Decoder(new DefaultRequestMsgMetadataDecoder(new BytesEncoder.DefaultBytesEncoder()));
 
     @Test
     public void bugFix7() {

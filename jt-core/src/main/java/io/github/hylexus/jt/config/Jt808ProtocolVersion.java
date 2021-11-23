@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public enum Jt808ProtocolVersion {
     /**
-     * 自动检测(2019版||2013版)
+     * 自动检测(2019版||2011版)
      */
     AUTO_DETECTION("ALL", (byte) -1),
     /**

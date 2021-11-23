@@ -15,6 +15,8 @@ import io.github.hylexus.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt808.codec.BytesEncoder;
 import io.github.hylexus.jt808.codec.Decoder;
 import io.github.hylexus.jt808.codec.Encoder;
+import io.github.hylexus.jt808.codec.RequestMsgMetadataDecoder;
+import io.github.hylexus.jt808.codec.impl.DefaultRequestMsgMetadataDecoder;
 import io.github.hylexus.jt808.converter.MsgTypeParser;
 import io.github.hylexus.jt808.converter.ResponseMsgBodyConverter;
 import io.github.hylexus.jt808.converter.impl.*;
@@ -140,9 +142,15 @@ public abstract class Jt808ServerConfigurationSupport {
         return new HeatBeatHandler(jt808SessionManager);
     }
 
+    @Bean(BEAN_NAME_REQUEST_MSG_METADATA_DECODER)
+    @ConditionalOnMissingBean(name = BEAN_NAME_REQUEST_MSG_METADATA_DECODER)
+    public RequestMsgMetadataDecoder requestMsgMetadataDecoder(BytesEncoder bytesEncoder) {
+        return new DefaultRequestMsgMetadataDecoder(bytesEncoder);
+    }
+
     @Bean
-    public Decoder decoder(BytesEncoder bytesEncoder) {
-        return new Decoder(bytesEncoder);
+    public Decoder decoder(RequestMsgMetadataDecoder requestMsgMetadataDecoder) {
+        return new Decoder(requestMsgMetadataDecoder);
     }
 
     @Bean

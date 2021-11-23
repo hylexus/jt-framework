@@ -31,7 +31,7 @@ public class LocationUploadMsgBodyConverter implements RequestMsgBodyConverter<L
         body.setDirection(buf.readShort());
         byte[] tmp = new byte[6];
         buf.readBytes(tmp);
-        body.setTime(BcdOps.bytes2BcdString(tmp, 0, 6));
+        body.setTime(BcdOps.bytes2BcdStringV2(tmp, 0, 6));
         return Optional.of(body);
     }
 

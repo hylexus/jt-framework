@@ -28,7 +28,7 @@ public class LocationUploadMsgBodyConverter2 implements RequestMsgBodyConverter<
         body.setHeight((short) intFromBytes(bytes, 16, 2));
         body.setSpeed((short) intFromBytes(bytes, 18, 2));
         body.setDirection((short) intFromBytes(bytes, 20, 2));
-        body.setTime(BcdOps.bytes2BcdString(bytes, 22, 6));
+        body.setTime(BcdOps.bytes2BcdStringV2(bytes, 22, 6));
         return Optional.of(body);
     }
 
