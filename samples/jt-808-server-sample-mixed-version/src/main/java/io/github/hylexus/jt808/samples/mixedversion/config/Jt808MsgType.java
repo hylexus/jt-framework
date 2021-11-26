@@ -27,6 +27,7 @@ public enum Jt808MsgType implements MsgType {
     RESP_QUERY_TERMINAL_PROPERTIES(0x8107, "查询终端属性(EMPTY)"),
     CLIENT_QUERY_TERMINAL_PROPERTIES_REPLY(0x0107, "查询终端属性应答"),
     REQ_0701(0x701, "电子运单上报"),
+    REQ_0704(0x0704, "定位数据批量上传"),
     ;
     private static final Map<Integer, Jt808MsgType> mapping = new HashMap<>(values().length);
 

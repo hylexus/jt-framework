@@ -3,11 +3,12 @@ package io.github.hylexus.jt808.samples.mixedversion.handler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.annotation.msg.handler.Jt808RequestMsgHandlerMapping;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt808.msg.RequestMsgHeader;
+import io.github.hylexus.jt808.msg.RequestMsgMetadata;
 import io.github.hylexus.jt808.msg.resp.BuiltinServerCommonReplyRespMsgBody;
-import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2011;
-import io.github.hylexus.jt808.samples.mixedversion.entity.req.AuthRequestMsgV2019;
-import io.github.hylexus.jt808.samples.mixedversion.entity.req.ReqMsg0701;
+import io.github.hylexus.jt808.samples.mixedversion.config.Jt808MsgType;
+import io.github.hylexus.jt808.samples.mixedversion.entity.req.*;
 import io.github.hylexus.jt808.session.Jt808Session;
 import io.github.hylexus.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt808.session.Session;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static io.github.hylexus.jt808.samples.mixedversion.config.Jt808MsgType.CLIENT_AUTH;
+import static io.github.hylexus.jt808.samples.mixedversion.config.Jt808MsgType.CLIENT_LOCATION_INFO_UPLOAD;
 
 /**
  * @author hylexus
@@ -69,6 +71,46 @@ public class CommonHandler {
         assert sessionInfo.get() == session;
         // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_AUTH);
         return new BuiltinServerCommonReplyRespMsgBody(header.getFlowId(), CLIENT_AUTH.getMsgId(), (byte) 0);
+    }
+
+    // 处理MsgId为0x0200的消息
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0200, versions = Jt808ProtocolVersion.VERSION_2011)
+    public BuiltinServerCommonReplyRespMsgBody processLocationMsgV2011(
+            Jt808Session session, RequestMsgMetadata metadata,
+            RequestMsgHeader header,
+            LocationUploadReqMsgV2011 msgBody) {
+
+        assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
+        assert session.getTerminalId().equals(header.getTerminalId());
+        assert session.getTerminalId().equals(metadata.getHeader().getTerminalId());
+        assert metadata.getHeader() == header;
+
+        log.info("处理位置上报消息 terminalId = {}, msgBody = {}", header.getTerminalId(), msgBody);
+        // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
+        return new BuiltinServerCommonReplyRespMsgBody(header.getFlowId(), CLIENT_LOCATION_INFO_UPLOAD.getMsgId(), (byte) 0);
+    }
+
+    // 处理MsgId为0x0200的消息
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0200, versions = Jt808ProtocolVersion.VERSION_2019)
+    public BuiltinServerCommonReplyRespMsgBody processLocationMsgV2019(
+            Jt808Session session, RequestMsgMetadata metadata,
+            RequestMsgHeader header,
+            LocationUploadReqMsgV2019 msgBody) {
+
+        assert header.getMsgId() == BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId();
+        assert session.getTerminalId().equals(header.getTerminalId());
+        assert session.getTerminalId().equals(metadata.getHeader().getTerminalId());
+        assert metadata.getHeader() == header;
+
+        log.info("处理位置上报消息 terminalId = {}, msgBody = {}", header.getTerminalId(), msgBody);
+        // return CommonReplyMsgBody.success(header.getFlowId(), BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
+        return new BuiltinServerCommonReplyRespMsgBody(header.getFlowId(), CLIENT_LOCATION_INFO_UPLOAD.getMsgId(), (byte) 0);
+    }
+
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0704, versions = Jt808ProtocolVersion.VERSION_2019)
+    public BuiltinServerCommonReplyRespMsgBody processReqMsg0704(ReqMsg0704 msg0704, RequestMsgHeader header) {
+        System.out.println(msg0704);
+        return new BuiltinServerCommonReplyRespMsgBody(header.getFlowId(), Jt808MsgType.REQ_0704.getMsgId(), (byte) 0);
     }
 
 }

@@ -29,5 +29,13 @@ jt808:
       keep-alive-time: 60s
       blocking-queue-size: 20
       thread-name-format: '808-msg-processor-%d'
-
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    servlet:
+      content-type: text/html
+  jackson:
+    time-zone: Asia/Shanghai
 

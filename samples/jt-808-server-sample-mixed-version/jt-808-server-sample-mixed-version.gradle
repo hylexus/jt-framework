@@ -26,4 +26,5 @@ dependencies {
 
     provided "io.netty:netty-all:${jar_version_netty}"
     compile "com.google.guava:guava:${jar_version_guava}"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
 }
