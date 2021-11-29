@@ -1,4 +1,4 @@
-#org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-#  io.github.hylexus.jt808.boot.config.Jt808ServerAutoConfigure
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.hylexus.jt.jt808.boot.config.Jt808AutoConfiguration
 org.springframework.boot.env.EnvironmentPostProcessor=\
-  io.github.hylexus.jt808.boot.env.Jt808DefaultEnvironmentPostProcessor
+  io.github.hylexus.jt.jt808.boot.env.Jt808DefaultEnvironmentPostProcessor

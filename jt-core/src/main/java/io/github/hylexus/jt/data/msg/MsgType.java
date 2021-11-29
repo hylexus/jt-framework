@@ -4,7 +4,6 @@ import java.util.Optional;
 
 /**
  * @author hylexus
- * createdAt 2019/1/24
  **/
 public interface MsgType {
     int getMsgId();

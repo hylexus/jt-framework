@@ -16,11 +16,11 @@ public enum Jt808ProtocolVersion {
      */
     AUTO_DETECTION("ALL", (byte) -1),
     /**
-     * 仅仅且仅仅支持 2011 版
+     * 仅仅支持 2011 版
      */
     VERSION_2011("2011", (byte) 0),
     /**
-     * 仅仅且仅仅支持 2019 版
+     * 仅仅支持 2019 版
      */
     VERSION_2019("2019", (byte) 1),
     ;

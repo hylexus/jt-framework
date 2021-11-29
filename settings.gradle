@@ -12,6 +12,7 @@ include 'jt-808-server-spring-boot-stater'
 
 // samples
 include 'samples'
+include 'samples:jt-808-server-sample-debug'
 include 'samples:jt-808-server-sample-bare'
 include 'samples:jt-808-server-sample-customized'
 include 'samples:jt-808-server-sample-annotation'

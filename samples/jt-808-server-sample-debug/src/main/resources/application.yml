@@ -1,0 +1,8 @@
+server:
+  port: 8808
+jt808:
+  print-component-statistics: true
+logging:
+  level: info
+  level.io.github.hylexus.jt: debug
+  level.jt-808.channel: debug

@@ -10,7 +10,6 @@ import java.util.Optional;
 
 /**
  * @author hylexus
- * createdAt 2019/1/24
  **/
 @Getter
 public enum BuiltinJt808MsgType implements MsgType {

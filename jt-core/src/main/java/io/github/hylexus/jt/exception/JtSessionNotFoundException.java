@@ -2,7 +2,6 @@ package io.github.hylexus.jt.exception;
 
 /**
  * @author hylexus
- * createdAt 2019/2/2
  **/
 public class JtSessionNotFoundException extends AbstractJtException {
     private String terminalId;
