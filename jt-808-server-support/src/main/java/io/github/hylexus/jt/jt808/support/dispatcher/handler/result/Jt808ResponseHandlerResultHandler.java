@@ -20,13 +20,13 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
     }
 
     @Override
-    public boolean supports(Jt808HandlerResult result) {
-        return result.getReturnValue() instanceof Jt808Response;
+    public boolean supports(Jt808HandlerResult handlerResult) {
+        return handlerResult != null && handlerResult.getReturnValue() instanceof Jt808Response;
     }
 
     @Override
-    public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult result) {
-        final Jt808Response returnValue = (Jt808Response) result.getReturnValue();
+    public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
+        final Jt808Response returnValue = (Jt808Response) handlerResult.getReturnValue();
         final ByteBuf byteBuf = this.encoder.encode(returnValue);
         try {
             session.sendMsgToClient(byteBuf);

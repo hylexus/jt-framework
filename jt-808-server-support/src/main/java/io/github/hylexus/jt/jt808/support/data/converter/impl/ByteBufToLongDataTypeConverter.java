@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.data.converter.impl;
 
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
+import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.converter.Jt808MsgDataTypeConverter;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.netty.buffer.ByteBuf;
@@ -14,17 +15,17 @@ import java.util.Set;
  */
 public class ByteBufToLongDataTypeConverter implements Jt808MsgDataTypeConverter<Long> {
 
-    private static final Set<ConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.DWORD, Long.class),
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.DWORD, long.class),
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.WORD, Long.class),
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.WORD, long.class),
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.BYTE, Long.class),
-            ConvertibleMetadata.forJt808MsgDataType(MsgDataType.BYTE, long.class)
+    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.DWORD, Long.class),
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.DWORD, long.class),
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.WORD, Long.class),
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.WORD, long.class),
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTE, Long.class),
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTE, long.class)
     );
 
     @Override
-    public Set<ConvertibleMetadata> getConvertibleTypes() {
+    public Set<RequestMsgConvertibleMetadata> getConvertibleTypes() {
         return CONVERTIBLE_METADATA_SET;
     }
 

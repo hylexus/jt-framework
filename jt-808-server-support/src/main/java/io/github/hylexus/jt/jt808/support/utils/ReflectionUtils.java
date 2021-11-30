@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.utils;
 
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.oaks.utils.BcdOps;
@@ -16,6 +17,14 @@ import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
  * @author hylexus
  */
 public class ReflectionUtils {
+
+    public static <T> T createInstance(Class<T> cls) throws JtIllegalStateException {
+        try {
+            return cls.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new JtIllegalStateException(e);
+        }
+    }
 
     public static boolean isVoidReturnType(Method method) {
         return method.getReturnType() == Void.TYPE;

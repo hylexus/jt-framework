@@ -10,17 +10,21 @@ import lombok.ToString;
 @Data
 @ToString(of = {"sourceDataType", "targetClass"})
 @EqualsAndHashCode(of = {"sourceDataType", "targetClass"})
-public class ConvertibleMetadata {
+public class ConvertibleMetadata<S, T> {
 
-    private final MsgDataType sourceDataType;
-    private final Class<?> targetClass;
+    private final S sourceDataType;
+    private final T targetClass;
 
-    public ConvertibleMetadata(MsgDataType sourceDataType, Class<?> targetClass) {
+    public ConvertibleMetadata(S sourceDataType, T targetClass) {
         this.sourceDataType = sourceDataType;
         this.targetClass = targetClass;
     }
 
-    public static ConvertibleMetadata forJt808MsgDataType(MsgDataType sourceDataType, Class<?> targetType) {
-        return new ConvertibleMetadata(sourceDataType, targetType);
+    public static RequestMsgConvertibleMetadata forJt808RequestMsgDataType(MsgDataType sourceDataType, Class<?> targetType) {
+        return new RequestMsgConvertibleMetadata(sourceDataType, targetType);
+    }
+
+    public static ResponseMsgConvertibleMetadata forJt808ResponseMsgDataType(Class<?> cls, MsgDataType targetType) {
+        return new ResponseMsgConvertibleMetadata(cls, targetType);
     }
 }

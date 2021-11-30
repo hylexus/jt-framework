@@ -17,6 +17,8 @@ public class Jt808HandlerResult {
     @Nullable
     private Object returnValue;
 
+    private boolean requestProcessed = false;
+
     private Function<Throwable, Jt808HandlerResult> exceptionHandler;
 
     public Jt808HandlerResult handleException(Throwable throwable) {

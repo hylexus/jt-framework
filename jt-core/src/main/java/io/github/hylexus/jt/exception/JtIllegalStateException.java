@@ -1,8 +1,9 @@
 package io.github.hylexus.jt.exception;
 
 /**
- * @author hylexus
  * Created At 2019-08-24 16:21
+ *
+ * @author hylexus
  */
 public class JtIllegalStateException extends AbstractJtException {
     public JtIllegalStateException() {

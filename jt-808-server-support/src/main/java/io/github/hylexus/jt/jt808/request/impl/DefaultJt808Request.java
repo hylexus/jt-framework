@@ -51,7 +51,7 @@ public class DefaultJt808Request implements Jt808Request {
 
     @Override
     public String toString() {
-        return "RequestMsgMetadata{"
+        return "DefaultJt808Request{"
                + "msgType=" + msgType
                + ", header=" + header
                + ", checkSum=" + originalCheckSum

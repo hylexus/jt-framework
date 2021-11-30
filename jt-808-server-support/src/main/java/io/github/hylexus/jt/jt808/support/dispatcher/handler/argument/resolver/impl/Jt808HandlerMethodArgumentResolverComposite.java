@@ -1,6 +1,5 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.MethodParameter;
@@ -11,23 +10,20 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-/**
- * @author hylexus
- */
-@BuiltinComponent
-public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgumentResolver {
+public class Jt808HandlerMethodArgumentResolverComposite implements HandlerMethodArgumentResolver {
 
     private final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
     private final ConcurrentMap<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
-    public DelegateHandlerMethodArgumentResolvers() {
+    public Jt808HandlerMethodArgumentResolverComposite() {
         addDefaultHandlerMethodArgumentResolver(this);
     }
 
-    static void addDefaultHandlerMethodArgumentResolver(DelegateHandlerMethodArgumentResolvers resolvers) {
+    static void addDefaultHandlerMethodArgumentResolver(Jt808HandlerMethodArgumentResolverComposite resolvers) {
+        resolvers.addResolver(new Jt808RequestMsgBodyHandlerMethodArgumentResolver());
         resolvers.addResolver(new Jt808RequestArgumentResolver());
-        resolvers.addResolver(new Jt808RequestHeaderArgumentResolver());
         resolvers.addResolver(new Jt808SessionArgumentResolver());
+        resolvers.addResolver(new Jt808RequestHeaderArgumentResolver());
         resolvers.addResolver(new Jt808ExceptionArgumentResolver());
     }
 
@@ -43,7 +39,7 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
         if (resolver != null) {
             return resolver.resolveArgument(parameter, context);
         }
-        throw new Jt808ArgumentResolveException(context);
+        throw new Jt808ArgumentResolveException("Can not resolve argument [ " + parameter.getParameterType() + " ]", context);
     }
 
     private HandlerMethodArgumentResolver getResolver(MethodParameter methodParameter) {
@@ -62,7 +58,7 @@ public class DelegateHandlerMethodArgumentResolvers implements HandlerMethodArgu
         return null;
     }
 
-    public DelegateHandlerMethodArgumentResolvers addResolver(HandlerMethodArgumentResolver resolver) {
+    public Jt808HandlerMethodArgumentResolverComposite addResolver(HandlerMethodArgumentResolver resolver) {
         this.resolvers.add(resolver);
         return this;
     }

@@ -24,15 +24,15 @@ public class ArgumentContext {
     @Nullable
     private final Jt808Session session;
 
-    public static ArgumentContext of(Throwable throwable, Jt808Request request, Jt808Session session) {
-        return new ArgumentContext(throwable, request, session);
+    public static ArgumentContext of(Jt808Request request, Jt808Session session, Throwable throwable) {
+        return new ArgumentContext(request, session, throwable);
     }
 
-    public static ArgumentContext of(Throwable throwable, Jt808Request request) {
-        return new ArgumentContext(throwable, request, null);
+    public static ArgumentContext of(Jt808Request request, Throwable throwable) {
+        return new ArgumentContext(request, null, throwable);
     }
 
-    public ArgumentContext(@Nullable Throwable throwable, @Nullable Jt808Request request, @Nullable Jt808Session session) {
+    private ArgumentContext(@Nullable Jt808Request request, @Nullable Jt808Session session, @Nullable Throwable throwable) {
         this.request = request;
         this.session = session;
         this.throwable = throwable;

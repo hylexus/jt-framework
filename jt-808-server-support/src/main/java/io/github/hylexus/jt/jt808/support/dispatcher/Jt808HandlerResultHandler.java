@@ -6,8 +6,8 @@ import io.github.hylexus.jt.jt808.session.Jt808Session;
 
 public interface Jt808HandlerResultHandler extends OrderedComponent {
 
-    boolean supports(Jt808HandlerResult result);
+    boolean supports(Jt808HandlerResult handlerResult);
 
-    void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult result);
+    void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult);
 
 }

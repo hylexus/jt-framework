@@ -2,6 +2,9 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection;
 
 import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808MultipleVersionSupport;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.Set;
 
 /**
  * 类似于 org.springframework.web.method.HandlerMethod
@@ -23,19 +27,25 @@ import java.lang.reflect.WildcardType;
 @ToString
 @Accessors(chain = true)
 @Slf4j
-public class HandlerMethod {
+public class HandlerMethod implements Jt808MultipleVersionSupport {
 
     private final Object beanInstance;
     private final Method method;
     @SuppressFBWarnings("EI_EXPOSE_REP")
     private final MethodParameter[] parameters;
     private final boolean isVoidReturnType;
+    private final Set<Jt808ProtocolVersion> supportedVersions;
+    private final Set<MsgType> supportedMsgTypes;
 
-    public HandlerMethod(Object beanInstance, Method method, boolean isVoidReturnType) {
+    public HandlerMethod(
+            Object beanInstance, Method method, boolean isVoidReturnType,
+            Set<Jt808ProtocolVersion> supportedVersions, Set<MsgType> supportedMsgTypes) {
         this.beanInstance = beanInstance;
         this.method = method;
         this.parameters = this.initMethodParameters(method);
         this.isVoidReturnType = isVoidReturnType;
+        this.supportedVersions = supportedVersions;
+        this.supportedMsgTypes = supportedMsgTypes;
     }
 
     private MethodParameter[] initMethodParameters(Method method) {
@@ -62,5 +72,15 @@ public class HandlerMethod {
             }
         }
         return methodParameters;
+    }
+
+    @Override
+    public Set<Jt808ProtocolVersion> getSupportedVersions() {
+        return supportedVersions;
+    }
+
+    @Override
+    public Set<MsgType> getSupportedMsgTypes() {
+        return supportedMsgTypes;
     }
 }

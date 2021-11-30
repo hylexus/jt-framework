@@ -1,7 +1,8 @@
-package io.github.hylexus.jt.jt808.support.codec;
+package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
@@ -29,11 +30,12 @@ public class Jt808AnnotationBasedDecoder {
     private final Map<Class<? extends ReqMsgFieldConverter<?>>, ReqMsgFieldConverter<?>> converterMapping = new HashMap<>();
 
     public <T> T decode(Jt808Request request, Class<T> cls) throws Jt808AnnotationArgumentResolveException {
-        final T instance = createInstance(cls);
+        final T instance = ReflectionUtils.createInstance(cls);
 
         final Jt808ByteBuf bodyDataBuf = request.body();
 
-        return (T) decode(cls, instance, bodyDataBuf, request);
+        @SuppressWarnings("unchecked") final T result = (T) decode(cls, instance, bodyDataBuf, request);
+        return result;
     }
 
     public Object decode(Class<?> cls, Object instance, ByteBuf byteBuf, Jt808Request request) throws Jt808AnnotationArgumentResolveException {
@@ -76,7 +78,7 @@ public class Jt808AnnotationBasedDecoder {
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
             final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
             while (slice.isReadable()) {
-                final Object itemInstance = createInstance(itemClass);
+                final Object itemInstance = ReflectionUtils.createInstance(itemClass);
                 final ByteBuf it = slice.slice(slice.readerIndex(), slice.readableBytes());
                 this.decode(itemClass, itemInstance, it, request);
                 slice.readerIndex(slice.readerIndex() + it.readerIndex());
@@ -87,7 +89,7 @@ public class Jt808AnnotationBasedDecoder {
         }
 
         // 3.2 其他类型
-        final ConvertibleMetadata key = ConvertibleMetadata.forJt808MsgDataType(dataType, fieldType);
+        final ConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(dataType, fieldType);
         final Optional<Jt808MsgDataTypeConverter<?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
         if (converterInfo.isEmpty()) {
             // 3.2.1 没有配置【自定义属性转换器】&& 是【支持的目标类型】但是没有内置转换器
@@ -124,7 +126,7 @@ public class Jt808AnnotationBasedDecoder {
         ReqMsgFieldConverter converter = converterMapping.get(converterClass);
         if (converter == null) {
             synchronized (this) {
-                converter = createInstance(converterClass);
+                converter = ReflectionUtils.createInstance(converterClass);
                 converterMapping.put(converterClass, converter);
             }
         }
@@ -204,11 +206,4 @@ public class Jt808AnnotationBasedDecoder {
         }
     }
 
-    private <T> T createInstance(Class<T> cls) throws Jt808AnnotationArgumentResolveException {
-        try {
-            return cls.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new Jt808AnnotationArgumentResolveException(e);
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.meta;
 
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import lombok.Data;
 import lombok.ToString;
@@ -46,17 +47,20 @@ public class JavaBeanFieldMetadata {
      * @param instance        当前field对应的实例
      * @param createNewIfNull 当值为空时，新创建field对应类型的实例返回
      */
-    public Object getFieldValue(Object instance, boolean createNewIfNull)
-            throws IllegalAccessException, InstantiationException {
+    public Object getFieldValue(Object instance, boolean createNewIfNull) {
 
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
+        try {
+            if (!field.isAccessible()) {
+                field.setAccessible(true);
+            }
+            Object oldValue = field.get(instance);
+            if (oldValue == null && createNewIfNull) {
+                oldValue = fieldType.newInstance();
+            }
+            return oldValue;
+        } catch (Exception e) {
+            throw new JtIllegalStateException(e);
         }
-        Object oldValue = field.get(instance);
-        if (oldValue == null && createNewIfNull) {
-            oldValue = fieldType.newInstance();
-        }
-        return oldValue;
     }
 
     public <T extends Annotation> boolean isAnnotationPresent(Class<T> annotationClass) {

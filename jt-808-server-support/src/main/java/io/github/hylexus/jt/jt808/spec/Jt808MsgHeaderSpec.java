@@ -28,6 +28,10 @@ public interface Jt808MsgHeaderSpec {
 
     MsgBodyPropsSpec msgBodyProps();
 
+    default int msgBodyLength() {
+        return msgBodyProps().msgBodyLength();
+    }
+
     default int msgBodyStartIndex() {
         return Jt808MsgHeaderSpec.msgBodyStartIndex(version(), msgBodyProps().hasSubPackage());
     }

@@ -72,13 +72,6 @@ public class Jt808DispatcherHandler {
             this.invokeExceptionHandler(request, session, dispatcherException, null);
         }
 
-        try {
-            final Object handler = this.getHandler(request, session);
-            final Jt808HandlerResult handlerResult = this.invokeHandler(request, session, handler);
-            this.handleResult(request, session, handlerResult);
-        } catch (Throwable dispatcherException) {
-            this.invokeExceptionHandler(request, session, dispatcherException, null);
-        }
     }
 
     protected void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult result) {
@@ -96,7 +89,7 @@ public class Jt808DispatcherHandler {
 
     private Jt808HandlerResult invokeExceptionHandler(Jt808Request request, Jt808Session session, Throwable throwable, Object handler) {
         try {
-            return exceptionHandler.handleException(handler, ArgumentContext.of(throwable, request, session));
+            return exceptionHandler.handleException(handler, ArgumentContext.of(request, session, throwable));
         } catch (Throwable e) {
             log.error("An exception occurred while invoke ExceptionHandler", throwable);
             return null;

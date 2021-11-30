@@ -57,12 +57,12 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
             this.msgDispatcher.doDispatch(request);
         } catch (Throwable e) {
             try {
-                commonExceptionHandler.handleException(null, ArgumentContext.of(new Jt808NettyException(e), request, jt808Session));
+                commonExceptionHandler.handleException(null, ArgumentContext.of(request, jt808Session, new Jt808NettyException(e)));
             } catch (Throwable ex) {
                 log.error("An error occurred while invoke ExceptionHandler", ex);
             }
         } finally {
-            release(msg);
+//            release(msg);
         }
     }
 

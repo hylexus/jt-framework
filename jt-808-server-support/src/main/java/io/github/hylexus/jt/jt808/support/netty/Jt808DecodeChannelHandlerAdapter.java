@@ -47,12 +47,12 @@ public class Jt808DecodeChannelHandlerAdapter extends ChannelInboundHandlerAdapt
                 ctx.fireChannelRead(request);
             } catch (Throwable throwable) {
                 try {
-                    this.exceptionHandler.handleException(null, ArgumentContext.of(new Jt808NettyException(throwable), request));
+                    this.exceptionHandler.handleException(null, ArgumentContext.of(request, new Jt808NettyException(throwable)));
                 } catch (Throwable e) {
                     log.error("An error occurred while invoke ExceptionHandler", e);
                 }
             } finally {
-                buf.release();
+//                buf.release();
             }
         } else {
             ctx.fireChannelRead(msg);
