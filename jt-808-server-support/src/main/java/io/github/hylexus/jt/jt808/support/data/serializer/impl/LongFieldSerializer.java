@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class LongFieldJt808FieldSerializer implements Jt808FieldSerializer<Long> {
+public class LongFieldSerializer implements Jt808FieldSerializer<Long> {
 
     private static final Set<ResponseMsgConvertibleMetadata> SUPPORTED_RESPONSE_MSG_CONVERTIBLE_METADATA = Set.of(
             ConvertibleMetadata.forJt808ResponseMsgDataType(long.class, MsgDataType.DWORD),

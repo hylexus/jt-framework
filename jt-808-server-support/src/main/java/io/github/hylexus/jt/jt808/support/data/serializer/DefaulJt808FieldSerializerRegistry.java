@@ -1,8 +1,10 @@
-package io.github.hylexus.jt.jt808.support.data.serializer.impl;
+package io.github.hylexus.jt.jt808.support.data.serializer;
 
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
-import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
+import io.github.hylexus.jt.jt808.support.data.serializer.impl.ByteFieldSerializer;
+import io.github.hylexus.jt.jt808.support.data.serializer.impl.IntegerFieldSerializer;
+import io.github.hylexus.jt.jt808.support.data.serializer.impl.LongFieldSerializer;
+import io.github.hylexus.jt.jt808.support.data.serializer.impl.ShortFieldSerializer;
 import lombok.NonNull;
 
 import java.util.Map;
@@ -27,13 +29,13 @@ public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerR
     }
 
     static void registerDefaultConverter(DefaulJt808FieldSerializerRegistry registry) {
-        registry.registerConverter(new IntegerFieldJt808FieldSerializer());
+        registry.registerConverter(new IntegerFieldSerializer());
 
-        registry.registerConverter(new ByteFieldJt808FieldSerializer());
+        registry.registerConverter(new ByteFieldSerializer());
 
-        registry.registerConverter(new ShortFieldJt808FieldSerializer());
+        registry.registerConverter(new ShortFieldSerializer());
 
-        registry.registerConverter(new LongFieldJt808FieldSerializer());
+        registry.registerConverter(new LongFieldSerializer());
     }
 
     @Override

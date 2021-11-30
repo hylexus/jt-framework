@@ -1,9 +1,9 @@
-package io.github.hylexus.jt.jt808.support.data.converter.impl;
+package io.github.hylexus.jt.jt808.support.data.deserialize.impl;
 
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.converter.Jt808MsgDataTypeConverter;
+import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.netty.buffer.ByteBuf;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class ByteBufToByteDataTypeConverter implements Jt808MsgDataTypeConverter<Byte> {
+public class ByteFieldDeserializer implements Jt808FieldDeserializer<Byte> {
 
     private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
             ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTE, Byte.class),
@@ -25,7 +25,7 @@ public class ByteBufToByteDataTypeConverter implements Jt808MsgDataTypeConverter
     }
 
     @Override
-    public Byte convert(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
+    public Byte deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BYTE) {
 //            return byteBuf.getByte(start);
             return byteBuf.readByte();

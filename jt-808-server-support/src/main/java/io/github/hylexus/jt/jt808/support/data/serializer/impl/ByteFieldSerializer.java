@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class ByteFieldJt808FieldSerializer implements Jt808FieldSerializer<Byte> {
+public class ByteFieldSerializer implements Jt808FieldSerializer<Byte> {
 
     private static final Set<ResponseMsgConvertibleMetadata> SUPPORTED_RESPONSE_MSG_CONVERTIBLE_METADATA = Set.of(
             ConvertibleMetadata.forJt808ResponseMsgDataType(byte.class, MsgDataType.BYTE),

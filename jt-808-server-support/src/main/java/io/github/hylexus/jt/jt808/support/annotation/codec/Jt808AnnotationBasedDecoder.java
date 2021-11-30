@@ -6,10 +6,11 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
-import io.github.hylexus.jt.jt808.support.data.converter.Jt808MsgDataTypeConverter;
+import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.converter.ReqMsgFieldConverter;
-import io.github.hylexus.jt.jt808.support.data.converter.registry.DataTypeConverterRegistry;
-import io.github.hylexus.jt.jt808.support.data.converter.registry.DefaultDataTypeConverterRegistry;
+import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
+import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
+import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
@@ -26,7 +27,7 @@ import java.util.*;
 @Slf4j
 public class Jt808AnnotationBasedDecoder {
 
-    private final DataTypeConverterRegistry dataTypeConverterRegistry = new DefaultDataTypeConverterRegistry();
+    private final Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry = new DefaultJt808FieldDeserializerRegistry();
     private final Map<Class<? extends ReqMsgFieldConverter<?>>, ReqMsgFieldConverter<?>> converterMapping = new HashMap<>();
 
     public <T> T decode(Jt808Request request, Class<T> cls) throws Jt808AnnotationArgumentResolveException {
@@ -89,16 +90,16 @@ public class Jt808AnnotationBasedDecoder {
         }
 
         // 3.2 其他类型
-        final ConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(dataType, fieldType);
-        final Optional<Jt808MsgDataTypeConverter<?>> converterInfo = dataTypeConverterRegistry.getConverter(key);
+        final RequestMsgConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(dataType, fieldType);
+        final Optional<Jt808FieldDeserializer<?>> converterInfo = jt808FieldDeserializerRegistry.getConverter(key);
         if (converterInfo.isEmpty()) {
             // 3.2.1 没有配置【自定义属性转换器】&& 是【支持的目标类型】但是没有内置转换器
             throw new Jt808AnnotationArgumentResolveException(
                     "No customerDataTypeConverterClass found, Unsupported expectedTargetClassType " + fieldType + " for field " + field);
         }
 
-        final Jt808MsgDataTypeConverter<?> converter = converterInfo.get();
-        final Object value = converter.convert(bodyDataBuf, dataType, startIndex, length);
+        final Jt808FieldDeserializer<?> converter = converterInfo.get();
+        final Object value = converter.deserialize(bodyDataBuf, dataType, startIndex, length);
 
         log.debug("Convert field {}({}) by converter : {}, result : {}",
                 field.getName(), fieldType.getSimpleName(), converter.getClass().getSimpleName(), value);

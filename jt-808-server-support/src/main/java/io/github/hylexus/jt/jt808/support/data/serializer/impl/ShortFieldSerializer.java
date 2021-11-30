@@ -12,15 +12,13 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class IntegerFieldJt808FieldSerializer implements Jt808FieldSerializer<Integer> {
+public class ShortFieldSerializer implements Jt808FieldSerializer<Short> {
 
     private static final Set<ResponseMsgConvertibleMetadata> SUPPORTED_RESPONSE_MSG_CONVERTIBLE_METADATA = Set.of(
-            ConvertibleMetadata.forJt808ResponseMsgDataType(int.class, MsgDataType.DWORD),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(int.class, MsgDataType.WORD),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(int.class, MsgDataType.BYTE),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(Integer.class, MsgDataType.DWORD),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(Integer.class, MsgDataType.WORD),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(Integer.class, MsgDataType.BYTE)
+            ConvertibleMetadata.forJt808ResponseMsgDataType(short.class, MsgDataType.WORD),
+            ConvertibleMetadata.forJt808ResponseMsgDataType(short.class, MsgDataType.BYTE),
+            ConvertibleMetadata.forJt808ResponseMsgDataType(Short.class, MsgDataType.WORD),
+            ConvertibleMetadata.forJt808ResponseMsgDataType(Short.class, MsgDataType.BYTE)
     );
 
     @Override
@@ -29,11 +27,8 @@ public class IntegerFieldJt808FieldSerializer implements Jt808FieldSerializer<In
     }
 
     @Override
-    public void serialize(Integer object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
+    public void serialize(Short object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
         switch (msgDataType) {
-            case DWORD:
-                byteBuf.writeInt(object);
-                break;
             case WORD:
                 byteBuf.writeShort(object);
                 break;
@@ -41,7 +36,7 @@ public class IntegerFieldJt808FieldSerializer implements Jt808FieldSerializer<In
                 byteBuf.writeByte(object);
                 break;
             default: {
-                throw new Jt808FieldSerializerException("Can not serialize Integer/int as " + msgDataType);
+                throw new Jt808FieldSerializerException("Can not serialize Short/short as " + msgDataType);
             }
         }
     }

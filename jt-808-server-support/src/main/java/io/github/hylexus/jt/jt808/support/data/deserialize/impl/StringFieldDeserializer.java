@@ -1,10 +1,10 @@
-package io.github.hylexus.jt.jt808.support.data.converter.impl;
+package io.github.hylexus.jt.jt808.support.data.deserialize.impl;
 
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.converter.Jt808MsgDataTypeConverter;
+import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -15,15 +15,15 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class ByteBufToStringDataConverter implements Jt808MsgDataTypeConverter<String> {
+public class StringFieldDeserializer implements Jt808FieldDeserializer<String> {
     private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.STRING, String.class));
     private final Charset charset;
 
-    public ByteBufToStringDataConverter() {
+    public StringFieldDeserializer() {
         this(JtProtocolConstant.JT_808_STRING_ENCODING);
     }
 
-    public ByteBufToStringDataConverter(Charset charset) {
+    public StringFieldDeserializer(Charset charset) {
         this.charset = charset;
     }
 
@@ -33,7 +33,7 @@ public class ByteBufToStringDataConverter implements Jt808MsgDataTypeConverter<S
     }
 
     @Override
-    public String convert(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
+    public String deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.STRING) {
 //            return JtProtocolUtils.getString(byteBuf, start, length, charset);
             return JtProtocolUtils.readString(byteBuf, start, length, charset);
