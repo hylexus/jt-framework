@@ -1,7 +1,8 @@
 package io.github.hylexus.jt.jt808.response;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgBodySpec;
+import io.github.hylexus.jt.jt808.response.impl.DefaultJt808ResponseBuilder;
+import io.netty.buffer.ByteBuf;
 
 /**
  * @author hylexus
@@ -16,10 +17,10 @@ public interface Jt808Response {
 
     int flowId();
 
-    Jt808MsgBodySpec body();
+    ByteBuf body();
 
     default int msgBodyLength() {
-        return body().data().readableBytes();
+        return body().readableBytes();
     }
 
     default int encryptionType() {
@@ -34,4 +35,7 @@ public interface Jt808Response {
         return 0;
     }
 
+    static DefaultJt808ResponseBuilder newBuilder() {
+        return DefaultJt808ResponseBuilder.newBuilder();
+    }
 }

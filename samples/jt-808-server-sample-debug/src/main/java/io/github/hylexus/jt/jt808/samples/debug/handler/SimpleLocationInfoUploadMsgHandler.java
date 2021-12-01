@@ -4,6 +4,7 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.response.impl.DefaultJt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
@@ -35,6 +36,12 @@ public class SimpleLocationInfoUploadMsgHandler implements Jt808ReqMsgHandler<De
                 .writeWord(request.flowId())
                 .writeWord(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId());
         jt808ByteBuf.writeByte(0);
-        return new DefaultJt808Response(BuiltinJt808MsgType.SERVER_COMMON_REPLY, jt808ByteBuf, session);
+
+        return Jt808Response.newBuilder()
+                .body(jt808ByteBuf)
+                .terminalId(session.getTerminalId())
+                .msgId(BuiltinJt808MsgType.SERVER_COMMON_REPLY)
+                .flowId(session.getCurrentFlowId())
+                .build();
     }
 }

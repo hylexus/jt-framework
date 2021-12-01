@@ -68,8 +68,8 @@ public class Jt808DispatcherHandlerAutoConfiguration {
     }
 
     @Bean
-    public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler() {
-        return new Jt808ResponseMsgBodyHandlerResultHandler();
+    public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler(Jt808MsgEncoder encoder) {
+        return new Jt808ResponseMsgBodyHandlerResultHandler(encoder);
     }
 
     @Bean

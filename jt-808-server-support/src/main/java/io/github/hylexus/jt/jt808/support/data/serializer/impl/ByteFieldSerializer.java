@@ -28,6 +28,7 @@ public class ByteFieldSerializer implements Jt808FieldSerializer<Byte> {
     public void serialize(Byte object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
         if (msgDataType == MsgDataType.BYTE) {
             byteBuf.writeByte(object);
+            return;
         }
         throw new Jt808FieldSerializerException("Can not serialize Byte/byte as " + msgDataType);
     }

@@ -30,7 +30,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     @Override
     public ByteBuf encode(Jt808Response response) {
         final Jt808ByteBuf headerBuf = encodeMsgHeader(response);
-        final Jt808ByteBuf bodyBuf = response.body().data();
+        final ByteBuf bodyBuf = response.body();
 
         final CompositeByteBuf compositeByteBuf = allocator.compositeBuffer()
                 .addComponent(true, headerBuf)
@@ -47,27 +47,6 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
                 .addComponent(true, escaped)
                 .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER));
     }
-
-//    @Override
-//    public ByteBuf encode(Jt808Response response) {
-//        final Jt808ByteBuf headerBuf = encodeMsgHeader(response);
-//        final Jt808ByteBuf bodyBuf = response.body().data();
-//
-//        final CompositeByteBuf compositeByteBuf = allocator.compositeBuffer()
-//                .addComponent(true, headerBuf)
-//                .addComponent(true, bodyBuf);
-//
-//        final byte checkSum = this.msgBytesProcessor.calculateCheckSum(compositeByteBuf);
-//
-//        compositeByteBuf.writeByte(checkSum);
-//        compositeByteBuf.resetReaderIndex();
-//        final ByteBuf escaped = this.msgBytesProcessor.doEscapeForSend(compositeByteBuf);
-//
-//        return allocator.compositeBuffer()
-//                .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER))
-//                .addComponent(true, escaped)
-//                .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER));
-//    }
 
     protected Jt808ByteBuf encodeMsgHeader(Jt808Response response) {
         final Jt808ProtocolVersion version = response.version();

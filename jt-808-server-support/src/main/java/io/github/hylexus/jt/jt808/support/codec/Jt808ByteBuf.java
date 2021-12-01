@@ -69,6 +69,12 @@ public class Jt808ByteBuf extends AbstractJt808ByteBuf {
         return this;
     }
 
+    @Override
+    public Jt808ByteBuf writeByte(int value) {
+        buf.writeByte(value);
+        return this;
+    }
+
     private byte[] getBytesInternal(int startIndex, int length) {
         final byte[] bytes = new byte[length];
         this.getBytes(startIndex, bytes, 0, length);
