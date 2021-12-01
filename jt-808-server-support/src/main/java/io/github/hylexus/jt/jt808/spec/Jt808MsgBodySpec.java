@@ -7,6 +7,6 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
  */
 public interface Jt808MsgBodySpec {
 
-    Jt808ByteBuf data();
+    Jt808ByteBuf requestBody();
 
 }

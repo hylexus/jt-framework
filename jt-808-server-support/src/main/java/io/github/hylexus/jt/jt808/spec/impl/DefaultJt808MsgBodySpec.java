@@ -15,7 +15,7 @@ public class DefaultJt808MsgBodySpec implements Jt808MsgBodySpec {
     }
 
     @Override
-    public Jt808ByteBuf data() {
+    public Jt808ByteBuf requestBody() {
         return byteBuf;
     }
 

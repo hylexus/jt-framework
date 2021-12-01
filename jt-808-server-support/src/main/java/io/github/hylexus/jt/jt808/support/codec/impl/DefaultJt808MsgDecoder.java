@@ -7,7 +7,6 @@ import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.request.impl.DefaultJt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
-import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodySpec;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeaderSpec;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultMsgBodyPropsSpec;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultSubPackageSpec;
@@ -42,7 +41,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
         final MsgType msgType = this.parseMsgType(headerSpec);
 
-        return new DefaultJt808Request(headerSpec, new DefaultJt808MsgBodySpec(escaped), originalCheckSum, calculatedCheckSum, msgType);
+        return new DefaultJt808Request(headerSpec, escaped, originalCheckSum, calculatedCheckSum, msgType);
     }
 
     private MsgType parseMsgType(Jt808MsgHeaderSpec headerSpec) {

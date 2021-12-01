@@ -2,15 +2,14 @@ package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.converter.ReqMsgFieldConverter;
+import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
-import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
@@ -33,7 +32,7 @@ public class Jt808AnnotationBasedDecoder {
     public <T> T decode(Jt808Request request, Class<T> cls) throws Jt808AnnotationArgumentResolveException {
         final T instance = ReflectionUtils.createInstance(cls);
 
-        final Jt808ByteBuf bodyDataBuf = request.body();
+        final ByteBuf bodyDataBuf = request.body();
 
         @SuppressWarnings("unchecked") final T result = (T) decode(cls, instance, bodyDataBuf, request);
         return result;

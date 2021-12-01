@@ -45,6 +45,9 @@ public interface Jt808MsgHeaderSpec {
     String toString();
 
     interface MsgBodyPropsSpec {
+
+        int intValue();
+
         // bit[0-9] 0000,0011,1111,1111(3FF)(消息体长度)
         default int msgBodyLength() {
             return intValue() & 0x3ff;
@@ -70,7 +73,6 @@ public interface Jt808MsgHeaderSpec {
             return (intValue() & 0x8000) >> 15;
         }
 
-        int intValue();
     }
 
     interface SubPackageSpec {

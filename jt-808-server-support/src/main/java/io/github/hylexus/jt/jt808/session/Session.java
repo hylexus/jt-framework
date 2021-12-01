@@ -45,10 +45,14 @@ public class Session implements Jt808Session {
     private Jt808ProtocolVersion protocolVersion;
 
     @Override
-    public void sendMsgToClient(ByteBuf byteBuf) throws InterruptedException, JtCommunicationException {
-        ChannelFuture sync = channel.writeAndFlush(byteBuf).sync();
-        if (!sync.isSuccess()) {
-            throw new JtCommunicationException("sendMsgToClient failed");
+    public void sendMsgToClient(ByteBuf byteBuf) throws JtCommunicationException {
+        try {
+            final ChannelFuture sync = channel.writeAndFlush(byteBuf).sync();
+            if (!sync.isSuccess()) {
+                throw new JtCommunicationException("sendMsgToClient failed");
+            }
+        } catch (InterruptedException e) {
+            throw new JtCommunicationException(e);
         }
     }
 

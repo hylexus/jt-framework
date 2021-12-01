@@ -36,7 +36,7 @@ public class DefaultJt808Response implements Jt808Response {
     }
 
     @Override
-    public int msgId() {
+    public int msgType() {
         return msgId;
     }
 

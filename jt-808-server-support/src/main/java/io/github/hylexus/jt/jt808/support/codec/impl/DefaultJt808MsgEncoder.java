@@ -64,7 +64,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
 
         // bytes[0-1] 消息ID Word
-        buf.writeWord(response.msgId());
+        buf.writeWord(response.msgType());
 
         // bytes[2-3] 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
@@ -98,7 +98,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
 
         // bytes[0-1] 消息ID Word
-        buf.writeWord(response.msgId());
+        buf.writeWord(response.msgType());
 
         // bytes[2-3] 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(

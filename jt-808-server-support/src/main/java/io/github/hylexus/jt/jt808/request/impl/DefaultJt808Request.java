@@ -2,8 +2,8 @@ package io.github.hylexus.jt.jt808.request.impl;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgBodySpec;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.netty.buffer.ByteBuf;
 
 /**
  * @author hylexus
@@ -11,14 +11,14 @@ import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
 public class DefaultJt808Request implements Jt808Request {
 
     protected final Jt808MsgHeaderSpec header;
-    protected final Jt808MsgBodySpec body;
+    protected final ByteBuf rawByteBuf;
     protected final byte originalCheckSum;
     protected final byte calculatedCheckSum;
     protected final MsgType msgType;
 
-    public DefaultJt808Request(Jt808MsgHeaderSpec header, Jt808MsgBodySpec body, byte originalCheckSum, byte calculatedCheckSum, MsgType msgType) {
+    public DefaultJt808Request(Jt808MsgHeaderSpec header, ByteBuf rawByteBuf, byte originalCheckSum, byte calculatedCheckSum, MsgType msgType) {
         this.header = header;
-        this.body = body;
+        this.rawByteBuf = rawByteBuf;
         this.originalCheckSum = originalCheckSum;
         this.calculatedCheckSum = calculatedCheckSum;
         this.msgType = msgType;
@@ -30,8 +30,13 @@ public class DefaultJt808Request implements Jt808Request {
     }
 
     @Override
-    public Jt808MsgBodySpec bodySpec() {
-        return body;
+    public ByteBuf rawByteBuf() {
+        return rawByteBuf;
+    }
+
+    @Override
+    public ByteBuf body() {
+        return rawByteBuf.slice(header.msgBodyStartIndex(), header.msgBodyLength());
     }
 
     @Override

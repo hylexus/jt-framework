@@ -17,19 +17,16 @@ public interface Jt808Session {
 
     /**
      * @param bytes 待发送给客户端的数据
-     * @throws InterruptedException     InterruptedException
      * @see #sendMsgToClient(ByteBuf)
      */
-    default void sendMsgToClient(byte[] bytes) throws InterruptedException, JtCommunicationException {
+    default void sendMsgToClient(byte[] bytes) throws JtCommunicationException {
         this.sendMsgToClient(Unpooled.wrappedBuffer(bytes));
     }
 
     /**
      * @param byteBuf 待发送给客户端的数据
-     * @throws InterruptedException     InterruptedException
-     * @throws JtCommunicationException JtCommunicationException
      */
-    void sendMsgToClient(ByteBuf byteBuf) throws InterruptedException, JtCommunicationException;
+    void sendMsgToClient(ByteBuf byteBuf) throws JtCommunicationException;
 
     /**
      * @return 当前流水号，并自增
@@ -60,8 +57,6 @@ public interface Jt808Session {
 
     /**
      * @return 当前终端的协议版本号
-     * @author hylexus
-     * @since 2.0.0
      */
     Jt808ProtocolVersion getProtocolVersion();
 

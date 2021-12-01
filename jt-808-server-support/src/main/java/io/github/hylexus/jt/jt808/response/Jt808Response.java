@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
  */
 public interface Jt808Response {
 
-    int msgId();
+    int msgType();
 
     Jt808ProtocolVersion version();
 
