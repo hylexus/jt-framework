@@ -1,0 +1,34 @@
+package io.github.hylexus.jt.jt808.support.data.type;
+
+import io.github.hylexus.jt.jt808.support.utils.BytesUtils;
+import io.netty.buffer.ByteBuf;
+
+/**
+ * @author hylexus
+ */
+public class WordWrapper implements BytesValueWrapper<Integer> {
+    private Integer value;
+
+    public WordWrapper() {
+    }
+
+    public WordWrapper(Integer value) {
+        this.value = value;
+    }
+
+    @Override
+    public void write(ByteBuf byteBuf) {
+        BytesUtils.writeWord(byteBuf, value);
+    }
+
+    @Override
+    public Integer read(ByteBuf byteBuf, int offset, int length) {
+        value = BytesUtils.readWord(byteBuf);
+        return value;
+    }
+
+    @Override
+    public Integer value() {
+        return value;
+    }
+}
