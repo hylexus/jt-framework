@@ -3,9 +3,13 @@ package io.github.hylexus.jt.jt808.samples.debug.handler;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.response.CommandWaitingPool;
+import io.github.hylexus.jt.jt808.response.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2011;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
+import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
+import io.github.hylexus.jt.jt808.samples.debug.entity.resp.DemoServerCommonReplyRespMsg;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterReplyRespMsg;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
@@ -19,6 +23,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Jt808RequestMsgHandler
 public class AnnotationHandler01 {
+
+    @Jt808RequestMsgHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
+    public Object processMsg0001(Jt808Request request, TerminalCommonReplyMsg body) {
+        // todo null
+        // todo flowId
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(request.header().terminalId(), BuiltinJt808MsgType.CLIENT_COMMON_REPLY, 1);
+        CommandWaitingPool.getInstance().putIfNecessary(commandKey, body);
+        return new DemoServerCommonReplyRespMsg().setMsgId(BuiltinJt808MsgType.SERVER_COMMON_REPLY.getMsgId())
+                .setResult(0).setFlowId(111);
+    }
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2011)
     public Object processRegisterMsgV2011(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2011 authMsgV2011) {

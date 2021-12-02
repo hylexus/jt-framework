@@ -105,10 +105,15 @@ public class ReflectionUtils {
         return value;
     }
 
-    public static void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException {
-        if (!field.isAccessible()) {
+    public static void setFieldValue(Object instance, Field field, Object value) {
+        // if (!field.isAccessible()) {
+        if (!field.canAccess(instance)) {
             field.setAccessible(true);
         }
-        field.set(instance, value);
+        try {
+            field.set(instance, value);
+        } catch (IllegalAccessException e) {
+            throw new JtIllegalStateException(e);
+        }
     }
 }

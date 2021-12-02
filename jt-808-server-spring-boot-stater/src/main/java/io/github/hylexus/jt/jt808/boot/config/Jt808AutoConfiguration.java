@@ -3,6 +3,10 @@ package io.github.hylexus.jt.jt808.boot.config;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808DispatcherHandlerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808NettyServerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
+import io.github.hylexus.jt.jt808.response.Jt808CommandSender;
+import io.github.hylexus.jt.jt808.response.impl.DefaultJt808CommandSender;
+import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
@@ -43,6 +47,18 @@ public class Jt808AutoConfiguration {
     @Bean
     public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor) {
         return new DefaultJt808MsgEncoder(msgBytesProcessor);
+    }
+
+    @Bean
+    public Jt808AnnotationBasedEncoder jt808AnnotationBasedEncoder() {
+        return new Jt808AnnotationBasedEncoder();
+    }
+
+    @Bean
+    public Jt808CommandSender jt808CommandSender(
+            Jt808SessionManager sessionManager, Jt808MsgEncoder encoder,
+            Jt808AnnotationBasedEncoder annotationBasedEncoder) {
+        return new DefaultJt808CommandSender(sessionManager, encoder, annotationBasedEncoder);
     }
 
 }

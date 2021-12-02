@@ -35,6 +35,8 @@ public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerR
         registry.registerConverter(new LongFieldSerializer());
 
         registry.registerConverter(new StringFieldSerializer());
+
+        registry.registerConverter(new ByteBufFieldSerializer());
     }
 
     @Override
@@ -46,7 +48,8 @@ public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerR
 
     @Override
     public Optional<Jt808FieldSerializer<Object>> getConverter(ResponseMsgConvertibleMetadata convertibleMetadata) {
-        @SuppressWarnings("unckecked") final Jt808FieldSerializer<Object> serializer = (Jt808FieldSerializer<Object>) this.converterMap.get(convertibleMetadata);
+        @SuppressWarnings({"unchecked"}) final Jt808FieldSerializer<Object> serializer
+                = (Jt808FieldSerializer<Object>) this.converterMap.get(convertibleMetadata);
         return Optional.ofNullable(serializer);
     }
 

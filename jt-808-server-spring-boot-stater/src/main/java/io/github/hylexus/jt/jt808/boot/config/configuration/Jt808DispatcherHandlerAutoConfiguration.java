@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.converter.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
@@ -68,8 +69,8 @@ public class Jt808DispatcherHandlerAutoConfiguration {
     }
 
     @Bean
-    public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler(Jt808MsgEncoder encoder) {
-        return new Jt808ResponseMsgBodyHandlerResultHandler(encoder);
+    public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler(Jt808MsgEncoder encoder, Jt808AnnotationBasedEncoder annotationBasedEncoder) {
+        return new Jt808ResponseMsgBodyHandlerResultHandler(annotationBasedEncoder, encoder);
     }
 
     @Bean

@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
+import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.msg.Jt808ResponseMsgBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
@@ -12,7 +13,6 @@ import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.github.hylexus.jt.jt808.support.utils.JavaBeanMetadataUtils;
-import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -26,7 +26,24 @@ public class Jt808AnnotationBasedEncoder {
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
     private final Jt808FieldSerializerRegistry fieldSerializerRegistry = new DefaulJt808FieldSerializerRegistry();
 
-    public ByteBuf encode(Object responseMsgInstance) {
+    // TODO annotation properties...
+    public Jt808Response encode(Object responseMsg, Jt808Session session) {
+        final Class<?> entityClass = responseMsg.getClass();
+        final Jt808ResponseMsgBody annotation = requireNonNull(
+                AnnotationUtils.findAnnotation(entityClass, Jt808ResponseMsgBody.class),
+                "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseMsgBody.class.getSimpleName());
+
+        final ByteBuf respBody = this.encodeMsgBody(responseMsg);
+        return Jt808Response.newBuilder()
+                .body(respBody)
+                .version(session.getProtocolVersion())
+                .msgId(annotation.respMsgId())
+                .terminalId(session.getTerminalId())
+                .flowId(session.getCurrentFlowId())
+                .build();
+    }
+
+    public ByteBuf encodeMsgBody(Object responseMsgInstance) {
         final Class<?> entityClass = responseMsgInstance.getClass();
         final ByteBuf byteBuf = allocator.buffer();
         doEncode(responseMsgInstance, entityClass, byteBuf);
@@ -45,11 +62,17 @@ public class Jt808AnnotationBasedEncoder {
     private void processBasicField(Class<?> entityClass, Object responseMsgInstance, JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf) {
         final BasicField basicFieldAnnotation = fieldMetadata.getAnnotation(BasicField.class);
         final MsgDataType jtDataType = basicFieldAnnotation.dataType();
+        final Object fieldValue = fieldMetadata.getFieldValue(responseMsgInstance, false);
+
         if (jtDataType == MsgDataType.LIST) {
             // TODO list serialize
+            if (!(fieldValue instanceof Iterable)) {
+                throw new JtIllegalArgumentException(fieldMetadata.getFieldType().getName() + " should be Iterable");
+            }
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
-            final Object itemInstance = ReflectionUtils.createInstance(itemClass);
-            this.doEncode(itemInstance, itemClass, byteBuf);
+            for (Object item : ((Iterable<?>) fieldValue)) {
+                this.doEncode(item, itemClass, byteBuf);
+            }
             return;
         }
 
@@ -59,9 +82,8 @@ public class Jt808AnnotationBasedEncoder {
         }
 
         final Jt808FieldSerializer<Object> fieldSerializer = fieldSerializerRegistry.getConverter(forJt808ResponseMsgDataType(fieldType, jtDataType))
-                .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField().getName() + "]"));
+                .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
 
-        final Object fieldValue = fieldMetadata.getFieldValue(responseMsgInstance, false);
         fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
     }
 }

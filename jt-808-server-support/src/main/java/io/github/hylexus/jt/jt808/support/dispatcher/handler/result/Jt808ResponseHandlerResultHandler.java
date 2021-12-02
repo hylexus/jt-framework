@@ -30,7 +30,7 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
         final ByteBuf byteBuf = this.encoder.encode(returnValue);
         try {
             session.sendMsgToClient(byteBuf);
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             // TODO exception handler
         }

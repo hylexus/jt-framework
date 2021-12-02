@@ -50,12 +50,15 @@ public class JavaBeanFieldMetadata {
     public Object getFieldValue(Object instance, boolean createNewIfNull) {
 
         try {
-            if (!field.isAccessible()) {
+            //if (!field.isAccessible()) {
+            if (!field.canAccess(instance)) {
+
                 field.setAccessible(true);
             }
             Object oldValue = field.get(instance);
             if (oldValue == null && createNewIfNull) {
-                oldValue = fieldType.newInstance();
+                oldValue = ReflectionUtils.createInstance(fieldType);
+                // oldValue = fieldType.newInstance();
             }
             return oldValue;
         } catch (Exception e) {

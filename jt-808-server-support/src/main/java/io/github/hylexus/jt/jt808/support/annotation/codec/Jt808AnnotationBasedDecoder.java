@@ -115,7 +115,7 @@ public class Jt808AnnotationBasedDecoder {
 
         final ReqMsgFieldConverter<?> converter = getDataTypeConverter(converterClass);
         final Object value = converter.convert(bytes, start, byteCount);
-        this.setFieldValue(instance, field, value);
+        ReflectionUtils.setFieldValue(instance, field, value);
         return value;
     }
 
@@ -136,17 +136,6 @@ public class Jt808AnnotationBasedDecoder {
     private <T> void setFieldValue(T instance, JavaBeanFieldMetadata fieldMetadata, Object value) throws Jt808AnnotationArgumentResolveException {
         try {
             fieldMetadata.setFieldValue(instance, value);
-        } catch (IllegalAccessException e) {
-            throw new Jt808AnnotationArgumentResolveException(e);
-        }
-    }
-
-    public void setFieldValue(Object instance, Field field, Object value) throws Jt808AnnotationArgumentResolveException {
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
-        }
-        try {
-            field.set(instance, value);
         } catch (IllegalAccessException e) {
             throw new Jt808AnnotationArgumentResolveException(e);
         }
