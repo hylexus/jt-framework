@@ -23,7 +23,8 @@ public class Jt808HandlerResultHandlerNotFoundException extends Jt808DispatcherE
         super(cause, request);
     }
 
-    public Jt808HandlerResultHandlerNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, Jt808Request request) {
+    public Jt808HandlerResultHandlerNotFoundException(
+            String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, Jt808Request request) {
         super(message, cause, enableSuppression, writableStackTrace, request);
     }
 }

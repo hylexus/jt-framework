@@ -16,7 +16,10 @@ import java.util.Set;
  * @author hylexus
  */
 public class StringFieldDeserializer implements Jt808FieldDeserializer<String> {
-    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.STRING, String.class));
+    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.STRING, String.class)
+    );
+
     private final Charset charset;
 
     public StringFieldDeserializer() {
@@ -35,7 +38,6 @@ public class StringFieldDeserializer implements Jt808FieldDeserializer<String> {
     @Override
     public String deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.STRING) {
-//            return JtProtocolUtils.getString(byteBuf, start, length, charset);
             return JtProtocolUtils.readString(byteBuf, start, length, charset);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to String");

@@ -22,6 +22,10 @@ public interface Jt808MsgHeaderSpec {
         throw new JtIllegalStateException("未知版本,version=" + version);
     }
 
+    default int msgBodyStartIndex() {
+        return Jt808MsgHeaderSpec.msgBodyStartIndex(version(), msgBodyProps().hasSubPackage());
+    }
+
     Jt808ProtocolVersion version();
 
     int msgType();
@@ -30,10 +34,6 @@ public interface Jt808MsgHeaderSpec {
 
     default int msgBodyLength() {
         return msgBodyProps().msgBodyLength();
-    }
-
-    default int msgBodyStartIndex() {
-        return Jt808MsgHeaderSpec.msgBodyStartIndex(version(), msgBodyProps().hasSubPackage());
     }
 
     String terminalId();

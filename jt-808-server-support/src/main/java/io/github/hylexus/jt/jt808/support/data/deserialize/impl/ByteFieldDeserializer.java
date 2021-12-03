@@ -27,7 +27,6 @@ public class ByteFieldDeserializer implements Jt808FieldDeserializer<Byte> {
     @Override
     public Byte deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BYTE) {
-//            return byteBuf.getByte(start);
             return byteBuf.readByte();
         }
 

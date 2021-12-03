@@ -22,8 +22,8 @@ public class DefaultMsgBodyPropsSpec implements Jt808MsgHeaderSpec.MsgBodyPropsS
 
     @Override
     public String toString() {
-        return "MsgBodyProps{" +
-               "intValue=" + intValue
+        return "MsgBodyProps{"
+               + "intValue=" + intValue
                + ", msgBodyLength=" + msgBodyLength()
                + ", hasSubPackage=" + hasSubPackage()
                + ", encryptionType=" + encryptionType()

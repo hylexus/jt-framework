@@ -83,7 +83,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         // bytes[17-20] 消息包封装项
         //        if (msgBodyPropsSpec.hasSubPackage()) {
         //            final Jt808MsgHeaderSpec.SubPackageSpec subPackageSpec = header.subPackageSpec()
-        //                    .orElseThrow(() -> new JtIllegalStateException("(v2019) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
+        //            .orElseThrow(() -> new JtIllegalStateException("(v2019) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
         //            // 消息总包包数
         //            buf.writeWord(subPackageSpec.totalSubPackageCount());
         //            // 包序号
@@ -114,7 +114,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         // bytes[12-15] 消息包封装项
         //        if (msgBodyPropsSpec.hasSubPackage()) {
         //            final Jt808MsgHeaderSpec.SubPackageSpec subPackageSpec = header.subPackageSpec()
-        //                    .orElseThrow(() -> new JtIllegalStateException("(v2011) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
+        //            .orElseThrow(() -> new JtIllegalStateException("(v2011) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
         //            // 消息总包包数
         //            buf.writeWord(subPackageSpec.totalSubPackageCount());
         //            // 包序号

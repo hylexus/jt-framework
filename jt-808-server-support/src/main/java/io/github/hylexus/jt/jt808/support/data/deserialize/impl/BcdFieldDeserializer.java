@@ -14,7 +14,9 @@ import java.util.Set;
  * @author hylexus
  */
 public class BcdFieldDeserializer implements Jt808FieldDeserializer<String> {
-    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BCD, String.class));
+    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BCD, String.class)
+    );
 
     @Override
     public Set<RequestMsgConvertibleMetadata> getConvertibleTypes() {
@@ -24,7 +26,6 @@ public class BcdFieldDeserializer implements Jt808FieldDeserializer<String> {
     @Override
     public String deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BCD) {
-//            return JtProtocolUtils.getBcd(byteBuf, start, length);
             return JtProtocolUtils.readBcd(byteBuf, start, length);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to BCD");

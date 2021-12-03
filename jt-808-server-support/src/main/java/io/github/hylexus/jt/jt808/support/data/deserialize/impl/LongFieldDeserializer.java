@@ -32,13 +32,10 @@ public class LongFieldDeserializer implements Jt808FieldDeserializer<Long> {
     @Override
     public Long deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.DWORD) {
-//            return byteBuf.getLong(start);
             return byteBuf.readLong();
         } else if (msgDataType == MsgDataType.WORD) {
-//            return (long) byteBuf.getShort(start);
             return (long) byteBuf.readShort();
         } else if (msgDataType == MsgDataType.BYTE) {
-//            return (long) byteBuf.getByte(start);
             return (long) byteBuf.readByte();
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Long");

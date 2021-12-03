@@ -31,13 +31,10 @@ public class IntegerFieldDeserializer implements Jt808FieldDeserializer<Integer>
     @Override
     public Integer deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.DWORD) {
-//            return byteBuf.getInt(start);
             return byteBuf.readInt();
         } else if (msgDataType == MsgDataType.WORD) {
-//            return (int) byteBuf.getShort(start);
             return (int) byteBuf.readShort();
         } else if (msgDataType == MsgDataType.BYTE) {
-//            return (int) byteBuf.getByte(start);
             return (int) byteBuf.readByte();
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Integer");

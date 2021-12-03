@@ -52,7 +52,7 @@ public class Jt808DecodeChannelHandlerAdapter extends ChannelInboundHandlerAdapt
                     log.error("An error occurred while invoke ExceptionHandler", e);
                 }
             } finally {
-//                buf.release();
+            // buf.release();
             }
         } else {
             ctx.fireChannelRead(msg);

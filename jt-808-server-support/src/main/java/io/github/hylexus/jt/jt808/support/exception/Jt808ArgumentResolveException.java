@@ -30,7 +30,10 @@ public class Jt808ArgumentResolveException extends AbstractJtException {
         this.argumentContext = argumentContext;
     }
 
-    public Jt808ArgumentResolveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, ArgumentContext argumentContext) {
+    public Jt808ArgumentResolveException(
+            String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace, ArgumentContext argumentContext) {
+
         super(message, cause, enableSuppression, writableStackTrace);
         this.argumentContext = argumentContext;
     }

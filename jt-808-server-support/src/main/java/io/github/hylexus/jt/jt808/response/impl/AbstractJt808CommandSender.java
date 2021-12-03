@@ -28,19 +28,25 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
     }
 
     @Override
-    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, Jt808Response response, Long timeout, TimeUnit timeUnit) throws JtCommunicationException, InterruptedException {
+    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, Jt808Response response, Long timeout, TimeUnit timeUnit)
+            throws JtCommunicationException, InterruptedException {
+
         final Jt808Session session = getSession(key.terminalId());
         final ByteBuf byteBuf = this.encode(session, response);
         return sendAndWait(key, session, timeout, timeUnit, byteBuf);
     }
 
     @Override
-    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, ByteBuf byteBuf, long timeout, TimeUnit timeUnit) throws JtCommunicationException, InterruptedException {
+    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, ByteBuf byteBuf, long timeout, TimeUnit timeUnit)
+            throws JtCommunicationException, InterruptedException {
+
         return sendAndWait(key, getSession(key.terminalId()), timeout, timeUnit, byteBuf);
     }
 
     @Override
-    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, Object entity, Long timeout, TimeUnit timeUnit) throws JtCommunicationException, InterruptedException {
+    public <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, Object entity, Long timeout, TimeUnit timeUnit)
+            throws JtCommunicationException, InterruptedException {
+
         final Jt808Session session = this.getSession(key.terminalId());
         final ByteBuf byteBuf = this.encode(session, entity);
         return sendAndWait(key, session, timeout, timeUnit, byteBuf);

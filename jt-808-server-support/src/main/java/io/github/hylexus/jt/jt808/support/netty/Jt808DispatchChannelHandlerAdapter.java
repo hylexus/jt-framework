@@ -62,7 +62,7 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
                 log.error("An error occurred while invoke ExceptionHandler", ex);
             }
         } finally {
-//            release(msg);
+            // release(msg);
         }
     }
 

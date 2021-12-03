@@ -13,7 +13,9 @@ import java.util.Set;
  * @author hylexus
  */
 public class ByteBufFieldDeserializer implements Jt808FieldDeserializer<ByteBuf> {
-    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTES, ByteBuf.class));
+    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
+            ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTES, ByteBuf.class)
+    );
 
     @Override
     public Set<RequestMsgConvertibleMetadata> getConvertibleTypes() {

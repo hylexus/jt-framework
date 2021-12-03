@@ -30,10 +30,8 @@ public class ShortFieldDeserializer implements Jt808FieldDeserializer<Short> {
     @Override
     public Short deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.WORD) {
-//            return byteBuf.getShort(start);
             return byteBuf.readShort();
         } else if (msgDataType == MsgDataType.BYTE) {
-//            return (short) byteBuf.getByte(start);
             return (short) byteBuf.readByte();
         }
 

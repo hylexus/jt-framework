@@ -582,11 +582,6 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     }
 
     @Override
-    public ByteBuf readBytes(int length) {
-        return buf.readBytes(length);
-    }
-
-    @Override
     public ByteBuf readSlice(int length) {
         return buf.readSlice(length);
     }
@@ -594,6 +589,11 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     @Override
     public ByteBuf readRetainedSlice(int length) {
         return buf.readRetainedSlice(length);
+    }
+
+    @Override
+    public ByteBuf readBytes(int length) {
+        return buf.readBytes(length);
     }
 
     @Override
@@ -637,13 +637,13 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     }
 
     @Override
-    public CharSequence readCharSequence(int length, Charset charset) {
-        return buf.readCharSequence(length, charset);
+    public int readBytes(FileChannel out, long position, int length) throws IOException {
+        return buf.readBytes(out, position, length);
     }
 
     @Override
-    public int readBytes(FileChannel out, long position, int length) throws IOException {
-        return buf.readBytes(out, position, length);
+    public CharSequence readCharSequence(int length, Charset charset) {
+        return buf.readCharSequence(length, charset);
     }
 
     @Override
@@ -837,13 +837,13 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     }
 
     @Override
-    public ByteBuf retainedSlice() {
-        return buf.retainedSlice();
+    public ByteBuf slice(int index, int length) {
+        return buf.slice(index, length);
     }
 
     @Override
-    public ByteBuf slice(int index, int length) {
-        return buf.slice(index, length);
+    public ByteBuf retainedSlice() {
+        return buf.retainedSlice();
     }
 
     @Override
@@ -927,6 +927,11 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     }
 
     @Override
+    public String toString() {
+        return buf.toString();
+    }
+
+    @Override
     public int hashCode() {
         return buf.hashCode();
     }
@@ -939,11 +944,6 @@ public class AbstractJt808ByteBuf extends ByteBuf {
     @Override
     public int compareTo(ByteBuf buffer) {
         return buf.compareTo(buffer);
-    }
-
-    @Override
-    public String toString() {
-        return buf.toString();
     }
 
     @Override
