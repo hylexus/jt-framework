@@ -23,6 +23,7 @@ public interface JtProtocolConstant {
     String BEAN_NAME_JT808_NETTY_TCP_SERVER = "jt808NettyTcpServer";
 
     String BEAN_NAME_JT808_SESSION_MANAGER = "jt808SessionManager";
+    String BEAN_NAME_JT808_INTERCEPTORS = "jt808Interceptors";
     String BEAN_NAME_JT808_SESSION_MANAGER_EVENT_LISTENER = "jt808SessionManagerEventListener";
     String BEAN_NAME_JT808_COMMAND_SENDER = "jt808CommandSender";
 

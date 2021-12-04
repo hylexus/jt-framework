@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -26,6 +27,7 @@ public class BuiltinLoggingOnlyExceptionHandler implements Jt808ExceptionHandler
     }
 
     @Override
+    @Nonnull
     public Jt808HandlerResult handleException(Object handler, ArgumentContext argumentContext) throws Throwable {
         final Throwable throwable = argumentContext.getThrowable();
         if (throwable != null) {
@@ -33,6 +35,6 @@ public class BuiltinLoggingOnlyExceptionHandler implements Jt808ExceptionHandler
         } else {
             log.error("{}", argumentContext);
         }
-        return null;
+        return Jt808HandlerResult.empty();
     }
 }

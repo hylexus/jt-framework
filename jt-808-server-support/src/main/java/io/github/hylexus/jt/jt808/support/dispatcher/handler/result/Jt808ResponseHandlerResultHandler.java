@@ -28,11 +28,6 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
     public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
         final Jt808Response returnValue = (Jt808Response) handlerResult.getReturnValue();
         final ByteBuf byteBuf = this.encoder.encode(returnValue);
-        try {
-            session.sendMsgToClient(byteBuf);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            // TODO exception handler
-        }
+        session.sendMsgToClient(byteBuf);
     }
 }

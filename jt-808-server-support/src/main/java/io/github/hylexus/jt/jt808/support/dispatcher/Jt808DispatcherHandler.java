@@ -11,6 +11,7 @@ import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerNotFoundExceptio
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerResultHandlerNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -45,45 +46,88 @@ public class Jt808DispatcherHandler {
 
     public void handleRequest(Jt808Request request) {
         final Jt808Session session = getSession(request);
-
+        Throwable dispatcherException = null;
+        Jt808HandlerExecutionChain executionChain = null;
+        Jt808HandlerResult handlerResult = null;
         try {
-            final Object handler;
             try {
                 // 1. detect a handler that can handle the current request
-                handler = this.getHandler(request, session);
-            } catch (Throwable throwable) {
-                final Jt808HandlerResult exceptionResult = this.invokeExceptionHandler(request, session, throwable, null);
-                this.handleResult(request, session, exceptionResult);
-                return;
-            }
+                executionChain = this.getHandler(request, session);
+                if (!executionChain.applyPreHandle(request, session)) {
+                    return;
+                }
 
-            final Jt808HandlerResult handlerResult;
-            try {
                 // 2. invoke handler to handle current request
-                handlerResult = this.invokeHandler(request, session, handler);
+                handlerResult = this.invokeHandler(request, session, executionChain.getHandler());
+                executionChain.applyPostHandle(request, session, handlerResult);
+
             } catch (Throwable throwable) {
-                final Jt808HandlerResult exceptionResult = this.invokeExceptionHandler(request, session, throwable, handler);
-                this.handleResult(request, session, exceptionResult);
-                return;
+                dispatcherException = throwable;
             }
             // 3. handle the result if necessary
-            this.handleResult(request, session, handlerResult);
-        } catch (Throwable dispatcherException) {
-            this.invokeExceptionHandler(request, session, dispatcherException, null);
+            this.processHandlerResult(request, session, executionChain, handlerResult, dispatcherException);
+        } catch (Throwable throwable) {
+            dispatcherException = throwable;
+        } finally {
+            if (executionChain != null) {
+                try {
+                    executionChain.triggerAfterCompletion(request, session, dispatcherException);
+                } catch (Throwable e) {
+                    log.error("An error occurred while invoke triggerAfterCompletion()", e);
+                }
+            }
         }
 
+    }
+
+    private void processHandlerResult(
+            Jt808Request request, Jt808Session session,
+            @Nullable Jt808HandlerExecutionChain executionChain,
+            @Nullable Jt808HandlerResult handlerResult,
+            @Nullable Throwable dispatcherException) {
+
+        if (dispatcherException != null) {
+            try {
+                final Jt808HandlerResult exceptionResult = this.processException(
+                        request,
+                        session,
+                        executionChain != null ? executionChain.getHandler() : null,
+                        dispatcherException
+                );
+                this.handleResult(request, session, exceptionResult);
+            } catch (Throwable throwable) {
+                log.error("An error occurred while invoke ExceptionHandler", throwable);
+            }
+        } else {
+            try {
+                this.handleResult(request, session, handlerResult);
+            } catch (Throwable exception) {
+                try {
+                    final Jt808HandlerResult exceptionResult = this.processException(request, session, null, exception);
+                    this.handleResult(request, session, exceptionResult);
+                } catch (Throwable e) {
+                    log.error("An error occurred while invoke ExceptionHandler", e);
+                }
+            }
+        }
+    }
+
+    private Jt808HandlerResult processException(
+            Jt808Request request, Jt808Session session,
+            @Nullable Object handler,
+            Throwable dispatcherException) throws Throwable {
+        return exceptionHandler.handleException(handler, ArgumentContext.of(request, session, dispatcherException));
     }
 
     protected void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult result) {
-        final Jt808HandlerResultHandler resultHandler = getResultHandler(result, request);
-        try {
-            resultHandler.handleResult(request, session, result);
-        } catch (Throwable throwable) {
-            this.invokeExceptionHandler(request, session, throwable, result.getHandler());
+        if (Jt808HandlerResult.isEmptyResult(result)) {
+            return;
         }
+        final Jt808HandlerResultHandler resultHandler = getResultHandler(result, request);
+        resultHandler.handleResult(request, session, result);
     }
 
-    protected Jt808HandlerResult invokeHandler(Jt808Request request, Jt808Session session, Object handler) {
+    protected Jt808HandlerResult invokeHandler(Jt808Request request, Jt808Session session, Object handler) throws Throwable {
         return this.getHandlerAdapter(request, handler).handle(request, session, handler);
     }
 
@@ -96,9 +140,9 @@ public class Jt808DispatcherHandler {
         }
     }
 
-    protected Object getHandler(Jt808Request request, Jt808Session session) {
+    protected Jt808HandlerExecutionChain getHandler(Jt808Request request, Jt808Session session) {
         for (Jt808HandlerMapping handlerMapping : this.handlerMappings) {
-            final Optional<Object> handler = handlerMapping.getHandler(request, session);
+            final Optional<Jt808HandlerExecutionChain> handler = handlerMapping.getHandler(request, session);
             if (handler.isPresent()) {
                 return handler.get();
             }

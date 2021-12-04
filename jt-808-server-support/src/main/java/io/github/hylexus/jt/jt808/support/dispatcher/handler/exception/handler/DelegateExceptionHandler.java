@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import org.springframework.core.ExceptionDepthComparator;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Comparator;
 import java.util.List;
@@ -40,6 +41,7 @@ public class DelegateExceptionHandler implements Jt808ExceptionHandler {
     }
 
     @Override
+    @Nonnull
     public Jt808HandlerResult handleException(Object handler, ArgumentContext argumentContext) throws Throwable {
         final Throwable throwable = argumentContext.getThrowable();
         assert throwable != null;

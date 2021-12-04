@@ -11,6 +11,6 @@ import java.util.Optional;
  */
 public interface Jt808HandlerMapping extends OrderedComponent {
 
-    Optional<Object> getHandler(Jt808Request request, Jt808Session session);
+    Optional<Jt808HandlerExecutionChain> getHandler(Jt808Request request, Jt808Session session);
 
 }

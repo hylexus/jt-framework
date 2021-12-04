@@ -21,12 +21,12 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 //public class LocationUploadReqMsgV2019Test implements Jt808HeaderSpecAware {
 public class LocationUploadReqMsgV2019Test {
 
-//    @ToString.Exclude
-//    private Jt808MsgHeaderSpec header;
+    //    @ToString.Exclude
+    //    private Jt808MsgHeaderSpec header;
 
-//    public void setHeader(Jt808MsgHeaderSpec headerSpec) {
-//        this.header = headerSpec;
-//    }
+    //    public void setHeader(Jt808MsgHeaderSpec headerSpec) {
+    //        this.header = headerSpec;
+    //    }
 
     // (1). 报警标志
     @BasicField(order = 0, startIndex = 0, dataType = DWORD)

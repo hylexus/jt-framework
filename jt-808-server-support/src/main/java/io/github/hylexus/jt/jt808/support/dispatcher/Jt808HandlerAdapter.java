@@ -11,5 +11,5 @@ public interface Jt808HandlerAdapter extends OrderedComponent {
 
     boolean supports(Object handler);
 
-    Jt808HandlerResult handle(Jt808Request request, Jt808Session session, Object handler);
+    Jt808HandlerResult handle(Jt808Request request, Jt808Session session, Object handler) throws Throwable;
 }

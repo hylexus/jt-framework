@@ -32,12 +32,7 @@ public class Jt808ResponseMsgBodyHandlerResultHandler implements Jt808HandlerRes
 
     @Override
     public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
-        try {
-            doHandleResult(request, session, handlerResult);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            // TODO exception handler
-        }
+        this.doHandleResult(request, session, handlerResult);
     }
 
     private void doHandleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {

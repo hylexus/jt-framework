@@ -53,13 +53,15 @@ public class Jt808AnnotationBasedDecoder {
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
             if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
                 this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
-                System.out.println("read--> " + byteBuf.readableBytes());
             }
         }
         return instance;
     }
 
-    private Object processBasicField(EvaluationContext evaluationContext, Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata, ByteBuf bodyDataBuf, Jt808Request request) {
+    private Object processBasicField(
+            EvaluationContext evaluationContext, Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata,
+            ByteBuf bodyDataBuf, Jt808Request request) {
+
         final BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
         final MsgDataType dataType = annotation.dataType();
         final Class<?> fieldType = fieldMetadata.getFieldType();
@@ -149,8 +151,9 @@ public class Jt808AnnotationBasedDecoder {
         }
     }
 
-    private int getBasicFieldLength(EvaluationContext evaluationContext, Class<?> cls, Object instance, BasicField annotation, MsgDataType dataType, Class<?> fieldType)
-            throws Jt808AnnotationArgumentResolveException {
+    private int getBasicFieldLength(
+            EvaluationContext evaluationContext, Class<?> cls, Object instance, BasicField annotation,
+            MsgDataType dataType, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
 
         // 1. DataType.byteCount
         if (dataType.getByteCount() > 0) {
@@ -181,8 +184,11 @@ public class Jt808AnnotationBasedDecoder {
         return getLengthFromByteCountMethod(instance, lengthMethod);
     }
 
-    private int getBasicFieldStartIndex(EvaluationContext evaluationContext, Class<?> cls, Object instance, BasicField annotation, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
-        if (annotation.startIndex() > 0) {
+    private int getBasicFieldStartIndex(
+            EvaluationContext evaluationContext, Class<?> cls, Object instance,
+            BasicField annotation, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
+
+        if (annotation.startIndex() >= 0) {
             return annotation.startIndex();
         }
         if (StringUtils.isNotEmpty(annotation.startIndexExpression())) {

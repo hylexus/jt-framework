@@ -18,7 +18,7 @@ public @interface BasicField {
      */
     int order();
 
-    int startIndex() default 0;
+    int startIndex() default -1;
 
     String startIndexExpression() default "";
 
@@ -32,7 +32,7 @@ public @interface BasicField {
      * @return 该字段的字节数
      * @see MsgDataType#getByteCount()
      */
-    int length() default 0;
+    int length() default -1;
 
     String lengthExpression() default "";
 

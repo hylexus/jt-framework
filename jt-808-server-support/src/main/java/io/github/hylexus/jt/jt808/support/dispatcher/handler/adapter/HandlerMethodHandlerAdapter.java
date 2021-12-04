@@ -25,15 +25,9 @@ public class HandlerMethodHandlerAdapter implements Jt808HandlerAdapter {
     }
 
     @Override
-    public Jt808HandlerResult handle(Jt808Request request, Jt808Session session, Object handler) {
+    public Jt808HandlerResult handle(Jt808Request request, Jt808Session session, Object handler) throws Throwable {
         final HandlerMethod handlerMethod = (HandlerMethod) handler;
-        try {
-            return this.invokeHandlerMethod(handlerMethod, request, session);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        // TODO exception handler
-        return null;
+        return this.invokeHandlerMethod(handlerMethod, request, session);
     }
 
     private Jt808HandlerResult invokeHandlerMethod(HandlerMethod handlerMethod, Jt808Request request, Jt808Session session) throws Throwable {
@@ -49,11 +43,10 @@ public class HandlerMethodHandlerAdapter implements Jt808HandlerAdapter {
             throw e.getTargetException();
         }
 
-        final Jt808HandlerResult handlerResult = new Jt808HandlerResult().setHandler(handlerMethod).setReturnValue(result);
         if (result == null && handlerMethod.isVoidReturnType()) {
-            handlerResult.setRequestProcessed(true);
+            return Jt808HandlerResult.empty();
         }
-        return handlerResult;
+        return new Jt808HandlerResult().setHandler(handlerMethod).setReturnValue(result);
     }
 
     private Object[] resolveArgs(HandlerMethod handlerMethod, Jt808Request request, Jt808Session session) {

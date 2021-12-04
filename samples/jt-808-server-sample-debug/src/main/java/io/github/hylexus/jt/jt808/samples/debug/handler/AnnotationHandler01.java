@@ -19,6 +19,8 @@ import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Slf4j
 @Component
 @Jt808RequestMsgHandler
@@ -37,6 +39,10 @@ public class AnnotationHandler01 {
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2011)
     public Object processRegisterMsgV2011(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2011 authMsgV2011) {
         log.info("{}", authMsgV2011);
+        // 测试异常处理
+        if (new Random().nextBoolean()) {
+            throw new IllegalStateException("Random exception ...");
+        }
         return new TerminalRegisterReplyRespMsg()
                 .setFlowId(request.flowId())
                 .setResult((byte) 0)

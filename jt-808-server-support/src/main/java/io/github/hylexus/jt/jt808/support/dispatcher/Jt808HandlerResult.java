@@ -5,26 +5,25 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
 
 @Setter
 @Getter
 @Accessors(chain = true)
 public class Jt808HandlerResult {
 
+    private static final Jt808HandlerResult EMPTY_RESULT = new Jt808HandlerResult();
+
+    public static Jt808HandlerResult empty() {
+        return EMPTY_RESULT;
+    }
+
+    public static boolean isEmptyResult(Jt808HandlerResult result) {
+        return result == EMPTY_RESULT;
+    }
+
     private Object handler;
 
     @Nullable
     private Object returnValue;
 
-    private boolean requestProcessed = false;
-
-    private Function<Throwable, Jt808HandlerResult> exceptionHandler;
-
-    public Jt808HandlerResult handleException(Throwable throwable) {
-        if (this.exceptionHandler != null) {
-            return exceptionHandler.apply(throwable);
-        }
-        throw new RuntimeException(throwable);
-    }
 }
