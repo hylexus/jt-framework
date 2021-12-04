@@ -4,7 +4,7 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
@@ -60,7 +60,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     }
 
     private Jt808ByteBuf encodeMsgHeaderV2019(Jt808Response response) {
-        final int msgBodyStartIndex = Jt808MsgHeaderSpec.msgBodyStartIndex(response.version(), false);
+        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(response.version(), false);
         final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
 
         // bytes[0-1] 消息ID Word
@@ -94,7 +94,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     }
 
     private Jt808ByteBuf encodeMsgHeaderV2011(Jt808Response response) {
-        final int msgBodyStartIndex = Jt808MsgHeaderSpec.msgBodyStartIndex(response.version(), false);
+        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(response.version(), false);
         final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
 
         // bytes[0-1] 消息ID Word

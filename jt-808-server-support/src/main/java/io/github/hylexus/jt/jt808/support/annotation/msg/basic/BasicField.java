@@ -20,28 +20,33 @@ public @interface BasicField {
 
     int startIndex() default 0;
 
-    String startIndexMethod() default "";
+    String startIndexExpression() default "";
 
-    MsgDataType dataType();
+    String startIndexMethod() default "";
 
     /**
      * 1. {@link #dataType()}
      * 2. {@code length()}
-     * 3. {@link #byteCountMethod()}
+     * 3. {@link #lengthMethod()}
      *
      * @return 该字段的字节数
      * @see MsgDataType#getByteCount()
      */
     int length() default 0;
 
+    String lengthExpression() default "";
+
     /**
      * 1. {@link #dataType()}
      * 2. {@link #length()}
-     * 3. {@code byteCountMethod()}
+     * 3. {@link #lengthExpression()}
+     * 4. {@code lengthMethod()}
      *
      * @return 表示字节数长度的字段, 必须为int或Integer
      */
-    String byteCountMethod() default "";
+    String lengthMethod() default "";
+
+    MsgDataType dataType();
 
     Class<? extends ReqMsgFieldConverter<?>> customerDataTypeConverterClass() default ReqMsgFieldConverter.NoOpsConverter.class;
 

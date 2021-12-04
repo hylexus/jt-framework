@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.support.annotation.msg.Jt808RequestMsgBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
@@ -11,7 +11,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Data
 @Jt808RequestMsgBody
 public class DebugTerminalRegisterMsgV2019 implements Jt808HeaderSpecAware {
-    private Jt808MsgHeaderSpec header;
+    private Jt808MsgHeader header;
 
     // 1. [0-2) WORD 省域ID
     @BasicField(order = 1, startIndex = 0, dataType = WORD)
@@ -38,7 +38,7 @@ public class DebugTerminalRegisterMsgV2019 implements Jt808HeaderSpecAware {
     private byte color;
 
     // 7. [76,n)   String    车辆标识
-    @BasicField(order = 7, startIndex = 76, dataType = STRING, byteCountMethod = "carIdentifierLength")
+    @BasicField(order = 7, startIndex = 76, dataType = STRING, lengthMethod = "carIdentifierLength")
     private String carIdentifier;
 
     public int carIdentifierLength() {
@@ -46,7 +46,7 @@ public class DebugTerminalRegisterMsgV2019 implements Jt808HeaderSpecAware {
     }
 
     @Override
-    public void setHeaderSpec(Jt808MsgHeaderSpec header) {
+    public void setHeader(Jt808MsgHeader header) {
         this.header = header;
     }
 }

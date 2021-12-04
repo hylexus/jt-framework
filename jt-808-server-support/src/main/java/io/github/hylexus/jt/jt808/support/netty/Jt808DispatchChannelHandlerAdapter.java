@@ -3,7 +3,7 @@ package io.github.hylexus.jt.jt808.support.netty;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
@@ -49,7 +49,7 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
             }
 
             request = (Jt808Request) msg;
-            final Jt808MsgHeaderSpec header = request.header();
+            final Jt808MsgHeader header = request.header();
             final String terminalId = header.terminalId();
             jt808Session = sessionManager.persistenceIfNecessary(terminalId, header.version(), ctx.channel());
             log.debug("[decode] : {}, terminalId={}, msg = {}", request.msgType(), terminalId, request);

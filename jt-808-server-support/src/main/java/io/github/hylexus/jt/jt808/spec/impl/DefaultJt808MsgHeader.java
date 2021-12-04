@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import lombok.Setter;
 
 import java.util.Optional;
@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  * @author hylexus
  */
 @Setter
-public class DefaultJt808MsgHeaderSpec implements Jt808MsgHeaderSpec {
+public class DefaultJt808MsgHeader implements Jt808MsgHeader {
 
     private Jt808ProtocolVersion version;
 
@@ -127,8 +127,8 @@ public class DefaultJt808MsgHeaderSpec implements Jt808MsgHeaderSpec {
             return this;
         }
 
-        public DefaultJt808MsgHeaderSpec build() {
-            final DefaultJt808MsgHeaderSpec spec = new DefaultJt808MsgHeaderSpec();
+        public DefaultJt808MsgHeader build() {
+            final DefaultJt808MsgHeader spec = new DefaultJt808MsgHeader();
             spec.setMsgId(msgId);
             spec.setMsgBodyPropsSpec(msgBodyPropsSpec);
             spec.setVersion(version);

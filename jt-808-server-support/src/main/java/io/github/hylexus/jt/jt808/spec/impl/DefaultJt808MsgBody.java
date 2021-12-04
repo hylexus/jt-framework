@@ -1,16 +1,16 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
-import io.github.hylexus.jt.jt808.spec.Jt808MsgBodySpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.netty.buffer.ByteBuf;
 
 /**
  * @author hylexus
  */
-public class DefaultJt808MsgBodySpec implements Jt808MsgBodySpec {
+public class DefaultJt808MsgBody implements Jt808MsgBody {
     private final Jt808ByteBuf byteBuf;
 
-    public DefaultJt808MsgBodySpec(Jt808ByteBuf byteBuf) {
+    public DefaultJt808MsgBody(Jt808ByteBuf byteBuf) {
         this.byteBuf = byteBuf;
     }
 
@@ -68,8 +68,8 @@ public class DefaultJt808MsgBodySpec implements Jt808MsgBodySpec {
             return this;
         }
 
-        public DefaultJt808MsgBodySpec build() {
-            return new DefaultJt808MsgBodySpec(this.byteBuf);
+        public DefaultJt808MsgBody build() {
+            return new DefaultJt808MsgBody(this.byteBuf);
         }
 
     }

@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * @author hylexus
  */
-public interface Jt808MsgHeaderSpec {
+public interface Jt808MsgHeader {
 
     static int msgBodyStartIndex(Jt808ProtocolVersion version, boolean hasSubPackage) {
         // 2011, 2013
@@ -23,7 +23,7 @@ public interface Jt808MsgHeaderSpec {
     }
 
     default int msgBodyStartIndex() {
-        return Jt808MsgHeaderSpec.msgBodyStartIndex(version(), msgBodyProps().hasSubPackage());
+        return Jt808MsgHeader.msgBodyStartIndex(version(), msgBodyProps().hasSubPackage());
     }
 
     Jt808ProtocolVersion version();

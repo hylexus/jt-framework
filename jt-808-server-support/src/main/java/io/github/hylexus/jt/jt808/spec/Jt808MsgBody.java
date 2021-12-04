@@ -5,7 +5,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 /**
  * @author hylexus
  */
-public interface Jt808MsgBodySpec {
+public interface Jt808MsgBody {
 
     Jt808ByteBuf requestBody();
 

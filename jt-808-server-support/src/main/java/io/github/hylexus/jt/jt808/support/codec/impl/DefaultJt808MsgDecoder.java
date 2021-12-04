@@ -6,8 +6,8 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.request.impl.DefaultJt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
-import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultMsgBodyPropsSpec;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultSubPackageSpec;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
@@ -36,7 +36,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     public Jt808Request decode(Jt808ProtocolVersion version, Jt808ByteBuf byteBuf) {
         final Jt808ByteBuf escaped = Jt808ByteBuf.from(this.msgBytesProcessor.doEscapeForReceive(byteBuf));
 
-        final Jt808MsgHeaderSpec headerSpec = this.parseMsgHeaderSpec(version, escaped);
+        final Jt808MsgHeader headerSpec = this.parseMsgHeaderSpec(version, escaped);
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
         final MsgType msgType = this.parseMsgType(headerSpec);
@@ -44,7 +44,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return new DefaultJt808Request(headerSpec, escaped, originalCheckSum, calculatedCheckSum, msgType);
     }
 
-    private MsgType parseMsgType(Jt808MsgHeaderSpec headerSpec) {
+    private MsgType parseMsgType(Jt808MsgHeader headerSpec) {
         final int msgId = headerSpec.msgType();
         return this.msgTypeParser.parseMsgType(msgId)
                 .orElseThrow(() -> {
@@ -56,7 +56,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     /**
      * @param serverSupportedVersion 服务端配置文件中配置的期望终端使用的协议版本，可忽略该参数
      */
-    private Jt808MsgHeaderSpec parseMsgHeaderSpec(Jt808ProtocolVersion serverSupportedVersion, Jt808ByteBuf byteBuf) {
+    private Jt808MsgHeader parseMsgHeaderSpec(Jt808ProtocolVersion serverSupportedVersion, Jt808ByteBuf byteBuf) {
         // bytes[2-3] WORD 消息体属性
         final int msgBodyPropsIntValue = byteBuf.getWord(2);
         final DefaultMsgBodyPropsSpec msgBodyProps = new DefaultMsgBodyPropsSpec(msgBodyPropsIntValue);
@@ -77,8 +77,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         }
     }
 
-    private Jt808MsgHeaderSpec parseHeaderV2019(Jt808MsgHeaderSpec.MsgBodyPropsSpec msgBodyPropsSpec, Jt808ByteBuf byteBuf) {
-        final DefaultJt808MsgHeaderSpec headerSpec = new DefaultJt808MsgHeaderSpec();
+    private Jt808MsgHeader parseHeaderV2019(Jt808MsgHeader.MsgBodyPropsSpec msgBodyPropsSpec, Jt808ByteBuf byteBuf) {
+        final DefaultJt808MsgHeader headerSpec = new DefaultJt808MsgHeader();
         headerSpec.setVersion(Jt808ProtocolVersion.VERSION_2019);
         // 1. bytes[0-1] WORD
         final int msgId = byteBuf.getWord(0);
@@ -107,8 +107,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return headerSpec;
     }
 
-    private Jt808MsgHeaderSpec parseHeaderV2011(Jt808MsgHeaderSpec.MsgBodyPropsSpec msgBodyPropsSpec, Jt808ByteBuf byteBuf) {
-        final DefaultJt808MsgHeaderSpec headerSpec = new DefaultJt808MsgHeaderSpec();
+    private Jt808MsgHeader parseHeaderV2011(Jt808MsgHeader.MsgBodyPropsSpec msgBodyPropsSpec, Jt808ByteBuf byteBuf) {
+        final DefaultJt808MsgHeader headerSpec = new DefaultJt808MsgHeader();
         headerSpec.setVersion(Jt808ProtocolVersion.VERSION_2011);
         // 1. bytes[0-1] WORD
         final int msgId = byteBuf.getWord(0);

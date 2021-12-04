@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.request.impl;
 
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
@@ -13,14 +13,14 @@ import java.util.Map;
  */
 public class DefaultJt808Request implements Jt808Request {
 
-    protected final Jt808MsgHeaderSpec header;
+    protected final Jt808MsgHeader header;
     protected final ByteBuf rawByteBuf;
     protected final byte originalCheckSum;
     protected final byte calculatedCheckSum;
     protected final MsgType msgType;
     private final Map<String, Object> attributes;
 
-    public DefaultJt808Request(Jt808MsgHeaderSpec header, ByteBuf rawByteBuf, byte originalCheckSum, byte calculatedCheckSum, MsgType msgType) {
+    public DefaultJt808Request(Jt808MsgHeader header, ByteBuf rawByteBuf, byte originalCheckSum, byte calculatedCheckSum, MsgType msgType) {
         this.header = header;
         this.rawByteBuf = rawByteBuf;
         this.originalCheckSum = originalCheckSum;
@@ -30,7 +30,7 @@ public class DefaultJt808Request implements Jt808Request {
     }
 
     @Override
-    public Jt808MsgHeaderSpec header() {
+    public Jt808MsgHeader header() {
         return header;
     }
 

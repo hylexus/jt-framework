@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.request;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.netty.buffer.ByteBuf;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -16,7 +16,7 @@ public interface Jt808Request {
 
     MsgType msgType();
 
-    Jt808MsgHeaderSpec header();
+    Jt808MsgHeader header();
 
     default Jt808ProtocolVersion version() {
         return header().version();
@@ -30,6 +30,10 @@ public interface Jt808Request {
 
     ByteBuf body();
 
+    default int msgBodyLength() {
+        return header().msgBodyLength();
+    }
+
     byte originalCheckSum();
 
     byte calculatedCheckSum();
@@ -38,8 +42,9 @@ public interface Jt808Request {
 
     /**
      * Return the request attribute value if present.
+     *
      * @param name the attribute name
-     * @param <T> the attribute type
+     * @param <T>  the attribute type
      * @return the attribute value
      */
     @SuppressWarnings("unchecked")
@@ -51,8 +56,9 @@ public interface Jt808Request {
     /**
      * Return the request attribute value or if not present raise an
      * {@link IllegalArgumentException}.
+     *
      * @param name the attribute name
-     * @param <T> the attribute type
+     * @param <T>  the attribute type
      * @return the attribute value
      */
     @SuppressWarnings("unchecked")
@@ -64,9 +70,10 @@ public interface Jt808Request {
 
     /**
      * Return the request attribute value, or a default, fallback value.
-     * @param name the attribute name
+     *
+     * @param name         the attribute name
      * @param defaultValue a default value to return instead
-     * @param <T> the attribute type
+     * @param <T>          the attribute type
      * @return the attribute value
      */
     @SuppressWarnings("unchecked")

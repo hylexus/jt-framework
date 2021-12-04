@@ -1,13 +1,13 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeaderSpec;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.utils.JtProtocolUtils;
 
 /**
  * @author hylexus
  */
-public class DefaultMsgBodyPropsSpec implements Jt808MsgHeaderSpec.MsgBodyPropsSpec {
+public class DefaultMsgBodyPropsSpec implements Jt808MsgHeader.MsgBodyPropsSpec {
 
     private final int intValue;
 
