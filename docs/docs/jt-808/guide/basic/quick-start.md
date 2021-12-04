@@ -85,15 +85,15 @@ public class Jt808ServerSampleBareApplication {
 ### 使用发包工具测试鉴权消息
 
 ::: danger 注意：
-无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](pages/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](docs/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
 :::
 
 ::: danger 注意：
-无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](pages/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](docs/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
 :::
 
 ::: danger 注意：
-无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](pages/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
+无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](docs/jt-808/guide/FAQjt-808/guide/FAQ/debug.md#调试工具) 。
 :::
 
 用发包工具发送如下报文给服务器( `默认TCP端口:6808` )测试：
