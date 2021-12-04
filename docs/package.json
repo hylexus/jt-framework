@@ -16,11 +16,11 @@
   "license": "",
   "author": "hylexus",
   "devDependencies": {
-    "vuepress": "^1.1.0"
+    "vuepress": "^2.0.0-beta.27"
   },
   "dependencies": {},
   "scripts": {
-    "docs:dev": "vuepress dev pages --no-cache",
-    "docs:build": "vuepress build pages"
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   }
 }

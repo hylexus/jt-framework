@@ -14,7 +14,7 @@ module.exports = {
     },
 
     themeConfig: {
-        nav: navConfig(),
+        navbar: navConfig(),
         sidebar: sidebarConfig(),
         sidebarDepth: 1,
         displayAllHeaders: false,
@@ -221,7 +221,7 @@ function navConfig() {
         {
             text: '指南',
             ariaLabel: '指南',
-            items: [
+            children: [
                 {text: 'V1.x', link: '/jt-808/guide/'},
                 {text: 'V2.x', link: '/v2/jt-808/guide/'}
             ]
@@ -229,7 +229,7 @@ function navConfig() {
         {
             text: '配置',
             ariaLabel: '配置',
-            items: [
+            children: [
                 {text: 'V1.x', link: '/jt-808/config/'},
                 {text: 'V2.x', link: '/v2/jt-808/config/'}
             ]
