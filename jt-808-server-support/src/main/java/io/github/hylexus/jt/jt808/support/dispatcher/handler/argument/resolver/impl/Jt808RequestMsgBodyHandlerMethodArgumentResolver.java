@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.Jt808RequestMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;

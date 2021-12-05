@@ -2,8 +2,9 @@ package io.github.hylexus.jt.jt808.support.utils;
 
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.Transient;
-import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.jt808.support.annotation.msg.splice.SlicedFrom;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 
@@ -68,8 +69,10 @@ public class JavaBeanMetadataUtils {
 
             JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
-            if (javaBeanFieldMetadata.isAnnotationPresent(BasicField.class)) {
-                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(BasicField.class).order());
+            if (javaBeanFieldMetadata.isAnnotationPresent(RequestField.class)) {
+                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(RequestField.class).order());
+            } else if (javaBeanFieldMetadata.isAnnotationPresent(ResponseField.class)) {
+                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(ResponseField.class).order());
             }
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);

@@ -13,7 +13,7 @@ import io.github.hylexus.jt.jt808.session.SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.RequestMsgDispatcher;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.DelegateExceptionHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean(NETTY_HANDLER_NAME_808_DECODE)
     @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_DECODE)
-    public Jt808DecodeChannelHandlerAdapter decodeHandler(Jt808MsgDecoder decoder, DelegateExceptionHandler exceptionHandler) {
+    public Jt808DecodeChannelHandlerAdapter decodeHandler(Jt808MsgDecoder decoder, CompositeJt808ExceptionHandler exceptionHandler) {
         return new Jt808DecodeChannelHandlerAdapter(serverProps.getProtocol().getVersion(), decoder, exceptionHandler);
     }
 
@@ -83,7 +83,7 @@ public class Jt808NettyServerAutoConfiguration {
     @ConditionalOnMissingBean(Jt808DispatchChannelHandlerAdapter.class)
     public Jt808DispatchChannelHandlerAdapter jt808ChannelHandlerAdapter(
             Jt808SessionManager jt808SessionManager,
-            RequestMsgDispatcher requestMsgDispatcher, DelegateExceptionHandler exceptionHandler) {
+            RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
 
         return new Jt808DispatchChannelHandlerAdapter(jt808SessionManager, requestMsgDispatcher, exceptionHandler);
     }

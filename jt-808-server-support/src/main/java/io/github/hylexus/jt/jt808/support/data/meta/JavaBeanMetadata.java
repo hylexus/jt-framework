@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.meta;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.splice.SlicedFrom;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

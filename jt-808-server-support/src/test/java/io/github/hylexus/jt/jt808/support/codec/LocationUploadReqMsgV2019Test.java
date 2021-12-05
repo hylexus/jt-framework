@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
-import io.github.hylexus.jt.jt808.support.annotation.msg.splice.SlicedFrom;
-import io.github.hylexus.jt.jt808.support.annotation.msg.splice.SplittableField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.SplittableRequestField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +29,11 @@ public class LocationUploadReqMsgV2019Test {
     //    }
 
     // (1). 报警标志
-    @BasicField(order = 0, startIndex = 0, dataType = DWORD)
+    @RequestField(order = 0, startIndex = 0, dataType = DWORD)
     private int alarmFlag;
     // (2). 状态
-    @BasicField(order = 1, startIndex = 4, dataType = DWORD)
-    @SplittableField(splitPropertyValueIntoNestedBeanField = "statusInfo")
+    @RequestField(order = 1, startIndex = 4, dataType = DWORD)
+    @SplittableRequestField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
     private LocationUploadStatus statusInfo;
 
@@ -48,39 +48,39 @@ public class LocationUploadReqMsgV2019Test {
     @SlicedFrom(sourceFieldName = "status", bitIndex = 2)
     private int latType;
     // (3). 纬度(尚未除以 10^6)
-    @BasicField(order = 2, startIndex = 8, dataType = DWORD)
+    @RequestField(order = 2, startIndex = 8, dataType = DWORD)
     private Integer intLat;
     // (4). 经度(尚未除以 10^6)
-    @BasicField(order = 3, startIndex = 12, dataType = DWORD)
+    @RequestField(order = 3, startIndex = 12, dataType = DWORD)
     private Integer intLng;
     // (5). 高度
-    @BasicField(order = 4, startIndex = 16, dataType = WORD)
+    @RequestField(order = 4, startIndex = 16, dataType = WORD)
     private Integer height;
     // (6). 速度
-    @BasicField(order = 5, startIndex = 18, dataType = WORD)
+    @RequestField(order = 5, startIndex = 18, dataType = WORD)
     private int speed;
     // (7). 方向
-    @BasicField(order = 6, startIndex = 20, dataType = WORD)
+    @RequestField(order = 6, startIndex = 20, dataType = WORD)
     private Integer direction;
 
     // (8). 时间
-    @BasicField(order = 7, startIndex = 22, dataType = BCD, length = 6)
+    @RequestField(order = 7, startIndex = 22, dataType = BCD, length = 6)
     private String time;
 
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, byteCountMethod = "getExtraInfoLength")
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "getExtraInfoLength()")
-    @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
+    @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data
     public static class ExtraItem {
-        @BasicField(order = 0, startIndex = 0, dataType = BYTE)
+        @RequestField(order = 0, startIndex = 0, dataType = BYTE)
         private byte id;
-        @BasicField(order = 1, startIndex = 1, dataType = BYTE)
+        @RequestField(order = 1, startIndex = 1, dataType = BYTE)
         private byte contentLength;
 
         // @BasicField(order = 3, startIndex = 2, lengthMethod = "getContentLengthMethod", dataType = BYTES)
-        @BasicField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)
+        @RequestField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)
         private byte[] content;
 
         public int getContentLengthMethod() {
@@ -90,33 +90,33 @@ public class LocationUploadReqMsgV2019Test {
 
     @Data
     public static class LocationUploadStatus {
-        @SplittableField.BitAt(bitIndex = 0)
+        @SplittableRequestField.BitAt(bitIndex = 0)
         private boolean accStatus; // acc开?
 
-        @SplittableField.BitAt(bitIndex = 1)
+        @SplittableRequestField.BitAt(bitIndex = 1)
         private int bit1; //1:定位, 0:未定位
 
-        @SplittableField.BitAt(bitIndex = 2)
+        @SplittableRequestField.BitAt(bitIndex = 2)
         private Boolean isSouthLat;// 是否南纬? 0:北纬 1:南纬
 
         // 0:东经 1:西经
-        @SplittableField.BitAt(bitIndex = 3)
+        @SplittableRequestField.BitAt(bitIndex = 3)
         private Integer lngType;
 
         // 0: 运营  1:停运
-        @SplittableField.BitAt(bitIndex = 4)
+        @SplittableRequestField.BitAt(bitIndex = 4)
         private int operationStatus;
 
         // 0: 经纬度未经过保密插件加密  1:经纬度已经保密插件加密
-        @SplittableField.BitAt(bitIndex = 5)
+        @SplittableRequestField.BitAt(bitIndex = 5)
         private int latLngEncryptStatus;
 
         // 1: 紧急刹车系统采集的前撞预警
-        @SplittableField.BitAt(bitIndex = 6)
+        @SplittableRequestField.BitAt(bitIndex = 6)
         private int bit6;
 
         // 扯到偏移预警
-        @SplittableField.BitAt(bitIndex = 7)
+        @SplittableRequestField.BitAt(bitIndex = 7)
         private int bit7;
     }
 }

@@ -19,4 +19,8 @@ public interface Jt808ExceptionHandler extends OrderedComponent {
     @Nonnull
     Jt808HandlerResult handleException(Object handler, ArgumentContext argumentContext) throws Throwable;
 
+    @Override
+    default int getOrder() {
+        return EXCEPTION_HANDLER_CUSTOMER_INTERFACE_BASED;
+    }
 }

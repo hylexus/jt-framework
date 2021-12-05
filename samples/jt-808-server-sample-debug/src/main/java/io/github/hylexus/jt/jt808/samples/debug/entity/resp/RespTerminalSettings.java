@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.resp;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.Jt808ResponseMsgBody;
-import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
@@ -21,22 +21,22 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Jt808ResponseMsgBody(respMsgId = 0x8103, desc = "设置终端参数")
 public class RespTerminalSettings {
 
-    @BasicField(order = 2, dataType = MsgDataType.LIST)
+    @ResponseField(order = 2, dataType = MsgDataType.LIST)
     private List<ParamItem> paramList;
 
-    @BasicField(order = 1, dataType = BYTE)
+    @ResponseField(order = 1, dataType = BYTE)
     private int totalParamCount;
 
     @Data
     @Accessors(chain = true)
     public static class ParamItem {
-        @BasicField(order = 1, dataType = DWORD)
+        @ResponseField(order = 1, dataType = DWORD)
         private int msgId;
 
-        @BasicField(order = 2, dataType = BYTE)
+        @ResponseField(order = 2, dataType = BYTE)
         private int bytesCountOfContentLength;
 
-        @BasicField(order = 3, dataType = BYTES)
+        @ResponseField(order = 3, dataType = BYTES)
         private ByteBuf msgContent;
 
         public ParamItem() {

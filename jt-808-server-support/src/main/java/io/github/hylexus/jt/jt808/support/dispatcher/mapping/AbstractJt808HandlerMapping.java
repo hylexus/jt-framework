@@ -5,8 +5,10 @@ import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerMapping;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.interceptor.MatchableHandlerInterceptor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hylexus
@@ -25,6 +27,11 @@ public abstract class AbstractJt808HandlerMapping implements Jt808HandlerMapping
     }
 
     protected List<Jt808HandlerInterceptor> doMatch(Jt808Request request, Jt808Session session, Object handler) {
-        return this.interceptorList;
+        return this.interceptorList.stream().filter(interceptor -> {
+            if (interceptor instanceof MatchableHandlerInterceptor) {
+                return ((MatchableHandlerInterceptor) interceptor).requestMatcher().test(request, session);
+            }
+            return true;
+        }).collect(Collectors.toList());
     }
 }

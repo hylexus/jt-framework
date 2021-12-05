@@ -15,4 +15,15 @@ public interface Jt808FieldDeserializer<T> {
 
     T deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length);
 
+    class PlaceholderFieldDeserializer implements Jt808FieldDeserializer<Object> {
+        @Override
+        public Set<RequestMsgConvertibleMetadata> getConvertibleTypes() {
+            throw new UnsupportedOperationException("This FieldDeserializer only serves as a placeholder");
+        }
+
+        @Override
+        public Object deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
+            throw new UnsupportedOperationException("This FieldDeserializer only serves as a placeholder");
+        }
+    }
 }

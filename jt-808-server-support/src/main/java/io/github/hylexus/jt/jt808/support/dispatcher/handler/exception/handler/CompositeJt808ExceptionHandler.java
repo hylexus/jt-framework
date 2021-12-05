@@ -9,7 +9,6 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.A
 import org.springframework.core.ExceptionDepthComparator;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +18,16 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author hylexus
  */
-@NotThreadSafe
-public class DelegateExceptionHandler implements Jt808ExceptionHandler {
+public class CompositeJt808ExceptionHandler implements Jt808ExceptionHandler {
 
     private final List<Jt808ExceptionHandler> exceptionHandlers = Lists.newArrayList();
     private final Map<Class<? extends Throwable>, Jt808ExceptionHandler> mappingCache = new ConcurrentHashMap<>();
     private volatile boolean sorted = false;
 
-    public DelegateExceptionHandler() {
+    public CompositeJt808ExceptionHandler() {
     }
 
-    public DelegateExceptionHandler addExceptionHandler(Jt808ExceptionHandler exceptionHandler) {
+    public CompositeJt808ExceptionHandler addExceptionHandler(Jt808ExceptionHandler exceptionHandler) {
         this.exceptionHandlers.add(exceptionHandler);
         this.sorted = false;
         return this;
@@ -77,8 +75,12 @@ public class DelegateExceptionHandler implements Jt808ExceptionHandler {
         final Map<Class<? extends Throwable>, Jt808ExceptionHandler> tempCache = new ConcurrentHashMap<>();
 
         if (!this.sorted) {
-            this.exceptionHandlers.sort(Comparator.comparing(OrderedComponent::getOrder));
-            this.sorted = true;
+            synchronized (this) {
+                if (!this.sorted) {
+                    this.exceptionHandlers.sort(Comparator.comparing(OrderedComponent::getOrder));
+                    this.sorted = true;
+                }
+            }
         }
 
         for (Jt808ExceptionHandler handler : this.exceptionHandlers) {

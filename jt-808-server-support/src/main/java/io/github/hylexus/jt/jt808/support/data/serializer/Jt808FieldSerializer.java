@@ -13,4 +13,15 @@ public interface Jt808FieldSerializer<T> {
 
     void serialize(T object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException;
 
+    class PlaceholderFiledSerializer implements Jt808FieldSerializer<Object> {
+        @Override
+        public Set<ResponseMsgConvertibleMetadata> getSupportedTypes() {
+            throw new UnsupportedOperationException("This FieldSerializer only serves as a placeholder");
+        }
+
+        @Override
+        public void serialize(Object object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
+            throw new UnsupportedOperationException("This FieldSerializer only serves as a placeholder");
+        }
+    }
 }

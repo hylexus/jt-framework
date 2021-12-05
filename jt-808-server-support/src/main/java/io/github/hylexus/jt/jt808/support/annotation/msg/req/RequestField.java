@@ -1,7 +1,7 @@
-package io.github.hylexus.jt.jt808.support.annotation.msg.basic;
+package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
-import io.github.hylexus.jt.jt808.support.data.converter.ReqMsgFieldConverter;
+import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 
 import java.lang.annotation.*;
 
@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface BasicField {
+public @interface RequestField {
 
     /**
      * @return 赋值顺序，值越小优先级越高
@@ -48,6 +48,6 @@ public @interface BasicField {
 
     MsgDataType dataType();
 
-    Class<? extends ReqMsgFieldConverter<?>> customerDataTypeConverterClass() default ReqMsgFieldConverter.NoOpsConverter.class;
+    Class<? extends Jt808FieldDeserializer<?>> customerFieldDeserializerClass() default Jt808FieldDeserializer.PlaceholderFieldDeserializer.class;
 
 }

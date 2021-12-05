@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.support.annotation.msg;
+package io.github.hylexus.jt.jt808.support.annotation.msg.resp;
 
 import java.lang.annotation.*;
 

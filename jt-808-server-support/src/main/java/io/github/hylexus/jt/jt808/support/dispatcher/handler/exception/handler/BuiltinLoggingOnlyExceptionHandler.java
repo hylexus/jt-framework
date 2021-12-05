@@ -18,7 +18,7 @@ public class BuiltinLoggingOnlyExceptionHandler implements Jt808ExceptionHandler
 
     @Override
     public int getOrder() {
-        return BUILTIN_COMPONENT_ORDER;
+        return EXCEPTION_HANDLER_BUILTIN_INTERFACE_BASED;
     }
 
     @Override

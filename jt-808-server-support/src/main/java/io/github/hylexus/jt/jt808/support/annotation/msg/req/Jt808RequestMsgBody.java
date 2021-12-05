@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.support.annotation.msg;
+package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
-import io.github.hylexus.jt.jt808.support.annotation.msg.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;

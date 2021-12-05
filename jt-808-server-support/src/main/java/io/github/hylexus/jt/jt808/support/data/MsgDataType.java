@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
@@ -28,7 +28,7 @@ public enum MsgDataType {
      * 字节数
      * 为零表示使用外部指定的长度
      *
-     * @see BasicField#length()
+     * @see RequestField#length()
      */
     private final int byteCount;
 

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Setter
@@ -21,6 +22,7 @@ public class Jt808HandlerResult {
         return result == EMPTY_RESULT;
     }
 
+    @Nonnull
     private Object handler;
 
     @Nullable

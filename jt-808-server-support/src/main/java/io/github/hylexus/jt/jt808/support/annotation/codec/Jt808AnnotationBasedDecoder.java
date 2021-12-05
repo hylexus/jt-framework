@@ -1,12 +1,11 @@
 package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.support.annotation.msg.basic.BasicField;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.converter.ReqMsgFieldConverter;
 import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
@@ -31,7 +30,7 @@ import java.util.*;
 public class Jt808AnnotationBasedDecoder {
 
     private final Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry = new DefaultJt808FieldDeserializerRegistry();
-    private final Map<Class<? extends ReqMsgFieldConverter<?>>, ReqMsgFieldConverter<?>> converterMapping = new HashMap<>();
+    private final Map<Class<? extends Jt808FieldDeserializer<?>>, Jt808FieldDeserializer<?>> converterMapping = new HashMap<>();
     private final ExpressionParser parser = new SpelExpressionParser();
 
     public <T> T decode(Jt808Request request, Class<T> cls) throws Jt808AnnotationArgumentResolveException {
@@ -51,7 +50,7 @@ public class Jt808AnnotationBasedDecoder {
         evaluationContext.setVariable("request", request);
         evaluationContext.setVariable("header", request.header());
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
-            if (fieldMetadata.isAnnotationPresent(BasicField.class)) {
+            if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
                 this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
             }
         }
@@ -62,18 +61,18 @@ public class Jt808AnnotationBasedDecoder {
             EvaluationContext evaluationContext, Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata,
             ByteBuf bodyDataBuf, Jt808Request request) {
 
-        final BasicField annotation = fieldMetadata.getAnnotation(BasicField.class);
+        final RequestField annotation = fieldMetadata.getAnnotation(RequestField.class);
         final MsgDataType dataType = annotation.dataType();
         final Class<?> fieldType = fieldMetadata.getFieldType();
 
         final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldType);
         final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, dataType, fieldType);
 
-        final Class<? extends ReqMsgFieldConverter<?>> converterClass = annotation.customerDataTypeConverterClass();
+        final Class<? extends Jt808FieldDeserializer<?>> converterClass = annotation.customerFieldDeserializerClass();
         // 1. 优先使用用户自定义的属性转换器
         final Field field = fieldMetadata.getField();
-        if (converterClass != ReqMsgFieldConverter.NoOpsConverter.class) {
-            return populateFieldByCustomerConverter(bodyDataBuf, instance, field, converterClass, startIndex, length);
+        if (converterClass != Jt808FieldDeserializer.PlaceholderFieldDeserializer.class) {
+            return populateFieldByCustomerFieldDeserializer(bodyDataBuf, instance, field, dataType, converterClass, startIndex, length);
         }
 
         // 2. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
@@ -118,26 +117,28 @@ public class Jt808AnnotationBasedDecoder {
         return value;
     }
 
-    private Object populateFieldByCustomerConverter(
+    private Object populateFieldByCustomerFieldDeserializer(
             ByteBuf bytes, Object instance, Field field,
-            Class<? extends ReqMsgFieldConverter<?>> converterClass,
-            int start, int byteCount) throws Jt808AnnotationArgumentResolveException {
+            MsgDataType dataType, Class<? extends Jt808FieldDeserializer<?>> deserializerClass,
+            int offset, int length) throws Jt808AnnotationArgumentResolveException {
 
-        final ReqMsgFieldConverter<?> converter = getDataTypeConverter(converterClass);
-        final Object value = converter.convert(bytes, start, byteCount);
+        final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(deserializerClass);
+        final Object value = fieldDeserializer.deserialize(bytes, dataType, offset, length);
         ReflectionUtils.setFieldValue(instance, field, value);
         return value;
     }
 
     @SuppressWarnings("rawtypes")
-    private ReqMsgFieldConverter getDataTypeConverter(
-            Class<? extends ReqMsgFieldConverter<?>> converterClass) throws Jt808AnnotationArgumentResolveException {
+    private Jt808FieldDeserializer getFieldDeserializer(
+            Class<? extends Jt808FieldDeserializer<?>> converterClass) throws Jt808AnnotationArgumentResolveException {
 
-        ReqMsgFieldConverter converter = converterMapping.get(converterClass);
+        Jt808FieldDeserializer converter = converterMapping.get(converterClass);
         if (converter == null) {
             synchronized (this) {
-                converter = ReflectionUtils.createInstance(converterClass);
-                converterMapping.put(converterClass, converter);
+                if ((converter = converterMapping.get(converterClass)) == null) {
+                    converter = ReflectionUtils.createInstance(converterClass);
+                    converterMapping.put(converterClass, converter);
+                }
             }
         }
         return converter;
@@ -152,7 +153,7 @@ public class Jt808AnnotationBasedDecoder {
     }
 
     private int getBasicFieldLength(
-            EvaluationContext evaluationContext, Class<?> cls, Object instance, BasicField annotation,
+            EvaluationContext evaluationContext, Class<?> cls, Object instance, RequestField annotation,
             MsgDataType dataType, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
 
         // 1. DataType.byteCount
@@ -186,7 +187,7 @@ public class Jt808AnnotationBasedDecoder {
 
     private int getBasicFieldStartIndex(
             EvaluationContext evaluationContext, Class<?> cls, Object instance,
-            BasicField annotation, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
+            RequestField annotation, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
 
         if (annotation.startIndex() >= 0) {
             return annotation.startIndex();

@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.support.annotation.msg.splice;
+package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 
 import java.lang.annotation.*;
 
@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SplittableField {
+public @interface SplittableRequestField {
 
     /**
      * @return 字段名(将属性拆分到嵌套的bean中)

@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class Jt808HandlerMethodArgumentResolverComposite implements HandlerMethodArgumentResolver {
+public class CompositeJt808HandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
     private final ConcurrentMap<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
-    public Jt808HandlerMethodArgumentResolverComposite() {
+    public CompositeJt808HandlerMethodArgumentResolver() {
         addDefaultHandlerMethodArgumentResolver(this);
     }
 
-    static void addDefaultHandlerMethodArgumentResolver(Jt808HandlerMethodArgumentResolverComposite resolvers) {
+    static void addDefaultHandlerMethodArgumentResolver(CompositeJt808HandlerMethodArgumentResolver resolvers) {
         resolvers.addResolver(new Jt808RequestMsgBodyHandlerMethodArgumentResolver());
         resolvers.addResolver(new Jt808RequestArgumentResolver());
         resolvers.addResolver(new Jt808SessionArgumentResolver());
@@ -58,7 +58,7 @@ public class Jt808HandlerMethodArgumentResolverComposite implements HandlerMetho
         return null;
     }
 
-    public Jt808HandlerMethodArgumentResolverComposite addResolver(HandlerMethodArgumentResolver resolver) {
+    public CompositeJt808HandlerMethodArgumentResolver addResolver(HandlerMethodArgumentResolver resolver) {
         this.resolvers.add(resolver);
         return this;
     }
