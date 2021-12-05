@@ -35,6 +35,7 @@ public class LocationUploadReqMsgV2019Test {
     @RequestField(order = 1, startIndex = 4, dataType = DWORD)
     @SplittableRequestField(splitPropertyValueIntoNestedBeanField = "statusInfo")
     private int status;
+
     private LocationUploadStatus statusInfo;
 
     // 将上面的 status 字段的第0位取出转为 int 类型

@@ -37,7 +37,6 @@ public class Jt808DispatcherHandler {
             Jt808ExceptionHandler exceptionHandler) {
 
         this.sessionManager = sessionManager;
-
         this.handlerMappings = this.sort(handlerMappings);
         this.handlerAdapters = this.sort(handlerAdapters);
         this.resultHandlers = this.sort(resultHandlers);
@@ -51,20 +50,20 @@ public class Jt808DispatcherHandler {
         Jt808HandlerResult handlerResult = null;
         try {
             try {
-                // 1. detect a handler that can handle the current request
+                // 1. Detect a handler that can handle the current request
                 executionChain = this.getHandler(request, session);
                 if (!executionChain.applyPreHandle(request, session)) {
                     return;
                 }
 
-                // 2. invoke handler to handle current request
+                // 2. Invoke handler to handle current request
                 handlerResult = this.invokeHandler(request, session, executionChain.getHandler());
                 executionChain.applyPostHandle(request, session, handlerResult);
 
             } catch (Throwable throwable) {
                 dispatcherException = throwable;
             }
-            // 3. handle the result if necessary
+            // 3. Handle the result from handler if necessary
             this.processHandlerResult(request, session, executionChain, handlerResult, dispatcherException);
         } catch (Throwable throwable) {
             dispatcherException = throwable;
@@ -129,15 +128,6 @@ public class Jt808DispatcherHandler {
 
     protected Jt808HandlerResult invokeHandler(Jt808Request request, Jt808Session session, Object handler) throws Throwable {
         return this.getHandlerAdapter(request, handler).handle(request, session, handler);
-    }
-
-    private Jt808HandlerResult invokeExceptionHandler(Jt808Request request, Jt808Session session, Throwable throwable, Object handler) {
-        try {
-            return exceptionHandler.handleException(handler, ArgumentContext.of(request, session, throwable));
-        } catch (Throwable e) {
-            log.error("An exception occurred while invoke ExceptionHandler", throwable);
-            return null;
-        }
     }
 
     protected Jt808HandlerExecutionChain getHandler(Jt808Request request, Jt808Session session) {

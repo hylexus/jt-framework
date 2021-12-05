@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.data.deserialize;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.impl.*;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author hylexus
  */
+@Slf4j
 public class DefaultJt808FieldDeserializerRegistry implements Jt808FieldDeserializerRegistry {
 
     private final Map<RequestMsgConvertibleMetadata, Jt808FieldDeserializer<?>> converterMap = new ConcurrentHashMap<>();
@@ -19,10 +21,6 @@ public class DefaultJt808FieldDeserializerRegistry implements Jt808FieldDeserial
         if (autoRegisterDefaultConverter) {
             registerDefaultConverter(this);
         }
-    }
-
-    public DefaultJt808FieldDeserializerRegistry() {
-        this(true);
     }
 
     static void registerDefaultConverter(DefaultJt808FieldDeserializerRegistry registry) {
@@ -48,7 +46,13 @@ public class DefaultJt808FieldDeserializerRegistry implements Jt808FieldDeserial
     @Override
     public void registerConverter(@NonNull Jt808FieldDeserializer<?> converter) {
         for (RequestMsgConvertibleMetadata convertibleType : converter.getConvertibleTypes()) {
-            converterMap.put(convertibleType, converter);
+            final Jt808FieldDeserializer<?> old = converterMap.get(convertibleType);
+            if (old != null && old.shouldBeReplacedBy(converter)) {
+                log.warn("Jt808FieldDeserializer [{}] has been replaced by [{}]", old.getClass().getName(), converter.getClass().getName());
+                converterMap.put(convertibleType, converter);
+            } else {
+                converterMap.put(convertibleType, converter);
+            }
         }
     }
 

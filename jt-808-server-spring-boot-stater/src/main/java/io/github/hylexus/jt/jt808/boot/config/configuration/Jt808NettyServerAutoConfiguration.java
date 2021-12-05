@@ -16,7 +16,6 @@ import io.github.hylexus.jt.jt808.support.dispatcher.RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
@@ -32,8 +31,11 @@ import static io.github.hylexus.jt.config.JtProtocolConstant.*;
  */
 public class Jt808NettyServerAutoConfiguration {
 
-    @Autowired
-    private Jt808ServerProps serverProps;
+    private final Jt808ServerProps serverProps;
+
+    public Jt808NettyServerAutoConfiguration(Jt808ServerProps serverProps) {
+        this.serverProps = serverProps;
+    }
 
     @Bean(BEAN_NAME_JT808_SESSION_MANAGER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_SESSION_MANAGER)

@@ -2,7 +2,6 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.scan;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
@@ -22,8 +21,6 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static io.github.hylexus.jt.jt808.support.utils.ReflectionUtils.isVoidReturnType;
 
@@ -45,17 +42,24 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
     @Override
     public void afterPropertiesSet() throws Exception {
         final Collection<Object> exceptionHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestMsgHandlerAdvice.class).values();
-        int order = 1;
+        this.doScan(exceptionHandlerClassList);
+
+        final Collection<Object> msgHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestMsgHandler.class).values();
+        this.doScan(msgHandlerClassList);
+
+        this.compositeJt808ExceptionHandler.sort();
+    }
+
+    private void doScan(Collection<Object> exceptionHandlerClassList) {
         for (Object handlerClassInstance : exceptionHandlerClassList) {
             ReflectionUtils.doWithMethods(
                     ClassUtils.getUserClass(handlerClassInstance.getClass()),
                     method -> {
                         final Set<Class<? extends Throwable>> supportedExceptionTypes = this.getSupportedExceptionTypes(method);
-                        final Set<Jt808ProtocolVersion> supportedVersions = this.getSupportedVersions(method);
                         final ExceptionHandlerHandlerMethod handlerMethod = new ExceptionHandlerHandlerMethod(
                                 handlerClassInstance, method,
                                 isVoidReturnType(method),
-                                supportedExceptionTypes, supportedVersions,
+                                supportedExceptionTypes,
                                 argumentResolver
                         );
 
@@ -64,11 +68,6 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
                     this::isExceptionHandlerMethod
             );
         }
-    }
-
-    private Set<Jt808ProtocolVersion> getSupportedVersions(Method method) {
-        final Set<Jt808ExceptionHandler> annotations = AnnotatedElementUtils.findAllMergedAnnotations(method, Jt808ExceptionHandler.class);
-        return annotations.stream().flatMap(a -> Stream.of(a.versions())).collect(Collectors.toSet());
     }
 
     private Set<Class<? extends Throwable>> getSupportedExceptionTypes(Method method) {

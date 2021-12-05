@@ -6,6 +6,7 @@ import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedD
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.converter.BuiltinMsgTypeParser;
+import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -20,7 +21,7 @@ public class Jt808AnnotationBasedDecoderTest {
         final Jt808Request request = buildJt808Request();
 
         final Class<LocationUploadReqMsgV2019Test> cls = LocationUploadReqMsgV2019Test.class;
-        final Jt808AnnotationBasedDecoder decoder = new Jt808AnnotationBasedDecoder();
+        final Jt808AnnotationBasedDecoder decoder = new Jt808AnnotationBasedDecoder(new DefaultJt808FieldDeserializerRegistry(true));
         final LocationUploadReqMsgV2019Test instance = decoder.decode(request, cls);
         System.out.println("-----------junit--------");
         System.out.println(instance);

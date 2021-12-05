@@ -15,16 +15,8 @@ public class CompositeJt808HandlerMethodArgumentResolver implements HandlerMetho
     private final List<HandlerMethodArgumentResolver> resolvers = new ArrayList<>();
     private final ConcurrentMap<MethodParameter, HandlerMethodArgumentResolver> argumentResolverCache = new ConcurrentHashMap<>();
 
-    public CompositeJt808HandlerMethodArgumentResolver() {
-        addDefaultHandlerMethodArgumentResolver(this);
-    }
-
-    static void addDefaultHandlerMethodArgumentResolver(CompositeJt808HandlerMethodArgumentResolver resolvers) {
-        resolvers.addResolver(new Jt808RequestMsgBodyHandlerMethodArgumentResolver());
-        resolvers.addResolver(new Jt808RequestArgumentResolver());
-        resolvers.addResolver(new Jt808SessionArgumentResolver());
-        resolvers.addResolver(new Jt808RequestHeaderArgumentResolver());
-        resolvers.addResolver(new Jt808ExceptionArgumentResolver());
+    public CompositeJt808HandlerMethodArgumentResolver(List<HandlerMethodArgumentResolver> resolverList) {
+        resolverList.forEach(this::addResolver);
     }
 
     @Override
@@ -58,8 +50,7 @@ public class CompositeJt808HandlerMethodArgumentResolver implements HandlerMetho
         return null;
     }
 
-    public CompositeJt808HandlerMethodArgumentResolver addResolver(HandlerMethodArgumentResolver resolver) {
+    public void addResolver(HandlerMethodArgumentResolver resolver) {
         this.resolvers.add(resolver);
-        return this;
     }
 }

@@ -6,10 +6,8 @@ import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
-import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
-import io.github.hylexus.jt.jt808.support.data.serializer.DefaulJt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
@@ -30,8 +28,12 @@ import static java.util.Objects.requireNonNull;
 public class Jt808AnnotationBasedEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
-    private final Jt808FieldSerializerRegistry fieldSerializerRegistry = new DefaulJt808FieldSerializerRegistry();
     private final Map<Class<? extends Jt808FieldSerializer<?>>, Jt808FieldSerializer<?>> converterMapping = new HashMap<>();
+    private final Jt808FieldSerializerRegistry fieldSerializerRegistry;
+
+    public Jt808AnnotationBasedEncoder(Jt808FieldSerializerRegistry fieldSerializerRegistry) {
+        this.fieldSerializerRegistry = fieldSerializerRegistry;
+    }
 
     // TODO annotation properties...
     public Jt808Response encode(Object responseMsg, Jt808Session session) {

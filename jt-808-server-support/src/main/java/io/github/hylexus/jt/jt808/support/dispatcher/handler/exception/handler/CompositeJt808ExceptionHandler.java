@@ -22,15 +22,17 @@ public class CompositeJt808ExceptionHandler implements Jt808ExceptionHandler {
 
     private final List<Jt808ExceptionHandler> exceptionHandlers = Lists.newArrayList();
     private final Map<Class<? extends Throwable>, Jt808ExceptionHandler> mappingCache = new ConcurrentHashMap<>();
-    private volatile boolean sorted = false;
 
-    public CompositeJt808ExceptionHandler() {
+    public CompositeJt808ExceptionHandler(List<Jt808ExceptionHandler> handlers) {
+        handlers.forEach(this::addExceptionHandler);
     }
 
-    public CompositeJt808ExceptionHandler addExceptionHandler(Jt808ExceptionHandler exceptionHandler) {
+    public void addExceptionHandler(Jt808ExceptionHandler exceptionHandler) {
         this.exceptionHandlers.add(exceptionHandler);
-        this.sorted = false;
-        return this;
+    }
+
+    public synchronized void sort() {
+        this.exceptionHandlers.sort(Comparator.comparing(OrderedComponent::getOrder));
     }
 
     @Override
@@ -73,15 +75,6 @@ public class CompositeJt808ExceptionHandler implements Jt808ExceptionHandler {
     private Jt808ExceptionHandler doMatchException(Class<? extends Throwable> targetExceptionClass) {
         final Set<Class<? extends Throwable>> result = Sets.newHashSet();
         final Map<Class<? extends Throwable>, Jt808ExceptionHandler> tempCache = new ConcurrentHashMap<>();
-
-        if (!this.sorted) {
-            synchronized (this) {
-                if (!this.sorted) {
-                    this.exceptionHandlers.sort(Comparator.comparing(OrderedComponent::getOrder));
-                    this.sorted = true;
-                }
-            }
-        }
 
         for (Jt808ExceptionHandler handler : this.exceptionHandlers) {
             for (Class<? extends Throwable> exceptionType : handler.getSupportedExceptionTypes()) {

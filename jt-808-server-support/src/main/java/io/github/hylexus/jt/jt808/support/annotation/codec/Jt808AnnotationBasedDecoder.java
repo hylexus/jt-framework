@@ -6,7 +6,6 @@ import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
@@ -29,9 +28,14 @@ import java.util.*;
 @Slf4j
 public class Jt808AnnotationBasedDecoder {
 
-    private final Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry = new DefaultJt808FieldDeserializerRegistry();
     private final Map<Class<? extends Jt808FieldDeserializer<?>>, Jt808FieldDeserializer<?>> converterMapping = new HashMap<>();
     private final ExpressionParser parser = new SpelExpressionParser();
+    private final Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry;
+    private final SlicedFromAnnotationDecoder slicedFromAnnotationDecoder = new SlicedFromAnnotationDecoder();
+
+    public Jt808AnnotationBasedDecoder(Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry) {
+        this.jt808FieldDeserializerRegistry = jt808FieldDeserializerRegistry;
+    }
 
     public <T> T decode(Jt808Request request, Class<T> cls) throws Jt808AnnotationArgumentResolveException {
         final T instance = ReflectionUtils.createInstance(cls);
@@ -53,6 +57,11 @@ public class Jt808AnnotationBasedDecoder {
             if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
                 this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
             }
+        }
+        try {
+            this.slicedFromAnnotationDecoder.processAllSlicedFromAnnotatedField(instance);
+        } catch (IllegalAccessException e) {
+            throw new Jt808AnnotationArgumentResolveException(e);
         }
         return instance;
     }

@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.data.serializer;
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.impl.*;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author hylexus
  */
+@Slf4j
 public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerRegistry {
 
     private final Map<ResponseMsgConvertibleMetadata, Jt808FieldSerializer<?>> converterMap = new ConcurrentHashMap<>();
@@ -19,10 +21,6 @@ public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerR
         if (autoRegisterDefaultConverter) {
             registerDefaultConverter(this);
         }
-    }
-
-    public DefaulJt808FieldSerializerRegistry() {
-        this(true);
     }
 
     static void registerDefaultConverter(DefaulJt808FieldSerializerRegistry registry) {
@@ -42,7 +40,12 @@ public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerR
     @Override
     public void registerConverter(@NonNull Jt808FieldSerializer<?> converter) {
         for (ResponseMsgConvertibleMetadata convertibleType : converter.getSupportedTypes()) {
-            converterMap.put(convertibleType, converter);
+            final Jt808FieldSerializer<?> old = converterMap.get(convertibleType);
+            if (old != null && old.shouldBeReplacedBy(converter)) {
+                log.warn("Jt808FieldSerializer [{}] has been replaced by [{}]", old.getClass().getName(), converter.getClass().getName());
+            } else {
+                converterMap.put(convertibleType, converter);
+            }
         }
     }
 

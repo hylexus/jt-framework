@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
@@ -16,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -32,16 +32,14 @@ import java.util.Set;
 public class ExceptionHandlerHandlerMethod extends HandlerMethod implements Jt808ExceptionHandler {
 
     private final Set<Class<? extends Throwable>> supportedExceptionTypes;
-    private final Set<Jt808ProtocolVersion> supportedVersions;
     private final HandlerMethodArgumentResolver argumentResolver;
 
     public ExceptionHandlerHandlerMethod(
             Object beanInstance, Method method, boolean isVoidReturnType,
             Set<Class<? extends Throwable>> supportedExceptionTypes,
-            Set<Jt808ProtocolVersion> supportedVersions, HandlerMethodArgumentResolver argumentResolver) {
+            HandlerMethodArgumentResolver argumentResolver) {
 
-        super(beanInstance, method, isVoidReturnType, supportedVersions, null);
-        this.supportedVersions = supportedVersions;
+        super(beanInstance, method, isVoidReturnType, null, null);
         this.supportedExceptionTypes = supportedExceptionTypes;
         this.argumentResolver = argumentResolver;
     }
@@ -53,7 +51,12 @@ public class ExceptionHandlerHandlerMethod extends HandlerMethod implements Jt80
 
     @Override
     public Set<Jt808ProtocolVersion> getSupportedVersions() {
-        return supportedVersions;
+        throw new JtIllegalStateException();
+    }
+
+    @Override
+    public Set<MsgType> getSupportedMsgTypes() {
+        throw new JtIllegalStateException();
     }
 
     @Override
@@ -77,10 +80,5 @@ public class ExceptionHandlerHandlerMethod extends HandlerMethod implements Jt80
 
     private Object[] resolveArgs(HandlerMethod handlerMethod, ArgumentContext argumentContext) {
         return ArgumentUtils.resolveArguments(handlerMethod, argumentContext, this.argumentResolver);
-    }
-
-    @Override
-    public Set<MsgType> getSupportedMsgTypes() {
-        return Collections.emptySet();
     }
 }

@@ -10,7 +10,11 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 
 public class Jt808RequestMsgBodyHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final Jt808AnnotationBasedDecoder annotationBasedDecoder = new Jt808AnnotationBasedDecoder();
+    private final Jt808AnnotationBasedDecoder annotationBasedDecoder;
+
+    public Jt808RequestMsgBodyHandlerMethodArgumentResolver(Jt808AnnotationBasedDecoder annotationBasedDecoder) {
+        this.annotationBasedDecoder = annotationBasedDecoder;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
