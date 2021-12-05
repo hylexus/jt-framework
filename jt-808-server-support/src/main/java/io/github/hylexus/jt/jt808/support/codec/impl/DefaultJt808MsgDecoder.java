@@ -13,7 +13,7 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultSubPackageSpec;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.converter.MsgTypeParser;
+import io.github.hylexus.jt.jt808.support.MsgTypeParser;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
 
