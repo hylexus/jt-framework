@@ -11,6 +11,46 @@ import java.nio.charset.Charset;
  * @author hylexus
  */
 public abstract class JtProtocolUtils {
+    public static short getUnsignedByte(ByteBuf byteBuf, int startIndex) {
+        return byteBuf.getUnsignedByte(startIndex);
+    }
+
+    public static short readUnsignedByte(ByteBuf byteBuf) {
+        return byteBuf.readUnsignedByte();
+    }
+
+    public static byte readByte(ByteBuf byteBuf) {
+        return byteBuf.readByte();
+    }
+
+    public static byte getByte(ByteBuf byteBuf, int startIndex) {
+        return byteBuf.getByte(startIndex);
+    }
+
+    public static int getWord(ByteBuf byteBuf, int start) {
+        return byteBuf.getUnsignedShort(start);
+    }
+
+    public static int readWord(ByteBuf byteBuf) {
+        return byteBuf.readUnsignedShort();
+    }
+
+    public static ByteBuf writeWord(ByteBuf byteBuf, int value) {
+        return byteBuf.writeShort(value);
+    }
+
+    public static int getDword(ByteBuf byteBuf, int start) {
+        return byteBuf.getInt(start);
+    }
+
+    public static int readDword(ByteBuf byteBuf) {
+        return byteBuf.readInt();
+    }
+
+    public static ByteBuf writeDword(ByteBuf byteBuf, int value) {
+        return byteBuf.writeInt(value);
+    }
+
     public static String getBcd(ByteBuf byteBuf, int startIndex, int length) {
         final byte[] bytes = getBytes(byteBuf, startIndex, length);
         return BcdOps.bcd2StringV2(bytes);
@@ -19,6 +59,12 @@ public abstract class JtProtocolUtils {
     public static String readBcd(ByteBuf byteBuf, int startIndex, int length) {
         final byte[] bytes = readBytes(byteBuf, startIndex, length);
         return BcdOps.bcd2StringV2(bytes);
+    }
+
+    public static ByteBuf writeBcd(ByteBuf byteBuf, String value) {
+        final byte[] bytes = BcdOps.string2Bcd(value);
+        byteBuf.writeBytes(bytes);
+        return byteBuf;
     }
 
     public static String getString(ByteBuf byteBuf, int startIndex, int length) {
@@ -37,6 +83,16 @@ public abstract class JtProtocolUtils {
     public static String readString(ByteBuf byteBuf, int startIndex, int length, Charset charset) {
         final byte[] bytes = readBytes(byteBuf, startIndex, length);
         return new String(bytes, charset);
+    }
+
+    public static ByteBuf writeString(ByteBuf byteBuf, String value, Charset charset) {
+        byteBuf.writeBytes(value.getBytes(charset));
+        return byteBuf;
+    }
+
+    public static ByteBuf writeString(ByteBuf byteBuf, String value) {
+        byteBuf.writeBytes(value.getBytes(JtProtocolConstant.JT_808_STRING_ENCODING));
+        return byteBuf;
     }
 
     public static byte[] getBytes(ByteBuf byteBuf, int startIndex, int length) {

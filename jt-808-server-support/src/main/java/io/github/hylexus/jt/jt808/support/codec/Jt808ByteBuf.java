@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
 import io.github.hylexus.jt.config.JtProtocolConstant;
-import io.github.hylexus.oaks.utils.BcdOps;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.Charset;
@@ -23,49 +23,47 @@ public class Jt808ByteBuf extends AbstractJt808ByteBuf {
     }
 
     public int getWord(int startIndex) {
-        return this.getUnsignedShort(startIndex);
+        return JtProtocolUtils.getWord(buf, startIndex);
     }
 
     public Jt808ByteBuf writeWord(int value) {
-        this.writeShort(value);
+        JtProtocolUtils.writeWord(buf, value);
         return this;
     }
 
     public int getDword(int startIndex) {
-        return this.getInt(startIndex);
+        return JtProtocolUtils.getDword(buf, startIndex);
     }
 
     public Jt808ByteBuf writeDword(int value) {
-        this.writeInt(value);
+        JtProtocolUtils.writeDword(buf, value);
         return this;
     }
 
     public String getString(int startIndex, int length) {
-        return getString(startIndex, length, JtProtocolConstant.JT_808_STRING_ENCODING);
+        return JtProtocolUtils.getString(buf, startIndex, length);
     }
 
     public String getString(int startIndex, int length, Charset charset) {
-        final byte[] bytes = getBytesInternal(startIndex, length);
-        return new String(bytes, charset);
+        return JtProtocolUtils.getString(buf, startIndex, length, charset);
     }
 
     public Jt808ByteBuf writeString(String value, Charset charset) {
-        this.writeBytes(value.getBytes(charset));
+        JtProtocolUtils.writeString(buf, value, charset);
         return this;
     }
 
     public Jt808ByteBuf writeString(String value) {
-        return this.writeString(value, JtProtocolConstant.JT_808_STRING_ENCODING);
+        JtProtocolUtils.writeString(buf, value, JtProtocolConstant.JT_808_STRING_ENCODING);
+        return this;
     }
 
     public String getBcd(int startIndex, int length) {
-        final byte[] bytes = getBytesInternal(startIndex, length);
-        return BcdOps.bcd2StringV2(bytes);
+        return JtProtocolUtils.getBcd(buf, startIndex, length);
     }
 
     public Jt808ByteBuf writeBcd(String value) {
-        final byte[] bytes = BcdOps.string2Bcd(value);
-        this.writeBytes(bytes);
+        JtProtocolUtils.writeBcd(buf, value);
         return this;
     }
 
@@ -73,12 +71,6 @@ public class Jt808ByteBuf extends AbstractJt808ByteBuf {
     public Jt808ByteBuf writeByte(int value) {
         buf.writeByte(value);
         return this;
-    }
-
-    private byte[] getBytesInternal(int startIndex, int length) {
-        final byte[] bytes = new byte[length];
-        this.getBytes(startIndex, bytes, 0, length);
-        return bytes;
     }
 
 }

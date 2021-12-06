@@ -18,31 +18,48 @@ public @interface RequestField {
      */
     int order();
 
+    /**
+     * 字段偏移量获取顺序：
+     * <ol>
+     *     <li>{@code startIndex}</li>
+     *     <li>{@link #startIndexExpression()}</li>
+     *     <li>{@link #startIndexMethod()}</li>
+     * </ol>
+     */
     int startIndex() default -1;
 
+    /**
+     * 以 SpEL(Spring Expression Language) 语法指定字段偏移量
+     *
+     * @since 2.0.0
+     */
     String startIndexExpression() default "";
 
     String startIndexMethod() default "";
 
     /**
-     * 1. {@link #dataType()}
-     * 2. {@code length()}
-     * 3. {@link #lengthMethod()}
+     * 字段长度获取顺序：
+     * <ol>
+     *     <li>{@link MsgDataType#getByteCount() dataType() }</li>
+     *     <li>{@code length()}</li>
+     *     <li>{@link #lengthExpression()}</li>
+     *     <li>{@link #lengthMethod()}</li>
+     * </ol>
      *
      * @return 该字段的字节数
      * @see MsgDataType#getByteCount()
      */
     int length() default -1;
 
+    /**
+     * 以 SpEL(Spring Expression Language) 语法指定字段长度
+     *
+     * @since 2.0.0
+     */
     String lengthExpression() default "";
 
     /**
-     * 1. {@link #dataType()}
-     * 2. {@link #length()}
-     * 3. {@link #lengthExpression()}
-     * 4. {@code lengthMethod()}
-     *
-     * @return 表示字节数长度的字段, 必须为int或Integer
+     * @return 表示字段长度的方法的名称(返回类型必须为int或Integer)
      */
     String lengthMethod() default "";
 

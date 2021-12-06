@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.type;
 
-import io.github.hylexus.jt.jt808.support.utils.BytesUtils;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -18,12 +18,12 @@ public class BcdWrapper implements BytesValueWrapper<String> {
 
     @Override
     public void write(ByteBuf byteBuf) {
-        BytesUtils.writeBcd(byteBuf, value);
+        JtProtocolUtils.writeBcd(byteBuf, value);
     }
 
     @Override
     public String read(ByteBuf byteBuf, int offset, int length) {
-        value = BytesUtils.readBcd(byteBuf, length);
+        value = JtProtocolUtils.readBcd(byteBuf, offset, length);
         return value;
     }
 

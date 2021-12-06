@@ -5,6 +5,8 @@ import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.response.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.response.Jt808CommandSender;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.RespTerminalSettings;
+import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +25,11 @@ import java.util.concurrent.TimeUnit;
 public class DebugController {
 
     private final Jt808CommandSender commandSender;
+    private final Jt808SessionManager sessionManager;
 
-    public DebugController(Jt808CommandSender commandSender) {
+    public DebugController(Jt808CommandSender commandSender, Jt808SessionManager sessionManager) {
         this.commandSender = commandSender;
+        this.sessionManager = sessionManager;
     }
 
     @RequestMapping("/set-terminal-params")
@@ -40,8 +44,9 @@ public class DebugController {
         param.setParamList(paramList);
         param.setTotalParamCount(paramList.size());
 
-        // TODO flowId
-        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY,1);
+        final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow();
+        final int currentFlowId = session.getCurrentFlowId();
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, currentFlowId);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, param, 15L, TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
         return resp;

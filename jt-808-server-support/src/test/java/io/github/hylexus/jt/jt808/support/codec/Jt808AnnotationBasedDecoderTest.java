@@ -2,10 +2,10 @@ package io.github.hylexus.jt.jt808.support.codec;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.support.BuiltinMsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.BuiltinMsgTypeParser;
 import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
@@ -14,7 +14,10 @@ import org.junit.Test;
 
 public class Jt808AnnotationBasedDecoderTest {
 
-    private final Jt808MsgDecoder jt808MsgDecoder = new DefaultJt808MsgDecoder(new BuiltinMsgTypeParser(), new DefaultJt808MsgBytesProcessor());
+    private final Jt808MsgDecoder jt808MsgDecoder = new DefaultJt808MsgDecoder(
+            new BuiltinMsgTypeParser(),
+            new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)
+    );
 
     @Test
     public void testDecode() {

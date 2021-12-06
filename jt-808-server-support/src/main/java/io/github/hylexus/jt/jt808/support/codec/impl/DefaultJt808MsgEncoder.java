@@ -8,15 +8,18 @@ import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
+import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author hylexus
  */
+@Slf4j(topic = "jt-808.response.encoder")
 public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
@@ -40,7 +43,14 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
         compositeByteBuf.writeByte(checkSum);
         compositeByteBuf.resetReaderIndex();
+        if (log.isDebugEnabled()) {
+            log.debug("before escape: {}", HexStringUtils.byteBufToString(compositeByteBuf));
+        }
         final ByteBuf escaped = this.msgBytesProcessor.doEscapeForSend(compositeByteBuf);
+
+        if (log.isDebugEnabled()) {
+            log.debug("before escape: {}", HexStringUtils.byteBufToString(escaped));
+        }
 
         return allocator.compositeBuffer()
                 .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER))

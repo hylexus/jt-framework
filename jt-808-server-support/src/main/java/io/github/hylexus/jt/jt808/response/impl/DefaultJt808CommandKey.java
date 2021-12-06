@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author hylexus
@@ -53,8 +54,8 @@ public class DefaultJt808CommandKey implements Jt808CommandKey {
     }
 
     @Nullable
-    public Integer serverFlowId() {
-        return serverFlowId;
+    public Optional<Integer> serverFlowId() {
+        return Optional.ofNullable(serverFlowId);
     }
 
     @Override

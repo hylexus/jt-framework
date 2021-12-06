@@ -56,16 +56,15 @@ public interface Jt808ServerNettyConfigure {
 
         private final BuiltInServerBootstrapProps serverBootstrapProps;
         private final HeatBeatHandler heatBeatHandler;
-        private final Jt808DecodeChannelHandlerAdapter decodeHandler;
         private final Jt808DispatchChannelHandlerAdapter jt808DispatchChannelHandlerAdapter;
 
         public DefaultJt808ServerNettyConfigure(
                 BuiltInServerBootstrapProps serverBootstrapProps,
                 HeatBeatHandler heatBeatHandler,
-                Jt808DecodeChannelHandlerAdapter decodeHandler, Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+                Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+
             this.serverBootstrapProps = serverBootstrapProps;
             this.heatBeatHandler = heatBeatHandler;
-            this.decodeHandler = decodeHandler;
             this.jt808DispatchChannelHandlerAdapter = channelHandlerAdapter;
         }
 
@@ -97,7 +96,6 @@ public interface Jt808ServerNettyConfigure {
                             Unpooled.copiedBuffer(new byte[]{PACKAGE_DELIMITER, PACKAGE_DELIMITER})
                     )
             );
-            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_DECODE, decodeHandler);
             ch.pipeline().addLast(NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER, jt808DispatchChannelHandlerAdapter);
         }
     }

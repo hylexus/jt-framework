@@ -9,7 +9,6 @@ import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2011;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
-import io.github.hylexus.jt.jt808.samples.debug.entity.resp.DemoServerCommonReplyRespMsg;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterReplyRespMsg;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
@@ -27,13 +26,11 @@ import java.util.Random;
 public class AnnotationHandler01 {
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
-    public Object processMsg0001(Jt808Request request, TerminalCommonReplyMsg body) {
-        // todo null
-        // todo flowId
-        final Jt808CommandKey commandKey = Jt808CommandKey.of(request.header().terminalId(), BuiltinJt808MsgType.CLIENT_COMMON_REPLY, 1);
+    public void processMsg0001(Jt808Request request, TerminalCommonReplyMsg body) {
+        final int serverMsgId = body.getServerMsgId();
+        final String terminalId = request.header().terminalId();
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, serverMsgId);
         CommandWaitingPool.getInstance().putIfNecessary(commandKey, body);
-        return new DemoServerCommonReplyRespMsg().setMsgId(BuiltinJt808MsgType.SERVER_COMMON_REPLY.getMsgId())
-                .setResult(0).setFlowId(111);
     }
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2011)

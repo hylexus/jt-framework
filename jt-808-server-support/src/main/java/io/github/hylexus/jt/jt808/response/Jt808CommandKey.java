@@ -3,6 +3,8 @@ package io.github.hylexus.jt.jt808.response;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.response.impl.DefaultJt808CommandKey;
 
+import java.util.Optional;
+
 /**
  * Created At 2019-10-09 9:19 下午
  *
@@ -14,12 +16,12 @@ public interface Jt808CommandKey {
 
     int terminalReplyMsgId();
 
-    Integer serverFlowId();
+    Optional<Integer> serverFlowId();
 
     default String getKeyAsString() {
-        return serverFlowId() == null
+        return serverFlowId().isEmpty()
                 ? String.format("%s_%s", terminalId(), terminalReplyMsgId())
-                : String.format("%s_%s_%s", terminalId(), terminalReplyMsgId(), serverFlowId());
+                : String.format("%s_%s_%s", terminalId(), terminalReplyMsgId(), serverFlowId().get());
     }
 
     default String getWaitingFlag() {

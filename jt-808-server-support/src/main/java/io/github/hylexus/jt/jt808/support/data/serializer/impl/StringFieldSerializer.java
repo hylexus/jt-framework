@@ -1,12 +1,11 @@
 package io.github.hylexus.jt.jt808.support.data.serializer.impl;
 
-import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
-import io.github.hylexus.oaks.utils.BcdOps;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -31,10 +30,10 @@ public class StringFieldSerializer implements Jt808FieldSerializer<String> {
         // TODO NPE
         switch (msgDataType) {
             case STRING:
-                byteBuf.writeBytes(object.getBytes(JtProtocolConstant.JT_808_STRING_ENCODING));
+                JtProtocolUtils.writeString(byteBuf, object);
                 break;
             case BCD:
-                byteBuf.writeBytes(BcdOps.bcdString2bytes(object));
+                JtProtocolUtils.writeBcd(byteBuf, object);
                 break;
             default: {
                 throw new Jt808FieldSerializerException("Can not serialize String as " + msgDataType);

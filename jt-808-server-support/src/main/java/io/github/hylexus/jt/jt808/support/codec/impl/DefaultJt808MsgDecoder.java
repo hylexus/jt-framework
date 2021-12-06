@@ -10,17 +10,17 @@ import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultMsgBodyPropsSpec;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultSubPackageSpec;
+import io.github.hylexus.jt.jt808.support.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author hylexus
  */
-@Slf4j
+@Slf4j(topic = "jt-808.request.decoder")
 @BuiltinComponent
 public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
@@ -34,7 +34,14 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
     @Override
     public Jt808Request decode(Jt808ProtocolVersion version, Jt808ByteBuf byteBuf) {
+        if (log.isDebugEnabled()) {
+            log.debug("before escaped: {}", HexStringUtils.byteBufToString(byteBuf));
+        }
         final Jt808ByteBuf escaped = Jt808ByteBuf.from(this.msgBytesProcessor.doEscapeForReceive(byteBuf));
+
+        if (log.isDebugEnabled()) {
+            log.debug("after escaped: {}", HexStringUtils.byteBufToString(escaped));
+        }
 
         final Jt808MsgHeader headerSpec = this.parseMsgHeaderSpec(version, escaped);
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);

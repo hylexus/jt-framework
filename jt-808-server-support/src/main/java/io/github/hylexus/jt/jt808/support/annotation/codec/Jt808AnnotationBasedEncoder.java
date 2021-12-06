@@ -37,6 +37,10 @@ public class Jt808AnnotationBasedEncoder {
 
     // TODO annotation properties...
     public Jt808Response encode(Object responseMsg, Jt808Session session) {
+        return this.encode(responseMsg, session, session.getCurrentFlowId());
+    }
+
+    public Jt808Response encode(Object responseMsg, Jt808Session session, int serverFlowId) {
         final Class<?> entityClass = responseMsg.getClass();
         final Jt808ResponseMsgBody annotation = requireNonNull(
                 AnnotationUtils.findAnnotation(entityClass, Jt808ResponseMsgBody.class),
@@ -48,7 +52,7 @@ public class Jt808AnnotationBasedEncoder {
                 .version(session.getProtocolVersion())
                 .msgId(annotation.respMsgId())
                 .terminalId(session.getTerminalId())
-                .flowId(session.getCurrentFlowId())
+                .flowId(serverFlowId)
                 .build();
     }
 
@@ -73,14 +77,15 @@ public class Jt808AnnotationBasedEncoder {
         final MsgDataType jtDataType = responseFieldAnnotation.dataType();
         final Object fieldValue = fieldMetadata.getFieldValue(responseMsgInstance, false);
 
+        // 1. 优先使用自定义转换器
         final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = responseFieldAnnotation.customerFieldSerializerClass();
         if (customerFieldSerializerClass != Jt808FieldSerializer.PlaceholderFiledSerializer.class) {
             final Jt808FieldSerializer<Object> fieldSerializer = this.getFieldSerializer(customerFieldSerializerClass);
             fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
             return;
         }
+        // 2. LIST
         if (jtDataType == MsgDataType.LIST) {
-            // TODO list serialize
             if (!(fieldValue instanceof Iterable)) {
                 throw new JtIllegalArgumentException(fieldMetadata.getFieldType().getName() + " should be Iterable");
             }
@@ -90,12 +95,19 @@ public class Jt808AnnotationBasedEncoder {
             }
             return;
         }
+        // 3. 内嵌对象
+        if (jtDataType == MsgDataType.OBJECT) {
+            final Class<?> fieldType = fieldMetadata.getFieldType();
+            this.doEncode(fieldValue, fieldType, byteBuf);
+            return;
+        }
 
         final Class<?> fieldType = fieldMetadata.getFieldType();
         if (!jtDataType.getExpectedTargetClassType().contains(fieldType)) {
             throw new JtIllegalArgumentException("Can not convert [" + fieldType.getName() + "] to [" + jtDataType + "]");
         }
 
+        // 4. 内置转换器
         final Jt808FieldSerializer<Object> fieldSerializer = fieldSerializerRegistry.getConverter(forJt808ResponseMsgDataType(fieldType, jtDataType))
                 .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
 

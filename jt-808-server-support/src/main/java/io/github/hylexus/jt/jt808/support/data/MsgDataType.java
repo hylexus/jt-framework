@@ -20,8 +20,15 @@ public enum MsgDataType {
     DWORD(4, "无符号四字节整型(双字，32 位)", of(long.class, Long.class, int.class, Integer.class)),
     BCD(0, "8421 码，n 字节", of(String.class)),
     STRING(0, "GBK 编码，若无数据，置空", of(String.class)),
+    /**
+     * @since 2.0.0
+     */
     LIST(0, "List", of(List.class)),
-    UNKNOWN(0, "未知类型，用于占位符或默认值", of(String.class)),
+    /**
+     * @since 2.0.0
+     */
+    OBJECT(0, "Object", of()),
+    UNKNOWN(0, "未知类型，用于占位符或默认值", of()),
     ;
 
     /**

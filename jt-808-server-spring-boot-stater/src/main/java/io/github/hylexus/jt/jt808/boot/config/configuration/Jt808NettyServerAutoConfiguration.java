@@ -49,11 +49,6 @@ public class Jt808NettyServerAutoConfiguration {
         return new HeatBeatHandler(jt808SessionManager);
     }
 
-    @Bean(NETTY_HANDLER_NAME_808_DECODE)
-    @ConditionalOnMissingBean(name = NETTY_HANDLER_NAME_808_DECODE)
-    public Jt808DecodeChannelHandlerAdapter decodeHandler(Jt808MsgDecoder decoder, CompositeJt808ExceptionHandler exceptionHandler) {
-        return new Jt808DecodeChannelHandlerAdapter(serverProps.getProtocol().getVersion(), decoder, exceptionHandler);
-    }
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE)
@@ -84,17 +79,15 @@ public class Jt808NettyServerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(Jt808DispatchChannelHandlerAdapter.class)
     public Jt808DispatchChannelHandlerAdapter jt808ChannelHandlerAdapter(
-            Jt808SessionManager jt808SessionManager,
+            Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
             RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
 
-        return new Jt808DispatchChannelHandlerAdapter(jt808SessionManager, requestMsgDispatcher, exceptionHandler);
+        return new Jt808DispatchChannelHandlerAdapter(serverProps.getProtocol().getVersion(), decoder, jt808SessionManager, requestMsgDispatcher, exceptionHandler);
     }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
-    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
-            HeatBeatHandler heatBeatHandler,
-            Jt808DecodeChannelHandlerAdapter decodeHandler, Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(HeatBeatHandler heatBeatHandler, Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
 
         final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = this.serverProps.getServer().getIdleStateHandler();
         final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps
@@ -108,7 +101,7 @@ public class Jt808NettyServerAutoConfiguration {
                 )
         );
 
-        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, decodeHandler, channelHandlerAdapter);
+        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter);
     }
 
     @Bean(BEAN_NAME_JT808_NETTY_TCP_SERVER)

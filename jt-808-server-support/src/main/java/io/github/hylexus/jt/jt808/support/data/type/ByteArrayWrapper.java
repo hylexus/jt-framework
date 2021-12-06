@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.type;
 
-import io.github.hylexus.jt.jt808.support.utils.BytesUtils;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -23,7 +23,7 @@ public class ByteArrayWrapper implements BytesValueWrapper<byte[]> {
 
     @Override
     public byte[] read(ByteBuf byteBuf, int offset, int length) {
-        value = BytesUtils.readBytes(byteBuf, length);
+        value = JtProtocolUtils.readBytes(byteBuf, offset, length);
         return value;
     }
 

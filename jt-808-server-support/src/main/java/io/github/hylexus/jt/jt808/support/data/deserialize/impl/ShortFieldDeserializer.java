@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -30,7 +31,7 @@ public class ShortFieldDeserializer implements Jt808FieldDeserializer<Short> {
     @Override
     public Short deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.WORD) {
-            return byteBuf.readShort();
+            return (short) JtProtocolUtils.readWord(byteBuf);
         } else if (msgDataType == MsgDataType.BYTE) {
             return (short) byteBuf.readByte();
         }

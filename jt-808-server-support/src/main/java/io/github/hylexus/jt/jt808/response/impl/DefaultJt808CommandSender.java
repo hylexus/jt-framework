@@ -28,8 +28,8 @@ public class DefaultJt808CommandSender extends AbstractJt808CommandSender {
     }
 
     @Override
-    protected ByteBuf encode(Jt808Session session, Object response) throws Jt808EncodeException {
-        final Jt808Response jt808Response = this.annotationBasedEncoder.encode(response, session);
+    protected ByteBuf encode(Jt808Session session, Object response, int serverFlowId) throws Jt808EncodeException {
+        final Jt808Response jt808Response = this.annotationBasedEncoder.encode(response, session, serverFlowId);
         return this.encode(session, jt808Response);
     }
 }

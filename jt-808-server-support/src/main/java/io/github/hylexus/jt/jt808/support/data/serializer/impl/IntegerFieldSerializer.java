@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -32,10 +33,10 @@ public class IntegerFieldSerializer implements Jt808FieldSerializer<Integer> {
     public void serialize(Integer object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
         switch (msgDataType) {
             case DWORD:
-                byteBuf.writeInt(object);
+                JtProtocolUtils.writeDword(byteBuf, object);
                 break;
             case WORD:
-                byteBuf.writeShort(object);
+                JtProtocolUtils.writeWord(byteBuf, object);
                 break;
             case BYTE:
                 byteBuf.writeByte(object);

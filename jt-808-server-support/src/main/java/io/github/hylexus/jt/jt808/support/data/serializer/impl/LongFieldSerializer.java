@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -34,10 +35,10 @@ public class LongFieldSerializer implements Jt808FieldSerializer<Long> {
         // TODO NPE
         switch (msgDataType) {
             case DWORD:
-                byteBuf.writeInt(object.intValue());
+                JtProtocolUtils.writeDword(byteBuf, object.intValue());
                 break;
             case WORD:
-                byteBuf.writeShort(object.shortValue());
+                JtProtocolUtils.writeWord(byteBuf, object.intValue());
                 break;
             case BYTE:
                 byteBuf.writeByte(object.byteValue());

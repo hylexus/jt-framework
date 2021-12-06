@@ -23,7 +23,10 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class Jt808AnnotationBasedDecoder {
@@ -53,7 +56,11 @@ public class Jt808AnnotationBasedDecoder {
         evaluationContext.setVariable("this", instance);
         evaluationContext.setVariable("request", request);
         evaluationContext.setVariable("header", request.header());
-        for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
+        final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getFieldMetadataList();
+        if (fieldMetadataList.isEmpty()) {
+            throw new Jt808AnnotationArgumentResolveException("Entity Class has empty field list.");
+        }
+        for (JavaBeanFieldMetadata fieldMetadata : fieldMetadataList) {
             if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
                 this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
             }
@@ -71,27 +78,30 @@ public class Jt808AnnotationBasedDecoder {
             ByteBuf bodyDataBuf, Jt808Request request) {
 
         final RequestField annotation = fieldMetadata.getAnnotation(RequestField.class);
-        final MsgDataType dataType = annotation.dataType();
-        final Class<?> fieldType = fieldMetadata.getFieldType();
+        final MsgDataType jtDataType = annotation.dataType();
+        final Class<?> javaDataType = fieldMetadata.getFieldType();
 
-        final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldType);
-        final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, dataType, fieldType);
+        final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, javaDataType);
+        final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, jtDataType, javaDataType);
 
         final Class<? extends Jt808FieldDeserializer<?>> converterClass = annotation.customerFieldDeserializerClass();
         // 1. 优先使用用户自定义的属性转换器
         final Field field = fieldMetadata.getField();
         if (converterClass != Jt808FieldDeserializer.PlaceholderFieldDeserializer.class) {
-            return populateFieldByCustomerFieldDeserializer(bodyDataBuf, instance, field, dataType, converterClass, startIndex, length);
+            final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(converterClass);
+            return deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length);
         }
 
-        // 2. 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
-        if (!dataType.getExpectedTargetClassType().contains(fieldType)) {
-            throw new Jt808AnnotationArgumentResolveException("No customerDataTypeConverterClass found, Unsupported expectedTargetClassType "
-                                                              + fieldType + " for field " + field);
+        // 2. 内嵌对象 特殊处理
+        if (jtDataType == MsgDataType.OBJECT) {
+            final Class<?> objectClass = fieldMetadata.getFieldType();
+            final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            final Object objectInstance = ReflectionUtils.createInstance(objectClass);
+            return decode(objectClass, objectInstance, slice, request);
         }
-        // 3. 默认的属性转换策略
-        // 3.1 LIST 特殊处理
-        if (dataType == MsgDataType.LIST) {
+
+        // 3 LIST 特殊处理
+        if (jtDataType == MsgDataType.LIST) {
             final List<Object> list = new ArrayList<>();
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
             final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
@@ -106,33 +116,29 @@ public class Jt808AnnotationBasedDecoder {
             return list;
         }
 
-        // 3.2 其他类型
-        final RequestMsgConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(dataType, fieldType);
-        final Optional<Jt808FieldDeserializer<?>> converterInfo = jt808FieldDeserializerRegistry.getConverter(key);
-        if (converterInfo.isEmpty()) {
-            // 3.2.1 没有配置【自定义属性转换器】&& 是【支持的目标类型】但是没有内置转换器
-            throw new Jt808AnnotationArgumentResolveException(
-                    "No customerDataTypeConverterClass found, Unsupported expectedTargetClassType " + fieldType + " for field " + field);
+        // 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
+        if (!jtDataType.getExpectedTargetClassType().contains(javaDataType)) {
+            throw new Jt808AnnotationArgumentResolveException("No Jt808FieldDeserializer found, Unsupported expectedTargetClassType "
+                                                              + javaDataType + " for field " + field);
         }
+        // 4. 默认的属性转换策略
+        final RequestMsgConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(jtDataType, javaDataType);
+        final Jt808FieldDeserializer<?> deserializer = jt808FieldDeserializerRegistry.getConverter(key)
+                .orElseThrow(() -> new Jt808AnnotationArgumentResolveException(
+                        "No Jt808FieldDeserializer found, Unsupported expectedTargetClassType " + javaDataType + " for field " + field));
 
-        final Jt808FieldDeserializer<?> converter = converterInfo.get();
-        final Object value = converter.deserialize(bodyDataBuf, dataType, startIndex, length);
-
-        log.debug("Convert field {}({}) by converter : {}, result : {}",
-                field.getName(), fieldType.getSimpleName(), converter.getClass().getSimpleName(), value);
-
-        this.setFieldValue(instance, fieldMetadata, value);
-
-        return value;
+        return deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length);
     }
 
-    private Object populateFieldByCustomerFieldDeserializer(
-            ByteBuf bytes, Object instance, Field field,
-            MsgDataType dataType, Class<? extends Jt808FieldDeserializer<?>> deserializerClass,
-            int offset, int length) throws Jt808AnnotationArgumentResolveException {
+    private Object deserialize(
+            ByteBuf byteBuf, Object instance, Field field,
+            Jt808FieldDeserializer<?> deserializer, MsgDataType jtDataType, int offset, int length) {
 
-        final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(deserializerClass);
-        final Object value = fieldDeserializer.deserialize(bytes, dataType, offset, length);
+        final Object value = deserializer.deserialize(byteBuf, jtDataType, offset, length);
+        if (log.isDebugEnabled()) {
+            log.debug("Convert field {}({}) by converter : {}, result : {}",
+                    field.getName(), instance.getClass().getSimpleName(), deserializer, value);
+        }
         ReflectionUtils.setFieldValue(instance, field, value);
         return value;
     }

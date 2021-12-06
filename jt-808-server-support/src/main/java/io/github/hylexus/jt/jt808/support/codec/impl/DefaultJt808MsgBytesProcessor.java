@@ -5,7 +5,6 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.exception.Jt808MsgEscapeException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.CompositeByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -16,21 +15,27 @@ import java.util.List;
  */
 @Slf4j
 public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
-    final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
+    private final ByteBufAllocator allocator ;
+
+    private static final byte BYTE_7D = 0x7d;
+    private static final byte BYTE_7E = 0x7e;
+
+    public DefaultJt808MsgBytesProcessor(ByteBufAllocator allocator) {
+        this.allocator = allocator;
+    }
 
     @Override
     public ByteBuf doEscapeForReceive(ByteBuf byteBuf) throws Jt808MsgEscapeException {
-        // TODO 转义+单元测试
         final int readableBytes = byteBuf.readableBytes();
 
-        final byte packageDelimiter = 0x7d;
+        final byte delimiter = 0x7d;
         int from = byteBuf.readerIndex();
-        int indexOf = byteBuf.indexOf(from, readableBytes, packageDelimiter);
+        int indexOf = byteBuf.indexOf(from, readableBytes, delimiter);
         if (indexOf < 0) {
             return byteBuf;
         }
-        final List<ByteBuf> byteBufList = new ArrayList<>();
 
+        final List<ByteBuf> byteBufList = new ArrayList<>();
         do {
             final byte current = byteBuf.getByte(indexOf);
             final byte next = byteBuf.getByte(indexOf + 1);
@@ -53,19 +58,56 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
                 }
                 from = indexOf + 1;
             }
-        } while (from < readableBytes && (indexOf = byteBuf.indexOf(from, readableBytes, packageDelimiter)) >= 0);
+        } while (from < readableBytes && (indexOf = byteBuf.indexOf(from, readableBytes, delimiter)) >= 0);
 
         byteBufList.add(byteBuf.slice(from, readableBytes - from));
 
-        final CompositeByteBuf compositeBuffer = allocator.compositeBuffer(byteBufList.size());
-        byteBufList.forEach(buf -> compositeBuffer.addComponent(true, buf));
-        return compositeBuffer;
+        return allocator.compositeBuffer().addComponents(true, byteBufList);
     }
 
     @Override
     public ByteBuf doEscapeForSend(ByteBuf byteBuf) throws Jt808MsgEscapeException {
-        // TODO 转义
-        return byteBuf;
+        int readableBytes = byteBuf.readableBytes();
+        int from = 0;
+        int indexOf = nextIndexOf(byteBuf, from, readableBytes);
+        if (indexOf < 0) {
+            return byteBuf;
+        }
+
+        final List<ByteBuf> bufList = new ArrayList<>();
+
+        do {
+            if (from < indexOf) {
+                bufList.add(byteBuf.slice(from, indexOf - from));
+            }
+            final byte current = byteBuf.getByte(indexOf);
+            if (current == BYTE_7D) {
+                bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x01));
+            } else if (current == BYTE_7E) {
+                bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x02));
+            }
+            from = indexOf + 1;
+        } while (from < readableBytes && (indexOf = nextIndexOf(byteBuf, from, readableBytes)) > 0);
+
+        bufList.add(byteBuf.slice(from, readableBytes - from));
+        return allocator.compositeBuffer().addComponents(true, bufList);
+    }
+
+
+
+    private int nextIndexOf(ByteBuf byteBuf, int from, int to) {
+        final int index1 = byteBuf.indexOf(from, to, BYTE_7E);
+        final int index2 = byteBuf.indexOf(from, to, BYTE_7D);
+        if (index1 < 0 && index2 < 0) {
+            return -1;
+        }
+        if (index1 < 0) {
+            return index2;
+        }
+        if (index2 < 0) {
+            return index1;
+        }
+        return Math.min(index1, index2);
     }
 
     @Override

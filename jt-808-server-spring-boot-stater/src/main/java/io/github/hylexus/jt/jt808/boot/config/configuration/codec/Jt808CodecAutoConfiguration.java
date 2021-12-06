@@ -13,6 +13,7 @@ import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDese
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.DefaulJt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
+import io.netty.buffer.ByteBufAllocator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +26,7 @@ public class Jt808CodecAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Jt808MsgBytesProcessor jt808MsgBytesProcessor() {
-        return new DefaultJt808MsgBytesProcessor();
+        return new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT);
     }
 
     @Bean
