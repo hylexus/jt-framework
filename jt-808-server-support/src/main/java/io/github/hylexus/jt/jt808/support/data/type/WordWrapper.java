@@ -23,7 +23,7 @@ public class WordWrapper implements BytesValueWrapper<Integer> {
 
     @Override
     public Integer read(ByteBuf byteBuf, int offset, int length) {
-        value = JtProtocolUtils.readWord(byteBuf);
+        value = JtProtocolUtils.readUnsignedWord(byteBuf);
         return value;
     }
 

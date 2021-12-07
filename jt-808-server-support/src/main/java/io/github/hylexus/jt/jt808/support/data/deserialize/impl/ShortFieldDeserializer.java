@@ -31,9 +31,9 @@ public class ShortFieldDeserializer implements Jt808FieldDeserializer<Short> {
     @Override
     public Short deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.WORD) {
-            return (short) JtProtocolUtils.readWord(byteBuf);
+            return JtProtocolUtils.readWord(byteBuf);
         } else if (msgDataType == MsgDataType.BYTE) {
-            return (short) byteBuf.readByte();
+            return byteBuf.readUnsignedByte();
         }
 
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Short");

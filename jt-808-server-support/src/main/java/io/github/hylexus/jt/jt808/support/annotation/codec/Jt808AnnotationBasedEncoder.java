@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
+import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
@@ -17,7 +18,12 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +34,7 @@ import static java.util.Objects.requireNonNull;
 public class Jt808AnnotationBasedEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
+    private final ExpressionParser parser = new SpelExpressionParser();
     private final Map<Class<? extends Jt808FieldSerializer<?>>, Jt808FieldSerializer<?>> converterMapping = new HashMap<>();
     private final Jt808FieldSerializerRegistry fieldSerializerRegistry;
 
@@ -36,17 +43,21 @@ public class Jt808AnnotationBasedEncoder {
     }
 
     // TODO annotation properties...
-    public Jt808Response encode(Object responseMsg, Jt808Session session) {
-        return this.encode(responseMsg, session, session.getCurrentFlowId());
+    public Jt808Response encode(Jt808Request request, Object responseMsg, Jt808Session session) {
+        return this.encode(request, responseMsg, session, session.getCurrentFlowId());
     }
 
     public Jt808Response encode(Object responseMsg, Jt808Session session, int serverFlowId) {
+        return this.encode(null, responseMsg, session, serverFlowId);
+    }
+
+    public Jt808Response encode(Jt808Request request, Object responseMsg, Jt808Session session, int serverFlowId) {
         final Class<?> entityClass = responseMsg.getClass();
         final Jt808ResponseMsgBody annotation = requireNonNull(
                 AnnotationUtils.findAnnotation(entityClass, Jt808ResponseMsgBody.class),
                 "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseMsgBody.class.getSimpleName());
 
-        final ByteBuf respBody = this.encodeMsgBody(responseMsg);
+        final ByteBuf respBody = this.encodeMsgBody(request, responseMsg, session);
         return Jt808Response.newBuilder()
                 .body(respBody)
                 .version(session.getProtocolVersion())
@@ -56,29 +67,43 @@ public class Jt808AnnotationBasedEncoder {
                 .build();
     }
 
-    public ByteBuf encodeMsgBody(Object responseMsgInstance) {
-        final Class<?> entityClass = responseMsgInstance.getClass();
+    private ByteBuf encodeMsgBody(Jt808Request request, Object instance, Jt808Session session) {
+        final Class<?> entityClass = instance.getClass();
         final ByteBuf byteBuf = allocator.buffer();
-        doEncode(responseMsgInstance, entityClass, byteBuf);
+
+        doEncode(instance, entityClass, byteBuf, request, session);
+
         return byteBuf;
     }
 
-    private void doEncode(Object responseMsgInstance, Class<?> entityClass, ByteBuf byteBuf) {
+    private void doEncode(Object instance, Class<?> entityClass, ByteBuf byteBuf, Jt808Request request, Jt808Session session) {
         final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
+        final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
+        evaluationContext.setVariable("this", instance);
+        if (request != null) {
+            evaluationContext.setVariable("request", request);
+            evaluationContext.setVariable("header", request.header());
+        }
+        if (session != null) {
+            evaluationContext.setVariable("session", session);
+        }
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
             if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
-                this.processBasicRespField(entityClass, responseMsgInstance, fieldMetadata, byteBuf);
+                this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
             }
         }
     }
 
-    private void processBasicRespField(Class<?> entityClass, Object responseMsgInstance, JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf) {
-        final ResponseField responseFieldAnnotation = fieldMetadata.getAnnotation(ResponseField.class);
-        final MsgDataType jtDataType = responseFieldAnnotation.dataType();
+    private void processBasicRespField(Object responseMsgInstance, JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf, Jt808Request request, Jt808Session session, EvaluationContext evaluationContext) {
+        final ResponseField fieldAnnotation = fieldMetadata.getAnnotation(ResponseField.class);
+        final MsgDataType jtDataType = fieldAnnotation.dataType();
         final Object fieldValue = fieldMetadata.getFieldValue(responseMsgInstance, false);
-
+        final String conditionalExpression = fieldAnnotation.conditionalOn();
+        if (StringUtils.isNotEmpty(conditionalExpression) && this.isConditionNotMatch(conditionalExpression, evaluationContext)) {
+            return;
+        }
         // 1. 优先使用自定义转换器
-        final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = responseFieldAnnotation.customerFieldSerializerClass();
+        final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = fieldAnnotation.customerFieldSerializerClass();
         if (customerFieldSerializerClass != Jt808FieldSerializer.PlaceholderFiledSerializer.class) {
             final Jt808FieldSerializer<Object> fieldSerializer = this.getFieldSerializer(customerFieldSerializerClass);
             fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
@@ -91,14 +116,14 @@ public class Jt808AnnotationBasedEncoder {
             }
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
             for (Object item : ((Iterable<?>) fieldValue)) {
-                this.doEncode(item, itemClass, byteBuf);
+                this.doEncode(item, itemClass, byteBuf, request, session);
             }
             return;
         }
         // 3. 内嵌对象
         if (jtDataType == MsgDataType.OBJECT) {
             final Class<?> fieldType = fieldMetadata.getFieldType();
-            this.doEncode(fieldValue, fieldType, byteBuf);
+            this.doEncode(fieldValue, fieldType, byteBuf, request, session);
             return;
         }
 
@@ -112,6 +137,11 @@ public class Jt808AnnotationBasedEncoder {
                 .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
 
         fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
+    }
+
+    private boolean isConditionNotMatch(String expression, EvaluationContext evaluationContext) {
+        final Boolean match = parser.parseExpression(expression).getValue(evaluationContext, boolean.class);
+        return Boolean.FALSE.equals(match);
     }
 
     @SuppressWarnings("unchecked")

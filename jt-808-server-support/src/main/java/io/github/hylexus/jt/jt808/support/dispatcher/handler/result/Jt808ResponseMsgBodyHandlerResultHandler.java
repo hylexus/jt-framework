@@ -39,7 +39,7 @@ public class Jt808ResponseMsgBodyHandlerResultHandler implements Jt808HandlerRes
         final Object returnValue = handlerResult.getReturnValue();
         assert returnValue != null;
 
-        final Jt808Response jt808Response = this.annotationBasedEncoder.encode(returnValue, session);
+        final Jt808Response jt808Response = this.annotationBasedEncoder.encode(request, returnValue, session);
         final ByteBuf respByteBuf = this.encoder.encode(jt808Response);
         session.sendMsgToClient(respByteBuf);
     }

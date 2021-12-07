@@ -34,9 +34,9 @@ public class IntegerFieldDeserializer implements Jt808FieldDeserializer<Integer>
         if (msgDataType == MsgDataType.DWORD) {
             return JtProtocolUtils.readDword(byteBuf);
         } else if (msgDataType == MsgDataType.WORD) {
-            return JtProtocolUtils.readWord(byteBuf);
+            return JtProtocolUtils.readUnsignedWord(byteBuf);
         } else if (msgDataType == MsgDataType.BYTE) {
-            return (int) byteBuf.readByte();
+            return (int) byteBuf.readUnsignedByte();
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Integer");
     }

@@ -21,6 +21,6 @@ public class TerminalRegisterReplyRespMsg {
     @ResponseField(order = 1, dataType = MsgDataType.BYTE)
     private byte result;
     // 3. byte[3,x) STRING 鉴权码(只有在成功后才有该字段)
-    @ResponseField(order = 3, dataType = MsgDataType.STRING)
+    @ResponseField(order = 3, dataType = MsgDataType.STRING, conditionalOn = "result == 0")
     private String authCode;
 }

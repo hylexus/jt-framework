@@ -20,6 +20,13 @@ public @interface ResponseField {
 
     MsgDataType dataType();
 
+    /**
+     * @return SpEL(Spring Expression Language); 解析之后的结果为true时才会序列化该字段。
+     */
+    String conditionalOn() default "";
+
+    boolean ignoreWhenNull() default true;
+
     Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass() default Jt808FieldSerializer.PlaceholderFiledSerializer.class;
 
 }

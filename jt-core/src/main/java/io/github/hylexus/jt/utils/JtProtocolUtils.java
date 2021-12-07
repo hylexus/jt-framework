@@ -27,12 +27,26 @@ public abstract class JtProtocolUtils {
         return byteBuf.getByte(startIndex);
     }
 
+    public static ByteBuf writeByte(ByteBuf byteBuf, byte value) {
+        byteBuf.writeByte(value);
+        return byteBuf;
+    }
+
+    public static ByteBuf writeByte(ByteBuf byteBuf, int value) {
+        byteBuf.writeByte(value);
+        return byteBuf;
+    }
+
     public static int getWord(ByteBuf byteBuf, int start) {
         return byteBuf.getUnsignedShort(start);
     }
 
-    public static int readWord(ByteBuf byteBuf) {
+    public static int readUnsignedWord(ByteBuf byteBuf) {
         return byteBuf.readUnsignedShort();
+    }
+
+    public static short readWord(ByteBuf byteBuf) {
+        return byteBuf.readShort();
     }
 
     public static ByteBuf writeWord(ByteBuf byteBuf, int value) {
@@ -45,6 +59,10 @@ public abstract class JtProtocolUtils {
 
     public static int readDword(ByteBuf byteBuf) {
         return byteBuf.readInt();
+    }
+
+    public static long readUnsignedDword(ByteBuf byteBuf) {
+        return byteBuf.readUnsignedInt();
     }
 
     public static ByteBuf writeDword(ByteBuf byteBuf, int value) {

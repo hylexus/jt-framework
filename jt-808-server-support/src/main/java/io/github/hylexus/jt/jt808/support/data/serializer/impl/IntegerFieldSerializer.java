@@ -39,7 +39,7 @@ public class IntegerFieldSerializer implements Jt808FieldSerializer<Integer> {
                 JtProtocolUtils.writeWord(byteBuf, object);
                 break;
             case BYTE:
-                byteBuf.writeByte(object);
+                JtProtocolUtils.writeByte(byteBuf, object);
                 break;
             default: {
                 throw new Jt808FieldSerializerException("Can not serialize Integer/int as " + msgDataType);
