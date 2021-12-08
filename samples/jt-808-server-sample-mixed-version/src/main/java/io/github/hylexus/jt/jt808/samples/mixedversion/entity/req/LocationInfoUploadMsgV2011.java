@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.samples.mixedversion.entity.req;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import lombok.Data;
@@ -17,7 +17,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Slf4j
 @Data
 @Accessors(chain = true)
-@Jt808RequestMsgBody
+@Jt808RequestBody
 public class LocationInfoUploadMsgV2011 {
     // (1). 报警标志
     @RequestField(order = 1, startIndex = 0, dataType = DWORD)

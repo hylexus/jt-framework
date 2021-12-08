@@ -1,14 +1,14 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.MethodParameter;
 import io.github.hylexus.jt.jt808.support.exception.Jt808ArgumentResolveException;
 
 /**
  * @author hylexus
  */
-public class Jt808ExceptionArgumentResolver implements HandlerMethodArgumentResolver {
+public class ExceptionHandlerMethodArgumentResolver implements Jt808HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {

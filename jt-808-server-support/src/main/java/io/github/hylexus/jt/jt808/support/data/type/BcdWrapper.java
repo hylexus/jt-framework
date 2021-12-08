@@ -23,7 +23,7 @@ public class BcdWrapper implements BytesValueWrapper<String> {
 
     @Override
     public String read(ByteBuf byteBuf, int offset, int length) {
-        value = JtProtocolUtils.readBcd(byteBuf, offset, length);
+        value = JtProtocolUtils.readBcd(byteBuf, length);
         return value;
     }
 

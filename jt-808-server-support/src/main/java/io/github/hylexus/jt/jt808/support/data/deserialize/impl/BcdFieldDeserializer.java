@@ -26,7 +26,7 @@ public class BcdFieldDeserializer implements Jt808FieldDeserializer<String> {
     @Override
     public String deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BCD) {
-            return JtProtocolUtils.readBcd(byteBuf, start, length);
+            return JtProtocolUtils.readBcd(byteBuf, length);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to BCD");
     }

@@ -6,7 +6,7 @@ import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerAdvice;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.ExceptionHandlerHandlerMethod;
 import lombok.Setter;
@@ -32,9 +32,9 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
     private ApplicationContext applicationContext;
 
     private final CompositeJt808ExceptionHandler compositeJt808ExceptionHandler;
-    private final HandlerMethodArgumentResolver argumentResolver;
+    private final Jt808HandlerMethodArgumentResolver argumentResolver;
 
-    public Jt808ExceptionHandlerScanner(CompositeJt808ExceptionHandler compositeJt808ExceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
+    public Jt808ExceptionHandlerScanner(CompositeJt808ExceptionHandler compositeJt808ExceptionHandler, Jt808HandlerMethodArgumentResolver argumentResolver) {
         this.compositeJt808ExceptionHandler = compositeJt808ExceptionHandler;
         this.argumentResolver = argumentResolver;
     }

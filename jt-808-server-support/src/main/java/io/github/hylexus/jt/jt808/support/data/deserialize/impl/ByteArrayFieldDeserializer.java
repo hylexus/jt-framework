@@ -27,7 +27,7 @@ public class ByteArrayFieldDeserializer implements Jt808FieldDeserializer<byte[]
     @Override
     public byte[] deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BYTES) {
-            return JtProtocolUtils.readBytes(byteBuf, start, length);
+            return JtProtocolUtils.readBytes(byteBuf, length);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to byte[]");
     }

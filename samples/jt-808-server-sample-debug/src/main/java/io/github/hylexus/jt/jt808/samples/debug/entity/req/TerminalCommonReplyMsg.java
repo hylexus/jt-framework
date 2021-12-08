@@ -1,12 +1,12 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 
 @Data
-@Jt808RequestMsgBody
+@Jt808RequestBody
 public class TerminalCommonReplyMsg {
 
     // bytes[0,2)   WORD    应答流水号 对应的平台消息的流水号

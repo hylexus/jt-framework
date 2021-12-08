@@ -74,8 +74,8 @@ public abstract class JtProtocolUtils {
         return BcdOps.bcd2StringV2(bytes);
     }
 
-    public static String readBcd(ByteBuf byteBuf, int startIndex, int length) {
-        final byte[] bytes = readBytes(byteBuf, startIndex, length);
+    public static String readBcd(ByteBuf byteBuf, int length) {
+        final byte[] bytes = readBytes(byteBuf, length);
         return BcdOps.bcd2StringV2(bytes);
     }
 
@@ -99,7 +99,7 @@ public abstract class JtProtocolUtils {
     }
 
     public static String readString(ByteBuf byteBuf, int startIndex, int length, Charset charset) {
-        final byte[] bytes = readBytes(byteBuf, startIndex, length);
+        final byte[] bytes = readBytes(byteBuf, length);
         return new String(bytes, charset);
     }
 
@@ -119,7 +119,7 @@ public abstract class JtProtocolUtils {
         return bytes;
     }
 
-    public static byte[] readBytes(ByteBuf byteBuf, int startIndex, int length) {
+    public static byte[] readBytes(ByteBuf byteBuf, int length) {
         final byte[] bytes = new byte[length];
         byteBuf.readBytes(bytes);
         return bytes;

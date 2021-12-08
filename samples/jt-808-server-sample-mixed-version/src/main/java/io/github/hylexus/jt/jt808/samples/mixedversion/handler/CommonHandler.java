@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.mixedversion.handler;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.req.*;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.ServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.TerminalRegisterReplyMsg;
@@ -32,11 +33,11 @@ public class CommonHandler {
     }
 
     @Jt808RequestMsgHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
-    public TerminalRegisterReplyMsg processTerminalRegisterMsgV2019(Jt808Request request, TerminalRegisterMsgV2019 body) {
+    public TerminalRegisterReplyMsg processTerminalRegisterMsgV2019(Jt808RequestEntity<TerminalRegisterMsgV2019> entity) {
 
-        log.info("V2019--TerminalRegister : {}", body);
+        log.info("V2019--TerminalRegister : {}", entity);
         return new TerminalRegisterReplyMsg()
-                .setFlowId(request.flowId())
+                .setFlowId(entity.header().flowId())
                 .setResult((byte) 0)
                 .setAuthCode("authCode2019-admin")
                 ;

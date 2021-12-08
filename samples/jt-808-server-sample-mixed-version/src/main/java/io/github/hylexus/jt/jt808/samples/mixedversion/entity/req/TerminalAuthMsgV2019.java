@@ -1,15 +1,16 @@
 package io.github.hylexus.jt.jt808.samples.mixedversion.entity.req;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
+import static io.github.hylexus.jt.jt808.support.data.MsgDataType.BYTE;
+import static io.github.hylexus.jt.jt808.support.data.MsgDataType.STRING;
 
 @Data
 @Accessors(chain = true)
-@Jt808RequestMsgBody
+@Jt808RequestBody
 public class TerminalAuthMsgV2019 {
 
     // byte[0,1)    BYTE    鉴权码长度

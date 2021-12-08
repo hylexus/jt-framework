@@ -6,7 +6,7 @@ import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.utils.ArgumentUtils;
 import lombok.Getter;
@@ -32,12 +32,12 @@ import java.util.Set;
 public class ExceptionHandlerHandlerMethod extends HandlerMethod implements Jt808ExceptionHandler {
 
     private final Set<Class<? extends Throwable>> supportedExceptionTypes;
-    private final HandlerMethodArgumentResolver argumentResolver;
+    private final Jt808HandlerMethodArgumentResolver argumentResolver;
 
     public ExceptionHandlerHandlerMethod(
             Object beanInstance, Method method, boolean isVoidReturnType,
             Set<Class<? extends Throwable>> supportedExceptionTypes,
-            HandlerMethodArgumentResolver argumentResolver) {
+            Jt808HandlerMethodArgumentResolver argumentResolver) {
 
         super(beanInstance, method, isVoidReturnType, null, null);
         this.supportedExceptionTypes = supportedExceptionTypes;

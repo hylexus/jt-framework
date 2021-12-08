@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
-import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
 import lombok.Data;
@@ -9,7 +9,7 @@ import lombok.Data;
 import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 
 @Data
-@Jt808RequestMsgBody
+@Jt808RequestBody
 public class DebugTerminalRegisterMsgV2011 implements Jt808HeaderSpecAware {
     private Jt808MsgHeader header;
 

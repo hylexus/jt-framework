@@ -8,7 +8,7 @@ import io.github.hylexus.jt.jt808.support.exception.Jt808ArgumentResolveExceptio
  *
  * @author hylexus
  */
-public interface HandlerMethodArgumentResolver {
+public interface Jt808HandlerMethodArgumentResolver {
 
     boolean supportsParameter(MethodParameter methodParameter);
 

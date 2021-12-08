@@ -31,7 +31,7 @@ public class ShortFieldSerializer implements Jt808FieldSerializer<Short> {
     public void serialize(Short object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
         switch (msgDataType) {
             case WORD:
-                JtProtocolUtils.writeWord(byteBuf,object);
+                JtProtocolUtils.writeWord(byteBuf, object);
                 break;
             case BYTE:
                 byteBuf.writeByte(object);

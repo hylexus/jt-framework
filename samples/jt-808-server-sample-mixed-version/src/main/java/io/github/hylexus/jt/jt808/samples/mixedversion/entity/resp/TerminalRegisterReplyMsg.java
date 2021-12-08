@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Jt808ResponseMsgBody(respMsgId = 0x8100)
+@Jt808ResponseBody(respMsgId = 0x8100)
 public class TerminalRegisterReplyMsg {
     // 1. byte[0,2) WORD 对应的终端注册消息的流水号
     @ResponseField(order = 0, dataType = MsgDataType.WORD)

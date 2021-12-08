@@ -23,7 +23,7 @@ public class ByteArrayWrapper implements BytesValueWrapper<byte[]> {
 
     @Override
     public byte[] read(ByteBuf byteBuf, int offset, int length) {
-        value = JtProtocolUtils.readBytes(byteBuf, offset, length);
+        value = JtProtocolUtils.readBytes(byteBuf, length);
         return value;
     }
 

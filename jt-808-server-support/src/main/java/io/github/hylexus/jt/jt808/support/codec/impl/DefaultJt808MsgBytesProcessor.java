@@ -1,4 +1,3 @@
-
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
@@ -27,7 +27,7 @@ public class Jt808ResponseMsgBodyHandlerResultHandler implements Jt808HandlerRes
     public boolean supports(Jt808HandlerResult handlerResult) {
         return handlerResult != null
                && handlerResult.getReturnValue() != null
-               && AnnotatedElementUtils.isAnnotated(handlerResult.getReturnValue().getClass(), Jt808ResponseMsgBody.class);
+               && AnnotatedElementUtils.isAnnotated(handlerResult.getReturnValue().getClass(), Jt808ResponseBody.class);
     }
 
     @Override

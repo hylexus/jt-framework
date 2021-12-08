@@ -1,4 +1,3 @@
-
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.interceptor;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;

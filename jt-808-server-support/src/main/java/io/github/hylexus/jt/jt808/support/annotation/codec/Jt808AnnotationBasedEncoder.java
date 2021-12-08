@@ -4,7 +4,7 @@ import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
@@ -53,9 +53,9 @@ public class Jt808AnnotationBasedEncoder {
 
     public Jt808Response encode(Jt808Request request, Object responseMsg, Jt808Session session, int serverFlowId) {
         final Class<?> entityClass = responseMsg.getClass();
-        final Jt808ResponseMsgBody annotation = requireNonNull(
-                AnnotationUtils.findAnnotation(entityClass, Jt808ResponseMsgBody.class),
-                "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseMsgBody.class.getSimpleName());
+        final Jt808ResponseBody annotation = requireNonNull(
+                AnnotationUtils.findAnnotation(entityClass, Jt808ResponseBody.class),
+                "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseBody.class.getSimpleName());
 
         final ByteBuf respBody = this.encodeMsgBody(request, responseMsg, session);
         return Jt808Response.newBuilder()

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,32 +26,40 @@ public class HandlerMethodArgumentResolverAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808RequestArgumentResolver jt808RequestArgumentResolver() {
-        return new Jt808RequestArgumentResolver();
+    public Jt808RequestEntityHandlerMethodArgumentResolver jt808RequestEntityHandlerMethodArgumentResolver(
+            Jt808AnnotationBasedDecoder annotationBasedDecoder) {
+
+        return new Jt808RequestEntityHandlerMethodArgumentResolver(annotationBasedDecoder);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808SessionArgumentResolver jt808SessionArgumentResolver() {
-        return new Jt808SessionArgumentResolver();
+    public Jt808RequestHandlerMethodArgumentResolver jt808RequestArgumentResolver() {
+        return new Jt808RequestHandlerMethodArgumentResolver();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808RequestHeaderArgumentResolver jt808RequestHeaderArgumentResolver() {
-        return new Jt808RequestHeaderArgumentResolver();
+    public Jt808SessionHandlerMethodArgumentResolver jt808SessionArgumentResolver() {
+        return new Jt808SessionHandlerMethodArgumentResolver();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808ExceptionArgumentResolver jt808ExceptionArgumentResolver() {
-        return new Jt808ExceptionArgumentResolver();
+    public Jt808RequestHeaderHandlerMethodArgumentResolver jt808RequestHeaderArgumentResolver() {
+        return new Jt808RequestHeaderHandlerMethodArgumentResolver();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ExceptionHandlerMethodArgumentResolver jt808ExceptionArgumentResolver() {
+        return new ExceptionHandlerMethodArgumentResolver();
     }
 
     @Bean
     @Primary
-    public HandlerMethodArgumentResolver handlerMethodArgumentResolver(ObjectProvider<HandlerMethodArgumentResolver> argumentResolvers) {
-        final List<HandlerMethodArgumentResolver> resolverList = argumentResolvers.stream()
+    public Jt808HandlerMethodArgumentResolver handlerMethodArgumentResolver(ObjectProvider<Jt808HandlerMethodArgumentResolver> argumentResolvers) {
+        final List<Jt808HandlerMethodArgumentResolver> resolverList = argumentResolvers.stream()
                 .filter(e -> e.getClass() != CompositeJt808HandlerMethodArgumentResolver.class)
                 .collect(Collectors.toList());
         return new CompositeJt808HandlerMethodArgumentResolver(resolverList);

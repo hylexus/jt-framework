@@ -1,4 +1,3 @@
-
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;

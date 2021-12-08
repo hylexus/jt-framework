@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.codec;
 
+import io.github.hylexus.jt.jt808.support.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -8,7 +9,6 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.DefaulJt808FieldSerializerRegistry;

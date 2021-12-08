@@ -1,12 +1,12 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.resp;
 
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseMsgBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-@Jt808ResponseMsgBody(respMsgId = 0x001)
+@Jt808ResponseBody(respMsgId = 0x001)
 @Data
 @Accessors(chain = true)
 public class DemoServerCommonReplyRespMsg {

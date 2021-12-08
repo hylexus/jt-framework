@@ -5,7 +5,7 @@ import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerAdapter;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.utils.ArgumentUtils;
 
@@ -13,9 +13,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class HandlerMethodHandlerAdapter implements Jt808HandlerAdapter {
 
-    private final HandlerMethodArgumentResolver argumentResolver;
+    private final Jt808HandlerMethodArgumentResolver argumentResolver;
 
-    public HandlerMethodHandlerAdapter(HandlerMethodArgumentResolver argumentResolver) {
+    public HandlerMethodHandlerAdapter(Jt808HandlerMethodArgumentResolver argumentResolver) {
         this.argumentResolver = argumentResolver;
     }
 

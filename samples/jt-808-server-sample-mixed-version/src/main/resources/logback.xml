@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-    <property name="LOG_HOME" value="logs" />
+    <property name="LOG_HOME" value="logs"/>
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
@@ -20,7 +20,7 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="Console" />
-        <appender-ref ref="File" />
+        <appender-ref ref="Console"/>
+        <appender-ref ref="File"/>
     </root>
 </configuration>

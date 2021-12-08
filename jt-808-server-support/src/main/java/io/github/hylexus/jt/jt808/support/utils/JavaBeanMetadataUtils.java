@@ -3,8 +3,8 @@ package io.github.hylexus.jt.jt808.support.utils;
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 

@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Jt808ResponseMsgBody {
+public @interface Jt808ResponseBody {
 
     int respMsgId();
 

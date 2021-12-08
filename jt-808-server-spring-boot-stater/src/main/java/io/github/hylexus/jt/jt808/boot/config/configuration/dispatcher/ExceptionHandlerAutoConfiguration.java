@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.HandlerMethodArgumentResolver;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.BuiltinLoggingOnlyExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.scan.Jt808ExceptionHandlerScanner;
@@ -33,7 +33,7 @@ public class ExceptionHandlerAutoConfiguration {
 
     @Bean
     public Jt808ExceptionHandlerScanner jt808ExceptionHandlerScanner(
-            Jt808ExceptionHandler exceptionHandler, HandlerMethodArgumentResolver argumentResolver) {
+            Jt808ExceptionHandler exceptionHandler, Jt808HandlerMethodArgumentResolver argumentResolver) {
         return new Jt808ExceptionHandlerScanner((CompositeJt808ExceptionHandler) exceptionHandler, argumentResolver);
     }
 
