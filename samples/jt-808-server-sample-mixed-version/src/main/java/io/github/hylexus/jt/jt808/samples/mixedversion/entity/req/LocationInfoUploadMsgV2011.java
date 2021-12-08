@@ -1,5 +1,6 @@
-package io.github.hylexus.jt.jt808.support.codec;
+package io.github.hylexus.jt.jt808.samples.mixedversion.entity.req;
 
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestMsgBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import lombok.Data;
@@ -16,24 +17,14 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Slf4j
 @Data
 @Accessors(chain = true)
-//@Jt808ReqMsgBody(msgType = 0x0200, version = Jt808ProtocolVersion.VERSION_2019)
-//public class LocationUploadReqMsgV2019Test implements Jt808HeaderSpecAware {
-public class LocationUploadReqMsgV2019Test {
-
-    //    @ToString.Exclude
-    //    private Jt808MsgHeaderSpec header;
-
-    //    public void setHeader(Jt808MsgHeaderSpec headerSpec) {
-    //        this.header = headerSpec;
-    //    }
-
+@Jt808RequestMsgBody
+public class LocationInfoUploadMsgV2011 {
     // (1). 报警标志
-    @RequestField(order = 0, startIndex = 0, dataType = DWORD)
+    @RequestField(order = 1, startIndex = 0, dataType = DWORD)
     private int alarmFlag;
     // (2). 状态
-    @RequestField(order = 1, startIndex = 4, dataType = DWORD)
+    @RequestField(order = 2, startIndex = 4, dataType = DWORD)
     private int status;
-
     // 将上面的 status 字段的第0位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
     private int accIntStatus;
@@ -45,28 +36,27 @@ public class LocationUploadReqMsgV2019Test {
     @SlicedFrom(sourceFieldName = "status", bitIndex = 2)
     private int latType;
     // (3). 纬度(尚未除以 10^6)
-    @RequestField(order = 2, startIndex = 8, dataType = DWORD)
+    @RequestField(order = 3, startIndex = 8, dataType = DWORD)
     private Integer intLat;
     // (4). 经度(尚未除以 10^6)
-    @RequestField(order = 3, startIndex = 12, dataType = DWORD)
+    @RequestField(order = 4, startIndex = 12, dataType = DWORD)
     private Integer intLng;
     // (5). 高度
-    @RequestField(order = 4, startIndex = 16, dataType = WORD)
+    @RequestField(order = 5, startIndex = 16, dataType = WORD)
     private Integer height;
     // (6). 速度
-    @RequestField(order = 5, startIndex = 18, dataType = WORD)
+    @RequestField(order = 6, startIndex = 18, dataType = WORD)
     private int speed;
     // (7). 方向
-    @RequestField(order = 6, startIndex = 20, dataType = WORD)
+    @RequestField(order = 7, startIndex = 20, dataType = WORD)
     private Integer direction;
 
     // (8). 时间
-    @RequestField(order = 7, startIndex = 22, dataType = BCD, length = 6)
+    @RequestField(order = 8, startIndex = 22, dataType = BCD, length = 6)
     private String time;
 
-    // @BasicField(order = 8, startIndex = 28, dataType = LIST, byteCountMethod = "getExtraInfoLength")
-    // @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "getExtraInfoLength()")
-    @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
+    // (9). 附加项列表
+    @RequestField(order = 9, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data
@@ -76,13 +66,7 @@ public class LocationUploadReqMsgV2019Test {
         @RequestField(order = 1, startIndex = 1, dataType = BYTE)
         private byte contentLength;
 
-        // @BasicField(order = 3, startIndex = 2, lengthMethod = "getContentLengthMethod", dataType = BYTES)
         @RequestField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)
         private byte[] content;
-
-        public int getContentLengthMethod() {
-            return contentLength;
-        }
     }
-
 }

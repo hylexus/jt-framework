@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Slf4j
 public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
-    private final ByteBufAllocator allocator ;
+    private final ByteBufAllocator allocator;
 
     private static final byte BYTE_7D = 0x7d;
     private static final byte BYTE_7E = 0x7e;
@@ -92,7 +92,6 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
         bufList.add(byteBuf.slice(from, readableBytes - from));
         return allocator.compositeBuffer().addComponents(true, bufList);
     }
-
 
 
     private int nextIndexOf(ByteBuf byteBuf, int from, int to) {

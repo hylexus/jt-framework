@@ -35,12 +35,12 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     @Override
     public Jt808Request decode(Jt808ProtocolVersion version, Jt808ByteBuf byteBuf) {
         if (log.isDebugEnabled()) {
-            log.debug("before escaped: {}", HexStringUtils.byteBufToString(byteBuf));
+            log.debug("- >>>>>>>>>>>>>>> : {}", HexStringUtils.byteBufToString(byteBuf));
         }
         final Jt808ByteBuf escaped = Jt808ByteBuf.from(this.msgBytesProcessor.doEscapeForReceive(byteBuf));
 
         if (log.isDebugEnabled()) {
-            log.debug("after escaped: {}", HexStringUtils.byteBufToString(escaped));
+            log.debug("+ >>>>>>>>>>>>>>> : {}", HexStringUtils.byteBufToString(escaped));
         }
 
         final Jt808MsgHeader headerSpec = this.parseMsgHeaderSpec(version, escaped);

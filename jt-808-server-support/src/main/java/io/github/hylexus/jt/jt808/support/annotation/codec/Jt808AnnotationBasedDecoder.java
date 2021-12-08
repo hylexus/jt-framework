@@ -81,7 +81,7 @@ public class Jt808AnnotationBasedDecoder {
         final MsgDataType jtDataType = annotation.dataType();
         final Class<?> javaDataType = fieldMetadata.getFieldType();
 
-        final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, javaDataType);
+        final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldMetadata);
         final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, jtDataType, javaDataType);
 
         final Class<? extends Jt808FieldDeserializer<?>> converterClass = annotation.customerFieldDeserializerClass();
@@ -118,8 +118,8 @@ public class Jt808AnnotationBasedDecoder {
 
         // 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
         if (!jtDataType.getExpectedTargetClassType().contains(javaDataType)) {
-            throw new Jt808AnnotationArgumentResolveException("No Jt808FieldDeserializer found, Unsupported expectedTargetClassType "
-                                                              + javaDataType + " for field " + field);
+            throw new Jt808AnnotationArgumentResolveException(
+                    "No Jt808FieldDeserializer found, Unsupported expectedTargetClassType [" + javaDataType + "] for field [" + field + " ]");
         }
         // 4. 默认的属性转换策略
         final RequestMsgConvertibleMetadata key = ConvertibleMetadata.forJt808RequestMsgDataType(jtDataType, javaDataType);
@@ -202,7 +202,7 @@ public class Jt808AnnotationBasedDecoder {
 
     private int getBasicFieldStartIndex(
             EvaluationContext evaluationContext, Class<?> cls, Object instance,
-            RequestField annotation, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
+            RequestField annotation, JavaBeanFieldMetadata fieldType) throws Jt808AnnotationArgumentResolveException {
 
         if (annotation.startIndex() >= 0) {
             return annotation.startIndex();
@@ -210,11 +210,14 @@ public class Jt808AnnotationBasedDecoder {
         if (StringUtils.isNotEmpty(annotation.startIndexExpression())) {
             final Number number = this.parser.parseExpression(annotation.startIndexExpression()).getValue(evaluationContext, Number.class);
             if (number == null) {
-                throw new Jt808AnnotationArgumentResolveException("Can not determine field startIndex with Expression[" + annotation.lengthExpression() + "]");
+                throw new Jt808AnnotationArgumentResolveException(
+                        "Can not determine field[" + fieldType.getField().getName() + "] startIndex with Expression["
+                        + annotation.lengthExpression() + "]");
             }
+            return number.intValue();
         }
         if (StringUtils.isEmpty(annotation.startIndexMethod())) {
-            throw new Jt808AnnotationArgumentResolveException("Can not determine field startIndex [" + fieldType.getName() + "]");
+            throw new Jt808AnnotationArgumentResolveException("Can not determine startIndex for field[" + fieldType.getField().getName() + "]");
         }
 
         final Method method = getLengthMethod(cls, annotation.startIndexMethod());

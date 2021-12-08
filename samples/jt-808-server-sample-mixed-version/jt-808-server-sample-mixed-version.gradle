@@ -1,7 +1,7 @@
 apply plugin: 'org.springframework.boot'
 
 springBoot {
-    mainClassName = 'io.github.hylexus.jt808.samples.mixedversion.Jt808ServerSampleMixedVersionApplication'
+    mainClassName = 'io.github.hylexus.jt.jt808.samples.mixedversion.Jt808ServerSampleMixedVersionApplication'
 }
 
 bootJar {

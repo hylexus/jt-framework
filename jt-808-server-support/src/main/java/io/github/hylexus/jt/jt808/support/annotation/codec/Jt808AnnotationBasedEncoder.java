@@ -94,10 +94,14 @@ public class Jt808AnnotationBasedEncoder {
         }
     }
 
-    private void processBasicRespField(Object responseMsgInstance, JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf, Jt808Request request, Jt808Session session, EvaluationContext evaluationContext) {
+    private void processBasicRespField(
+            Object instance, JavaBeanFieldMetadata fieldMetadata,
+            ByteBuf byteBuf, Jt808Request request, Jt808Session session,
+            EvaluationContext evaluationContext) {
+
         final ResponseField fieldAnnotation = fieldMetadata.getAnnotation(ResponseField.class);
         final MsgDataType jtDataType = fieldAnnotation.dataType();
-        final Object fieldValue = fieldMetadata.getFieldValue(responseMsgInstance, false);
+        final Object fieldValue = fieldMetadata.getFieldValue(instance, false);
         final String conditionalExpression = fieldAnnotation.conditionalOn();
         if (StringUtils.isNotEmpty(conditionalExpression) && this.isConditionNotMatch(conditionalExpression, evaluationContext)) {
             return;

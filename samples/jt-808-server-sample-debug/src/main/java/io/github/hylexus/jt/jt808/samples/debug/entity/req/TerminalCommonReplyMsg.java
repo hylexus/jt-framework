@@ -6,7 +6,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 
 @Data
-@Jt808RequestMsgBody(msgType = 0x0001)
+@Jt808RequestMsgBody
 public class TerminalCommonReplyMsg {
 
     // bytes[0,2)   WORD    应答流水号 对应的平台消息的流水号

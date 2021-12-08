@@ -44,12 +44,12 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         compositeByteBuf.writeByte(checkSum);
         compositeByteBuf.resetReaderIndex();
         if (log.isDebugEnabled()) {
-            log.debug("before escape: {}", HexStringUtils.byteBufToString(compositeByteBuf));
+            log.debug("- <<<<<<<<<<<<<<< : {}", HexStringUtils.byteBufToString(compositeByteBuf));
         }
         final ByteBuf escaped = this.msgBytesProcessor.doEscapeForSend(compositeByteBuf);
 
         if (log.isDebugEnabled()) {
-            log.debug("before escape: {}", HexStringUtils.byteBufToString(escaped));
+            log.debug("+ <<<<<<<<<<<<<<< : {}\n", HexStringUtils.byteBufToString(escaped));
         }
 
         return allocator.compositeBuffer()

@@ -8,7 +8,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 
 @Data
-@Jt808RequestMsgBody(msgType = 0x8001)
+@Jt808RequestMsgBody
 public class DemoAuthMsgV2011 implements Jt808HeaderSpecAware {
     private Jt808MsgHeader header;
 

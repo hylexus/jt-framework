@@ -2,7 +2,9 @@ server:
   port: 8808
 logging:
   level: info
-  level.io.github.hylexus: debug
+  level.io.github.hylexus: info
+  level.jt-808.request.decoder: debug
+  level.jt-808.response.encoder: debug
 jt808:
   print-component-statistics: true
   protocol:

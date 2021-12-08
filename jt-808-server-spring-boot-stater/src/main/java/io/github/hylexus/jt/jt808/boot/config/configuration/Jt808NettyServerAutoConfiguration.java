@@ -82,7 +82,10 @@ public class Jt808NettyServerAutoConfiguration {
             Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
             RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
 
-        return new Jt808DispatchChannelHandlerAdapter(serverProps.getProtocol().getVersion(), decoder, jt808SessionManager, requestMsgDispatcher, exceptionHandler);
+        return new Jt808DispatchChannelHandlerAdapter(
+                serverProps.getProtocol().getVersion(), decoder,
+                jt808SessionManager, requestMsgDispatcher, exceptionHandler
+        );
     }
 
     @Bean
