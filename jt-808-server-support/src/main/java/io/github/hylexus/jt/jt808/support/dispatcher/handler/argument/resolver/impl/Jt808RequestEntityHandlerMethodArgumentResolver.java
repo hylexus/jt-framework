@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
+import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.request.Jt808RequestEntity;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
@@ -27,14 +29,16 @@ public class Jt808RequestEntityHandlerMethodArgumentResolver implements Jt808Han
     public Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws Jt808ArgumentResolveException {
         final Class<?> parameterType = methodParameter.getParameterType();
 
-        assert context.getRequest() != null;
+        final Jt808ServerExchange exchange = context.getExchange();
+        final Jt808Request request = exchange.request();
+        assert request != null;
 
         final List<Class<?>> genericTypeList = methodParameter.getGenericType();
         if (CollectionUtils.isEmpty(genericTypeList)) {
             throw new Jt808ArgumentResolveException("Can not resolve GenericType on type [" + parameterType + "]", context);
         }
         final Class<?> genericType = genericTypeList.get(0);
-        final Object entity = this.annotationBasedDecoder.decode(context.getRequest(), genericType);
-        return new Jt808RequestEntity<>(context.getRequest(), context.getSession(), entity);
+        final Object entity = this.annotationBasedDecoder.decode(request, genericType);
+        return new Jt808RequestEntity<>(request, exchange.session(), entity);
     }
 }

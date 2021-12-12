@@ -16,4 +16,9 @@ public @interface Jt808ResponseBody {
 
     String desc() default "";
 
+    byte encryptionType() default 0;
+
+    int maxPackageSize() default 1024;
+
+    byte reversedBit15() default 0;
 }

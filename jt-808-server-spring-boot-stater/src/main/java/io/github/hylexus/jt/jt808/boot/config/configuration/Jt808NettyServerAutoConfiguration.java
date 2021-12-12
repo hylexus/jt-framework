@@ -11,8 +11,9 @@ import io.github.hylexus.jt.jt808.request.queue.impl.LocalEventBusListener;
 import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.session.SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
-import io.github.hylexus.jt.jt808.support.dispatcher.RequestMsgDispatcher;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.*;
@@ -72,7 +73,7 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean(BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_DISPATCHER)
-    public RequestMsgDispatcher requestMsgDispatcher(RequestMsgQueue requestMsgQueue) {
+    public Jt808RequestMsgDispatcher requestMsgDispatcher(RequestMsgQueue requestMsgQueue) {
         return new LocalEventBusDispatcher(requestMsgQueue);
     }
 
@@ -80,7 +81,7 @@ public class Jt808NettyServerAutoConfiguration {
     @ConditionalOnMissingBean(Jt808DispatchChannelHandlerAdapter.class)
     public Jt808DispatchChannelHandlerAdapter jt808ChannelHandlerAdapter(
             Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
-            RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
+            Jt808RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
 
         return new Jt808DispatchChannelHandlerAdapter(
                 serverProps.getProtocol().getVersion(), decoder,
@@ -126,8 +127,9 @@ public class Jt808NettyServerAutoConfiguration {
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     public RequestMsgQueueListener msgQueueListener(
-            RequestMsgQueue requestMsgQueue, Jt808DispatcherHandler dispatcherHandler) {
+            RequestMsgQueue requestMsgQueue, Jt808DispatcherHandler dispatcherHandler,
+            Jt808SessionManager sessionManager) {
 
-        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler);
+        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager,new DefaultJt808SubPackageStorage());
     }
 }

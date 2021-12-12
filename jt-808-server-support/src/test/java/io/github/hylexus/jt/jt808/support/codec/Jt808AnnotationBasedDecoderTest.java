@@ -36,7 +36,6 @@ public class Jt808AnnotationBasedDecoderTest {
                 + "4000000011504000000FA160400000000170200001803000000EA10FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF02020000EF0400000000F31B017118000000000000000000"
                 + "00000000000000000000000000000056";
         final ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer().writeBytes(HexStringUtils.hexString2Bytes(str));
-        final Jt808ByteBuf jt808ByteBuf = Jt808ByteBuf.from(byteBuf);
-        return jt808MsgDecoder.decode(Jt808ProtocolVersion.VERSION_2019, jt808ByteBuf);
+        return jt808MsgDecoder.decode(Jt808ProtocolVersion.VERSION_2019, byteBuf);
     }
 }

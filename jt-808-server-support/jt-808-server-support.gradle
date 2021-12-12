@@ -9,6 +9,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
     implementation group: 'com.github.sarveswaran-m', name: 'util.concurrent.blockingMap', version: "${jar_version_blocking_map}"
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine'
 
     compile "io.netty:netty-all:${jar_version_netty}"
 

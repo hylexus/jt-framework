@@ -2,9 +2,13 @@ package io.github.hylexus.jt.jt808.response.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.response.Jt808Response;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class DefaultJt808ResponseBuilder {
     private Jt808ProtocolVersion version;
@@ -30,17 +34,25 @@ public class DefaultJt808ResponseBuilder {
         return this;
     }
 
+    public DefaultJt808ResponseBuilder body(Consumer<Jt808ByteWriter> writerConsumer) {
+        if (this.body == null) {
+            this.body = ByteBufAllocator.DEFAULT.buffer();
+        }
+        writerConsumer.accept(Jt808ByteWriter.of(this.body));
+        return this;
+    }
+
     public DefaultJt808ResponseBuilder terminalId(String terminalId) {
         this.terminalId = terminalId;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder msgId(MsgType msgType) {
+    public DefaultJt808ResponseBuilder msgType(MsgType msgType) {
         this.msgId = msgType.getMsgId();
         return this;
     }
 
-    public DefaultJt808ResponseBuilder msgId(int msgId) {
+    public DefaultJt808ResponseBuilder msgType(int msgId) {
         this.msgId = msgId;
         return this;
     }
@@ -65,7 +77,7 @@ public class DefaultJt808ResponseBuilder {
         return this;
     }
 
-    public DefaultJt808Response build() {
+    public Jt808Response build() {
         return new DefaultJt808Response(
                 Objects.requireNonNull(version, "version() can not be null"),
                 Objects.requireNonNull(msgId, "msgType() can not be null"),

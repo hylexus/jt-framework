@@ -21,6 +21,6 @@ public class Jt808RequestHeaderHandlerMethodArgumentResolver implements Jt808Han
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws Jt808ArgumentResolveException {
-        return Optional.ofNullable(context.getRequest()).map(Jt808Request::header).orElse(null);
+        return Optional.ofNullable(context.getExchange().request()).map(Jt808Request::header).orElse(null);
     }
 }

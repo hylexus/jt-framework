@@ -13,8 +13,6 @@ import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterRepl
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerMapping;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -50,11 +48,11 @@ public class AnnotationHandler01 {
     public Jt808Response processRegisterMsgV2019(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2019 authMsgV2019) {
         log.info("{}", authMsgV2019);
         return Jt808Response.newBuilder()
-                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
+                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
                 .version(Jt808ProtocolVersion.VERSION_2019)
                 .terminalId(session.getTerminalId())
                 .flowId(session.getCurrentFlowId())
-                .body(Jt808ByteBuf.from(ByteBufAllocator.DEFAULT.buffer())
+                .body(bodyWriter -> bodyWriter
                         .writeWord(request.flowId())
                         .writeByte(0)
                         .writeString("AuthCode2019DebugDemo")

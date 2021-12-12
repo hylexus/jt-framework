@@ -2,10 +2,8 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
-import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -32,105 +30,103 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
     @Override
     public ByteBuf encode(Jt808Response response) {
-        final Jt808ByteBuf headerBuf = encodeMsgHeader(response);
-        final ByteBuf bodyBuf = response.body();
+        final int maxPackageSize = response.maxPackageSize();
+        final int msgBodyLength = response.msgBodyLength();
+        final int estimatedPackageSize = Jt808MsgHeader.msgBodyStartIndex(response.version(), false) + msgBodyLength + 3;
 
+        if (estimatedPackageSize <= maxPackageSize) {
+            return this.buildPackage(response, response.body(), 0, 0);
+        }
+
+        final int subPackageBodySize = maxPackageSize - Jt808MsgHeader.msgBodyStartIndex(response.version(), true) - 3;
+        final int subPackageCount = msgBodyLength % subPackageBodySize == 0
+                ? msgBodyLength / subPackageBodySize
+                : msgBodyLength / subPackageBodySize + 1;
+
+        final CompositeByteBuf allResponseBytes = allocator.compositeBuffer(subPackageCount);
+        final ByteBuf body = response.body();
+        for (int i = 0; i < subPackageCount; i++) {
+            final int offset = i * subPackageBodySize;
+            final int length = (i == subPackageCount - 1)
+                    ? Math.min(subPackageBodySize, msgBodyLength - offset)
+                    : subPackageBodySize;
+            final ByteBuf bodyData = body.slice(offset, length);
+            final CompositeByteBuf subPackage = buildPackage(response, bodyData, subPackageCount, i + 1);
+            allResponseBytes.addComponents(true, subPackage);
+        }
+        return allResponseBytes;
+    }
+
+    private CompositeByteBuf buildPackage(Jt808Response response, ByteBuf body, int totalSubPackageCount, int currentPackageNo) {
+        final ByteBuf headerBuf = this.encodeMsgHeader(response, body, totalSubPackageCount > 0, totalSubPackageCount, currentPackageNo);
         final CompositeByteBuf compositeByteBuf = allocator.compositeBuffer()
                 .addComponent(true, headerBuf)
-                .addComponent(true, bodyBuf);
+                .addComponent(true, body);
 
         final byte checkSum = this.msgBytesProcessor.calculateCheckSum(compositeByteBuf);
 
         compositeByteBuf.writeByte(checkSum);
         compositeByteBuf.resetReaderIndex();
         if (log.isDebugEnabled()) {
-            log.debug("- <<<<<<<<<<<<<<< : {}", HexStringUtils.byteBufToString(compositeByteBuf));
+            log.debug("- <<<<<<<<<<<<<<< ({}--{}) {}/{}: 7E{}7E",
+                    HexStringUtils.int2HexString(response.msgType(), 4),
+                    compositeByteBuf.readableBytes() + 2,
+                    Math.max(currentPackageNo, 1), Math.max(totalSubPackageCount, 1),
+                    HexStringUtils.byteBufToString(compositeByteBuf)
+            );
         }
+
         final ByteBuf escaped = this.msgBytesProcessor.doEscapeForSend(compositeByteBuf);
 
         if (log.isDebugEnabled()) {
-            log.debug("+ <<<<<<<<<<<<<<< : {}\n", HexStringUtils.byteBufToString(escaped));
+            log.debug("+ <<<<<<<<<<<<<<< ({}--{}) {}/{}: 7E{}7E",
+                    HexStringUtils.int2HexString(response.msgType(), 4),
+                    escaped.readableBytes() + 2,
+                    Math.max(currentPackageNo, 1), Math.max(totalSubPackageCount, 1),
+                    HexStringUtils.byteBufToString(escaped)
+            );
         }
-
         return allocator.compositeBuffer()
                 .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER))
                 .addComponent(true, escaped)
                 .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER));
     }
 
-    protected Jt808ByteBuf encodeMsgHeader(Jt808Response response) {
+    private ByteBuf encodeMsgHeader(Jt808Response response, ByteBuf body, boolean hasSubPackage, int totalSubPackageCount, int currentSubPackageNo) {
         final Jt808ProtocolVersion version = response.version();
-        if (version == Jt808ProtocolVersion.VERSION_2019) {
-            return encodeMsgHeaderV2019(response);
-        }
-        if (version == Jt808ProtocolVersion.VERSION_2011) {
-            return encodeMsgHeaderV2011(response);
-        }
-        throw new JtIllegalStateException("Unsupported version : " + version);
-    }
+        final ByteBuf header = allocator.buffer();
+        // bytes[0-2) 消息ID Word
+        JtProtocolUtils.writeWord(header, response.msgType());
 
-    private Jt808ByteBuf encodeMsgHeaderV2019(Jt808Response response) {
-        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(response.version(), false);
-        final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
-
-        // bytes[0-1] 消息ID Word
-        buf.writeWord(response.msgType());
-
-        // bytes[2-3] 消息体属性 Word
+        // bytes[2-4) 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
-                response.msgBodyLength(), response.encryptionType(), false, response.version(), response.reversedBit15InHeader());
-        buf.writeWord(bodyPropsForJt808);
+                body.readableBytes(), response.encryptionType(),
+                hasSubPackage, response.version(), response.reversedBit15InHeader()
+        );
+        JtProtocolUtils.writeWord(header, bodyPropsForJt808);
 
         // bytes[4] 协议版本号 byte
-        buf.writeByte(response.version().getVersionBit());
+        if (version == Jt808ProtocolVersion.VERSION_2019) {
+            header.writeByte(response.version().getVersionBit());
+        }
 
-        // bytes[5-14] 终端手机号 BCD[6]
-        buf.writeBcd(response.terminalId());
+        // bytes[5-14) 终端手机号 BCD[10]
+        // bytes[4-10) 终端手机号 BCD[6]
+        JtProtocolUtils.writeBcd(header, response.terminalId());
 
-        // bytes[15-16] 消息流水号  Word
-        buf.writeWord(response.flowId());
+        // bytes[15-17) 消息流水号  Word
+        // TODO bytes[10-12) 消息流水号  Word
+        JtProtocolUtils.writeWord(header, response.flowId());
 
-        // bytes[17-20] 消息包封装项
-        //        if (msgBodyPropsSpec.hasSubPackage()) {
-        //            final Jt808MsgHeaderSpec.SubPackageSpec subPackageSpec = header.subPackageSpec()
-        //            .orElseThrow(() -> new JtIllegalStateException("(v2019) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
-        //            // 消息总包包数
-        //            buf.writeWord(subPackageSpec.totalSubPackageCount());
-        //            // 包序号
-        //            buf.writeWord(subPackageSpec.currentPackageNo());
-        //        }
-
-        return buf;
+        // bytes[17-21) 消息包封装项
+        // bytes[12-16) 消息包封装项
+        if (hasSubPackage) {
+            // 消息总包包数
+            JtProtocolUtils.writeWord(header, totalSubPackageCount);
+            // 包序号
+            JtProtocolUtils.writeWord(header, currentSubPackageNo);
+        }
+        return header;
     }
 
-    private Jt808ByteBuf encodeMsgHeaderV2011(Jt808Response response) {
-        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(response.version(), false);
-        final Jt808ByteBuf buf = new Jt808ByteBuf(allocator.buffer(msgBodyStartIndex));
-
-        // bytes[0-1] 消息ID Word
-        buf.writeWord(response.msgType());
-
-        // bytes[2-3] 消息体属性 Word
-        final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
-                response.msgBodyLength(), response.encryptionType(), false, response.version(), response.reversedBit15InHeader());
-        buf.writeWord(bodyPropsForJt808);
-
-        // bytes[4-9] 终端手机号 BCD[6]
-        buf.writeBcd(response.terminalId());
-
-        // bytes[10-11] 消息流水号  Word
-        buf.writeWord(response.flowId());
-
-        // bytes[12-15] 消息包封装项
-        //        if (msgBodyPropsSpec.hasSubPackage()) {
-        //            final Jt808MsgHeaderSpec.SubPackageSpec subPackageSpec = header.subPackageSpec()
-        //            .orElseThrow(() -> new JtIllegalStateException("(v2011) msgBodyProps.hasSubPackage() == true, but header.subPackageSpec() is EMPTY."));
-        //            // 消息总包包数
-        //            buf.writeWord(subPackageSpec.totalSubPackageCount());
-        //            // 包序号
-        //            buf.writeWord(subPackageSpec.currentPackageNo());
-        //        }
-
-        return buf;
-    }
 }

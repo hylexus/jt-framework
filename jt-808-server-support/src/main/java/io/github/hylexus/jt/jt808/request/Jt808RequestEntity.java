@@ -66,7 +66,7 @@ public class Jt808RequestEntity<T> {
         return header.version();
     }
 
-    public Jt808MsgHeader.MsgBodyPropsSpec msgBodyProps() {
+    public Jt808MsgHeader.Jt808MsgBodyProps msgBodyProps() {
         return header.msgBodyProps();
     }
 

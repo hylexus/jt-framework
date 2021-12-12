@@ -17,6 +17,6 @@ public class Jt808SessionHandlerMethodArgumentResolver implements Jt808HandlerMe
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws Jt808ArgumentResolveException {
-        return context.getSession();
+        return context.getExchange().session();
     }
 }

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedE
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseMsgBodyHandlerResultHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseBodyHandlerResultHandler;
 import org.springframework.context.annotation.Bean;
 
 public class HandlerResultHandlerAutoConfiguration {
@@ -16,7 +16,7 @@ public class HandlerResultHandlerAutoConfiguration {
 
     @Bean
     public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler(Jt808MsgEncoder encoder, Jt808AnnotationBasedEncoder annotationBasedEncoder) {
-        return new Jt808ResponseMsgBodyHandlerResultHandler(annotationBasedEncoder, encoder);
+        return new Jt808ResponseBodyHandlerResultHandler(annotationBasedEncoder, encoder);
     }
 
 }

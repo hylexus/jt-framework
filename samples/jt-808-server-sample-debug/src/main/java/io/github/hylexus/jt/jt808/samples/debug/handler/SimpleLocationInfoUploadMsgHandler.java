@@ -4,12 +4,9 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.response.impl.DefaultJt808Response;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808ReqMsgHandler;
-import io.netty.buffer.ByteBufAllocator;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -18,7 +15,7 @@ import java.util.Set;
  * @author hylexus
  */
 @Component
-public class SimpleLocationInfoUploadMsgHandler implements Jt808ReqMsgHandler<DefaultJt808Response> {
+public class SimpleLocationInfoUploadMsgHandler implements Jt808RequestMsgHandler<Jt808Response> {
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return Set.of(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);
@@ -30,18 +27,12 @@ public class SimpleLocationInfoUploadMsgHandler implements Jt808ReqMsgHandler<De
     }
 
     @Override
-    public DefaultJt808Response handleMsg(Jt808Request request, Jt808Session session) {
+    public Jt808Response handleMsg(Jt808ServerExchange exchange) {
+        final Jt808Request request = exchange.request();
 
-        final Jt808ByteBuf jt808ByteBuf = new Jt808ByteBuf(ByteBufAllocator.DEFAULT.buffer())
+        return exchange.response()
                 .writeWord(request.flowId())
-                .writeWord(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId());
-        jt808ByteBuf.writeByte(0);
-
-        return Jt808Response.newBuilder()
-                .body(jt808ByteBuf)
-                .terminalId(session.getTerminalId())
-                .msgId(BuiltinJt808MsgType.SERVER_COMMON_REPLY)
-                .flowId(session.getCurrentFlowId())
-                .build();
+                .writeWord(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD.getMsgId())
+                .writeByte(0);
     }
 }

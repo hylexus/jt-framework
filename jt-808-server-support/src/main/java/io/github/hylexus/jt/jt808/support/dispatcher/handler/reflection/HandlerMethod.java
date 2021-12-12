@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt.jt808.support.dispatcher.Jt808MultipleVersionSupport;
+import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,7 +27,7 @@ import java.util.Set;
 @ToString
 @Accessors(chain = true)
 @Slf4j
-public class HandlerMethod implements Jt808MultipleVersionSupport {
+public class HandlerMethod implements MultipleVersionSupport {
 
     private final Object beanInstance;
     private final Method method;

@@ -15,14 +15,20 @@ public class DefaultJt808Request implements Jt808Request {
 
     protected final Jt808MsgHeader header;
     protected final ByteBuf rawByteBuf;
+    protected final ByteBuf body;
     protected final byte originalCheckSum;
     protected final byte calculatedCheckSum;
     protected final MsgType msgType;
     private final Map<String, Object> attributes;
 
-    public DefaultJt808Request(Jt808MsgHeader header, ByteBuf rawByteBuf, byte originalCheckSum, byte calculatedCheckSum, MsgType msgType) {
+    public DefaultJt808Request(
+            MsgType msgType, Jt808MsgHeader header, ByteBuf rawByteBuf, ByteBuf body,
+            byte originalCheckSum, byte calculatedCheckSum) {
         this.header = header;
         this.rawByteBuf = rawByteBuf;
+        this.body = (body == null)
+                ? this.rawByteBuf.slice(header.msgBodyStartIndex(), header.msgBodyLength())
+                : body;
         this.originalCheckSum = originalCheckSum;
         this.calculatedCheckSum = calculatedCheckSum;
         this.msgType = msgType;
@@ -41,7 +47,7 @@ public class DefaultJt808Request implements Jt808Request {
 
     @Override
     public ByteBuf body() {
-        return rawByteBuf.slice(header.msgBodyStartIndex(), header.msgBodyLength());
+        return body;
     }
 
     @Override
@@ -71,5 +77,58 @@ public class DefaultJt808Request implements Jt808Request {
                + ", header=" + header
                + ", checkSum=" + originalCheckSum
                + '}';
+    }
+
+    public static class DefaultJt808RequestBuilder implements Jt808RequestBuilder {
+        private Jt808MsgHeader header;
+        private ByteBuf rawByteBuf;
+        private ByteBuf body;
+        private byte originalCheckSum;
+        private byte calculatedCheckSum;
+        private final MsgType msgType;
+
+        public DefaultJt808RequestBuilder(Jt808Request request) {
+            this.header = request.header();
+            this.rawByteBuf = request.rawByteBuf();
+            this.body = request.body();
+            this.originalCheckSum = request.originalCheckSum();
+            this.calculatedCheckSum = request.calculatedCheckSum();
+            this.msgType = request.msgType();
+        }
+
+        @Override
+        public Jt808RequestBuilder header(Jt808MsgHeader header) {
+            this.header = header;
+            return this;
+        }
+
+        @Override
+        public Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf) {
+            this.rawByteBuf = byteBuf;
+            return this;
+        }
+
+        @Override
+        public Jt808RequestBuilder body(ByteBuf body) {
+            this.body = body;
+            return this;
+        }
+
+        @Override
+        public Jt808RequestBuilder originalCheckSum(byte checkSum) {
+            this.originalCheckSum = checkSum;
+            return this;
+        }
+
+        @Override
+        public Jt808RequestBuilder calculatedCheckSum(byte checkSum) {
+            this.calculatedCheckSum = checkSum;
+            return this;
+        }
+
+        @Override
+        public Jt808Request build() {
+            return new DefaultJt808Request(msgType, header, rawByteBuf, body, originalCheckSum, calculatedCheckSum);
+        }
     }
 }

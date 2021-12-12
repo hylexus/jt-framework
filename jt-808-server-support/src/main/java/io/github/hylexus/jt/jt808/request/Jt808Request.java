@@ -2,10 +2,9 @@ package io.github.hylexus.jt.jt808.request;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.request.impl.DefaultJt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.netty.buffer.ByteBuf;
-import org.springframework.lang.Nullable;
-import org.springframework.util.Assert;
 
 import java.util.Map;
 
@@ -17,6 +16,10 @@ public interface Jt808Request {
     MsgType msgType();
 
     Jt808MsgHeader header();
+
+    default String terminalId() {
+        return header().terminalId();
+    }
 
     default Jt808ProtocolVersion version() {
         return header().version();
@@ -40,48 +43,25 @@ public interface Jt808Request {
 
     Map<String, Object> getAttributes();
 
-    /**
-     * Return the request attribute value if present.
-     *
-     * @param name the attribute name
-     * @param <T>  the attribute type
-     * @return the attribute value
-     */
-    @SuppressWarnings("unchecked")
-    @Nullable
-    default <T> T getAttribute(String name) {
-        return (T) getAttributes().get(name);
+    default Jt808RequestBuilder mutate() {
+        return new DefaultJt808Request.DefaultJt808RequestBuilder(this);
     }
-
-    /**
-     * Return the request attribute value or if not present raise an
-     * {@link IllegalArgumentException}.
-     *
-     * @param name the attribute name
-     * @param <T>  the attribute type
-     * @return the attribute value
-     */
-    @SuppressWarnings("unchecked")
-    default <T> T getRequiredAttribute(String name) {
-        T value = getAttribute(name);
-        Assert.notNull(value, () -> "Required attribute '" + name + "' is missing");
-        return value;
-    }
-
-    /**
-     * Return the request attribute value, or a default, fallback value.
-     *
-     * @param name         the attribute name
-     * @param defaultValue a default value to return instead
-     * @param <T>          the attribute type
-     * @return the attribute value
-     */
-    @SuppressWarnings("unchecked")
-    default <T> T getAttributeOrDefault(String name, T defaultValue) {
-        return (T) getAttributes().getOrDefault(name, defaultValue);
-    }
-
 
     @Override
     String toString();
+
+    interface Jt808RequestBuilder {
+
+        Jt808RequestBuilder header(Jt808MsgHeader header);
+
+        Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf);
+
+        Jt808RequestBuilder body(ByteBuf body);
+
+        Jt808RequestBuilder originalCheckSum(byte checkSum);
+
+        Jt808RequestBuilder calculatedCheckSum(byte checkSum);
+
+        Jt808Request build();
+    }
 }

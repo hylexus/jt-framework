@@ -4,12 +4,15 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.ReferenceCounted;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
 
 /**
  * @author hylexus
  */
+@Slf4j
 public abstract class JtProtocolUtils {
     public static short getUnsignedByte(ByteBuf byteBuf, int startIndex) {
         return byteBuf.getUnsignedByte(startIndex);
@@ -154,5 +157,22 @@ public abstract class JtProtocolUtils {
             sb.insert(0, 0);
         }
         return sb.toString();
+    }
+
+    public static void release(Object... objects) {
+        if (objects == null || objects.length == 0) {
+            return;
+        }
+        for (Object object : objects) {
+            try {
+                if (object instanceof ReferenceCounted) {
+                    if (((ReferenceCounted) object).refCnt() > 0) {
+                        ((ReferenceCounted) object).release();
+                    }
+                }
+            } catch (Throwable e) {
+                log.error("", e);
+            }
+        }
     }
 }

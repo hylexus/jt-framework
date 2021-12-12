@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.mapping;
 
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
@@ -22,7 +23,9 @@ public class Jt808RequestMsgHandlerAnnotationHandlerMapping extends AbstractJt80
     }
 
     @Override
-    public Optional<Jt808HandlerExecutionChain> getHandler(Jt808Request request, Jt808Session session) {
+    public Optional<Jt808HandlerExecutionChain> getHandler(Jt808ServerExchange exchange) {
+        final Jt808Request request = exchange.request();
+        final Jt808Session session = exchange.session();
         return msgHandlerComponentMapping.getComponent(request.msgType(), request.header().version())
                 .map(handler -> super.buildHandlerExecutionChain(request, session, handler));
     }

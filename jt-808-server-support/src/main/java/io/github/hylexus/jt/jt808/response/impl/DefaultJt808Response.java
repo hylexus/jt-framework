@@ -10,13 +10,24 @@ import io.netty.buffer.ByteBuf;
 public class DefaultJt808Response implements Jt808Response {
 
     private final Jt808ProtocolVersion version;
-    private final int msgId;
-    private final int encryptionType;
-    private final int maxPackageSize;
-    private final byte reversedBit15InHeader;
     private final String terminalId;
-    private final int flowId;
+
+    private int flowId;
+    private int msgType;
+    private int encryptionType;
+    private byte reversedBit15InHeader;
+    private int maxPackageSize;
     private final ByteBuf body;
+
+    public static Jt808Response init(Jt808ProtocolVersion version, String terminalId) {
+        return new DefaultJt808Response(version, terminalId);
+    }
+
+    private DefaultJt808Response(Jt808ProtocolVersion version, String terminalId) {
+        this.version = version;
+        this.terminalId = terminalId;
+        this.body = allocator().buffer();
+    }
 
     public DefaultJt808Response(
             Jt808ProtocolVersion version, int msgType,
@@ -26,7 +37,7 @@ public class DefaultJt808Response implements Jt808Response {
             int flowId, ByteBuf body) {
 
         this.version = version;
-        this.msgId = msgType;
+        this.msgType = msgType;
         this.encryptionType = encryptionType;
         this.maxPackageSize = maxPackageSize;
         this.reversedBit15InHeader = reversedBit15InHeader;
@@ -35,9 +46,19 @@ public class DefaultJt808Response implements Jt808Response {
         this.body = body;
     }
 
+    public void setMsgType(int msgType) {
+        this.msgType = msgType;
+    }
+
     @Override
     public int msgType() {
-        return msgId;
+        return msgType;
+    }
+
+    @Override
+    public Jt808Response msgType(int msgType) {
+        this.msgType = msgType;
+        return this;
     }
 
     @Override
@@ -56,6 +77,12 @@ public class DefaultJt808Response implements Jt808Response {
     }
 
     @Override
+    public Jt808Response flowId(int flowId) {
+        this.flowId = flowId;
+        return this;
+    }
+
+    @Override
     public ByteBuf body() {
         return body;
     }
@@ -71,12 +98,30 @@ public class DefaultJt808Response implements Jt808Response {
     }
 
     @Override
+    public Jt808Response encryptionType(int encType) {
+        this.encryptionType = encType;
+        return this;
+    }
+
+    @Override
     public int maxPackageSize() {
         return maxPackageSize;
     }
 
     @Override
+    public Jt808Response maxPackageSize(int size) {
+        this.maxPackageSize = size;
+        return this;
+    }
+
+    @Override
     public byte reversedBit15InHeader() {
         return reversedBit15InHeader;
+    }
+
+    @Override
+    public Jt808Response reversedBit15InHeader(byte reversedBit15InHeader) {
+        this.reversedBit15InHeader = reversedBit15InHeader;
+        return this;
     }
 }

@@ -1,11 +1,12 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.result;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
+import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -25,9 +26,23 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
     }
 
     @Override
-    public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
+    public void handleResult(Jt808ServerExchange exchange, Jt808HandlerResult handlerResult) {
         final Jt808Response returnValue = (Jt808Response) handlerResult.getReturnValue();
-        final ByteBuf byteBuf = this.encoder.encode(returnValue);
-        session.sendMsgToClient(byteBuf);
+        if (returnValue != exchange.response()) {
+            if (exchange.response().body().writerIndex() > 0) {
+                throw new JtIllegalStateException(
+                        "MsgHandler returns a new [" + Jt808Response.class.getSimpleName()
+                        + "] instance \"AND\" modifies the original response body"
+                );
+            }
+
+            JtProtocolUtils.release(exchange.response().body());
+
+            final ByteBuf byteBuf = this.encoder.encode(returnValue);
+            exchange.session().sendMsgToClient(byteBuf);
+            return;
+        }
+        final ByteBuf byteBuf = this.encoder.encode(exchange.response());
+        exchange.session().sendMsgToClient(byteBuf);
     }
 }

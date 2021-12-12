@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public interface Jt808MultipleVersionSupport extends ReplaceableComponent {
+public interface MultipleVersionSupport extends ReplaceableComponent {
 
     default Set<Jt808ProtocolVersion> getSupportedVersions() {
         return Jt808ProtocolVersion.unmodifiableSetVersionAutoDetection();

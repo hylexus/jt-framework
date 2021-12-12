@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 @Setter
 @Getter
 @Accessors(chain = true)
@@ -22,10 +19,12 @@ public class Jt808HandlerResult {
         return result == EMPTY_RESULT;
     }
 
-    @Nonnull
     private Object handler;
 
-    @Nullable
     private Object returnValue;
+
+    public static Jt808HandlerResult of(Object handler, Object returnValue) {
+        return new Jt808HandlerResult().setHandler(handler).setReturnValue(returnValue);
+    }
 
 }

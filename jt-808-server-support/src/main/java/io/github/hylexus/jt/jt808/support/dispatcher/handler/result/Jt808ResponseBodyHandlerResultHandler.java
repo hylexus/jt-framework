@@ -1,8 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.result;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
@@ -13,12 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
 @Slf4j
-public class Jt808ResponseMsgBodyHandlerResultHandler implements Jt808HandlerResultHandler {
+public class Jt808ResponseBodyHandlerResultHandler implements Jt808HandlerResultHandler {
 
     private final Jt808AnnotationBasedEncoder annotationBasedEncoder;
     private final Jt808MsgEncoder encoder;
 
-    public Jt808ResponseMsgBodyHandlerResultHandler(Jt808AnnotationBasedEncoder annotationBasedEncoder, Jt808MsgEncoder encoder) {
+    public Jt808ResponseBodyHandlerResultHandler(Jt808AnnotationBasedEncoder annotationBasedEncoder, Jt808MsgEncoder encoder) {
         this.annotationBasedEncoder = annotationBasedEncoder;
         this.encoder = encoder;
     }
@@ -31,16 +30,23 @@ public class Jt808ResponseMsgBodyHandlerResultHandler implements Jt808HandlerRes
     }
 
     @Override
-    public void handleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
-        this.doHandleResult(request, session, handlerResult);
+    public void handleResult(Jt808ServerExchange exchange, Jt808HandlerResult handlerResult) {
+        if (exchange.response().body().writerIndex() > 0) {
+            throw new JtIllegalStateException(
+                    "MsgHandler returns the entity class marked by @" + Jt808ResponseBody.class.getSimpleName()
+                    + " \"AND\" modifies the response body"
+            );
+        }
+        this.doHandleResult(exchange, handlerResult);
     }
 
-    private void doHandleResult(Jt808Request request, Jt808Session session, Jt808HandlerResult handlerResult) {
+    private void doHandleResult(Jt808ServerExchange exchange, Jt808HandlerResult handlerResult) {
         final Object returnValue = handlerResult.getReturnValue();
         assert returnValue != null;
 
-        final Jt808Response jt808Response = this.annotationBasedEncoder.encode(request, returnValue, session);
-        final ByteBuf respByteBuf = this.encoder.encode(jt808Response);
-        session.sendMsgToClient(respByteBuf);
+        this.annotationBasedEncoder.encodeAndWriteToResponse(returnValue, exchange);
+
+        final ByteBuf respByteBuf = this.encoder.encode(exchange.response());
+        exchange.session().sendMsgToClient(respByteBuf);
     }
 }

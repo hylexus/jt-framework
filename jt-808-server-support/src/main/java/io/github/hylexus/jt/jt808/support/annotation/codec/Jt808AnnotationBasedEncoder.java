@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
@@ -25,6 +26,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +45,20 @@ public class Jt808AnnotationBasedEncoder {
     }
 
     // TODO annotation properties...
-    public Jt808Response encode(Jt808Request request, Object responseMsg, Jt808Session session) {
-        return this.encode(request, responseMsg, session, session.getCurrentFlowId());
+    public void encodeAndWriteToResponse(Object responseMsg, Jt808ServerExchange exchange) {
+        final Class<?> entityClass = responseMsg.getClass();
+        final Jt808ResponseBody annotation = getJt808ResponseBodyAnnotation(entityClass);
+
+        final Jt808Session session = exchange.session();
+        final ByteBuf respBody = this.encodeMsgBody(exchange.request(), responseMsg, session);
+
+        exchange.response()
+                .msgType(annotation.respMsgId())
+                .encryptionType(annotation.encryptionType())
+                .maxPackageSize(annotation.maxPackageSize())
+                .reversedBit15InHeader(annotation.reversedBit15())
+                .flowId(session.getCurrentFlowId())
+                .writeBytes(respBody);
     }
 
     public Jt808Response encode(Object responseMsg, Jt808Session session, int serverFlowId) {
@@ -53,15 +67,13 @@ public class Jt808AnnotationBasedEncoder {
 
     public Jt808Response encode(Jt808Request request, Object responseMsg, Jt808Session session, int serverFlowId) {
         final Class<?> entityClass = responseMsg.getClass();
-        final Jt808ResponseBody annotation = requireNonNull(
-                AnnotationUtils.findAnnotation(entityClass, Jt808ResponseBody.class),
-                "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseBody.class.getSimpleName());
+        final Jt808ResponseBody annotation = getJt808ResponseBodyAnnotation(entityClass);
 
         final ByteBuf respBody = this.encodeMsgBody(request, responseMsg, session);
         return Jt808Response.newBuilder()
                 .body(respBody)
                 .version(session.getProtocolVersion())
-                .msgId(annotation.respMsgId())
+                .msgType(annotation.respMsgId())
                 .terminalId(session.getTerminalId())
                 .flowId(serverFlowId)
                 .build();
@@ -162,5 +174,13 @@ public class Jt808AnnotationBasedEncoder {
             }
         }
         return converter;
+    }
+
+    @Nonnull
+    private Jt808ResponseBody getJt808ResponseBodyAnnotation(Class<?> entityClass) {
+        return requireNonNull(
+                AnnotationUtils.findAnnotation(entityClass, Jt808ResponseBody.class),
+                "[" + entityClass.getSimpleName() + "] should be marked by @" + Jt808ResponseBody.class.getSimpleName()
+        );
     }
 }

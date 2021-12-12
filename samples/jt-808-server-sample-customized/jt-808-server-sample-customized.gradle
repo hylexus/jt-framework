@@ -21,9 +21,6 @@ dependencies {
     implementation(project(":jt-808-server-support"))
     implementation(project(":jt-808-server-spring-boot-stater"))
 
-    implementation group: 'com.alibaba', name: 'fastjson', version: "${jar_version_fast_json}"
-
-
     provided "io.netty:netty-all:${jar_version_netty}"
     compile "com.google.guava:guava:${jar_version_guava}"
 }

@@ -7,7 +7,7 @@ import io.github.hylexus.jt.jt808.request.Jt808Request;
  * @author hylexus
  * createdAt 2019/1/24
  **/
-public interface RequestMsgDispatcher {
+public interface Jt808RequestMsgDispatcher {
 
     void doDispatch(Jt808Request request) throws Throwable;
 

@@ -25,8 +25,8 @@ public class Jt808RequestMsgBodyHandlerMethodArgumentResolver implements Jt808Ha
     public Object resolveArgument(MethodParameter methodParameter, ArgumentContext context) throws Jt808ArgumentResolveException {
         final Class<?> parameterType = methodParameter.getParameterType();
 
-        assert context.getRequest() != null;
+        assert context.getExchange().request() != null;
 
-        return this.annotationBasedDecoder.decode(context.getRequest(), parameterType);
+        return this.annotationBasedDecoder.decode(context.getExchange().request(), parameterType);
     }
 }

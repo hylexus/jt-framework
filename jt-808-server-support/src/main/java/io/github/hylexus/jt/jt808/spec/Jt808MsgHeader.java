@@ -2,8 +2,8 @@ package io.github.hylexus.jt.jt808.spec;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
-
-import java.util.Optional;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeader;
 
 /**
  * @author hylexus
@@ -30,7 +30,7 @@ public interface Jt808MsgHeader {
 
     int msgType();
 
-    MsgBodyPropsSpec msgBodyProps();
+    Jt808MsgBodyProps msgBodyProps();
 
     default int msgBodyLength() {
         return msgBodyProps().msgBodyLength();
@@ -40,11 +40,13 @@ public interface Jt808MsgHeader {
 
     int flowId();
 
-    Optional<SubPackageSpec> subPackageSpec();
-
     String toString();
 
-    interface MsgBodyPropsSpec {
+    default Jt808MsgHeaderBuilder mutate() {
+        return new DefaultJt808MsgHeader.DefaultJt808MsgHeaderBuilder(this);
+    }
+
+    interface Jt808MsgBodyProps {
 
         int intValue();
 
@@ -73,11 +75,41 @@ public interface Jt808MsgHeader {
             return (intValue() & 0x8000) >> 15;
         }
 
+        default Jt808MsgBodyPropsBuilder mutate() {
+            return new DefaultJt808MsgBodyProps.DefaultJt808MsgBodyPropsBuilder(this.intValue());
+        }
     }
 
-    interface SubPackageSpec {
-        int totalSubPackageCount();
+    interface Jt808MsgBodyPropsBuilder {
 
-        int currentPackageNo();
+        Jt808MsgBodyPropsBuilder msgBodyLength(int msgBodyLength);
+
+        Jt808MsgBodyPropsBuilder encryptionType(int encryptionType);
+
+        Jt808MsgBodyPropsBuilder subPackageIdentifier(int subPackageIdentifier);
+
+        Jt808MsgBodyPropsBuilder subPackageIdentifier(boolean hasSubPackage);
+
+        Jt808MsgBodyPropsBuilder versionIdentifier(int versionIdentifier);
+
+        Jt808MsgBodyPropsBuilder versionIdentifier(Jt808ProtocolVersion version);
+
+        Jt808MsgBodyPropsBuilder reversedBit15(int reversedBit15);
+
+        Jt808MsgBodyProps build();
+    }
+
+    interface Jt808MsgHeaderBuilder {
+        Jt808MsgHeaderBuilder version(Jt808ProtocolVersion version);
+
+        Jt808MsgHeaderBuilder msgType(int msgType);
+
+        Jt808MsgHeaderBuilder msgBodyProps(Jt808MsgBodyProps msgBodyProps);
+
+        Jt808MsgHeaderBuilder terminalId(String terminalId);
+
+        Jt808MsgHeaderBuilder flowId(int flowId);
+
+        Jt808MsgHeader build();
     }
 }

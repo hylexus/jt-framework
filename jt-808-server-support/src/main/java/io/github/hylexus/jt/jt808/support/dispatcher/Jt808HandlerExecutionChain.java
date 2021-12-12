@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
@@ -29,11 +28,11 @@ public class Jt808HandlerExecutionChain {
         return this.interceptors;
     }
 
-    public boolean applyPreHandle(Jt808Request request, Jt808Session session) throws Throwable {
+    public boolean applyPreHandle(Jt808ServerExchange exchange) throws Throwable {
         for (int i = 0; i < interceptors.size(); i++) {
             final Jt808HandlerInterceptor interceptor = interceptors.get(i);
-            if (!interceptor.preHandle(request, session, this.handler)) {
-                this.triggerAfterCompletion(request, session, null);
+            if (!interceptor.preHandle(exchange, this.handler)) {
+                this.triggerAfterCompletion(exchange, null);
                 return false;
             }
             this.interceptorIndex = i;
@@ -41,21 +40,21 @@ public class Jt808HandlerExecutionChain {
         return true;
     }
 
-    public void applyPostHandle(Jt808Request request, Jt808Session session, @Nullable Jt808HandlerResult handlerResult) throws Throwable {
+    public void applyPostHandle(Jt808ServerExchange exchange, @Nullable Jt808HandlerResult handlerResult) throws Throwable {
         if (interceptors.isEmpty()) {
             return;
         }
         for (int i = interceptors.size() - 1; i >= 0; i--) {
             Jt808HandlerInterceptor interceptor = interceptors.get(i);
-            interceptor.postHandle(request, session, this.handler, handlerResult);
+            interceptor.postHandle(exchange, this.handler, handlerResult);
         }
     }
 
-    public void triggerAfterCompletion(Jt808Request request, Jt808Session session, @Nullable Throwable throwable) throws Throwable {
+    public void triggerAfterCompletion(Jt808ServerExchange exchange, @Nullable Throwable throwable) throws Throwable {
         for (int i = this.interceptorIndex; i >= 0; i--) {
             final Jt808HandlerInterceptor interceptor = interceptors.get(i);
             try {
-                interceptor.afterCompletion(request, session, this.handler, throwable);
+                interceptor.afterCompletion(exchange, this.handler, throwable);
             } catch (Throwable throwable1) {
                 log.error("Jt808HandlerInterceptor.afterCompletion threw exception", throwable1);
             }

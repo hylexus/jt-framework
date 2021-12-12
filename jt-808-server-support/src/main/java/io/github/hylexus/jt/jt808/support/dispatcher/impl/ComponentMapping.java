@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt.jt808.support.dispatcher.Jt808MultipleVersionSupport;
+import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import static java.util.Optional.ofNullable;
  * @author hylexus
  */
 @Slf4j
-public class ComponentMapping<T extends Jt808MultipleVersionSupport> {
+public class ComponentMapping<T extends MultipleVersionSupport> {
     private final Map<Integer, Map<Jt808ProtocolVersion, T>> mappings = new HashMap<>();
 
     public Optional<T> getComponent(MsgType msgType, Jt808ProtocolVersion version) {

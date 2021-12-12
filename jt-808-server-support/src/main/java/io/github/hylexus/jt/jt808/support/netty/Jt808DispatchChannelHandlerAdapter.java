@@ -5,12 +5,9 @@ import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ByteBuf;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
-import io.github.hylexus.jt.jt808.support.dispatcher.RequestMsgDispatcher;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
-import io.github.hylexus.jt.jt808.support.exception.netty.Jt808NettyException;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,13 +27,13 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
 
     private final Jt808ProtocolVersion protocolVersion;
     private final Jt808MsgDecoder decoder;
-    private final RequestMsgDispatcher msgDispatcher;
+    private final Jt808RequestMsgDispatcher msgDispatcher;
     private final Jt808SessionManager sessionManager;
     private final Jt808ExceptionHandler commonExceptionHandler;
 
     public Jt808DispatchChannelHandlerAdapter(
             Jt808ProtocolVersion protocolVersion, Jt808MsgDecoder decoder, Jt808SessionManager sessionManager,
-            RequestMsgDispatcher msgDispatcher, Jt808ExceptionHandler commonExceptionHandler) {
+            Jt808RequestMsgDispatcher msgDispatcher, Jt808ExceptionHandler commonExceptionHandler) {
         this.protocolVersion = protocolVersion;
         this.decoder = decoder;
 
@@ -56,7 +53,7 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
                 if (buf.readableBytes() <= 0) {
                     return;
                 }
-                request = decoder.decode(protocolVersion, new Jt808ByteBuf(buf));
+                request = decoder.decode(protocolVersion, buf);
                 final Jt808MsgHeader header = request.header();
                 final String terminalId = header.terminalId();
                 jt808Session = sessionManager.persistenceIfNecessary(terminalId, header.version(), ctx.channel());
@@ -68,7 +65,9 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
                 this.msgDispatcher.doDispatch(request);
             } catch (Throwable throwable) {
                 try {
-                    commonExceptionHandler.handleException(null, ArgumentContext.of(request, jt808Session, new Jt808NettyException(throwable)));
+                    // TODO exception handler ...
+                    log.error("",throwable);
+                    // commonExceptionHandler.handleException(null, ArgumentContext.of(request, jt808Session, new Jt808NettyException(throwable)));
                 } catch (Throwable e) {
                     log.error("An error occurred while invoke ExceptionHandler", e);
                 }
