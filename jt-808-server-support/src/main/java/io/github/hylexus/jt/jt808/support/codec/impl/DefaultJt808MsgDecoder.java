@@ -55,9 +55,10 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         // 5. byte[17-20]     消息包封装项
         if (headerSpec.msgBodyProps().hasSubPackage()) {
             // byte[0-2)   消息包总数(word(16))
-            final int total = JtProtocolUtils.getWord(byteBuf, msgBodyStartIndex);
+            final int totalSubPackageCountStartIndex = msgBodyStartIndex - 2 * MsgDataType.WORD.getByteCount();
+            final int total = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex);
             // byte[2-4)   包序号(word(16))
-            final int currentNo = JtProtocolUtils.getWord(byteBuf, msgBodyStartIndex + MsgDataType.WORD.getByteCount());
+            final int currentNo = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex + MsgDataType.WORD.getByteCount());
             final ByteBuf subPackageBody = escaped.slice(msgBodyStartIndex, headerSpec.msgBodyLength()).copy();
             final SubPackageSupportedJt808Request.Jt808SubPackage subPackageSpec = new DefaultJt808SubPackage(total, currentNo, subPackageBody);
 

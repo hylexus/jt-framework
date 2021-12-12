@@ -7,5 +7,7 @@ import io.netty.buffer.ByteBuf;
  * @author hylexus
  */
 public interface Jt808MsgEncoder {
+
     ByteBuf encode(Jt808Response response);
+
 }

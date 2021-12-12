@@ -42,19 +42,19 @@ public class DefaultJt808MsgBodyProps implements Jt808MsgHeader.Jt808MsgBodyProp
 
         @Override
         public Jt808MsgHeader.Jt808MsgBodyPropsBuilder msgBodyLength(int msgBodyLength) {
-            this.intValue = JtProtocolUtils.setBitRange(intValue, 0, msgBodyLength, 9);
+            this.intValue = JtProtocolUtils.setBitRange(msgBodyLength, 10, intValue, 0);
             return this;
         }
 
         @Override
         public Jt808MsgHeader.Jt808MsgBodyPropsBuilder encryptionType(int encryptionType) {
-            this.intValue = JtProtocolUtils.setBitRange(intValue, 10, encryptionType, 3);
+            this.intValue = JtProtocolUtils.setBitRange(encryptionType, 3, intValue, 10);
             return this;
         }
 
         @Override
         public Jt808MsgHeader.Jt808MsgBodyPropsBuilder subPackageIdentifier(int subPackageIdentifier) {
-            this.intValue = JtProtocolUtils.setBitRange(intValue, 13, subPackageIdentifier, 1);
+            this.intValue = JtProtocolUtils.setBitRange(subPackageIdentifier, 1, intValue, 13);
             return this;
         }
 
@@ -65,7 +65,7 @@ public class DefaultJt808MsgBodyProps implements Jt808MsgHeader.Jt808MsgBodyProp
 
         @Override
         public Jt808MsgHeader.Jt808MsgBodyPropsBuilder versionIdentifier(int versionIdentifier) {
-            this.intValue = JtProtocolUtils.setBitRange(intValue, 14, versionIdentifier, 1);
+            this.intValue = JtProtocolUtils.setBitRange(versionIdentifier, 1, intValue, 14);
             return this;
         }
 
@@ -76,7 +76,7 @@ public class DefaultJt808MsgBodyProps implements Jt808MsgHeader.Jt808MsgBodyProp
 
         @Override
         public Jt808MsgHeader.Jt808MsgBodyPropsBuilder reversedBit15(int reversedBit15) {
-            this.intValue = JtProtocolUtils.setBitRange(intValue, 15, reversedBit15, 1);
+            this.intValue = JtProtocolUtils.setBitRange(reversedBit15, 1, intValue, 15);
             return this;
         }
 

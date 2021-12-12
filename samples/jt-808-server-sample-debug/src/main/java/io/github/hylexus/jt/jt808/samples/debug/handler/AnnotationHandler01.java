@@ -3,16 +3,20 @@ package io.github.hylexus.jt.jt808.samples.debug.handler;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.response.CommandWaitingPool;
 import io.github.hylexus.jt.jt808.response.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.response.Jt808Response;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2011;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
+import io.github.hylexus.jt.jt808.samples.debug.entity.resp.DemoServerCommonReplyRespMsg;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterReplyRespMsg;
 import io.github.hylexus.jt.jt808.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerMapping;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
+import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -58,5 +62,23 @@ public class AnnotationHandler01 {
                         .writeString("AuthCode2019DebugDemo")
                 ).build()
                 ;
+    }
+
+    @Jt808RequestMsgHandlerMapping(msgType = 0x8100)
+    public DemoServerCommonReplyRespMsg debugTerminalRegisterReplyRespMsg(Jt808RequestEntity<TerminalRegisterReplySubPackageDebug> entity) {
+        log.info("{}", entity.body());
+        return new DemoServerCommonReplyRespMsg().setMsgId(0x8100).setFlowId(1).setResult(0);
+    }
+
+    public static class TerminalRegisterReplySubPackageDebug {
+        // 1. byte[0,2) WORD 对应的终端注册消息的流水号
+        @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.WORD)
+        private int flowId;
+        // 2. byte[2,3) BYTE 0:成功;1:车辆已被注册;2:数据库中无该车辆; 3:终端已被注册;4:数据库中无该终端
+        @RequestField(order = 1, startIndex = 2, dataType = MsgDataType.BYTE)
+        private byte result;
+        // 3. byte[3,x) STRING 鉴权码(只有在成功后才有该字段)
+        @RequestField(order = 3, startIndex = 3, dataType = MsgDataType.STRING, lengthExpression = "#header.msgBodyLength() - 3")
+        private String authCode;
     }
 }

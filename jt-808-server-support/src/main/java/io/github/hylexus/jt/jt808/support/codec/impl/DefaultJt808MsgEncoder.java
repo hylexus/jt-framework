@@ -50,8 +50,8 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
             final int length = (i == subPackageCount - 1)
                     ? Math.min(subPackageBodySize, msgBodyLength - offset)
                     : subPackageBodySize;
-            final ByteBuf bodyData = body.slice(offset, length);
-            final CompositeByteBuf subPackage = buildPackage(response, bodyData, subPackageCount, i + 1);
+            final ByteBuf bodyData = body.retainedSlice(offset, length);
+            final CompositeByteBuf subPackage = this.buildPackage(response, bodyData, subPackageCount, i + 1);
             allResponseBytes.addComponents(true, subPackage);
         }
         return allResponseBytes;

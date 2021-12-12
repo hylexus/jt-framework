@@ -142,9 +142,10 @@ public abstract class JtProtocolUtils {
         return props & 0xFFFF;
     }
 
-    public static int setBitRange(int value, int startIndex, int targetValue, int targetLength) {
-        int mask = 32 - targetLength;
-        return targetValue << mask >>> mask << startIndex | value;
+    public static int setBitRange(int from, int length, int target, int offset) {
+        return ((~(((1 << length) - 1) << offset)) & target)
+               |
+               (from << offset);
     }
 
     public static String toBinaryString(int value, int width) {
