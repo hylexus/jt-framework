@@ -1,10 +1,12 @@
 ---
 home: true
-# heroImage: /hero.png
+[//]: # (heroImage: /img/hero.png)
 heroText: JT-framework
-tagline: 808、809(TODO)
-actionText: 808 接入指南 →
-actionLink: /v2/jt-808/guide/
+tagline: JT/T-808
+actions:
+- text: 接入指南
+  link: /v2/jt-808/guide/
+  type: primary
 features:
 - title: 基于Netty
   details: TCP处理基于Netty 4.x。
@@ -41,8 +43,10 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ## 软件版本
 
 ::: tip
-- JDK : 1.8+
+
+- JDK : 11+
 - Netty : 4.x
-- VuePress : ^1.1.0
+- VuePress : ^2.0.0-beta.27
 - Gradle : 5.5.1
+
 :::
