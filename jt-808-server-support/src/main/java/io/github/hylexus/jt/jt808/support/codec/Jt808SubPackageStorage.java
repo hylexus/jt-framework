@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
+import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
 import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Data;

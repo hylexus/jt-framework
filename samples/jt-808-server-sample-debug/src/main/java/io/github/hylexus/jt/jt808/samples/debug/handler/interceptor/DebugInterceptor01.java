@@ -1,8 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug.handler.interceptor;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import lombok.extern.slf4j.Slf4j;

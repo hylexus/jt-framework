@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.mixedversion.handler;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808RequestEntity;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.entity.builtin.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.req.*;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.ServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.TerminalRegisterReplyMsg;

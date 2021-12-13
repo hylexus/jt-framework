@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver;
 
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.exception;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
 
 /**
  * @author hylexus

@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
-import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
+import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 

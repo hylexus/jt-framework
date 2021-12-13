@@ -3,7 +3,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.scan;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;

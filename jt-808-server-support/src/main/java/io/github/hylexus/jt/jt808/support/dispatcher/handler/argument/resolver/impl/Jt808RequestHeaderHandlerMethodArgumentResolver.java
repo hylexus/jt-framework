@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.MethodParameter;
@@ -16,7 +16,7 @@ public class Jt808RequestHeaderHandlerMethodArgumentResolver implements Jt808Han
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return Jt808MsgHeader.class.isAssignableFrom(methodParameter.getParameterType());
+        return Jt808RequestHeader.class.isAssignableFrom(methodParameter.getParameterType());
     }
 
     @Override

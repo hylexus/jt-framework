@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl;
 
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.MethodParameter;

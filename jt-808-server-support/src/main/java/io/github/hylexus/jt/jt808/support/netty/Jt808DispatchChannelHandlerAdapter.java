@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
-import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
@@ -14,8 +14,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt808.session.SessionCloseReason.CHANNEL_INACTIVE;
-import static io.github.hylexus.jt.jt808.session.SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
+import static io.github.hylexus.jt.jt808.spec.session.SessionCloseReason.CHANNEL_INACTIVE;
+import static io.github.hylexus.jt.jt808.spec.session.SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
 
 /**
  * @author hylexus
@@ -54,7 +54,7 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
                     return;
                 }
                 request = decoder.decode(protocolVersion, buf);
-                final Jt808MsgHeader header = request.header();
+                final Jt808RequestHeader header = request.header();
                 final String terminalId = header.terminalId();
                 jt808Session = sessionManager.persistenceIfNecessary(terminalId, header.version(), ctx.channel());
 
@@ -66,7 +66,7 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
             } catch (Throwable throwable) {
                 try {
                     // TODO exception handler ...
-                    log.error("",throwable);
+                    log.error("", throwable);
                     // commonExceptionHandler.handleException(null, ArgumentContext.of(request, jt808Session, new Jt808NettyException(throwable)));
                 } catch (Throwable e) {
                     log.error("An error occurred while invoke ExceptionHandler", e);

@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.queue.RequestMsgQueue;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.RequestMsgQueue;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import lombok.extern.slf4j.Slf4j;
 

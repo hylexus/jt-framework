@@ -4,15 +4,15 @@ import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
-import io.github.hylexus.jt.jt808.request.impl.DefaultJt808Request;
-import io.github.hylexus.jt.jt808.request.impl.DefaultJt808SubPackageRequest;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
+import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
-import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808SubPackage;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
+import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
@@ -47,8 +47,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
             log.debug("+ >>>>>>>>>>>>>>> : 7E{}7E", HexStringUtils.byteBufToString(escaped));
         }
 
-        final Jt808MsgHeader header = this.parseMsgHeaderSpec(escaped);
-        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(header.version(), header.msgBodyProps().hasSubPackage());
+        final Jt808RequestHeader header = this.parseMsgHeaderSpec(escaped);
+        final int msgBodyStartIndex = Jt808RequestHeader.msgBodyStartIndex(header.version(), header.msgBodyProps().hasSubPackage());
         final MsgType msgType = this.parseMsgType(header);
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
@@ -80,7 +80,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         }
     }
 
-    private MsgType parseMsgType(Jt808MsgHeader header) {
+    private MsgType parseMsgType(Jt808RequestHeader header) {
         final int msgId = header.msgId();
         return this.msgTypeParser.parseMsgType(msgId)
                 .orElseThrow(() -> {
@@ -89,7 +89,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
                 });
     }
 
-    private Jt808MsgHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
+    private Jt808RequestHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
         // bytes[2-3] WORD 消息体属性
         final int msgBodyPropsIntValue = JtProtocolUtils.getWord(byteBuf, 2);
         final DefaultJt808MsgBodyProps msgBodyProps = new DefaultJt808MsgBodyProps(msgBodyPropsIntValue);
@@ -110,8 +110,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         }
     }
 
-    private Jt808MsgHeader parseHeaderV2019(Jt808MsgHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
-        final DefaultJt808MsgHeader headerSpec = new DefaultJt808MsgHeader();
+    private Jt808RequestHeader parseHeaderV2019(Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+        final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
         headerSpec.version(Jt808ProtocolVersion.VERSION_2019);
         // 1. bytes[0-1] WORD
         final int msgId = JtProtocolUtils.getWord(byteBuf, 0);
@@ -130,8 +130,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return headerSpec;
     }
 
-    private Jt808MsgHeader parseHeaderV2011(Jt808MsgHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
-        final DefaultJt808MsgHeader headerSpec = new DefaultJt808MsgHeader();
+    private Jt808RequestHeader parseHeaderV2011(Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+        final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
         headerSpec.version(Jt808ProtocolVersion.VERSION_2011);
         // 1. bytes[0-1] WORD
         final int msgId = JtProtocolUtils.getWord(byteBuf, 0);

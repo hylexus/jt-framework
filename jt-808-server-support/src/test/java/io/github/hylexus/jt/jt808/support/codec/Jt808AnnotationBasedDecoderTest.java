@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.support.BuiltinMsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinMsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;

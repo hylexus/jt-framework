@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;

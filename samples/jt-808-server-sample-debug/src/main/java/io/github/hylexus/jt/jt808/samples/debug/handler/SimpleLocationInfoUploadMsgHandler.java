@@ -3,9 +3,9 @@ package io.github.hylexus.jt.jt808.samples.debug.handler;
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
 import io.github.hylexus.jt.data.msg.MsgType;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.response.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;
 import org.springframework.stereotype.Component;
 

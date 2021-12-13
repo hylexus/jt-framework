@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler;
 
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.response.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 
 /**

@@ -4,11 +4,11 @@ import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808DispatcherHandl
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808NettyServerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.codec.Jt808CodecAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
-import io.github.hylexus.jt.jt808.response.Jt808CommandSender;
-import io.github.hylexus.jt.jt808.response.impl.DefaultJt808CommandSender;
-import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.support.BuiltinMsgTypeParser;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandSender;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinMsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

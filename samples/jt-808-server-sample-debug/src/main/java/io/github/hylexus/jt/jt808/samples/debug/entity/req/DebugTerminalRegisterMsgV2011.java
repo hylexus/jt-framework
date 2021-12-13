@@ -1,17 +1,17 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
-import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import lombok.Data;
 
 import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 
 @Data
 @Jt808RequestBody
-public class DebugTerminalRegisterMsgV2011 implements Jt808HeaderSpecAware {
-    private Jt808MsgHeader header;
+public class DebugTerminalRegisterMsgV2011 implements Jt808RequestHeaderAware {
+    private Jt808RequestHeader header;
 
     // 1. [0-2) WORD 省域ID
     @RequestField(order = 1, startIndex = 0, dataType = WORD)
@@ -46,7 +46,7 @@ public class DebugTerminalRegisterMsgV2011 implements Jt808HeaderSpecAware {
     }
 
     @Override
-    public void setHeader(Jt808MsgHeader header) {
+    public void setHeader(Jt808RequestHeader header) {
         this.header = header;
     }
 }

@@ -2,11 +2,11 @@ package io.github.hylexus.jt.jt808.samples.debug.controller;
 
 import com.google.common.collect.Lists;
 import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.response.Jt808CommandKey;
-import io.github.hylexus.jt.jt808.response.Jt808CommandSender;
+import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
+import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.RespTerminalSettings;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
-import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

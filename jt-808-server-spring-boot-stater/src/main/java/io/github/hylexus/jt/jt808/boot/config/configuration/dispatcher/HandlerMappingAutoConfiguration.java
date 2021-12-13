@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;

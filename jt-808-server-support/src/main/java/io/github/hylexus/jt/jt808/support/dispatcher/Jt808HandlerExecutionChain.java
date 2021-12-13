@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;

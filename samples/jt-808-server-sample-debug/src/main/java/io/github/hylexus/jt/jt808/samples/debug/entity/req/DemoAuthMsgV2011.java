@@ -1,16 +1,16 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
-import io.github.hylexus.jt.jt808.support.data.Jt808HeaderSpecAware;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 
 @Data
 @Jt808RequestBody
-public class DemoAuthMsgV2011 implements Jt808HeaderSpecAware {
-    private Jt808MsgHeader header;
+public class DemoAuthMsgV2011 implements Jt808RequestHeaderAware {
+    private Jt808RequestHeader header;
 
     @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.STRING, lengthMethod = "getAuthCodeByteCount")
     private String authCode;
@@ -20,7 +20,7 @@ public class DemoAuthMsgV2011 implements Jt808HeaderSpecAware {
     }
 
     @Override
-    public void setHeader(Jt808MsgHeader header) {
+    public void setHeader(Jt808RequestHeader header) {
         this.header = header;
     }
 }

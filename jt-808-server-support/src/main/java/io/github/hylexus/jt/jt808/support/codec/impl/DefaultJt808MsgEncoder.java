@@ -2,8 +2,8 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.config.JtProtocolConstant;
-import io.github.hylexus.jt.jt808.response.Jt808Response;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -32,13 +32,13 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     public ByteBuf encode(Jt808Response response) {
         final int maxPackageSize = response.maxPackageSize();
         final int msgBodyLength = response.msgBodyLength();
-        final int estimatedPackageSize = Jt808MsgHeader.msgBodyStartIndex(response.version(), false) + msgBodyLength + 3;
+        final int estimatedPackageSize = Jt808RequestHeader.msgBodyStartIndex(response.version(), false) + msgBodyLength + 3;
 
         if (estimatedPackageSize <= maxPackageSize) {
             return this.buildPackage(response, response.body(), 0, 0);
         }
 
-        final int subPackageBodySize = maxPackageSize - Jt808MsgHeader.msgBodyStartIndex(response.version(), true) - 3;
+        final int subPackageBodySize = maxPackageSize - Jt808RequestHeader.msgBodyStartIndex(response.version(), true) - 3;
         final int subPackageCount = msgBodyLength % subPackageBodySize == 0
                 ? msgBodyLength / subPackageBodySize
                 : msgBodyLength / subPackageBodySize + 1;

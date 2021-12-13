@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerAdapterNotFoundException;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerNotFoundException;

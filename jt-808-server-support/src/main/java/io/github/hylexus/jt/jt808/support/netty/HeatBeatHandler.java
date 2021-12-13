@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
-import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -8,7 +8,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt808.session.SessionCloseReason.IDLE_TIMEOUT;
+import static io.github.hylexus.jt.jt808.spec.session.SessionCloseReason.IDLE_TIMEOUT;
 
 /**
  * @author hylexus

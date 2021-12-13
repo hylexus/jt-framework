@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.interceptor;
 
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 
 import java.util.function.BiPredicate;
 

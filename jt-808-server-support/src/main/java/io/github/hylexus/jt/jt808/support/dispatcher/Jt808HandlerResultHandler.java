@@ -1,9 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 
 public interface Jt808HandlerResultHandler extends OrderedComponent {
 

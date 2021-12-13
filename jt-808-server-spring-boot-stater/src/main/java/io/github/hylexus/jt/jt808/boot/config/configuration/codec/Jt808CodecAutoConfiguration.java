@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.codec;
 
-import io.github.hylexus.jt.jt808.support.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;

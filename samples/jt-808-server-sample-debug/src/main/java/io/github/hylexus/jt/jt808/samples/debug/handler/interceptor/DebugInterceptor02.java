@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.samples.debug.handler.interceptor;
 
 import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.interceptor.Jt808HandlerInterceptorMatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.interceptor.MatchableHandlerInterceptor;
