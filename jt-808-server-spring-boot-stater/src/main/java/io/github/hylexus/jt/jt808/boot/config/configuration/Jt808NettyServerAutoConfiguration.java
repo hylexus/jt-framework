@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorThreadPoolProps;
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
@@ -11,15 +12,19 @@ import io.github.hylexus.jt.jt808.request.queue.impl.LocalEventBusListener;
 import io.github.hylexus.jt.jt808.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.session.SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.LocalEventBusDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.*;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
+import java.time.Duration;
+import java.util.Comparator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -81,7 +86,7 @@ public class Jt808NettyServerAutoConfiguration {
     @ConditionalOnMissingBean(Jt808DispatchChannelHandlerAdapter.class)
     public Jt808DispatchChannelHandlerAdapter jt808ChannelHandlerAdapter(
             Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
-            Jt808RequestMsgDispatcher requestMsgDispatcher, CompositeJt808ExceptionHandler exceptionHandler) {
+            Jt808RequestMsgDispatcher requestMsgDispatcher, Jt808ExceptionHandler exceptionHandler) {
 
         return new Jt808DispatchChannelHandlerAdapter(
                 serverProps.getProtocol().getVersion(), decoder,
@@ -124,12 +129,27 @@ public class Jt808NettyServerAutoConfiguration {
         return server;
     }
 
+    @Bean
+    public Jt808SubPackageStorage.SubPackageEventListener debugSubPackageEventListener() {
+        return new Jt808SubPackageStorage.DefaultDebuggingSubPackageEventListener();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt808SubPackageStorage jt808SubPackageStorage(ObjectProvider<Jt808SubPackageStorage.SubPackageEventListener> subPackageEventListeners) {
+        final DefaultJt808SubPackageStorage storage = new DefaultJt808SubPackageStorage(128, Duration.ofSeconds(30));
+        subPackageEventListeners.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).forEach(storage::addListener);
+        return storage;
+    }
+
     @Bean(BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_REQ_MSG_QUEUE_LISTENER)
     public RequestMsgQueueListener msgQueueListener(
             RequestMsgQueue requestMsgQueue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager) {
-
-        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager,new DefaultJt808SubPackageStorage());
+            Jt808SessionManager sessionManager, Jt808SubPackageStorage jt808SubPackageStorage) {
+        return new LocalEventBusListener(
+                (LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager,
+                jt808SubPackageStorage
+        );
     }
 }

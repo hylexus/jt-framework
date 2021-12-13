@@ -4,8 +4,9 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.SubPackageSupportedJt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -13,12 +14,13 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author hylexus
@@ -26,69 +28,86 @@ import java.util.List;
 @Slf4j
 public class DefaultJt808SubPackageStorage implements Jt808SubPackageStorage {
 
+    public static final String LOG_PREFIX = "<SubPackage>";
+    private final List<SubPackageEventListener> listenerList = new ArrayList<>();
     protected final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
-    protected final Cache<String, List<SubPackageSupportedJt808Request.Jt808SubPackage>> cache;
+    protected final Cache<String, List<Jt808SubPackageRequest.Jt808SubPackage>> cache;
 
-    public DefaultJt808SubPackageStorage() {
+    public DefaultJt808SubPackageStorage(long maxCapacity, Duration subPackageTtl) {
         this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(Duration.ofMinutes(5))
-                .removalListener(new RemovalListener<String, List<SubPackageSupportedJt808Request.Jt808SubPackage>>() {
-                    @Override
-                    public void onRemoval(
-                            @Nullable String key, @Nullable List<SubPackageSupportedJt808Request.Jt808SubPackage> value, @Nonnull RemovalCause cause) {
+                .maximumSize(maxCapacity)
+                .expireAfterWrite(subPackageTtl)
+                .removalListener((RemovalListener<String, List<Jt808SubPackageRequest.Jt808SubPackage>>) (key, value, cause) -> {
+                    if (value == null) {
+                        return;
+                    }
 
-                        log.info("Removed , key={}", key);
-                        if (value != null) {
-                            for (SubPackageSupportedJt808Request.Jt808SubPackage subPackage : value) {
-                                try {
-                                    JtProtocolUtils.release(subPackage.body());
-                                } catch (Throwable e) {
-                                    log.error("An error occurred while release SubPackage", e);
-                                }
+                    final boolean isExpired = cause == RemovalCause.EXPIRED
+                                              || cause == RemovalCause.SIZE
+                                              || cause == RemovalCause.COLLECTED;
+                    for (Jt808SubPackageRequest.Jt808SubPackage subPackage : value) {
+                        try {
+                            if (isExpired) {
+                                this.invokeListener(EventType.PACKAGE_EXPIRED, subPackage);
                             }
+                        } finally {
+                            JtProtocolUtils.release(subPackage.body());
+                            log.debug("{} {} has been released.", LOG_PREFIX, subPackage);
                         }
                     }
+
                 })
                 .build();
     }
 
     @Override
-    public boolean isAllSubPackagesArrived(SubPackageSupportedJt808Request request) {
+    public void storeSubPackage(Jt808SubPackageRequest request) {
         final String key = this.buildSubPackageCacheKey(request);
-        final SubPackageSupportedJt808Request.Jt808SubPackage subPackage = request.subPackage();
-        final List<SubPackageSupportedJt808Request.Jt808SubPackage> list = this.cache.getIfPresent(key);
-
-        return list != null
-               && (list.size() == (subPackage.totalSubPackageCount() - 1));
+        final List<Jt808SubPackageRequest.Jt808SubPackage> list = this.cache.get(key, k -> new ArrayList<>());
+        requireNonNull(list).add(request.subPackage());
+        this.invokeListener(EventType.PACKAGE_ARRIVED, request.subPackage());
     }
 
     @Override
-    public void storeSubPackage(SubPackageSupportedJt808Request request) {
+    public Optional<ByteBuf> getAllSubPackages(Jt808SubPackageRequest request) {
         final String key = this.buildSubPackageCacheKey(request);
-        List<SubPackageSupportedJt808Request.Jt808SubPackage> list = this.cache.getIfPresent(key);
-        if (list == null) {
-            list = new ArrayList<>();
-            this.cache.put(key, list);
+        final List<Jt808SubPackageRequest.Jt808SubPackage> list = this.cache.get(key, k -> new ArrayList<>());
+        if (requireNonNull(list).size() < request.subPackage().totalSubPackageCount() - 1) {
+            return Optional.empty();
         }
+
+        this.invokeListener(EventType.PACKAGE_ARRIVED, request.subPackage());
+
         list.add(request.subPackage());
+
+        final CompositeByteBuf compositeByteBuf = this.allocator.compositeBuffer(list.size());
+        list.stream()
+                .sorted(Comparator.comparing(Jt808SubPackageRequest.Jt808SubPackage::currentPackageNo))
+                .peek(subPackage -> invokeListener(EventType.PACKAGE_CONSUMED, subPackage))
+                .forEach(jt808SubPackage -> compositeByteBuf.addComponents(true, jt808SubPackage.body().retain()));
+
+        this.cache.invalidate(key);
+        return Optional.of(compositeByteBuf);
+    }
+
+    private void invokeListener(EventType eventType, Jt808SubPackageRequest.Jt808SubPackage subPackage) {
+        for (SubPackageEventListener listener : this.listenerList) {
+            try {
+                listener.onEvent(new Event(eventType, subPackage));
+            } catch (Exception e) {
+                log.error("An error occurred while callback SubPackageStorageListener.", e);
+            }
+        }
     }
 
     @Override
-    public ByteBuf getAllSubPackages(SubPackageSupportedJt808Request request) {
-        final String key = this.buildSubPackageCacheKey(request);
-        final List<SubPackageSupportedJt808Request.Jt808SubPackage> list = this.cache.getIfPresent(key);
-        if (list == null) {
-            return null;
-        }
-        final CompositeByteBuf compositeByteBuf = this.allocator.compositeBuffer(list.size() + 1);
-        list.stream()
-                .sorted(Comparator.comparing(SubPackageSupportedJt808Request.Jt808SubPackage::currentPackageNo))
-                .forEach(jt808SubPackage -> compositeByteBuf.addComponents(true, jt808SubPackage.body().copy()));
-        compositeByteBuf.addComponents(true, request.subPackage().body());
-        return compositeByteBuf;
+    public synchronized void addListener(SubPackageEventListener listener) {
+        this.listenerList.add(listener);
+        this.listenerList.sort(Comparator.comparing(OrderedComponent::getOrder));
     }
 
     protected String buildSubPackageCacheKey(Jt808Request request) {
         return String.format("%s_%d", request.terminalId(), request.msgType().getMsgId());
     }
+
 }

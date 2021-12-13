@@ -4,7 +4,8 @@ jt808:
   print-component-statistics: true
 logging:
   level: info
-  level.io.github.hylexus.jt: debug
+  level.io.github.hylexus.jt: info
   level.jt-808.channel: debug
   level.jt-808.request.decoder: debug
   level.jt-808.response.encoder: debug
+  level.io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage: debug

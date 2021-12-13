@@ -1,8 +1,9 @@
 package io.github.hylexus.jt.jt808.request.queue.impl;
 
+import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
 import io.github.hylexus.jt.jt808.request.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.request.SubPackageSupportedJt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.request.impl.DefaultJt808ServerExchange;
 import io.github.hylexus.jt.jt808.request.queue.RequestMsgQueue;
 import io.github.hylexus.jt.jt808.request.queue.RequestMsgQueueListener;
@@ -18,6 +19,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author hylexus
@@ -39,27 +41,34 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
     }
 
     @Override
-    public void consumeMsg(Jt808Request request) {
-        final Jt808Request requestToDispatch = getRequest(request);
-        if (requestToDispatch == null) {
-            return;
-        }
-        if (requestToDispatch != request) {
-            JtProtocolUtils.release(request.body(), request.rawByteBuf());
-        }
-
-        final String terminalId = requestToDispatch.header().terminalId();
-        final Jt808Session session = this.sessionManager.findByTerminalId(terminalId)
-                // TODO exception
-                .orElseThrow();
-
-        final Jt808Response response = DefaultJt808Response.init(requestToDispatch.version(), terminalId);
-        final Jt808ServerExchange exchange = new DefaultJt808ServerExchange(requestToDispatch, response, session);
+    public void consumeMsg(Jt808Request originalRequest) {
+        Jt808ServerExchange exchange = null;
+        Jt808Request requestToDispatch = null;
+        Jt808Response originalResponse = null;
         try {
+            requestToDispatch = getRequest(originalRequest);
+            if (requestToDispatch == null) {
+                return;
+            }
+            if (requestToDispatch != originalRequest) {
+                JtProtocolUtils.release(originalRequest.body(), originalRequest.rawByteBuf());
+            }
+
+            final String terminalId = requestToDispatch.header().terminalId();
+            final Jt808Session session = this.sessionManager.findByTerminalId(terminalId)
+                    // TODO exception
+                    .orElseThrow();
+
+            originalResponse = DefaultJt808Response.init(originalRequest.version(), originalRequest.terminalId());
+            exchange = new DefaultJt808ServerExchange(requestToDispatch, originalResponse, session);
             this.dispatcherHandler.handleRequest(exchange);
         } finally {
-            if (exchange.response() != response) {
-                JtProtocolUtils.release(response.body());
+            if (requestToDispatch != null) {
+                JtProtocolUtils.release(requestToDispatch.body(), requestToDispatch.rawByteBuf());
+            }
+
+            if (exchange != null && exchange.response() != originalResponse) {
+                JtProtocolUtils.release(originalResponse.body());
             }
         }
     }
@@ -70,28 +79,30 @@ public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue>
             return request;
         }
 
-        final SubPackageSupportedJt808Request subPackageSupportedJt808Request = (SubPackageSupportedJt808Request) request;
-        if (this.subPackageStorage.isAllSubPackagesArrived(subPackageSupportedJt808Request)) {
-            final ByteBuf mergedBody = this.subPackageStorage.getAllSubPackages(subPackageSupportedJt808Request);
-
-            final Jt808MsgHeader.Jt808MsgBodyProps newMsgBodyProps = request.header().msgBodyProps()
-                    .mutate()
-                    .msgBodyLength(mergedBody.readableBytes())
-                    .subPackageIdentifier(false)
-                    .build();
-
-            final Jt808MsgHeader newHeader = request.header().mutate().msgBodyProps(newMsgBodyProps).build();
-
-            return request.mutate()
-                    .header(newHeader)
-                    .body(mergedBody)
-                    .rawByteBuf(null)
-                    .calculatedCheckSum((byte) 0)
-                    .originalCheckSum((byte) 0)
-                    .build();
-        } else {
-            this.subPackageStorage.storeSubPackage(subPackageSupportedJt808Request);
+        final Jt808SubPackageRequest subPackageRequest = (Jt808SubPackageRequest) request;
+        final Optional<ByteBuf> allPackages = this.subPackageStorage.getAllSubPackages(subPackageRequest);
+        if (allPackages.isEmpty()) {
+            this.subPackageStorage.storeSubPackage(subPackageRequest);
             return null;
         }
+
+        final ByteBuf mergedBody = allPackages
+                .orElseThrow(() -> new JtIllegalStateException("No sub"));
+
+        final Jt808MsgHeader.Jt808MsgBodyProps newMsgBodyProps = request.header().msgBodyProps()
+                .mutate()
+                .msgBodyLength(mergedBody.readableBytes())
+                .subPackageIdentifier(false)
+                .build();
+
+        final Jt808MsgHeader newHeader = request.header().mutate().msgBodyProps(newMsgBodyProps).build();
+
+        return request.mutate()
+                .header(newHeader)
+                .body(mergedBody)
+                .rawByteBuf(null)
+                .calculatedCheckSum((byte) 0)
+                .originalCheckSum((byte) 0)
+                .build();
     }
 }

@@ -43,7 +43,7 @@ public class DefaultJt808MsgHeader implements Jt808MsgHeader {
     }
 
     @Override
-    public int msgType() {
+    public int msgId() {
         return msgType;
     }
 
@@ -80,7 +80,7 @@ public class DefaultJt808MsgHeader implements Jt808MsgHeader {
     public static class DefaultJt808MsgHeaderBuilder implements Jt808MsgHeaderBuilder {
 
         private Jt808ProtocolVersion version;
-        private int msgType;
+        private int msgId;
         private Jt808MsgBodyProps msgBodyProps;
         private String terminalId;
         private int flowId;
@@ -89,7 +89,7 @@ public class DefaultJt808MsgHeader implements Jt808MsgHeader {
         }
 
         public DefaultJt808MsgHeaderBuilder(Jt808MsgHeader header) {
-            this.msgType = header.msgType();
+            this.msgId = header.msgId();
             this.msgBodyProps = header.msgBodyProps();
             this.terminalId = header.terminalId();
             this.flowId = header.flowId();
@@ -104,7 +104,7 @@ public class DefaultJt808MsgHeader implements Jt808MsgHeader {
 
         @Override
         public Jt808MsgHeaderBuilder msgType(int msgType) {
-            this.msgType = msgType;
+            this.msgId = msgType;
             return this;
         }
 
@@ -128,7 +128,7 @@ public class DefaultJt808MsgHeader implements Jt808MsgHeader {
 
         @Override
         public Jt808MsgHeader build() {
-            return new DefaultJt808MsgHeader(version, msgType, msgBodyProps, terminalId, flowId);
+            return new DefaultJt808MsgHeader(version, msgId, msgBodyProps, terminalId, flowId);
         }
     }
 

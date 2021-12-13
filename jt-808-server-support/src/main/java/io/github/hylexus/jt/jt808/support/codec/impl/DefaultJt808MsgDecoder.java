@@ -5,9 +5,9 @@ import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.request.Jt808Request;
-import io.github.hylexus.jt.jt808.request.SubPackageSupportedJt808Request;
+import io.github.hylexus.jt.jt808.request.Jt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.request.impl.DefaultJt808Request;
-import io.github.hylexus.jt.jt808.request.impl.DefaultSubPackageSupportedJt808Request;
+import io.github.hylexus.jt.jt808.request.impl.DefaultJt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgHeader;
@@ -47,37 +47,41 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
             log.debug("+ >>>>>>>>>>>>>>> : 7E{}7E", HexStringUtils.byteBufToString(escaped));
         }
 
-        final Jt808MsgHeader headerSpec = this.parseMsgHeaderSpec(escaped);
-        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(headerSpec.version(), headerSpec.msgBodyProps().hasSubPackage());
-        final MsgType msgType = this.parseMsgType(headerSpec);
+        final Jt808MsgHeader header = this.parseMsgHeaderSpec(escaped);
+        final int msgBodyStartIndex = Jt808MsgHeader.msgBodyStartIndex(header.version(), header.msgBodyProps().hasSubPackage());
+        final MsgType msgType = this.parseMsgType(header);
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
         // 5. byte[17-20]     消息包封装项
-        if (headerSpec.msgBodyProps().hasSubPackage()) {
+        if (header.msgBodyProps().hasSubPackage()) {
             // byte[0-2)   消息包总数(word(16))
             final int totalSubPackageCountStartIndex = msgBodyStartIndex - 2 * MsgDataType.WORD.getByteCount();
             final int total = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex);
             // byte[2-4)   包序号(word(16))
             final int currentNo = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex + MsgDataType.WORD.getByteCount());
-            final ByteBuf subPackageBody = escaped.slice(msgBodyStartIndex, headerSpec.msgBodyLength()).copy();
-            final SubPackageSupportedJt808Request.Jt808SubPackage subPackageSpec = new DefaultJt808SubPackage(total, currentNo, subPackageBody);
+            final ByteBuf subPackageBody = escaped.slice(msgBodyStartIndex, header.msgBodyLength()).copy();
+            final Jt808SubPackageRequest.Jt808SubPackage subPackageSpec = new DefaultJt808SubPackage(
+                    header.terminalId(), header.msgId(),
+                    total, currentNo,
+                    subPackageBody
+            );
 
-            return new DefaultSubPackageSupportedJt808Request(
-                    msgType, headerSpec,
-                    escaped, escaped.slice(msgBodyStartIndex, headerSpec.msgBodyLength()),
+            return new DefaultJt808SubPackageRequest(
+                    msgType, header,
+                    escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
                     originalCheckSum, calculatedCheckSum, subPackageSpec
             );
         } else {
             return new DefaultJt808Request(
-                    msgType, headerSpec,
-                    escaped, escaped.slice(msgBodyStartIndex, headerSpec.msgBodyLength()),
+                    msgType, header,
+                    escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
                     originalCheckSum, calculatedCheckSum
             );
         }
     }
 
-    private MsgType parseMsgType(Jt808MsgHeader headerSpec) {
-        final int msgId = headerSpec.msgType();
+    private MsgType parseMsgType(Jt808MsgHeader header) {
+        final int msgId = header.msgId();
         return this.msgTypeParser.parseMsgType(msgId)
                 .orElseThrow(() -> {
                     log.error("Received unknown msg, msgId = {}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));

@@ -28,7 +28,7 @@ public interface Jt808MsgHeader {
 
     Jt808ProtocolVersion version();
 
-    int msgType();
+    int msgId();
 
     Jt808MsgBodyProps msgBodyProps();
 
