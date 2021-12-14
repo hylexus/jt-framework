@@ -1,8 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
-import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
-import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package io.github.hylexus.jt.utils;
+package io.github.hylexus.jt.jt808.support.utils;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCounted;

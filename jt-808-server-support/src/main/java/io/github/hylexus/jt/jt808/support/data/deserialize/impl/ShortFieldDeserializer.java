@@ -5,7 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;

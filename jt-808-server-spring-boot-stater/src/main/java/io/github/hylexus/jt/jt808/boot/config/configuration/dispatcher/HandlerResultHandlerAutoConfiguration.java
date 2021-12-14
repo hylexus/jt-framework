@@ -3,8 +3,8 @@ package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseBodyHandlerResultHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
 import org.springframework.context.annotation.Bean;
 
 public class HandlerResultHandlerAutoConfiguration {

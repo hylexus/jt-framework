@@ -1,9 +1,9 @@
-package io.github.hylexus.jt.jt808.spec.entity.builtin;
+package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.netty.buffer.ByteBuf;
 

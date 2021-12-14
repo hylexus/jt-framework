@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.spec;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808RequestHeader;
 

@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.annotation.handler;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.adapter.Jt808RequestHandlerMappingHandlerAdapter;
 import io.github.hylexus.jt.jt808.support.dispatcher.mapping.Jt808RequestHandlerMappingHandlerMapping;

@@ -1,13 +1,13 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;

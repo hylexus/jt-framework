@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.props.protocol;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.config.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

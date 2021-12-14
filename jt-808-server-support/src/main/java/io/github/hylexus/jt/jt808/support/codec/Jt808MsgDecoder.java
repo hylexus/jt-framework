@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.netty.buffer.ByteBuf;
 

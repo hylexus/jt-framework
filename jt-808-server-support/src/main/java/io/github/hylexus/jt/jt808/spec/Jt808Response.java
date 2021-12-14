@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.jt808.spec;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseBuilder;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 

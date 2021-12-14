@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.type;
 
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 /**

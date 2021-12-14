@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
 import io.github.hylexus.jt.exception.JtCommunicationException;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

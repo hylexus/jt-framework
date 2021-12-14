@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.impl.response;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.netty.buffer.ByteBuf;
 

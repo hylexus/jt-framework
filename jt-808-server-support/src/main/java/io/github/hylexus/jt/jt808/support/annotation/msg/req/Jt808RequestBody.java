@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * @author hylexus
  * @see io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.impl.Jt808RequestBodyHandlerMethodArgumentResolver
  */
-@Target({ElementType.TYPE, ElementType.PARAMETER})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Jt808RequestBody {

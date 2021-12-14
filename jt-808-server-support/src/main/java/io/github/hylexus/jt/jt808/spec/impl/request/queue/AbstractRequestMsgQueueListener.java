@@ -8,7 +8,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 

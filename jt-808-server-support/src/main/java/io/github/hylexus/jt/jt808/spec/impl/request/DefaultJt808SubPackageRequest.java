@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt808.spec.impl.request;
 
-import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.netty.buffer.ByteBuf;
 
 /**

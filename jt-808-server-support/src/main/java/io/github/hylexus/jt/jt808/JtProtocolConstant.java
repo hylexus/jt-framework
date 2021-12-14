@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.config;
+package io.github.hylexus.jt.jt808;
 
 import java.nio.charset.Charset;
 

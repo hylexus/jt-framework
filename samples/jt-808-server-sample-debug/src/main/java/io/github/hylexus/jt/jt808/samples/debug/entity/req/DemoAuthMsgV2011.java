@@ -1,9 +1,9 @@
 package io.github.hylexus.jt.jt808.samples.debug.entity.req;
 
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
-import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import lombok.Data;
 

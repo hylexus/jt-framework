@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt808.samples.debug.handler;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.BuiltinJt808MsgType;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2011;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
@@ -10,6 +9,7 @@ import io.github.hylexus.jt.jt808.spec.CommandWaitingPool;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;

@@ -1,13 +1,9 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
-import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.spec.*;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808SubPackage;
@@ -17,7 +13,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

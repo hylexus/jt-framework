@@ -1,18 +1,19 @@
-package io.github.hylexus.jt.jt808.samples.debug.entity.req;
+package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
-import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
-import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import lombok.Data;
 
 import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 
+/**
+ * 内置终端注册消息体(2019)
+ *
+ * @author hylexus
+ */
 @Data
 @Jt808RequestBody
-public class DebugTerminalRegisterMsgV2019 implements Jt808RequestHeaderAware {
-    private Jt808RequestHeader header;
-
+public class BuiltinTerminalRegisterMsgBodyV2019 {
     // 1. [0-2) WORD 省域ID
     @RequestField(order = 1, startIndex = 0, dataType = WORD)
     private int provinceId;
@@ -38,15 +39,6 @@ public class DebugTerminalRegisterMsgV2019 implements Jt808RequestHeaderAware {
     private byte color;
 
     // 7. [76,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthMethod = "carIdentifierLength")
+    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 76")
     private String carIdentifier;
-
-    public int carIdentifierLength() {
-        return header.msgBodyLength() - 76;
-    }
-
-    @Override
-    public void setHeader(Jt808RequestHeader header) {
-        this.header = header;
-    }
 }

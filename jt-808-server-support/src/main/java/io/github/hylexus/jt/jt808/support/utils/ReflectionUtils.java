@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.JT_808_STRING_ENCODING;
+import static io.github.hylexus.jt.jt808.JtProtocolConstant.JT_808_STRING_ENCODING;
 import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
 
 /**

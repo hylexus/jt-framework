@@ -6,7 +6,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
-import io.github.hylexus.jt.utils.JtProtocolUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 /**

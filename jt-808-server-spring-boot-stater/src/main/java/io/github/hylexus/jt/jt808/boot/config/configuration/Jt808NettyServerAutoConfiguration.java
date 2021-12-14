@@ -30,7 +30,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.*;
+import static io.github.hylexus.jt.jt808.JtProtocolConstant.*;
 
 /**
  * @author hylexus

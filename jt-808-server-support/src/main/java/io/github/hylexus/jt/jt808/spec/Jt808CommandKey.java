@@ -1,6 +1,5 @@
 package io.github.hylexus.jt.jt808.spec;
 
-import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandKey;
 
 import java.util.Optional;

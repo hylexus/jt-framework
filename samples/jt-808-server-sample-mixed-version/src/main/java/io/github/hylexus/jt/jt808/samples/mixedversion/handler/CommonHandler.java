@@ -4,14 +4,14 @@ import io.github.hylexus.jt.jt808.samples.mixedversion.entity.req.*;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.ServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.TerminalRegisterReplyMsg;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.entity.builtin.Jt808RequestEntity;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static io.github.hylexus.jt.config.Jt808ProtocolVersion.VERSION_2011;
-import static io.github.hylexus.jt.config.Jt808ProtocolVersion.VERSION_2019;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2011;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
  * @author hylexus

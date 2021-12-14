@@ -8,8 +8,8 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestH
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.scan.Jt808RequestMsgHandlerScanner;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
-import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.mapping.Jt808RequestHandlerMappingHandlerMapping;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.github.hylexus.jt.config.JtProtocolConstant.BEAN_NAME_JT808_INTERCEPTORS;
+import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_INTERCEPTORS;
 
 public class HandlerMappingAutoConfiguration {
 

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
-import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import lombok.ToString;
 
 import javax.annotation.Nullable;

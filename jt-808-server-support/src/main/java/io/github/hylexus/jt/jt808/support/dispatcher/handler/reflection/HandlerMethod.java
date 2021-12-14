@@ -2,8 +2,8 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection;
 
 import com.google.common.collect.Lists;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.Getter;
 import lombok.Setter;

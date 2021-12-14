@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.impl;
 
-import io.github.hylexus.jt.config.Jt808ProtocolVersion;
-import io.github.hylexus.jt.data.msg.MsgType;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.extern.slf4j.Slf4j;
 
