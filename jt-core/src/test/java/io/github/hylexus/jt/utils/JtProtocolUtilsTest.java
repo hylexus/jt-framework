@@ -17,7 +17,7 @@ public class JtProtocolUtilsTest {
         System.out.println(Integer.toBinaryString(JtProtocolUtils.setBitRange(0b1, 1, 0b0_1_0_111_0001110011, 14)));
         System.out.println(Integer.toBinaryString(JtProtocolUtils.setBitRange(0b1, 1, 0b0_1_0_111_0001110011, 15)));
         System.out.println(Integer.toBinaryString(JtProtocolUtils.setBitRange(0b111001, 10, 0b0_1_0_111_0001110011, 0)));
-//        setBitRange(0b10101, 10, 0b1000111000101010001110011, 3);
+        // setBitRange(0b10101, 10, 0b1000111000101010001110011, 3);
 
     }
 
@@ -38,7 +38,9 @@ public class JtProtocolUtilsTest {
 
     String toBinString(int n, int length) {
         final String s = Integer.toBinaryString(n);
-        if (s.length() >= length) return s;
+        if (s.length() >= length) {
+            return s;
+        }
         StringBuilder sb = new StringBuilder(s);
         while (sb.length() < length) {
             sb.insert(0, 0);

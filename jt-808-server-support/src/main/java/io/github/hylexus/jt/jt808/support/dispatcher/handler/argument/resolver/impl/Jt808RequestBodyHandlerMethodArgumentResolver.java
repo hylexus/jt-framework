@@ -8,11 +8,11 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.MethodPa
 import io.github.hylexus.jt.jt808.support.exception.Jt808ArgumentResolveException;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
-public class Jt808RequestMsgBodyHandlerMethodArgumentResolver implements Jt808HandlerMethodArgumentResolver {
+public class Jt808RequestBodyHandlerMethodArgumentResolver implements Jt808HandlerMethodArgumentResolver {
 
     private final Jt808AnnotationBasedDecoder annotationBasedDecoder;
 
-    public Jt808RequestMsgBodyHandlerMethodArgumentResolver(Jt808AnnotationBasedDecoder annotationBasedDecoder) {
+    public Jt808RequestBodyHandlerMethodArgumentResolver(Jt808AnnotationBasedDecoder annotationBasedDecoder) {
         this.annotationBasedDecoder = annotationBasedDecoder;
     }
 

@@ -5,17 +5,22 @@ import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
 
 import java.util.List;
 import java.util.Optional;
 
-public class Jt808RequestMsgHandlerAnnotationHandlerMapping extends AbstractJt808HandlerMapping {
-    private final ComponentMapping<HandlerMethod> msgHandlerComponentMapping;
+/**
+ * @author hylexus
+ * @see SimpleJt808RequestHandler
+ */
+public class SimpleJt808RequestHandlerHandlerMapping extends AbstractJt808HandlerMapping {
 
-    public Jt808RequestMsgHandlerAnnotationHandlerMapping(
-            ComponentMapping<HandlerMethod> msgHandlerComponentMapping,
+    private final ComponentMapping<SimpleJt808RequestHandler<?>> msgHandlerComponentMapping;
+
+    public SimpleJt808RequestHandlerHandlerMapping(
+            ComponentMapping<SimpleJt808RequestHandler<?>> msgHandlerComponentMapping,
             List<Jt808HandlerInterceptor> interceptors) {
 
         super(interceptors);

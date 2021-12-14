@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug;
 
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808ExceptionHandler;
-import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerAdvice;
+import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerAdvice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@Jt808RequestMsgHandlerAdvice
+@Jt808RequestHandlerAdvice
 public class DebugAnnotationBasedExceptionHandler {
 
     @Jt808ExceptionHandler(value = Throwable.class)

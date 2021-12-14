@@ -11,6 +11,10 @@ import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 
+/**
+ * @author hylexus
+ * @see Jt808ResponseBody
+ */
 @Slf4j
 public class Jt808ResponseBodyHandlerResultHandler implements Jt808HandlerResultHandler {
 

@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808ExceptionHandler;
-import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandler;
-import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestMsgHandlerAdvice;
+import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
+import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerAdvice;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.CompositeJt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler.ExceptionHandlerHandlerMethod;
@@ -41,10 +41,10 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        final Collection<Object> exceptionHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestMsgHandlerAdvice.class).values();
+        final Collection<Object> exceptionHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestHandlerAdvice.class).values();
         this.doScan(exceptionHandlerClassList);
 
-        final Collection<Object> msgHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestMsgHandler.class).values();
+        final Collection<Object> msgHandlerClassList = applicationContext.getBeansWithAnnotation(Jt808RequestHandler.class).values();
         this.doScan(msgHandlerClassList);
 
         this.compositeJt808ExceptionHandler.sort();
@@ -108,8 +108,8 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
     }
 
     private boolean isExceptionHandlerClass(Class<?> cls) {
-        return AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandler.class)
-               || AnnotatedElementUtils.isAnnotated(cls, Jt808RequestMsgHandlerAdvice.class);
+        return AnnotatedElementUtils.isAnnotated(cls, Jt808RequestHandler.class)
+               || AnnotatedElementUtils.isAnnotated(cls, Jt808RequestHandlerAdvice.class);
     }
 
 }

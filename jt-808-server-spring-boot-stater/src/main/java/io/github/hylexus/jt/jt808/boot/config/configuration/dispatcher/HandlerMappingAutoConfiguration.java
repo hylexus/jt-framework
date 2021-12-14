@@ -4,12 +4,12 @@ import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerMapping;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.scan.Jt808RequestMsgHandlerScanner;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
-import io.github.hylexus.jt.jt808.support.dispatcher.mapping.Jt808ReqMsgHandlerHandlerMapping;
-import io.github.hylexus.jt.jt808.support.dispatcher.mapping.Jt808RequestMsgHandlerAnnotationHandlerMapping;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.Jt808RequestHandlerMappingHandlerMapping;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -32,12 +32,12 @@ public class HandlerMappingAutoConfiguration {
 
     @Bean
     public Jt808HandlerMapping jt808ReqMsgHandlerHandlerMapping(
-            ObjectProvider<Jt808RequestMsgHandler<?>> jt808ReqMsgHandlers,
+            ObjectProvider<SimpleJt808RequestHandler<?>> jt808ReqMsgHandlers,
             @Qualifier(BEAN_NAME_JT808_INTERCEPTORS) List<Jt808HandlerInterceptor> interceptors) {
 
-        final ComponentMapping<Jt808RequestMsgHandler<?>> componentMapping = new ComponentMapping<>();
+        final ComponentMapping<SimpleJt808RequestHandler<?>> componentMapping = new ComponentMapping<>();
         jt808ReqMsgHandlers.stream().forEach(componentMapping::register);
-        return new Jt808ReqMsgHandlerHandlerMapping(componentMapping, interceptors);
+        return new SimpleJt808RequestHandlerHandlerMapping(componentMapping, interceptors);
     }
 
     @Bean
@@ -48,6 +48,6 @@ public class HandlerMappingAutoConfiguration {
         final ComponentMapping<HandlerMethod> msgHandlerComponentMapping = new ComponentMapping<>();
         new Jt808RequestMsgHandlerScanner(applicationContext, msgTypeParser)
                 .doScan(msgHandlerComponentMapping);
-        return new Jt808RequestMsgHandlerAnnotationHandlerMapping(msgHandlerComponentMapping, interceptors);
+        return new Jt808RequestHandlerMappingHandlerMapping(msgHandlerComponentMapping, interceptors);
     }
 }

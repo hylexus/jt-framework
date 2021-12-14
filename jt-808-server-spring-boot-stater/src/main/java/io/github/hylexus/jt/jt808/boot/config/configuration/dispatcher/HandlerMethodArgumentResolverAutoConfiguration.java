@@ -18,10 +18,10 @@ public class HandlerMethodArgumentResolverAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808RequestMsgBodyHandlerMethodArgumentResolver jt808RequestMsgBodyHandlerMethodArgumentResolver(
+    public Jt808RequestBodyHandlerMethodArgumentResolver jt808RequestMsgBodyHandlerMethodArgumentResolver(
             Jt808AnnotationBasedDecoder annotationBasedDecoder) {
 
-        return new Jt808RequestMsgBodyHandlerMethodArgumentResolver(annotationBasedDecoder);
+        return new Jt808RequestBodyHandlerMethodArgumentResolver(annotationBasedDecoder);
     }
 
     @Bean

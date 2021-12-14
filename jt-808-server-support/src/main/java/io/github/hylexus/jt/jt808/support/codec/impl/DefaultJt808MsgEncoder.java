@@ -100,7 +100,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
         // bytes[2-4) 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
-                body.readableBytes(), response.encryptionType(),
+                body.readableBytes(), 0,
                 hasSubPackage, response.version(), response.reversedBit15InHeader()
         );
         JtProtocolUtils.writeWord(header, bodyPropsForJt808);

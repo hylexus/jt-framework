@@ -6,7 +6,7 @@ import io.github.hylexus.jt.data.msg.MsgType;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author hylexus
  */
 @Component
-public class SimpleLocationInfoUploadMsgHandler implements Jt808RequestMsgHandler<Jt808Response> {
+public class SimpleLocationInfoUploadHandlerSimple implements SimpleJt808RequestHandler<Jt808Response> {
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return Set.of(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD);

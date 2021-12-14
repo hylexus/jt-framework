@@ -3,9 +3,10 @@ package io.github.hylexus.jt.jt808.support.dispatcher.mapping;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestMsgHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
 
 import java.util.List;
@@ -13,13 +14,13 @@ import java.util.Optional;
 
 /**
  * @author hylexus
+ * @see Jt808RequestHandlerMapping
  */
-public class Jt808ReqMsgHandlerHandlerMapping extends AbstractJt808HandlerMapping {
+public class Jt808RequestHandlerMappingHandlerMapping extends AbstractJt808HandlerMapping {
+    private final ComponentMapping<HandlerMethod> msgHandlerComponentMapping;
 
-    private final ComponentMapping<Jt808RequestMsgHandler<?>> msgHandlerComponentMapping;
-
-    public Jt808ReqMsgHandlerHandlerMapping(
-            ComponentMapping<Jt808RequestMsgHandler<?>> msgHandlerComponentMapping,
+    public Jt808RequestHandlerMappingHandlerMapping(
+            ComponentMapping<HandlerMethod> msgHandlerComponentMapping,
             List<Jt808HandlerInterceptor> interceptors) {
 
         super(interceptors);
