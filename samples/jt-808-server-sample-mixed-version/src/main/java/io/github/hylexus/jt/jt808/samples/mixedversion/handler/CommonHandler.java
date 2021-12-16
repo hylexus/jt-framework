@@ -4,7 +4,7 @@ import io.github.hylexus.jt.jt808.samples.mixedversion.entity.req.*;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.ServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.mixedversion.entity.resp.TerminalRegisterReplyMsg;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.Jt808RequestEntity;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import lombok.extern.slf4j.Slf4j;

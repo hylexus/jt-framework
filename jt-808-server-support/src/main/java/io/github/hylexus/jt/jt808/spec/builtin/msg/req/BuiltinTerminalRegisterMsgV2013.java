@@ -7,13 +7,13 @@ import lombok.Data;
 import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 
 /**
- * 内置终端注册消息体(2019)
+ * 内置终端注册消息体(2013)
  *
  * @author hylexus
  */
 @Data
 @Jt808RequestBody
-public class BuiltinTerminalRegisterMsgBodyV2019 {
+public class BuiltinTerminalRegisterMsgV2013 {
     // 1. [0-2) WORD 省域ID
     @RequestField(order = 1, startIndex = 0, dataType = WORD)
     private int provinceId;
@@ -22,23 +22,23 @@ public class BuiltinTerminalRegisterMsgBodyV2019 {
     @RequestField(order = 2, startIndex = 2, dataType = WORD)
     private int cityId;
 
-    // 3. [4-15) BYTE[11] 制造商ID
-    @RequestField(order = 3, startIndex = 4, dataType = STRING, length = 11)
+    // 3. [4-9) BYTE[5] 制造商ID
+    @RequestField(order = 3, startIndex = 4, dataType = STRING, length = 5)
     private String manufacturerId;
 
-    // 4. [15-45) BYTE[30] 终端型号
-    @RequestField(order = 4, startIndex = 15, dataType = STRING, length = 30)
+    // 4. [9-29) BYTE[20] 终端型号
+    @RequestField(order = 4, startIndex = 9, dataType = STRING, length = 20)
     private String terminalType;
 
-    // 5. [45-75) BYTE[30] 终端型号
-    @RequestField(order = 5, startIndex = 45, dataType = STRING, length = 30)
+    // 5. [29-36) BYTE[7] 终端型号
+    @RequestField(order = 5, startIndex = 17, dataType = STRING, length = 7)
     private String terminalId;
 
-    // 6. [75,76)   BYTE    车牌颜色
-    @RequestField(order = 6, startIndex = 75, dataType = BYTE)
+    // 6. [36]   BYTE    车牌颜色
+    @RequestField(order = 6, startIndex = 36, dataType = BYTE)
     private byte color;
 
-    // 7. [76,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 76")
+    // 7. [37,n)   String    车辆标识
+    @RequestField(order = 7, startIndex = 25, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 37")
     private String carIdentifier;
 }

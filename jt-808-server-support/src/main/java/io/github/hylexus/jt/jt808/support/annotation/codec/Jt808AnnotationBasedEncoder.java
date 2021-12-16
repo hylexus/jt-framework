@@ -53,7 +53,7 @@ public class Jt808AnnotationBasedEncoder {
         final ByteBuf respBody = this.encodeMsgBody(exchange.request(), responseMsg, session);
 
         exchange.response()
-                .msgType(annotation.respMsgId())
+                .msgType(annotation.msgId())
                 //.encryptionType(annotation.encryptionType())
                 .maxPackageSize(annotation.maxPackageSize())
                 .reversedBit15InHeader(annotation.reversedBit15InHeader())
@@ -73,7 +73,7 @@ public class Jt808AnnotationBasedEncoder {
         return Jt808Response.newBuilder()
                 .body(respBody)
                 .version(session.getProtocolVersion())
-                .msgType(annotation.respMsgId())
+                .msgType(annotation.msgId())
                 .terminalId(session.getTerminalId())
                 .flowId(serverFlowId)
                 .build();

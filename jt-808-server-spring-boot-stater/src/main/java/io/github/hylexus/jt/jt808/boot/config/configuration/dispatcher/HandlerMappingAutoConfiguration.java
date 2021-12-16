@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_INTERCEPTORS;
 
+/**
+ * @author hylexus
+ */
 public class HandlerMappingAutoConfiguration {
 
     @Bean(BEAN_NAME_JT808_INTERCEPTORS)

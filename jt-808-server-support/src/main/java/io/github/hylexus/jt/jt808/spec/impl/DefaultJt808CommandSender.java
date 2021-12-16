@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
@@ -11,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author hylexus
  */
+@BuiltinComponent
 public class DefaultJt808CommandSender extends AbstractJt808CommandSender {
 
     private final Jt808MsgEncoder msgEncoder;

@@ -19,8 +19,8 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @BuiltinComponent
-public class SessionManager implements Jt808SessionManager {
-    private static final Jt808SessionManager instance = new SessionManager();
+public class DefaultJt808SessionManager implements Jt808SessionManager {
+    private static final Jt808SessionManager instance = new DefaultJt808SessionManager();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     // <terminalId,Session>
     private final Map<String, Jt808Session> sessionMap = new ConcurrentHashMap<>();
@@ -28,7 +28,7 @@ public class SessionManager implements Jt808SessionManager {
     private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
     private Jt808SessionManagerEventListener listener = new DefaultJt808SessionManagerEventListener();
 
-    private SessionManager() {
+    private DefaultJt808SessionManager() {
     }
 
     public static Jt808SessionManager getInstance() {

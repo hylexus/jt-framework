@@ -4,7 +4,7 @@ package io.github.hylexus.jt.jt808.spec;
 /**
  * @author hylexus
  */
-public interface RequestMsgQueue {
+public interface Jt808RequestMsgQueue {
 
     void postMsg(Jt808Request metadata) throws Throwable;
 

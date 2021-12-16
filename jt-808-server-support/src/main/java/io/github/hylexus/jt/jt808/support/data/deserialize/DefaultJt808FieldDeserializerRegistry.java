@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.deserialize;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.impl.*;
 import lombok.NonNull;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author hylexus
  */
 @Slf4j
+@BuiltinComponent
 public class DefaultJt808FieldDeserializerRegistry implements Jt808FieldDeserializerRegistry {
 
     private final Map<RequestMsgConvertibleMetadata, Jt808FieldDeserializer<?>> converterMap = new ConcurrentHashMap<>();

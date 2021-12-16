@@ -19,13 +19,13 @@ import java.util.Optional;
  * @author hylexus
  */
 @Slf4j
-public abstract class AbstractRequestMsgQueueListener<T extends RequestMsgQueue> implements RequestMsgQueueListener {
+public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808RequestMsgQueue> implements Jt808RequestMsgQueueListener {
     protected T queue;
     private final Jt808DispatcherHandler dispatcherHandler;
     private final Jt808SessionManager sessionManager;
     private final Jt808SubPackageStorage subPackageStorage;
 
-    public AbstractRequestMsgQueueListener(
+    public AbstractJt808RequestMsgQueueListener(
             T queue, Jt808DispatcherHandler dispatcherHandler,
             Jt808SessionManager sessionManager, Jt808SubPackageStorage subPackageStorage) {
         this.queue = queue;

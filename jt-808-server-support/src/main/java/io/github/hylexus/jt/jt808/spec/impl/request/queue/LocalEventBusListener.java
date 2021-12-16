@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 @Slf4j
 @BuiltinComponent
-public class LocalEventBusListener extends AbstractRequestMsgQueueListener<LocalEventBus> {
+public class LocalEventBusListener extends AbstractJt808RequestMsgQueueListener<LocalEventBus> {
 
     public LocalEventBusListener(
             LocalEventBus queue, Jt808DispatcherHandler dispatcherHandler,

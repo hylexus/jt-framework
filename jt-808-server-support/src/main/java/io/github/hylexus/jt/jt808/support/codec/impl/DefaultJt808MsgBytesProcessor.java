@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.exception.Jt808MsgEscapeException;
 import io.netty.buffer.ByteBuf;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author hylexus
  */
 @Slf4j
+@BuiltinComponent
 public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
     private final ByteBufAllocator allocator;
 

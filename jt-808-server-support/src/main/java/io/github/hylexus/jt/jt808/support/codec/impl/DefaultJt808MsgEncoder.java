@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author hylexus
  */
 @Slf4j(topic = "jt-808.response.encoder")
+@BuiltinComponent
 public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;

@@ -21,7 +21,7 @@ public @interface Jt808ResponseBody {
      * @return 服务端响应消息的消息类型
      * @see Jt808Response#msgType()
      */
-    int respMsgId();
+    int msgId();
 
     // /**
     //  * @return 消息体加密类型

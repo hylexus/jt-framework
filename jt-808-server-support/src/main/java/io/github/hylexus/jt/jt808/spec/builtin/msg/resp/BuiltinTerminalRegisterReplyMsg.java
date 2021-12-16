@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.samples.debug.entity.resp;
+package io.github.hylexus.jt.jt808.spec.builtin.msg.resp;
 
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
@@ -12,8 +12,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Jt808ResponseBody(msgId = 0x8100)
-public class TerminalRegisterReplyRespMsg {
-
+public class BuiltinTerminalRegisterReplyMsg {
     // 1. byte[0,2) WORD 对应的终端注册消息的流水号
     @ResponseField(order = 0, dataType = MsgDataType.WORD)
     private int flowId;

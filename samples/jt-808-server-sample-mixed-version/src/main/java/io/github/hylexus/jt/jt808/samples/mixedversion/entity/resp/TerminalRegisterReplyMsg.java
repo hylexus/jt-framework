@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Jt808ResponseBody(respMsgId = 0x8100, maxPackageSize = 33)
+@Jt808ResponseBody(msgId = 0x8100, maxPackageSize = 33)
 public class TerminalRegisterReplyMsg {
     // 1. byte[0,2) WORD 对应的终端注册消息的流水号
     @ResponseField(order = 0, dataType = MsgDataType.WORD)

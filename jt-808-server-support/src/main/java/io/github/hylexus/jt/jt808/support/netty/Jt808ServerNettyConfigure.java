@@ -55,12 +55,12 @@ public interface Jt808ServerNettyConfigure {
         }
 
         private final BuiltInServerBootstrapProps serverBootstrapProps;
-        private final HeatBeatHandler heatBeatHandler;
+        private final Jt808TerminalHeatBeatHandler heatBeatHandler;
         private final Jt808DispatchChannelHandlerAdapter jt808DispatchChannelHandlerAdapter;
 
         public DefaultJt808ServerNettyConfigure(
                 BuiltInServerBootstrapProps serverBootstrapProps,
-                HeatBeatHandler heatBeatHandler,
+                Jt808TerminalHeatBeatHandler heatBeatHandler,
                 Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
 
             this.serverBootstrapProps = serverBootstrapProps;
@@ -87,7 +87,7 @@ public interface Jt808ServerNettyConfigure {
                         new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.MILLISECONDS)
                 );
             }
-            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_HEART_BEAT, heatBeatHandler);
+            ch.pipeline().addLast(BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT, heatBeatHandler);
             ch.pipeline().addLast(
                     NETTY_HANDLER_NAME_808_FRAME,
                     new DelimiterBasedFrameDecoder(

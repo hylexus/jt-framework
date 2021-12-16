@@ -4,7 +4,7 @@ import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.SubscriberExceptionHandler;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.RequestMsgQueue;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueue;
 
 import java.util.concurrent.Executor;
 
@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
  * @author hylexus
  */
 @BuiltinComponent
-public class LocalEventBus extends AsyncEventBus implements RequestMsgQueue {
+public class LocalEventBus extends AsyncEventBus implements Jt808RequestMsgQueue {
 
     public LocalEventBus(String identifier, Executor executor) {
         super(identifier, executor);

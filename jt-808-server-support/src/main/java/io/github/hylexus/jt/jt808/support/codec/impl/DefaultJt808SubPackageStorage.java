@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
@@ -26,6 +27,7 @@ import static java.util.Objects.requireNonNull;
  * @author hylexus
  */
 @Slf4j
+@BuiltinComponent
 public class DefaultJt808SubPackageStorage implements Jt808SubPackageStorage {
 
     public static final String LOG_PREFIX = "<SubPackage>";

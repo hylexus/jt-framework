@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,11 +17,12 @@ import static io.github.hylexus.jt.jt808.spec.session.SessionCloseReason.IDLE_TI
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class HeatBeatHandler extends ChannelInboundHandlerAdapter {
+@BuiltinComponent
+public class Jt808TerminalHeatBeatHandler extends ChannelInboundHandlerAdapter {
 
     private final Jt808SessionManager sessionManager;
 
-    public HeatBeatHandler(Jt808SessionManager sessionManager) {
+    public Jt808TerminalHeatBeatHandler(Jt808SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 

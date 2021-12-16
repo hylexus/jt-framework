@@ -18,7 +18,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
  */
 @Data
 @Accessors(chain = true)
-@Jt808ResponseBody(respMsgId = 0x8103, desc = "设置终端参数")
+@Jt808ResponseBody(msgId = 0x8103, desc = "设置终端参数")
 public class RespTerminalSettings {
 
     @ResponseField(order = 2, dataType = MsgDataType.LIST)

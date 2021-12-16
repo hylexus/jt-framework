@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher.*;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.*;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class Jt808DispatcherHandlerAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean
     public Jt808DispatcherHandler jt808DispatcherHandler(
             Jt808SessionManager sessionManager,
             ObjectProvider<Jt808HandlerMapping> handlerMappings,

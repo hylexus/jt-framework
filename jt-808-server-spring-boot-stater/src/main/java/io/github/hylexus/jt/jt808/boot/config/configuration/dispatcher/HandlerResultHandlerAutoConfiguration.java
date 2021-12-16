@@ -7,6 +7,9 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808Respons
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
 import org.springframework.context.annotation.Bean;
 
+/**
+ * @author hylexus
+ */
 public class HandlerResultHandlerAutoConfiguration {
 
     @Bean

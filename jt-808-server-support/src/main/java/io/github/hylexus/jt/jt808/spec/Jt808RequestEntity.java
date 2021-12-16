@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
+package io.github.hylexus.jt.jt808.spec;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;

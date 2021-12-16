@@ -14,7 +14,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.STRING;
  */
 @Data
 @Jt808RequestBody
-public class BuiltinTerminalAuthenticationMsgBodyV2019 {
+public class BuiltinTerminalAuthenticationMsgV2019 {
 
     // byte[0,1)    BYTE    鉴权码长度
     @RequestField(order = 1, startIndex = 0, dataType = BYTE)
