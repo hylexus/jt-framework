@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import lombok.Data;
@@ -14,6 +15,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.STRING;
  */
 @Data
 @Jt808RequestBody
+@BuiltinComponent
 public class BuiltinTerminalAuthenticationMsgV2019 {
 
     // byte[0,1)    BYTE    鉴权码长度

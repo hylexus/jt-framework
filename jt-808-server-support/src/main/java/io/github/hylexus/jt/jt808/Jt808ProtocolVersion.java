@@ -20,10 +20,6 @@ public enum Jt808ProtocolVersion {
      */
     VERSION_2011("2011", (byte) 0),
     /**
-     * 2013 版
-     */
-    VERSION_2013("2013", (byte) 0),
-    /**
      * 2019 版
      */
     VERSION_2019("2019", (byte) 1),
@@ -38,7 +34,6 @@ public enum Jt808ProtocolVersion {
     private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Collections.unmodifiableSet(Sets.newHashSet(AUTO_DETECTION));
     private static final Set<Jt808ProtocolVersion> V2019 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2019));
     private static final Set<Jt808ProtocolVersion> V2011 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2011));
-    private static final Set<Jt808ProtocolVersion> V2013 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2013));
     private static final Set<Jt808ProtocolVersion> V2011_AND_2019 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2011, VERSION_2019));
 
     Jt808ProtocolVersion(String shortDesc, byte versionBit) {
@@ -56,10 +51,6 @@ public enum Jt808ProtocolVersion {
 
     public static Set<Jt808ProtocolVersion> unmodifiableSetVersion2011() {
         return V2011;
-    }
-
-    public static Set<Jt808ProtocolVersion> unmodifiableSetVersion2013() {
-        return V2013;
     }
 
     // getters

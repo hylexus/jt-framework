@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.exception.JtCommunicationException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +12,7 @@ import io.netty.channel.Channel;
  *
  * @author hylexus
  */
+@BuiltinComponent
 public interface Jt808Session {
 
     int MAX_FLOW_ID = 0xffff;

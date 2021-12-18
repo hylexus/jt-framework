@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseBuilder;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
@@ -12,6 +13,7 @@ import io.netty.buffer.ByteBufAllocator;
  * @author hylexus
  * @see Jt808ResponseHandlerResultHandler
  */
+@BuiltinComponent
 public interface Jt808Response {
 
     int DEFAULT_MAX_PACKAGE_SIZE = 1024;

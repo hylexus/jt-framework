@@ -34,7 +34,7 @@ public class HandlerMappingAutoConfiguration {
     }
 
     @Bean
-    public Jt808HandlerMapping jt808ReqMsgHandlerHandlerMapping(
+    public Jt808HandlerMapping simpleJt808RequestHandlerHandlerMapping(
             ObjectProvider<SimpleJt808RequestHandler<?>> jt808ReqMsgHandlers,
             @Qualifier(BEAN_NAME_JT808_INTERCEPTORS) List<Jt808HandlerInterceptor> interceptors) {
 
@@ -44,13 +44,14 @@ public class HandlerMappingAutoConfiguration {
     }
 
     @Bean
-    public Jt808HandlerMapping jt808HandlerMapping(
-            ApplicationContext applicationContext, MsgTypeParser msgTypeParser,
+    public Jt808HandlerMapping jt808RequestHandlerMappingHandlerMapping(
+            ApplicationContext applicationContext,
+            MsgTypeParser msgTypeParser,
             @Qualifier(BEAN_NAME_JT808_INTERCEPTORS) List<Jt808HandlerInterceptor> interceptors) {
 
         final ComponentMapping<HandlerMethod> msgHandlerComponentMapping = new ComponentMapping<>();
         new Jt808RequestMsgHandlerScanner(applicationContext, msgTypeParser)
                 .doScan(msgHandlerComponentMapping);
-        return new Jt808RequestHandlerMappingHandlerMapping(msgHandlerComponentMapping, interceptors);
+        return new Jt808RequestHandlerMappingHandlerMapping(msgHandlerComponentMapping, interceptors, msgTypeParser);
     }
 }

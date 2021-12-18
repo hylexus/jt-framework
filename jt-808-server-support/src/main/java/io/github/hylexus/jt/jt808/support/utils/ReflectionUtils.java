@@ -8,7 +8,6 @@ import io.github.hylexus.oaks.utils.Bytes;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Optional;
 
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.JT_808_STRING_ENCODING;
 import static io.github.hylexus.oaks.utils.IntBitOps.intFromBytes;
@@ -27,15 +26,7 @@ public class ReflectionUtils {
     }
 
     public static boolean isVoidReturnType(Method method) {
-        return method.getReturnType() == Void.TYPE;
-    }
-
-    public static Optional<Field> findFieldByName(Class<?> cls, String fieldName) {
-        try {
-            return Optional.of(cls.getDeclaredField(fieldName));
-        } catch (NoSuchFieldException e) {
-            return Optional.empty();
-        }
+        return method.getReturnType() == Void.class || method.getReturnType() == void.class;
     }
 
     // TODO 支持父类搜索

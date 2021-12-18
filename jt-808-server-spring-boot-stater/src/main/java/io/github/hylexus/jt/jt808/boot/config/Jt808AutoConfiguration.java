@@ -13,8 +13,8 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalAuthenticationMsgHandlerForDebugging;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalRegisterMsgHandlerForDebugging;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalAuthenticationMsgHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalRegisterMsgHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -48,19 +48,19 @@ public class Jt808AutoConfiguration {
 
     @Bean
     @ConditionalOnJt808BuiltinComponentsEnabled
-    public BuiltinTerminalRegisterMsgHandlerForDebugging builtinJt808RequestHandlerForDebugging() {
-        return new BuiltinTerminalRegisterMsgHandlerForDebugging();
+    public BuiltinTerminalRegisterMsgHandler builtinJt808RequestHandlerForDebugging() {
+        return new BuiltinTerminalRegisterMsgHandler();
     }
 
     @Bean
     @ConditionalOnJt808BuiltinComponentsEnabled
-    public BuiltinTerminalAuthenticationMsgHandlerForDebugging builtinTerminalAuthenticationMsgHandlerForDebugging() {
-        return new BuiltinTerminalAuthenticationMsgHandlerForDebugging();
+    public BuiltinTerminalAuthenticationMsgHandler builtinTerminalAuthenticationMsgHandlerForDebugging() {
+        return new BuiltinTerminalAuthenticationMsgHandler();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "jt808", name = "print-component-statistics", havingValue = "true", matchIfMissing = true)
-    public Jt808ServerComponentStatistics jt808ServerComponentStatistics(MsgTypeParser msgTypeParser) {
-        return new Jt808ServerComponentStatistics(msgTypeParser);
+    public Jt808ServerComponentStatistics jt808ServerComponentStatistics() {
+        return new Jt808ServerComponentStatistics();
     }
 }

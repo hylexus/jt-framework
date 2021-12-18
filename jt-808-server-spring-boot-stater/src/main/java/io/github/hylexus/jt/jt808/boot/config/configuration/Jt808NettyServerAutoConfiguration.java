@@ -9,10 +9,10 @@ import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueue;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.LocalEventBus;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.LocalEventBusListener;
+import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManagerEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManagerEventListener;
-import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage;
@@ -103,7 +103,9 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
-    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(Jt808TerminalHeatBeatHandler heatBeatHandler, Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+    public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
+            Jt808TerminalHeatBeatHandler heatBeatHandler,
+            Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
 
         final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = this.serverProps.getServer().getIdleStateHandler();
         final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps

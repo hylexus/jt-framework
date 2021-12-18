@@ -11,8 +11,10 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
+import io.github.hylexus.jt.utils.CommonUtils;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +26,17 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.ClassUtils;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static io.github.hylexus.jt.utils.CommonUtils.*;
+import static io.github.hylexus.jt.utils.CommonUtils.isBuiltinComponent;
+import static io.github.hylexus.jt.utils.CommonUtils.shortClassName;
 import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
 
 /**
@@ -45,7 +53,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     public static final AnsiColor UNKNOWN_COMPONENT_TYPE_COLOR = AnsiColor.BRIGHT_RED;
 
     private static final String END_OF_LINE = "\n";
-    private final MsgTypeParser msgTypeParser;
     private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
             Lists.newArrayList(
                     MsgTypeParser.class,
@@ -67,20 +74,20 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     @Setter
     private ApplicationContext applicationContext;
 
-    public Jt808ServerComponentStatistics(
-            MsgTypeParser msgTypeParser) {
-        this.msgTypeParser = msgTypeParser;
+    public Jt808ServerComponentStatistics() {
     }
 
     @Override
     public void run(String... args) {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
 
         appendBannerPrefix(stringBuilder);
-
+        stringBuilder.append(END_OF_LINE);
+        stringBuilder.append(line(1, "RequestHandler MappingInfo:")).append(END_OF_LINE);
+        appendRequestHandlerMappingInfo(stringBuilder);
         stringBuilder
-                .append(END_OF_LINE).append(line(1, "Configurable Components:")).append(END_OF_LINE)
+                .append(END_OF_LINE).append(line(2, "Configurable Components:")).append(END_OF_LINE)
                 .append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
                 .append(END_OF_LINE);
@@ -101,16 +108,31 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         log.info(stringBuilder.toString());
     }
 
-    private boolean containsBean(Object handler) {
-        if (handler == null) {
-            return false;
-        }
-        String[] names = applicationContext.getBeanNamesForType(handler.getClass());
-        return names != null && names.length != 0;
-    }
-
-    private String formatEntityClass(AnsiColor color, String simpleName) {
-        return AnsiOutput.toString(DEPRECATED_COMPONENT_COLOR, "<", color, simpleName, DEPRECATED_COMPONENT_COLOR, ">");
+    private void appendRequestHandlerMappingInfo(StringBuilder stringBuilder) {
+        stringBuilder.append(String.format("%1$-30s\t|\t%2$s\n", "MsgId (MsgDesc)  [Version]", "RequestHandler"));
+        stringBuilder.append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------").append(END_OF_LINE);
+        applicationContext.getBeansOfType(Jt808RequestHandlerReporter.class)
+                .values()
+                .stream()
+                .flatMap(Jt808RequestHandlerReporter::report)
+                .sorted(Comparator
+                        .comparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getMsgType().getMsgId())
+                        .thenComparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getVersion().getVersionBit())
+                ).forEach(reporter -> {
+                    final String msgDesc = String.format("%s (%s)  [%s] ",
+                            HexStringUtils.int2HexString(reporter.getMsgType().getMsgId(), 4),
+                            reporter.getMsgType().getDesc(),
+                            reporter.getVersion().getShortDesc()
+                    );
+                    final String handlerDesc = formatHandlerName(reporter.getHandlerMethod());
+                    stringBuilder.append(String.format("%1$-30s\t| %2$-120s", msgDesc, handlerDesc)).append(END_OF_LINE);
+                });
+        stringBuilder.append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------")
+                .append("----------------------------------------------------------------------").append(END_OF_LINE);
+        log.info(stringBuilder.toString());
     }
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
@@ -137,10 +159,21 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private AnsiColor detectColor(Class<?> cls) {
         Class<?> userClass = ClassUtils.getUserClass(cls);
-        if (isDeprecatedClass(userClass)) {
+        if (CommonUtils.isDeprecatedComponent(userClass)) {
             return DEPRECATED_COMPONENT_COLOR;
         }
         if (isBuiltinComponent(userClass)) {
+            return BUILTIN_COMPONENT_COLOR;
+        }
+
+        return CUSTOM_COMPONENT_COLOR;
+    }
+
+    private AnsiColor detectColor(Method method) {
+        if (CommonUtils.isDeprecatedComponent(method)) {
+            return DEPRECATED_COMPONENT_COLOR;
+        }
+        if (isBuiltinComponent(method)) {
             return BUILTIN_COMPONENT_COLOR;
         }
 
@@ -166,6 +199,40 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                                 ? componentPrefix(color) + shortClassName(userClass)
                                 : componentPrefix(color) + userClass.getName()
                 )
+        );
+    }
+
+    private String formatHandlerName(Method method) {
+        if (method == null) {
+            return AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "(U) NULL");
+        }
+        final Class<?> userClass = method.getDeclaringClass();
+        final AnsiColor handlerColor = detectColor(userClass);
+        final String paramList;
+        if (method.getParameters() != null) {
+            paramList = Stream.of(method.getParameters())
+                    .map(parameter -> {
+                        final AnsiColor color = detectColor(parameter.getType());
+                        // Generic in param ...
+                        final Type parameterizedType = parameter.getParameterizedType();
+                        if (parameterizedType instanceof ParameterizedType && ((ParameterizedType) parameterizedType).getActualTypeArguments() != null) {
+                            final String paramInfo = Stream.of(((ParameterizedType) parameterizedType).getActualTypeArguments())
+                                    .map(actualTypeArgument -> (Class<?>) actualTypeArgument)
+                                    .map(actualTypeArgument -> {
+                                        final AnsiColor genericColor = detectColor(actualTypeArgument);
+                                        return AnsiOutput.toString(genericColor, actualTypeArgument.getSimpleName(), AnsiColor.DEFAULT);
+                                    }).collect(Collectors.joining(", ", "<", ">"));
+
+                            return AnsiOutput.toString(color, parameter.getType().getSimpleName(), paramInfo, AnsiColor.DEFAULT);
+                        }
+                        return AnsiOutput.toString(color, parameter.getType().getSimpleName(), AnsiColor.DEFAULT);
+                    }).collect(Collectors.joining(", "));
+        } else {
+            paramList = "";
+        }
+        return AnsiOutput.toString(
+                handlerColor,
+                componentPrefix(handlerColor) + userClass.getSimpleName() + "#" + method.getName() + "(" + paramList + ")"
         );
     }
 

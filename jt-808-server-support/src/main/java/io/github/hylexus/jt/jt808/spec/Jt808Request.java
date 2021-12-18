@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
  * @author hylexus
  * @see Jt808MsgDecoder
  */
+@BuiltinComponent
 public interface Jt808Request {
 
     /**

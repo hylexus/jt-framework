@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -55,4 +56,7 @@ public class ComponentMapping<T extends MultipleVersionSupport> {
         }
     }
 
+    public Map<Integer, Map<Jt808ProtocolVersion, T>> getMappings() {
+        return Collections.unmodifiableMap(mappings);
+    }
 }

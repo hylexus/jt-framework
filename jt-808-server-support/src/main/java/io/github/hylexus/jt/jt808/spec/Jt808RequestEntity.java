@@ -1,15 +1,14 @@
 package io.github.hylexus.jt.jt808.spec;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
-import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.netty.buffer.ByteBuf;
 
 /**
  * @author hylexus
  */
+@BuiltinComponent
 public class Jt808RequestEntity<T> {
     private final MsgType msgType;
     private final Jt808RequestHeader header;

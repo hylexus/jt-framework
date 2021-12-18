@@ -10,22 +10,23 @@ import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.*;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2011;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
  * @author hylexus
  */
 @Slf4j
 @Jt808RequestHandler
-public class BuiltinTerminalAuthenticationMsgHandlerForDebugging implements ReplaceableComponent, BuiltinComponent {
+public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableComponent, BuiltinComponent {
 
     @Override
     public int getOrder() {
         return LOWEST_PRECEDENCE;
     }
 
-    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = {VERSION_2011, VERSION_2013})
-    public BuiltinServerCommonReplyMsg authMsgV2011AndV2013(Jt808Request request, BuiltinTerminalAuthenticationMsgV2011 body) {
+    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2011)
+    public BuiltinServerCommonReplyMsg authMsgV2011(Jt808Request request, BuiltinTerminalAuthenticationMsgV2011 body) {
         log.info("V2011--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
                 .setTerminalFlowId(request.flowId())

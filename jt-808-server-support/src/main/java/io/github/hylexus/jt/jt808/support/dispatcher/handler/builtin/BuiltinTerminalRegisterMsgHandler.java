@@ -5,7 +5,6 @@ import io.github.hylexus.jt.core.ReplaceableComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalRegisterMsgV2011;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalRegisterMsgV2013;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinTerminalRegisterReplyMsg;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
@@ -13,14 +12,15 @@ import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.*;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2011;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
  * @author hylexus
  */
 @Slf4j
 @Jt808RequestHandler
-public class BuiltinTerminalRegisterMsgHandlerForDebugging implements ReplaceableComponent, BuiltinComponent {
+public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, BuiltinComponent {
 
     @Override
     public int getOrder() {
@@ -33,15 +33,6 @@ public class BuiltinTerminalRegisterMsgHandlerForDebugging implements Replaceabl
         return new BuiltinTerminalRegisterReplyMsg()
                 .setFlowId(session.getCurrentFlowId())
                 .setAuthCode("AuthCode-admin-2011")
-                .setResult((byte) 0);
-    }
-
-    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2013)
-    public BuiltinTerminalRegisterReplyMsg processTerminalRegisterV2013(Jt808RequestEntity<BuiltinTerminalRegisterMsgV2013> entity) {
-        log.info("TerminalRegister V2013 : {}", entity.body());
-        return new BuiltinTerminalRegisterReplyMsg()
-                .setFlowId(entity.session().getCurrentFlowId())
-                .setAuthCode("AuthCode-admin-2013")
                 .setResult((byte) 0);
     }
 

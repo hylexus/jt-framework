@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.scan;
 
-import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
@@ -56,8 +56,8 @@ public class Jt808RequestMsgHandlerScanner {
                 final Jt808RequestHandlerMapping mappingAnnotation = method.getAnnotation(Jt808RequestHandlerMapping.class);
 
                 for (int msgId : mappingAnnotation.msgType()) {
-                    MsgType msgType = msgTypeParser.parseMsgType(msgId)
-                            .orElseThrow(() -> new JtIllegalStateException("Can not parse msgType with msgId " + msgId));
+                    final MsgType msgType = msgTypeParser.parseMsgType(msgId)
+                            .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                     for (Jt808ProtocolVersion version : mappingAnnotation.versions()) {
                         final HandlerMethod handlerMethod = new HandlerMethod(
                                 createBeanInstance(cls), method, isVoidReturnType(method),
