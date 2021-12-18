@@ -5,7 +5,7 @@ import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
@@ -23,9 +23,9 @@ import static io.github.hylexus.jt.jt808.support.utils.ReflectionUtils.isVoidRet
 
 public class Jt808RequestMsgHandlerScanner {
     private final ApplicationContext applicationContext;
-    private final MsgTypeParser msgTypeParser;
+    private final Jt808MsgTypeParser msgTypeParser;
 
-    public Jt808RequestMsgHandlerScanner(ApplicationContext applicationContext, MsgTypeParser msgTypeParser) {
+    public Jt808RequestMsgHandlerScanner(ApplicationContext applicationContext, Jt808MsgTypeParser msgTypeParser) {
         this.applicationContext = applicationContext;
         this.msgTypeParser = msgTypeParser;
     }

@@ -16,7 +16,7 @@ export const zh: NavbarConfig = [
         ]
     },
     {
-        text: "协议扫盲", link: "/protocol-introduction/"
+        text: "协议扫盲", link: "/protocol-introduction/808/v2019.html"
     },
     {
         text: "FAQ", link: "/frequently-asked-questions/"

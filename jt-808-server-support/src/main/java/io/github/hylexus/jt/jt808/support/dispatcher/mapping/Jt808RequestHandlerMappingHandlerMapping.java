@@ -3,7 +3,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.mapping;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;
@@ -24,12 +24,12 @@ public class Jt808RequestHandlerMappingHandlerMapping
         extends AbstractJt808HandlerMapping
         implements Jt808RequestHandlerReporter {
 
-    private final MsgTypeParser msgTypeParser;
+    private final Jt808MsgTypeParser msgTypeParser;
     private final ComponentMapping<HandlerMethod> msgHandlerComponentMapping;
 
     public Jt808RequestHandlerMappingHandlerMapping(
             ComponentMapping<HandlerMethod> msgHandlerComponentMapping,
-            List<Jt808HandlerInterceptor> interceptors, MsgTypeParser msgTypeParser) {
+            List<Jt808HandlerInterceptor> interceptors, Jt808MsgTypeParser msgTypeParser) {
 
         super(interceptors);
         this.msgHandlerComponentMapping = msgHandlerComponentMapping;

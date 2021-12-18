@@ -74,8 +74,9 @@ export const zh: SidebarConfig = {
     '/protocol-introduction/': [
         {
             text: "JT/T 808", children: [
-                "/protocol-introduction/808/v2011.md",
                 "/protocol-introduction/808/v2019.md",
+                "/protocol-introduction/808/v2013.md",
+                "/protocol-introduction/808/v2011.md",
             ]
         },
 

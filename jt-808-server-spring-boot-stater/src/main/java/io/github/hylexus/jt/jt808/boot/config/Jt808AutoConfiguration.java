@@ -7,8 +7,8 @@ import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808ServerComponent
 import io.github.hylexus.jt.jt808.boot.config.configuration.codec.Jt808CodecAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
-import io.github.hylexus.jt.jt808.spec.impl.BuiltinMsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
@@ -35,8 +35,8 @@ public class Jt808AutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MsgTypeParser msgTypeParser() {
-        return new BuiltinMsgTypeParser();
+    public Jt808MsgTypeParser msgTypeParser() {
+        return new BuiltinJt808MsgTypeParser();
     }
 
     @Bean

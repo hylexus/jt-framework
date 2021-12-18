@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.spec.impl;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
  * @author hylexus
  */
 @DebugOnly
-public class BuiltinMsgTypeParser implements MsgTypeParser {
+public class BuiltinJt808MsgTypeParser implements Jt808MsgTypeParser {
 
     @Override
     public Optional<MsgType> parseMsgType(int msgType) {

@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * @author hylexus
  **/
-public interface MsgTypeParser {
+public interface Jt808MsgTypeParser {
 
     Optional<MsgType> parseMsgType(int msgType);
 }

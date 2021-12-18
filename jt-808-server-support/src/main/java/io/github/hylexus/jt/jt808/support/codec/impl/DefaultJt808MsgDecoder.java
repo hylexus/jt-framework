@@ -24,10 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @BuiltinComponent
 public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
-    private final MsgTypeParser msgTypeParser;
+    private final Jt808MsgTypeParser msgTypeParser;
     private final Jt808MsgBytesProcessor msgBytesProcessor;
 
-    public DefaultJt808MsgDecoder(MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
+    public DefaultJt808MsgDecoder(Jt808MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
         this.msgTypeParser = msgTypeParser;
         this.msgBytesProcessor = msgBytesProcessor;
     }

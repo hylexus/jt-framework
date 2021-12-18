@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.codec;
 
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -31,7 +31,7 @@ public class Jt808CodecAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808MsgDecoder jt808MsgDecoder(MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
+    public Jt808MsgDecoder jt808MsgDecoder(Jt808MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
         return new DefaultJt808MsgDecoder(msgTypeParser, msgBytesProcessor);
     }
 

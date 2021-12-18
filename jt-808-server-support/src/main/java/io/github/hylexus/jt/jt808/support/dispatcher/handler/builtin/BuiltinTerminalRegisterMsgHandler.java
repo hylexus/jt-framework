@@ -22,11 +22,6 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 @Jt808RequestHandler
 public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, BuiltinComponent {
 
-    @Override
-    public int getOrder() {
-        return LOWEST_PRECEDENCE;
-    }
-
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2011)
     public BuiltinMsg8100 processTerminalRegisterV2011(BuiltinMsg0100V2011 msgBody, Jt808Session session) {
         log.info("TerminalRegister V2011 : {}", msgBody);
@@ -50,6 +45,11 @@ public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, 
                         // 鉴权码
                         .writeString("AuthCode-admin-2019")
                 ).build();
+    }
+
+    @Override
+    public int getOrder() {
+        return LOWEST_PRECEDENCE;
     }
 
 }

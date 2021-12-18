@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt808.spec.MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
@@ -46,7 +46,7 @@ public class HandlerMappingAutoConfiguration {
     @Bean
     public Jt808HandlerMapping jt808RequestHandlerMappingHandlerMapping(
             ApplicationContext applicationContext,
-            MsgTypeParser msgTypeParser,
+            Jt808MsgTypeParser msgTypeParser,
             @Qualifier(BEAN_NAME_JT808_INTERCEPTORS) List<Jt808HandlerInterceptor> interceptors) {
 
         final ComponentMapping<HandlerMethod> msgHandlerComponentMapping = new ComponentMapping<>();

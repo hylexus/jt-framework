@@ -54,7 +54,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     private static final String END_OF_LINE = "\n";
     private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
             Lists.newArrayList(
-                    MsgTypeParser.class,
+                    Jt808MsgTypeParser.class,
                     Jt808MsgDecoder.class,
                     Jt808MsgEncoder.class,
                     Jt808MsgBytesProcessor.class,
