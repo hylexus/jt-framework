@@ -3,8 +3,8 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin;
 import io.github.hylexus.jt.core.BuiltinComponent;
 import io.github.hylexus.jt.core.ReplaceableComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalAuthenticationMsgV2011;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalAuthenticationMsgV2019;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0102V2011;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0102V2019;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
@@ -26,7 +26,7 @@ public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableCompo
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2011)
-    public BuiltinServerCommonReplyMsg authMsgV2011(Jt808Request request, BuiltinTerminalAuthenticationMsgV2011 body) {
+    public BuiltinServerCommonReplyMsg authMsgV2011(Jt808Request request, BuiltinMsg0102V2011 body) {
         log.info("V2011--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
                 .setTerminalFlowId(request.flowId())
@@ -35,7 +35,7 @@ public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableCompo
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2019)
-    public BuiltinServerCommonReplyMsg authMsgV2019(Jt808Request request, BuiltinTerminalAuthenticationMsgV2019 body) {
+    public BuiltinServerCommonReplyMsg authMsgV2019(Jt808Request request, BuiltinMsg0102V2019 body) {
         log.info("V2019--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
                 .setTerminalFlowId(request.flowId())

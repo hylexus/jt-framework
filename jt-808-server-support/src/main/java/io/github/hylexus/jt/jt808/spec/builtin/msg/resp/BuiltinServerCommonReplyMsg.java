@@ -37,4 +37,10 @@ public class BuiltinServerCommonReplyMsg {
     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
     @ResponseField(order = 2, dataType = BYTE)
     int result;
+
+    public static BuiltinServerCommonReplyMsg success(int terminalMsgId, int terminalFlowId) {
+        return new BuiltinServerCommonReplyMsg().setResult(RESULT_SUCCESS)
+                .setTerminalMsgId(terminalMsgId)
+                .setTerminalFlowId(terminalFlowId);
+    }
 }

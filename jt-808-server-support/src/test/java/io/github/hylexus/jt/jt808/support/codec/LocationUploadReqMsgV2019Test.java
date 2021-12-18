@@ -66,7 +66,7 @@ public class LocationUploadReqMsgV2019Test {
 
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, byteCountMethod = "getExtraInfoLength")
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "getExtraInfoLength()")
-    @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
+    @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data

@@ -13,6 +13,7 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinCommonHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalAuthenticationMsgHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalRegisterMsgHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -56,6 +57,12 @@ public class Jt808AutoConfiguration {
     @ConditionalOnJt808BuiltinComponentsEnabled
     public BuiltinTerminalAuthenticationMsgHandler builtinTerminalAuthenticationMsgHandlerForDebugging() {
         return new BuiltinTerminalAuthenticationMsgHandler();
+    }
+
+    @Bean
+    @ConditionalOnJt808BuiltinComponentsEnabled
+    public BuiltinCommonHandler builtinCommonHandler() {
+        return new BuiltinCommonHandler();
     }
 
     @Bean

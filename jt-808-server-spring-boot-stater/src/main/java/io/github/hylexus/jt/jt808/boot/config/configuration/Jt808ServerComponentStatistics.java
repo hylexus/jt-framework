@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.github.hylexus.jt.utils.CommonUtils.isBuiltinComponent;
-import static io.github.hylexus.jt.utils.CommonUtils.shortClassName;
 import static org.springframework.boot.ansi.AnsiColor.BRIGHT_BLACK;
 
 /**
@@ -95,7 +94,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         for (Class<?> cls : classSet) {
             stringBuilder.append(String.format("%1$-36s", cls.getSimpleName()))
                     .append("|  ")
-                    .append(formatClassName(applicationContext.getBean(cls), false, false))
+                    .append(formatClassName(applicationContext.getBean(cls)))
                     .append(END_OF_LINE);
         }
         stringBuilder
@@ -109,7 +108,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private void appendRequestHandlerMappingInfo(StringBuilder stringBuilder) {
-        stringBuilder.append(String.format("%1$-30s\t|\t%2$s\n", "MsgId (MsgDesc)  [Version]", "RequestHandler"));
+        stringBuilder.append(String.format("%1$-30s\t|\t%2$s\n", "MsgId [Version]  (MsgDesc)", "RequestHandler"));
         stringBuilder.append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------").append(END_OF_LINE);
@@ -121,10 +120,10 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                         .comparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getMsgType().getMsgId())
                         .thenComparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getVersion().getVersionBit())
                 ).forEach(reporter -> {
-                    final String msgDesc = String.format("%s (%s)  [%s] ",
+                    final String msgDesc = String.format("%s [%-4s]  (%s) ",
                             HexStringUtils.int2HexString(reporter.getMsgType().getMsgId(), 4),
-                            reporter.getMsgType().getDesc(),
-                            reporter.getVersion().getShortDesc()
+                            reporter.getVersion().getShortDesc(),reporter.getMsgType().getDesc()
+
                     );
                     final String handlerDesc = formatHandlerName(reporter.getHandlerMethod());
                     stringBuilder.append(String.format("%1$-30s\t| %2$-120s", msgDesc, handlerDesc)).append(END_OF_LINE);
@@ -132,7 +131,6 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         stringBuilder.append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------").append(END_OF_LINE);
-        log.info(stringBuilder.toString());
     }
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
@@ -181,25 +179,12 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     }
 
     private String formatClassName(Object instance) {
-        return formatClassName(instance, true, false);
-    }
-
-    private String formatClassName(Object instance, boolean shortenClassName, boolean simpleName) {
         if (instance == null) {
             return AnsiOutput.toString(UNKNOWN_COMPONENT_TYPE_COLOR, "(U) NULL");
         }
-        Class<?> userClass = ClassUtils.getUserClass(instance);
-        AnsiColor color = detectColor(userClass);
-        return AnsiOutput.toString(
-                color,
-                simpleName
-                        ? componentPrefix(color) + userClass.getSimpleName()
-                        : (
-                        shortenClassName
-                                ? componentPrefix(color) + shortClassName(userClass)
-                                : componentPrefix(color) + userClass.getName()
-                )
-        );
+        final Class<?> userClass = ClassUtils.getUserClass(instance);
+        final AnsiColor color = detectColor(userClass);
+        return AnsiOutput.toString(color, componentPrefix(color) + userClass.getName());
     }
 
     private String formatHandlerName(Method method) {

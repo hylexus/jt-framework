@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.scan;
 
+import io.github.hylexus.jt.core.BuiltinComponent;
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.MsgType;
@@ -47,6 +49,15 @@ public class Jt808RequestMsgHandlerScanner {
             assert handlerAnnotation != null;
 
             final Method[] declaredMethods = ReflectionUtils.getAllDeclaredMethods(ClassUtils.getUserClass(cls));
+            final Object beanInstance = createBeanInstance(cls);
+            final int order;
+            if (beanInstance instanceof OrderedComponent) {
+                order = ((OrderedComponent) beanInstance).getOrder();
+            } else if (beanInstance instanceof BuiltinComponent) {
+                order = OrderedComponent.LOWEST_PRECEDENCE;
+            } else {
+                order = OrderedComponent.DEFAULT_ORDER;
+            }
             for (Method method : declaredMethods) {
 
                 if (!isRequestMsgMappingMethod(method)) {
@@ -60,8 +71,8 @@ public class Jt808RequestMsgHandlerScanner {
                             .orElseThrow(() -> new JtIllegalArgumentException("Can not parse msgType with msgId " + msgId));
                     for (Jt808ProtocolVersion version : mappingAnnotation.versions()) {
                         final HandlerMethod handlerMethod = new HandlerMethod(
-                                createBeanInstance(cls), method, isVoidReturnType(method),
-                                Set.of(version), Set.of(msgType)
+                                beanInstance, method, isVoidReturnType(method),
+                                Set.of(version), Set.of(msgType), order
                         );
                         componentMapping.register(handlerMethod, msgType, version);
                     }

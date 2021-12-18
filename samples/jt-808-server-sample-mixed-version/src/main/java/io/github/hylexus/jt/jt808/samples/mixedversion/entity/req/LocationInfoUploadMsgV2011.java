@@ -56,7 +56,7 @@ public class LocationInfoUploadMsgV2011 {
     private String time;
 
     // (9). 附加项列表
-    @RequestField(order = 9, startIndex = 28, dataType = LIST, lengthExpression = "#request.msgBodyLength() - 28")
+    @RequestField(order = 9, startIndex = 28, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data

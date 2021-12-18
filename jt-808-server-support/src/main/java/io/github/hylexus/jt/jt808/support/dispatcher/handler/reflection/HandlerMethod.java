@@ -36,16 +36,19 @@ public class HandlerMethod implements MultipleVersionSupport {
     private final boolean isVoidReturnType;
     private final Set<Jt808ProtocolVersion> supportedVersions;
     private final Set<MsgType> supportedMsgTypes;
+    private final int order;
 
     public HandlerMethod(
             Object beanInstance, Method method, boolean isVoidReturnType,
-            Set<Jt808ProtocolVersion> supportedVersions, Set<MsgType> supportedMsgTypes) {
+            Set<Jt808ProtocolVersion> supportedVersions, Set<MsgType> supportedMsgTypes,
+            int order) {
         this.beanInstance = beanInstance;
         this.method = method;
         this.parameters = this.initMethodParameters(method);
         this.isVoidReturnType = isVoidReturnType;
         this.supportedVersions = supportedVersions;
         this.supportedMsgTypes = supportedMsgTypes;
+        this.order = order;
     }
 
     private MethodParameter[] initMethodParameters(Method method) {
@@ -82,5 +85,10 @@ public class HandlerMethod implements MultipleVersionSupport {
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
         return supportedMsgTypes;
+    }
+
+    @Override
+    public int getOrder() {
+        return order;
     }
 }

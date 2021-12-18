@@ -2,6 +2,8 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.scan;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.core.BuiltinComponent;
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
@@ -52,6 +54,14 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
 
     private void doScan(Collection<Object> exceptionHandlerClassList) {
         for (Object handlerClassInstance : exceptionHandlerClassList) {
+            final int order;
+            if (handlerClassInstance instanceof OrderedComponent) {
+                order = ((OrderedComponent) handlerClassInstance).getOrder();
+            } else if (handlerClassInstance instanceof BuiltinComponent) {
+                order = OrderedComponent.LOWEST_PRECEDENCE;
+            } else {
+                order = OrderedComponent.DEFAULT_ORDER;
+            }
             ReflectionUtils.doWithMethods(
                     ClassUtils.getUserClass(handlerClassInstance.getClass()),
                     method -> {
@@ -60,7 +70,7 @@ public class Jt808ExceptionHandlerScanner implements InitializingBean, Applicati
                                 handlerClassInstance, method,
                                 isVoidReturnType(method),
                                 supportedExceptionTypes,
-                                argumentResolver
+                                argumentResolver, order
                         );
 
                         this.compositeJt808ExceptionHandler.addExceptionHandler(handlerMethod);

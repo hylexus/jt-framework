@@ -37,16 +37,11 @@ public class ExceptionHandlerHandlerMethod extends HandlerMethod implements Jt80
     public ExceptionHandlerHandlerMethod(
             Object beanInstance, Method method, boolean isVoidReturnType,
             Set<Class<? extends Throwable>> supportedExceptionTypes,
-            Jt808HandlerMethodArgumentResolver argumentResolver) {
+            Jt808HandlerMethodArgumentResolver argumentResolver, int order) {
 
-        super(beanInstance, method, isVoidReturnType, null, null);
+        super(beanInstance, method, isVoidReturnType, null, null, order);
         this.supportedExceptionTypes = supportedExceptionTypes;
         this.argumentResolver = argumentResolver;
-    }
-
-    @Override
-    public int getOrder() {
-        return EXCEPTION_HANDLER_CUSTOMER_ANNOTATION_BASED;
     }
 
     @Override

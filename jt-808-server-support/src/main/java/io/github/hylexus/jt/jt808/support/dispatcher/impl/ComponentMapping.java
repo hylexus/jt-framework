@@ -3,6 +3,8 @@ package io.github.hylexus.jt.jt808.support.dispatcher.impl;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
+import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
+import io.github.hylexus.jt.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
@@ -45,7 +47,9 @@ public class ComponentMapping<T extends MultipleVersionSupport> {
             final T oldComponent = map.get(version);
             if (oldComponent.shouldBeReplacedBy(component)) {
                 map.put(version, component);
-                log.warn("duplicate msgType : {}, the Component {} was replaced by {}", msgType, oldComponent.getClass(), component.getClass());
+                log.info("Duplicate msgType : {}, the Component [{}] has been replaced by [{}]",
+                        msgType, formatComponentName(oldComponent), formatComponentName(component)
+                );
             }
         } else {
             map.put(version, component);
@@ -54,6 +58,14 @@ public class ComponentMapping<T extends MultipleVersionSupport> {
         if (map.size() == Jt808ProtocolVersion.values().length) {
             map.remove(Jt808ProtocolVersion.AUTO_DETECTION);
         }
+    }
+
+    private String formatComponentName(MultipleVersionSupport instance) {
+        if (instance instanceof HandlerMethod) {
+            final HandlerMethod handlerMethod = (HandlerMethod) instance;
+            return CommonUtils.shortClassName(handlerMethod.getBeanInstance().getClass()) + "#" + handlerMethod.getMethod().getName();
+        }
+        return CommonUtils.shortClassName(instance.getClass());
     }
 
     public Map<Integer, Map<Jt808ProtocolVersion, T>> getMappings() {

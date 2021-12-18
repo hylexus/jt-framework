@@ -35,7 +35,7 @@ public class TerminalRegisterMsgV2011 {
     private byte color;
 
     // 7. [37,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 37, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 37")
+    @RequestField(order = 7, startIndex = 37, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 37")
     private String carIdentifier;
 
 }

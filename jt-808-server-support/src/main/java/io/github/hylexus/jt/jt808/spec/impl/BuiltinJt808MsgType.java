@@ -25,7 +25,8 @@ public enum BuiltinJt808MsgType implements MsgType {
     CLIENT_REGISTER_REPLY(0x8100, "终端注册应答"),
 
     CLIENT_AUTH(0x0102, "终端鉴权"),
-    CLIENT_LOCATION_INFO_UPLOAD(0x0200, "位置上报"),
+    CLIENT_LOCATION_INFO_UPLOAD(0x0200, "定位数据上报"),
+    CLIENT_LOCATION_INFO_BATCH_UPLOAD(0x0704, "定位数据批量上报"),
     ;
 
     private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);

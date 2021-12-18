@@ -15,7 +15,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Data
 @Jt808RequestBody
 @BuiltinComponent
-public class BuiltinTerminalRegisterMsgV2019 {
+public class BuiltinMsg0100V2019 {
     // 1. [0-2) WORD 省域ID
     @RequestField(order = 1, startIndex = 0, dataType = WORD)
     private int provinceId;
@@ -41,6 +41,6 @@ public class BuiltinTerminalRegisterMsgV2019 {
     private byte color;
 
     // 7. [76,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 76")
+    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 76")
     private String carIdentifier;
 }

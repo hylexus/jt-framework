@@ -56,6 +56,7 @@ public class Jt808AnnotationBasedDecoder {
         evaluationContext.setVariable("this", instance);
         evaluationContext.setVariable("request", request);
         evaluationContext.setVariable("header", request.header());
+        evaluationContext.setVariable("ctx", new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf));
         final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getFieldMetadataList();
         if (fieldMetadataList.isEmpty()) {
             throw new Jt808AnnotationArgumentResolveException("Entity Class has empty field list.");
@@ -95,16 +96,20 @@ public class Jt808AnnotationBasedDecoder {
         // 2. 内嵌对象 特殊处理
         if (jtDataType == MsgDataType.OBJECT) {
             final Class<?> objectClass = fieldMetadata.getFieldType();
-            final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            //final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            final ByteBuf slice = bodyDataBuf.readSlice(length);
             final Object objectInstance = ReflectionUtils.createInstance(objectClass);
-            return decode(objectClass, objectInstance, slice, request);
+            final Object value = decode(objectClass, objectInstance, slice, request);
+            this.setFieldValue(instance, fieldMetadata, value);
+            return value;
         }
 
         // 3 LIST 特殊处理
         if (jtDataType == MsgDataType.LIST) {
             final List<Object> list = new ArrayList<>();
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
-            final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            //final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            final ByteBuf slice = bodyDataBuf.readSlice(length);
             while (slice.isReadable()) {
                 final Object itemInstance = ReflectionUtils.createInstance(itemClass);
                 final ByteBuf it = slice.slice(slice.readerIndex(), slice.readableBytes());

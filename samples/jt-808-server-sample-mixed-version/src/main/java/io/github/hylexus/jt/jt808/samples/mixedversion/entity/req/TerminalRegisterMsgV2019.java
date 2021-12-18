@@ -35,7 +35,7 @@ public class TerminalRegisterMsgV2019 {
     private byte color;
 
     // 7. [76,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#header.msgBodyLength() - 76")
+    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 76")
     private String carIdentifier;
 
 }
