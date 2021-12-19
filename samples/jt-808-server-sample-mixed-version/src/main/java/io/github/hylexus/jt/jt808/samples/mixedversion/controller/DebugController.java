@@ -33,8 +33,8 @@ public class DebugController {
     }
 
     private TerminalVo toTerminalVo(Jt808Session session) {
-        return new TerminalVo().setTerminalId(session.getTerminalId())
-                .setVersion(session.getProtocolVersion().getShortDesc())
-                .setLastCommunicationTime(new Date(session.getLastCommunicateTimestamp()));
+        return new TerminalVo().setTerminalId(session.terminalId())
+                .setVersion(session.protocolVersion().getShortDesc())
+                .setLastCommunicationTime(new Date(session.lastCommunicateTimestamp()));
     }
 }

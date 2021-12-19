@@ -32,42 +32,42 @@ public interface Jt808Session {
 
     /**
      * @return 当前流水号，并自增
-     * @see #getCurrentFlowId(boolean)
+     * @see #currentFlowId(boolean)
      */
-    default int getCurrentFlowId() {
-        return getCurrentFlowId(true);
+    default int currentFlowId() {
+        return currentFlowId(true);
     }
 
     /**
      * @param autoIncrement 是否自增
      * @return 当前流水号
-     * @see #getCurrentFlowId()
+     * @see #currentFlowId()
      */
-    int getCurrentFlowId(boolean autoIncrement);
+    int currentFlowId(boolean autoIncrement);
 
-    String getId();
+    String id();
 
-    default String getSessionId() {
-        return getId();
+    default String sessionId() {
+        return id();
     }
 
-    Channel getChannel();
+    Channel channel();
 
-    Jt808Session setChannel(Channel channel);
+    Jt808Session channel(Channel channel);
 
-    String getTerminalId();
+    String terminalId();
 
     /**
      * @return 当前终端的协议版本号
      */
-    Jt808ProtocolVersion getProtocolVersion();
+    Jt808ProtocolVersion protocolVersion();
 
     /**
      * @return 上次通信时间
      */
-    long getLastCommunicateTimestamp();
+    long lastCommunicateTimestamp();
 
-    Jt808Session setLastCommunicateTimestamp(long lastCommunicateTimestamp);
+    Jt808Session lastCommunicateTimestamp(long lastCommunicateTimestamp);
 
     String toString();
 }

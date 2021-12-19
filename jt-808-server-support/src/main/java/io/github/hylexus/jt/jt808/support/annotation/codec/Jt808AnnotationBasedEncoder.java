@@ -57,7 +57,7 @@ public class Jt808AnnotationBasedEncoder {
                 //.encryptionType(annotation.encryptionType())
                 .maxPackageSize(annotation.maxPackageSize())
                 .reversedBit15InHeader(annotation.reversedBit15InHeader())
-                .flowId(session.getCurrentFlowId())
+                .flowId(session.currentFlowId())
                 .writeBytes(respBody);
     }
 
@@ -72,9 +72,9 @@ public class Jt808AnnotationBasedEncoder {
         final ByteBuf respBody = this.encodeMsgBody(request, responseMsg, session);
         return Jt808Response.newBuilder()
                 .body(respBody)
-                .version(session.getProtocolVersion())
+                .version(session.protocolVersion())
                 .msgType(annotation.msgId())
-                .terminalId(session.getTerminalId())
+                .terminalId(session.terminalId())
                 .flowId(serverFlowId)
                 .build();
     }

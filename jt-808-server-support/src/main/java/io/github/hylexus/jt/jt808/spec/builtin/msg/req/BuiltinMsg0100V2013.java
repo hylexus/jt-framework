@@ -32,7 +32,7 @@ public class BuiltinMsg0100V2013 {
     @RequestField(order = 4, startIndex = 9, dataType = STRING, length = 20)
     private String terminalType;
 
-    // 5. [29-36) BYTE[7] 终端型号
+    // 5. [29-36) BYTE[7] 终端ID
     @RequestField(order = 5, startIndex = 17, dataType = STRING, length = 7)
     private String terminalId;
 
@@ -41,6 +41,6 @@ public class BuiltinMsg0100V2013 {
     private byte color;
 
     // 7. [37,n)   String    车辆标识
-    @RequestField(order = 7, startIndex = 25, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 37")
+    @RequestField(order = 7, startIndex = 37, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 37")
     private String carIdentifier;
 }

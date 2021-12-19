@@ -1,6 +1,11 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.codec;
 
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetector;
+import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinTerminalRegisterJt808ProtocolVersionDetector;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -18,10 +23,29 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Comparator;
+
 /**
  * @author hylexus
  */
 public class Jt808CodecAutoConfiguration {
+
+    @Bean
+    public Jt808ProtocolVersionDetector builtinTerminalRegisterJt808ProtocolVersionDetector() {
+        return new BuiltinTerminalRegisterJt808ProtocolVersionDetector();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt808ProtocolVersionDetectorRegistry jt808ProtocolVersionDetectorRegistry(ObjectProvider<Jt808ProtocolVersionDetector> versionDetectors) {
+        final Jt808ProtocolVersionDetectorRegistry registry = new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector());
+        versionDetectors.stream()
+                .sorted(Comparator.comparing(Jt808ProtocolVersionDetector::getOrder))
+                .forEach(detector -> detector.getSupportedMsgTypes()
+                        .forEach(msgId -> registry.register(msgId, detector))
+                );
+        return registry;
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -31,8 +55,12 @@ public class Jt808CodecAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808MsgDecoder jt808MsgDecoder(Jt808MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
-        return new DefaultJt808MsgDecoder(msgTypeParser, msgBytesProcessor);
+    public Jt808MsgDecoder jt808MsgDecoder(
+            Jt808MsgTypeParser msgTypeParser,
+            Jt808MsgBytesProcessor msgBytesProcessor,
+            Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry) {
+
+        return new DefaultJt808MsgDecoder(msgTypeParser, msgBytesProcessor, versionDetectorRegistry);
     }
 
     @Bean

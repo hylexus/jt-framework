@@ -26,10 +26,16 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
     private final Jt808MsgTypeParser msgTypeParser;
     private final Jt808MsgBytesProcessor msgBytesProcessor;
+    private final Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry;
 
-    public DefaultJt808MsgDecoder(Jt808MsgTypeParser msgTypeParser, Jt808MsgBytesProcessor msgBytesProcessor) {
+    public DefaultJt808MsgDecoder(
+            Jt808MsgTypeParser msgTypeParser,
+            Jt808MsgBytesProcessor msgBytesProcessor,
+            Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry) {
+
         this.msgTypeParser = msgTypeParser;
         this.msgBytesProcessor = msgBytesProcessor;
+        this.versionDetectorRegistry = versionDetectorRegistry;
     }
 
     @Override
@@ -86,29 +92,25 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     }
 
     private Jt808RequestHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
+        // 1. bytes[0-1] WORD
+        final int msgId = JtProtocolUtils.getWord(byteBuf, 0);
         // bytes[2-3] WORD 消息体属性
         final int msgBodyPropsIntValue = JtProtocolUtils.getWord(byteBuf, 2);
-        final DefaultJt808MsgBodyProps msgBodyProps = new DefaultJt808MsgBodyProps(msgBodyPropsIntValue);
+        final Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps = new DefaultJt808MsgBodyProps(msgBodyPropsIntValue);
 
-        // 消息体中版本标识为1
-        if (msgBodyProps.versionIdentifier() == 1) {
-            // bytes[4] Byte
-            final byte version = byteBuf.getByte(4);
-            if (version == Jt808ProtocolVersion.VERSION_2019.getVersionBit()) {
-                return this.parseHeaderV2019(msgBodyProps, byteBuf);
-            } else if (version == Jt808ProtocolVersion.VERSION_2011.getVersionBit()) {
-                return this.parseHeaderV2011(msgBodyProps, byteBuf);
-            } else {
-                throw new JtIllegalStateException("未知版本: " + version);
-            }
-        } else {
-            return this.parseHeaderV2011(msgBodyProps, byteBuf);
+        final Jt808ProtocolVersion version = this.versionDetectorRegistry.getJt808ProtocolVersionDetector(msgId).detectVersion(msgId, msgBodyProps, byteBuf);
+        if (version.getVersionBit() == 1) {
+            return this.parseHeaderGreatThanOrEqualsV2019(version, msgBodyProps, byteBuf);
+        } else if (version == Jt808ProtocolVersion.VERSION_2013 || version == Jt808ProtocolVersion.VERSION_2011) {
+            return this.parseHeaderLessThanOrEqualsV2013(version, msgBodyProps, byteBuf);
         }
+
+        throw new JtIllegalStateException("未知版本: " + version);
     }
 
-    private Jt808RequestHeader parseHeaderV2019(Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+    private Jt808RequestHeader parseHeaderGreatThanOrEqualsV2019(Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
-        headerSpec.version(Jt808ProtocolVersion.VERSION_2019);
+        headerSpec.version(version);
         // 1. bytes[0-1] WORD
         final int msgId = JtProtocolUtils.getWord(byteBuf, 0);
         headerSpec.msgType(msgId);
@@ -116,8 +118,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         headerSpec.msgBodyProps(msgBodyProps);
 
         // 3. bytes[4] WORD 协议版本号
-        final byte version = byteBuf.getByte(4);
-        assert version == 1;
+        // final byte version = byteBuf.getByte(4);
+        // assert version == 1; // V2019
         // 4. byte[5-14]   终端手机号或设备ID bcd[10]
         headerSpec.terminalId(JtProtocolUtils.getBcd(byteBuf, 5, 10));
 
@@ -126,9 +128,9 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return headerSpec;
     }
 
-    private Jt808RequestHeader parseHeaderV2011(Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+    private Jt808RequestHeader parseHeaderLessThanOrEqualsV2013(Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
-        headerSpec.version(Jt808ProtocolVersion.VERSION_2011);
+        headerSpec.version(version);
         // 1. bytes[0-1] WORD
         final int msgId = JtProtocolUtils.getWord(byteBuf, 0);
         headerSpec.msgType(msgId);

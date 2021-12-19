@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.impl.response;
 
+import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.MsgType;
@@ -78,9 +79,12 @@ public class DefaultJt808ResponseBuilder {
     }
 
     public Jt808Response build() {
+        if (msgId == 0) {
+            throw new JtIllegalArgumentException("msgId() can not be null");
+        }
         return new DefaultJt808Response(
                 Objects.requireNonNull(version, "version() can not be null"),
-                Objects.requireNonNull(msgId, "msgType() can not be null"),
+                msgId,
                 encryptionType,
                 maxPackageSize,
                 reversedBit15InHeader,

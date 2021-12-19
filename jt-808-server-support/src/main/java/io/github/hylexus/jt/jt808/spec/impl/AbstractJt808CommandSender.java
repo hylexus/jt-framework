@@ -48,7 +48,7 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
             throws JtCommunicationException, InterruptedException {
 
         final Jt808Session session = this.getSession(key.terminalId());
-        final ByteBuf byteBuf = this.encode(session, entity, key.serverFlowId().orElse(session.getCurrentFlowId()));
+        final ByteBuf byteBuf = this.encode(session, entity, key.serverFlowId().orElse(session.currentFlowId()));
         return sendAndWait(key, session, timeout, timeUnit, byteBuf);
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
     @Override
     public void sendCommand(String terminalId, Object response) throws JtCommunicationException {
         final Jt808Session session = getSession(terminalId);
-        final ByteBuf byteBuf = this.encode(session, response, session.getCurrentFlowId());
+        final ByteBuf byteBuf = this.encode(session, response, session.currentFlowId());
         session.sendMsgToClient(byteBuf);
     }
 

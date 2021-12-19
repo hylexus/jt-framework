@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug.handler;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2011;
+import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2013;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterReplyRespMsg;
@@ -31,9 +31,9 @@ public class AnnotationHandler01 {
         CommandWaitingPool.getInstance().putIfNecessary(commandKey, body);
     }
 
-    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2011)
-    public Object processRegisterMsgV2011(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2011 authMsgV2011) {
-        log.info("{}", authMsgV2011);
+    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2013)
+    public Object processRegisterMsgV2013(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2013 authMsgV2013) {
+        log.info("{}", authMsgV2013);
         // 测试异常处理
         if (new Random().nextBoolean()) {
             throw new IllegalStateException("Random exception ...");
@@ -41,7 +41,7 @@ public class AnnotationHandler01 {
         return new TerminalRegisterReplyRespMsg()
                 .setFlowId(request.flowId())
                 .setResult((byte) 0)
-                .setAuthCode("AuthCode2011DebugDemo");
+                .setAuthCode("AuthCode2013DebugDemo");
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2019)
@@ -50,8 +50,8 @@ public class AnnotationHandler01 {
         return Jt808Response.newBuilder()
                 .msgType(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
                 .version(Jt808ProtocolVersion.VERSION_2019)
-                .terminalId(session.getTerminalId())
-                .flowId(session.getCurrentFlowId())
+                .terminalId(session.terminalId())
+                .flowId(session.currentFlowId())
                 .body(bodyWriter -> bodyWriter
                         .writeWord(request.flowId())
                         .writeByte(0)

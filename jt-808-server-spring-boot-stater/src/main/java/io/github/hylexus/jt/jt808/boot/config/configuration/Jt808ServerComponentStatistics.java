@@ -55,6 +55,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
     private final Set<Class<?>> classSet = Sets.newLinkedHashSet(
             Lists.newArrayList(
                     Jt808MsgTypeParser.class,
+                    Jt808ProtocolVersionDetectorRegistry.class,
                     Jt808MsgDecoder.class,
                     Jt808MsgEncoder.class,
                     Jt808MsgBytesProcessor.class,
@@ -122,7 +123,7 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                 ).forEach(reporter -> {
                     final String msgDesc = String.format("%s [%-4s]  (%s) ",
                             HexStringUtils.int2HexString(reporter.getMsgType().getMsgId(), 4),
-                            reporter.getVersion().getShortDesc(),reporter.getMsgType().getDesc()
+                            reporter.getVersion().getShortDesc(), reporter.getMsgType().getDesc()
 
                     );
                     final String handlerDesc = formatHandlerName(reporter.getHandlerMethod());

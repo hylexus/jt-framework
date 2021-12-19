@@ -1,8 +1,5 @@
 package io.github.hylexus.jt.jt808;
 
-import com.google.common.collect.Sets;
-
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -12,9 +9,13 @@ import java.util.Set;
  */
 public enum Jt808ProtocolVersion {
     /**
-     * 自动检测(2019版||2011版)
+     * 自动检测2019版||2013版
      */
     AUTO_DETECTION("ALL", (byte) -1),
+    /**
+     * 2013 版
+     */
+    VERSION_2013("2013", (byte) 0),
     /**
      * 2011 版
      */
@@ -31,10 +32,10 @@ public enum Jt808ProtocolVersion {
     private final byte versionBit;
     private final String shortDesc;
 
-    private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Collections.unmodifiableSet(Sets.newHashSet(AUTO_DETECTION));
-    private static final Set<Jt808ProtocolVersion> V2019 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2019));
-    private static final Set<Jt808ProtocolVersion> V2011 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2011));
-    private static final Set<Jt808ProtocolVersion> V2011_AND_2019 = Collections.unmodifiableSet(Sets.newHashSet(VERSION_2011, VERSION_2019));
+    private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Set.of(AUTO_DETECTION);
+    private static final Set<Jt808ProtocolVersion> V2019 = Set.of(VERSION_2019);
+    private static final Set<Jt808ProtocolVersion> V2013 = Set.of(VERSION_2013);
+    private static final Set<Jt808ProtocolVersion> V2011 = Set.of(VERSION_2011);
 
     Jt808ProtocolVersion(String shortDesc, byte versionBit) {
         this.shortDesc = shortDesc;
@@ -47,6 +48,10 @@ public enum Jt808ProtocolVersion {
 
     public static Set<Jt808ProtocolVersion> unmodifiableSetVersion2019() {
         return V2019;
+    }
+
+    public static Set<Jt808ProtocolVersion> unmodifiableSetVersion2013() {
+        return V2013;
     }
 
     public static Set<Jt808ProtocolVersion> unmodifiableSetVersion2011() {

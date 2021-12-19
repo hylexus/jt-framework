@@ -3,6 +3,8 @@ package io.github.hylexus.jt.jt808.support.codec;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
@@ -16,7 +18,8 @@ public class Jt808AnnotationBasedDecoderTest {
 
     private final Jt808MsgDecoder jt808MsgDecoder = new DefaultJt808MsgDecoder(
             new BuiltinJt808MsgTypeParser(),
-            new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)
+            new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
+            new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector())
     );
 
     @Test

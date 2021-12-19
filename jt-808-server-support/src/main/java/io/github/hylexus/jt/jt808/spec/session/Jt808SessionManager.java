@@ -52,7 +52,7 @@ public interface Jt808SessionManager {
      * @see #list(int, int, Predicate, Comparator, Function)
      */
     default List<Jt808Session> list(int page, int pageSize, Predicate<Jt808Session> filter) {
-        return list(page, pageSize, filter, Comparator.comparing(Jt808Session::getTerminalId), Function.identity());
+        return list(page, pageSize, filter, Comparator.comparing(Jt808Session::terminalId), Function.identity());
     }
 
     /**

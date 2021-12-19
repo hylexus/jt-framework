@@ -62,7 +62,7 @@ logging:
 至此，对 **808消息** 的处理服务已经搭建完毕。启动 `spring-boot` 项目开始测试。
 
 <p class="">
-    <img :src="$withBase('/img/print-component-statistics.png')"/>
+    <img :src="$withBase('/img/v2/quick-start/print-component-statistics.jpg')"/>
 </p>
 
 可以从启动日志中的`组件统计信息`中看到内置了一些消息处理器：

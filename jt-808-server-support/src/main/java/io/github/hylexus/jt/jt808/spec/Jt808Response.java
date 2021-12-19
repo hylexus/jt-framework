@@ -61,14 +61,14 @@ public interface Jt808Response {
     Jt808Response reversedBit15InHeader(byte reversedBit15InHeader);
 
     /**
-     * {@link Jt808ProtocolVersion#VERSION_2011 VERSION_2011} -- byte[4,10) -- {@link  MsgDataType#BCD BCD[6]} -- 终端手机号
+     * {@link Jt808ProtocolVersion#VERSION_2013 VERSION_2013} -- byte[4,10) -- {@link  MsgDataType#BCD BCD[6]} -- 终端手机号
      * <p>
      * {@link Jt808ProtocolVersion#VERSION_2019 VERSION_2019} -- byte[5,15) -- {@link  MsgDataType#BCD BCD[10]} -- 终端手机号
      */
     String terminalId();
 
     /**
-     * {@link Jt808ProtocolVersion#VERSION_2011 VERSION_2011} -- byte[10,11) -- {@link  MsgDataType#WORD WORD} -- 流水号
+     * {@link Jt808ProtocolVersion#VERSION_2013 VERSION_2013} -- byte[10,11) -- {@link  MsgDataType#WORD WORD} -- 流水号
      * <p>
      * {@link Jt808ProtocolVersion#VERSION_2019 VERSION_2019} -- byte[15,16) -- {@link  MsgDataType#WORD WORD} -- 流水号
      */

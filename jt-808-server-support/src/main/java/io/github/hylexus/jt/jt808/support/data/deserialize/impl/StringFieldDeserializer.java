@@ -38,7 +38,7 @@ public class StringFieldDeserializer implements Jt808FieldDeserializer<String> {
     @Override
     public String deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.STRING) {
-            return JtProtocolUtils.readString(byteBuf, start, length, charset);
+            return JtProtocolUtils.readString(byteBuf, length, charset);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to String");
     }

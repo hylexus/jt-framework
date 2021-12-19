@@ -55,11 +55,11 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     protected Session buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
         final Session session = new Session();
-        session.setChannel(channel);
-        session.setId(generateSessionId(channel));
-        session.setTerminalId(terminalId);
-        session.setLastCommunicateTimestamp(System.currentTimeMillis());
-        session.setProtocolVersion(version);
+        session.channel(channel);
+        session.id(generateSessionId(channel));
+        session.terminalId(terminalId);
+        session.lastCommunicateTimestamp(System.currentTimeMillis());
+        session.protocolVersion(version);
         return session;
     }
 
@@ -77,11 +77,11 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
         final Optional<Jt808Session> session = findByTerminalId(terminalId, updateLastCommunicateTime);
         if (session.isPresent()) {
             Jt808Session oldSession = session.get();
-            if (oldSession.getChannel() != channel) {
-                log.warn("replace channel for terminal({}), new:{}, old:{}", terminalId, channel.remoteAddress(), oldSession.getChannel().remoteAddress());
+            if (oldSession.channel() != channel) {
+                log.warn("replace channel for terminal({}), new:{}, old:{}", terminalId, channel.remoteAddress(), oldSession.channel().remoteAddress());
                 // 单个终端一般来说不会有高并发的问题，这里就不加锁了
                 // 有必要的话，可以自己复写该方法或实现自己的SessionManager
-                oldSession.setChannel(channel);
+                oldSession.channel(channel);
             }
             return oldSession;
         }
@@ -94,8 +94,8 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
     public void persistence(Jt808Session session) {
         lock.writeLock().lock();
         try {
-            this.sessionMap.put(session.getTerminalId(), session);
-            sessionIdTerminalIdMapping.put(session.getId(), session.getTerminalId());
+            this.sessionMap.put(session.terminalId(), session);
+            sessionIdTerminalIdMapping.put(session.id(), session.terminalId());
         } finally {
             lock.writeLock().unlock();
         }
@@ -126,7 +126,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
             final Jt808Session session = this.removeBySessionId(sessionId);
             if (session != null) {
                 listener.onSessionClose(session, reason);
-                session.getChannel().close();
+                session.channel().close();
             }
         } finally {
             lock.writeLock().unlock();
@@ -141,7 +141,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
         }
 
         if (updateLastCommunicateTime) {
-            session.setLastCommunicateTimestamp(System.currentTimeMillis());
+            session.lastCommunicateTimestamp(System.currentTimeMillis());
         }
 
         if (!this.checkStatus(session)) {
@@ -153,8 +153,8 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     private boolean checkStatus(Jt808Session session) {
         //if (!session.getChannel().isOpen()) {
-        if (!session.getChannel().isActive()) {
-            this.removeBySessionIdAndClose(session.getId(), SessionCloseReason.CHANNEL_INACTIVE);
+        if (!session.channel().isActive()) {
+            this.removeBySessionIdAndClose(session.id(), SessionCloseReason.CHANNEL_INACTIVE);
             return false;
         }
         return true;

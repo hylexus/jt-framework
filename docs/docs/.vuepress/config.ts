@@ -112,7 +112,7 @@ export default defineUserConfig<DefaultThemeOptions>({
             handleImportPath: (str) =>
                 str.replace(
                     /^@example-src/,
-                    path.resolve(__dirname, '../../backend-src/')
+                    path.resolve(__dirname, '../../example-src/')
                 ),
         },
     },

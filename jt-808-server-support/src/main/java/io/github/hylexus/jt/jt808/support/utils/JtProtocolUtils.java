@@ -97,11 +97,11 @@ public abstract class JtProtocolUtils {
         return new String(bytes, charset);
     }
 
-    public static String readString(ByteBuf byteBuf, int startIndex, int length) {
-        return readString(byteBuf, startIndex, length, JtProtocolConstant.JT_808_STRING_ENCODING);
+    public static String readString(ByteBuf byteBuf, int length) {
+        return readString(byteBuf, length, JtProtocolConstant.JT_808_STRING_ENCODING);
     }
 
-    public static String readString(ByteBuf byteBuf, int startIndex, int length, Charset charset) {
+    public static String readString(ByteBuf byteBuf, int length, Charset charset) {
         final byte[] bytes = readBytes(byteBuf, length);
         return new String(bytes, charset);
     }

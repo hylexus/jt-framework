@@ -10,7 +10,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 
 @Data
 @Jt808RequestBody
-public class DebugTerminalRegisterMsgV2011 implements Jt808RequestHeaderAware {
+public class DebugTerminalRegisterMsgV2013 implements Jt808RequestHeaderAware {
     private Jt808RequestHeader header;
 
     // 1. [0-2) WORD 省域ID

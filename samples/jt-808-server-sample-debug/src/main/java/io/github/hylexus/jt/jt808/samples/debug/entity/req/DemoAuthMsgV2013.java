@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Jt808RequestBody
-public class DemoAuthMsgV2011 implements Jt808RequestHeaderAware {
+public class DemoAuthMsgV2013 implements Jt808RequestHeaderAware {
     private Jt808RequestHeader header;
 
     @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.STRING, lengthMethod = "getAuthCodeByteCount")

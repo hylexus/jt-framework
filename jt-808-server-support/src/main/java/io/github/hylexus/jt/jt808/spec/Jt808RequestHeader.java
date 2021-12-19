@@ -12,7 +12,7 @@ public interface Jt808RequestHeader {
 
     static int msgBodyStartIndex(Jt808ProtocolVersion version, boolean hasSubPackage) {
         // 2011, 2013
-        if (version.getVersionBit() == Jt808ProtocolVersion.VERSION_2011.getVersionBit()) {
+        if (version.getVersionBit() == Jt808ProtocolVersion.VERSION_2013.getVersionBit()) {
             return hasSubPackage ? 16 : 12;
         }
         // 2019

@@ -6,6 +6,9 @@ export const zh: SidebarConfig = {
             text: '基础',
             children: [
                 '/v2/jt-808/guide/basic/quick-start.md',
+                '/v2/jt-808/guide/basic/terminology.md',
+                '/v2/jt-808/guide/basic/request-processing.md',
+                '/v2/jt-808/guide/basic/response-processing.md',
             ],
         },
         {

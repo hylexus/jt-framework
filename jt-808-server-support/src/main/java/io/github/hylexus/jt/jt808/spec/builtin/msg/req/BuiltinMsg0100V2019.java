@@ -32,11 +32,11 @@ public class BuiltinMsg0100V2019 {
     @RequestField(order = 4, startIndex = 15, dataType = STRING, length = 30)
     private String terminalType;
 
-    // 5. [45-75) BYTE[30] 终端型号
+    // 5. [45-75) BYTE[30] 终端ID
     @RequestField(order = 5, startIndex = 45, dataType = STRING, length = 30)
     private String terminalId;
 
-    // 6. [75,76)   BYTE    车牌颜色
+    // 6. [75]   BYTE    车牌颜色
     @RequestField(order = 6, startIndex = 75, dataType = BYTE)
     private byte color;
 

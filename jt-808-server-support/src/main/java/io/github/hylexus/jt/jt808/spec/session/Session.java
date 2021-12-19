@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author hylexus
  **/
-@ToString
-@Accessors(chain = true)
+@ToString(exclude = "channel")
+@Accessors(chain = true, fluent = true)
 @BuiltinComponent
 public class Session implements Jt808Session {
     public Session() {
@@ -57,7 +57,7 @@ public class Session implements Jt808Session {
     }
 
     @Override
-    public int getCurrentFlowId(boolean autoIncrement) {
+    public int currentFlowId(boolean autoIncrement) {
 
         if (!autoIncrement) {
             int flowId = this.nextFlowId.get();

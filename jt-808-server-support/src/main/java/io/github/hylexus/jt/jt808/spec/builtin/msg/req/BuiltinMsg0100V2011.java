@@ -32,7 +32,7 @@ public class BuiltinMsg0100V2011 {
     @RequestField(order = 4, startIndex = 9, dataType = STRING, length = 8)
     private String terminalType;
 
-    // 5. [17-24) BYTE[7] 终端型号
+    // 5. [17-24) BYTE[7] 终端ID
     @RequestField(order = 5, startIndex = 17, dataType = STRING, length = 7)
     private String terminalId;
 

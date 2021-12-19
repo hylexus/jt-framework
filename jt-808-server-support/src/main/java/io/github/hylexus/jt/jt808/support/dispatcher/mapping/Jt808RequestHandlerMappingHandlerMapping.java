@@ -1,9 +1,9 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.mapping;
 
+import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerExecutionChain;

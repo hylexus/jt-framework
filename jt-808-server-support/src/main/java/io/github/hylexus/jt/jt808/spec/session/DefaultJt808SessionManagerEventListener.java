@@ -19,7 +19,7 @@ public class DefaultJt808SessionManagerEventListener implements Jt808SessionMana
         if (session == null) {
             return;
         }
-        log.info("[SessionAdd] terminalId = {}, sessionId = {}", session.getTerminalId(), session.getId());
+        log.info("[SessionAdd] terminalId = {}, sessionId = {}", session.terminalId(), session.id());
     }
 
     @Override
@@ -27,7 +27,7 @@ public class DefaultJt808SessionManagerEventListener implements Jt808SessionMana
         if (session == null) {
             return;
         }
-        log.info("[SessionRemove] terminalId = {}, sessionId = {}", session.getTerminalId(), session.getId());
+        log.info("[SessionRemove] terminalId = {}, sessionId = {}", session.terminalId(), session.id());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class DefaultJt808SessionManagerEventListener implements Jt808SessionMana
         if (session == null) {
             return;
         }
-        log.info("[SessionClose] terminalId = {}, sessionId = {}, reason = {}", session.getTerminalId(), session.getId(), closeReason);
+        log.info("[SessionClose] terminalId = {}, sessionId = {}, reason = {}", session.terminalId(), session.id(), closeReason);
     }
 
 }

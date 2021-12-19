@@ -10,7 +10,7 @@ import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2011;
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2013;
 import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
@@ -21,7 +21,7 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 @Jt808RequestHandler
 public class CommonHandler {
 
-    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2011)
+    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2013)
     public TerminalRegisterReplyMsg processTerminalRegisterMsgV2011(Jt808Request request, TerminalRegisterMsgV2011 body) {
 
         log.info("V2011--TerminalRegister : {}", body);
@@ -43,7 +43,7 @@ public class CommonHandler {
                 ;
     }
 
-    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2011)
+    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2013)
     public ServerCommonReplyMsg authMsgV2011(Jt808Request request, TerminalAuthMsgV2011 body) {
         log.info("V2011--auth : {}", body);
         return new ServerCommonReplyMsg()
@@ -61,7 +61,7 @@ public class CommonHandler {
                 .setResult(0);
     }
 
-    @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2011)
+    @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2013)
     public ServerCommonReplyMsg processLocationMsgV2011(Jt808Request request, LocationInfoUploadMsgV2011 body) {
         log.info("V2011--LocationUpload : {}", body);
         return new ServerCommonReplyMsg()

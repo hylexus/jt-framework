@@ -2,9 +2,9 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.adapter;
 
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerAdapter;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
+import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
 import lombok.Setter;
@@ -12,7 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -45,23 +44,21 @@ public class SimpleJt808RequestHandlerHandlerAdapter
                 .getBeansOfType(SimpleJt808RequestHandler.class)
                 .values()
                 .stream()
-                .flatMap(handler -> {
-                    @SuppressWarnings("unchecked") final Set<MsgType> supportedMsgTypes = handler.getSupportedMsgTypes();
-                    return supportedMsgTypes
-                            .stream()
-                            .flatMap(msgType -> handler.getSupportedVersions()
-                                    .stream()
-                                    .map(version -> {
-                                        final Method method;
-                                        try {
-                                            method = handler.getClass().getMethod("handleMsg", Jt808ServerExchange.class);
-                                        } catch (NoSuchMethodException e) {
-                                            throw new JtIllegalStateException(e);
-                                        }
-                                        return new RequestMappingReporter(msgType, version, handler, method);
-                                    })
-                            );
-                });
+                .flatMap(handler -> ((MultipleVersionSupport) handler).getSupportedMsgTypes()
+                        .stream()
+                        .flatMap(msgType -> ((MultipleVersionSupport) handler).getSupportedVersions()
+                                .stream()
+                                .map(version -> {
+                                    final Method method;
+                                    try {
+                                        method = handler.getClass().getMethod("handleMsg", Jt808ServerExchange.class);
+                                    } catch (NoSuchMethodException e) {
+                                        throw new JtIllegalStateException(e);
+                                    }
+                                    return new RequestMappingReporter(msgType, version, handler, method);
+                                })
+                        )
+                );
     }
 
 }
