@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin;
 
 import io.github.hylexus.jt.core.BuiltinComponent;
 import io.github.hylexus.jt.core.ReplaceableComponent;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2011;
@@ -9,7 +10,6 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2013;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2019;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg8100;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +26,10 @@ public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, 
     // terminalId: 013912344321
     // 7E01000023013912344321007B000B0002696431323361626364656667684944313233343501B8CA4A2D313233343531317E
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2011)
-    public BuiltinMsg8100 processTerminalRegisterV2011(BuiltinMsg0100V2011 msgBody, Jt808Session session) {
+    public BuiltinMsg8100 processTerminalRegisterV2011(Jt808Request request, BuiltinMsg0100V2011 msgBody) {
         log.info("TerminalRegister V2011 : {}", msgBody);
         return new BuiltinMsg8100()
-                .setFlowId(session.currentFlowId())
+                .setTerminalFlowId(request.flowId())
                 .setAuthCode("AuthCode-admin-2011")
                 .setResult((byte) 0);
     }
@@ -40,7 +40,7 @@ public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, 
     public BuiltinMsg8100 processTerminalRegisterV2013(Jt808RequestEntity<BuiltinMsg0100V2013> entity) {
         log.info("TerminalRegister V2013 : {}", entity.body());
         return new BuiltinMsg8100()
-                .setFlowId(entity.session().currentFlowId())
+                .setTerminalFlowId(entity.flowId())
                 .setAuthCode("AuthCode-admin-2013")
                 .setResult((byte) 0);
     }
@@ -49,17 +49,17 @@ public class BuiltinTerminalRegisterMsgHandler implements ReplaceableComponent, 
     // 7E010040560100000000013912344329007B000B00026964393837363534333231747970653030313233343536373831323334353637383837363534333231494
     // 43030303031323334353637383132333435363738383736353433323101B8CA4A2D313233343539257E
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
-    public Jt808Response processTerminalRegisterV2019(Jt808RequestEntity<BuiltinMsg0100V2019> entity) {
-        log.info("TerminalRegister V2019 : {}", entity.body());
+    public Jt808Response processTerminalRegisterV2019(Jt808RequestEntity<BuiltinMsg0100V2019> request) {
+        log.info("TerminalRegister V2019 : {}", request.body());
 
         return Jt808Response.newBuilder()
-                .version(entity.version())
-                .terminalId(entity.terminalId())
-                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
-                .flowId(entity.session().currentFlowId())
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
+                .version(request.version())
+                .terminalId(request.terminalId())
+                .flowId(request.session().nextFlowId())
                 .body(writer -> writer
                         // 应答流水号
-                        .writeWord(entity.session().currentFlowId())
+                        .writeWord(request.flowId())
                         // 结果
                         .writeByte(0)
                         // 鉴权码

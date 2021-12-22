@@ -16,7 +16,7 @@ public class DefaultJt808Response implements Jt808Response {
     private int msgType;
     private int encryptionType;
     private byte reversedBit15InHeader;
-    private int maxPackageSize;
+    private int maxPackageSize = Jt808Response.DEFAULT_MAX_PACKAGE_SIZE;
     private final ByteBuf body;
 
     public static Jt808Response init(Jt808ProtocolVersion version, String terminalId) {

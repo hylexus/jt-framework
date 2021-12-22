@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ByteReader;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.netty.buffer.ByteBuf;
@@ -57,6 +58,11 @@ public interface Jt808Request {
     // ++++++++++++++++++++++++++++++++++++++++++++
     // ==> Shortcut Methods Start
     // ++++++++++++++++++++++++++++++++++++++++++++
+
+    default Jt808ByteReader bodyAsReader() {
+        return this::body;
+    }
+
     default int msgBodyLength() {
         return header().msgBodyLength();
     }

@@ -49,7 +49,12 @@ public class Jt808RequestHandlerMappingHandlerMapping
         return this.msgHandlerComponentMapping.getMappings().entrySet().stream().flatMap(entry -> {
             final Integer msgId = entry.getKey();
             final MsgType msgType = msgTypeParser.parseMsgType(msgId).orElseThrow();
-            return entry.getValue().entrySet().stream().map(it -> new RequestMappingReporter(msgType, it.getKey(), it.getValue(), it.getValue().getMethod()));
+            return entry.getValue().entrySet().stream()
+                    .map(it -> new RequestMappingReporter(
+                            msgType, it.getKey(), it.getValue(),
+                            it.getValue().getMethod(),
+                            it.getValue().getOrder())
+                    );
         });
     }
 }

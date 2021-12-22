@@ -19,7 +19,7 @@ public class DefaultJt808ResponseBuilderTest {
     public void testBuildRegisterMsgV2011() {
         final Jt808Response response = Jt808Response.newBuilder()
                 .version(Jt808ProtocolVersion.VERSION_2011)
-                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER)
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
                 .terminalId("013912344321")
                 .flowId(123)
                 .body(writer -> writer
@@ -45,7 +45,7 @@ public class DefaultJt808ResponseBuilderTest {
     public void testBuildRegisterMsgV2013() {
         final Jt808Response response = Jt808Response.newBuilder()
                 .version(Jt808ProtocolVersion.VERSION_2013)
-                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER)
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
                 .terminalId("013912344323")
                 .flowId(123)
                 .body(writer -> writer
@@ -71,7 +71,7 @@ public class DefaultJt808ResponseBuilderTest {
     public void testBuildRegisterMsgV2019() {
         final Jt808Response response = Jt808Response.newBuilder()
                 .version(Jt808ProtocolVersion.VERSION_2019)
-                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER)
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
                 .terminalId("00000000013912344329")
                 .flowId(123)
                 .body(writer -> writer

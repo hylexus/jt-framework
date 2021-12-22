@@ -31,19 +31,25 @@ public interface Jt808Session {
     void sendMsgToClient(ByteBuf byteBuf) throws JtCommunicationException;
 
     /**
-     * @return 当前流水号，并自增
-     * @see #currentFlowId(boolean)
+     * @return 当前流水号(并自增)
+     * @see #flowId(boolean)
+     */
+    default int nextFlowId() {
+        return flowId(true);
+    }
+
+    /**
+     * @return 当前流水号(不会自增)
      */
     default int currentFlowId() {
-        return currentFlowId(true);
+        return flowId(false);
     }
 
     /**
      * @param autoIncrement 是否自增
      * @return 当前流水号
-     * @see #currentFlowId()
      */
-    int currentFlowId(boolean autoIncrement);
+    int flowId(boolean autoIncrement);
 
     String id();
 

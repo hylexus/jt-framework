@@ -55,7 +55,7 @@ public class SimpleJt808RequestHandlerHandlerAdapter
                                     } catch (NoSuchMethodException e) {
                                         throw new JtIllegalStateException(e);
                                     }
-                                    return new RequestMappingReporter(msgType, version, handler, method);
+                                    return new RequestMappingReporter(msgType, version, handler, method, handler.getOrder());
                                 })
                         )
                 );

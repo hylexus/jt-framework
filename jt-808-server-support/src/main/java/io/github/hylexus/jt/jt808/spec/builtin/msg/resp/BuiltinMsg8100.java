@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class BuiltinMsg8100 {
     // 1. byte[0,2) WORD 对应的终端注册消息的流水号
     @ResponseField(order = 0, dataType = MsgDataType.WORD)
-    private int flowId;
+    private int terminalFlowId;
     // 2. byte[2,3) BYTE 0:成功;1:车辆已被注册;2:数据库中无该车辆; 3:终端已被注册;4:数据库中无该终端
     @ResponseField(order = 1, dataType = MsgDataType.BYTE)
     private byte result;

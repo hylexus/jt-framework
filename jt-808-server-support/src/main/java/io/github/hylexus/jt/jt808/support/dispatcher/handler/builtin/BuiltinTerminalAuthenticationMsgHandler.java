@@ -19,18 +19,13 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.*;
 @Jt808RequestHandler
 public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableComponent, BuiltinComponent {
 
-    @Override
-    public int getOrder() {
-        return LOWEST_PRECEDENCE;
-    }
-
     // 7E0102000C013912344321007B61646D696E2D3132333435364D7E
     @Jt808RequestHandlerMapping(msgType = 0x0102, versions = {VERSION_2013, VERSION_2011})
     public BuiltinServerCommonReplyMsg authMsgV2013(Jt808Request request, BuiltinMsg0102V2013 body) {
         log.info("V2013--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
-                .setTerminalFlowId(request.flowId())
-                .setTerminalMsgId(request.msgType().getMsgId())
+                .setClientFlowId(request.flowId())
+                .setClientMsgId(request.msgType().getMsgId())
                 .setResult(0);
     }
 
@@ -38,9 +33,14 @@ public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableCompo
     public BuiltinServerCommonReplyMsg authMsgV2019(Jt808Request request, BuiltinMsg0102V2019 body) {
         log.info("V2019--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
-                .setTerminalFlowId(request.flowId())
-                .setTerminalMsgId(request.msgType().getMsgId())
+                .setClientFlowId(request.flowId())
+                .setClientMsgId(request.msgType().getMsgId())
                 .setResult(0);
+    }
+
+    @Override
+    public int getOrder() {
+        return LOWEST_PRECEDENCE;
     }
 
 }

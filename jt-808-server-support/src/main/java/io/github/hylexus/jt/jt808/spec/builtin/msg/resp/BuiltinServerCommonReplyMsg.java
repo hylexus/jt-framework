@@ -28,19 +28,19 @@ public class BuiltinServerCommonReplyMsg {
 
     // 1. 应答流水号 WORD    对应的终端消息的流水号
     @ResponseField(order = 0, dataType = WORD)
-    int terminalFlowId;
+    int clientFlowId;
 
     // 2. 应答id WORD     对应的终端消息的 ID
     @ResponseField(order = 1, dataType = WORD)
-    int terminalMsgId;
+    int clientMsgId;
 
     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
     @ResponseField(order = 2, dataType = BYTE)
     int result;
 
-    public static BuiltinServerCommonReplyMsg success(int terminalMsgId, int terminalFlowId) {
+    public static BuiltinServerCommonReplyMsg success(int clientMsgId, int clientFlowId) {
         return new BuiltinServerCommonReplyMsg().setResult(RESULT_SUCCESS)
-                .setTerminalMsgId(terminalMsgId)
-                .setTerminalFlowId(terminalFlowId);
+                .setClientMsgId(clientMsgId)
+                .setClientFlowId(clientFlowId);
     }
 }

@@ -3,11 +3,14 @@ package io.github.hylexus.jt.jt808.spec;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseBuilder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+
+import java.util.function.Consumer;
 
 /**
  * @author hylexus
@@ -119,7 +122,33 @@ public interface Jt808Response {
         return this;
     }
 
-    static DefaultJt808ResponseBuilder newBuilder() {
+    static Jt808ResponseBuilder newBuilder() {
         return DefaultJt808ResponseBuilder.newBuilder();
     }
+
+    interface Jt808ResponseBuilder {
+
+        Jt808ResponseBuilder msgId(MsgType msgType);
+
+        Jt808ResponseBuilder msgId(int msgId);
+
+        Jt808ResponseBuilder version(Jt808ProtocolVersion version);
+
+        Jt808ResponseBuilder encryptionType(int encryptionType);
+
+        Jt808ResponseBuilder reversedBit15InHeader(byte reversedBit15InHeader);
+
+        Jt808ResponseBuilder terminalId(String terminalId);
+
+        Jt808ResponseBuilder flowId(Integer flowId);
+
+        Jt808ResponseBuilder body(ByteBuf body);
+
+        Jt808ResponseBuilder body(Consumer<Jt808ByteWriter> writer);
+
+        Jt808ResponseBuilder maxPackageSize(int maxPackageSize);
+
+        Jt808Response build();
+    }
+
 }

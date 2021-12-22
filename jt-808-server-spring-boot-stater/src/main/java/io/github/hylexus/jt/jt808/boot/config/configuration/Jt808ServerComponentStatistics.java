@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.*;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManagerEventListener;
@@ -11,7 +12,9 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
+import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
+import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
 import io.github.hylexus.jt.utils.CommonUtils;
@@ -31,6 +34,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -113,13 +118,28 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
         stringBuilder.append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------")
                 .append("----------------------------------------------------------------------").append(END_OF_LINE);
+
+        final Map<Integer, Map<Jt808ProtocolVersion, Jt808RequestHandlerReporter.RequestMappingReporter>> map = new HashMap<>();
+
         applicationContext.getBeansOfType(Jt808RequestHandlerReporter.class)
                 .values()
                 .stream()
                 .flatMap(Jt808RequestHandlerReporter::report)
+                .forEach(reporter -> {
+                    final int msgId = reporter.getMsgType().getMsgId();
+                    final Map<Jt808ProtocolVersion, Jt808RequestHandlerReporter.RequestMappingReporter> msgIdMapping
+                            = map.computeIfAbsent(msgId, integer -> new HashMap<>());
+
+                    final Jt808RequestHandlerReporter.RequestMappingReporter old = msgIdMapping.computeIfAbsent(reporter.getVersion(), k -> reporter);
+                    if (old != reporter && old.shouldBeReplacedBy(reporter)) {
+                        msgIdMapping.put(reporter.getVersion(), reporter);
+                    }
+                });
+
+        map.values().stream().flatMap(entry -> entry.values().stream())
                 .sorted(Comparator
                         .comparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getMsgType().getMsgId())
-                        .thenComparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getVersion().getVersionBit())
+                        .thenComparing((Jt808RequestHandlerReporter.RequestMappingReporter it) -> it.getVersion().getShortDesc())
                 ).forEach(reporter -> {
                     final String msgDesc = String.format("%s [%-4s]  (%s) ",
                             HexStringUtils.int2HexString(reporter.getMsgType().getMsgId(), 4),

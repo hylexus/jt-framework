@@ -1,19 +1,3 @@
-package io.github.hylexus.jt.jt808.samples.debug.handler;
-
-import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808Response;
-import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
-import org.springframework.stereotype.Component;
-
-import java.util.Set;
-
-/**
- * @author hylexus
- */
 @Component
 public class SimpleLocationInfoUploadHandlerSimple implements SimpleJt808RequestHandler<Jt808Response> {
     @Override

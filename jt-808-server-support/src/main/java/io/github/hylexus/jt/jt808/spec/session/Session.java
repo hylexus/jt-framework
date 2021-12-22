@@ -57,7 +57,7 @@ public class Session implements Jt808Session {
     }
 
     @Override
-    public int currentFlowId(boolean autoIncrement) {
+    public int flowId(boolean autoIncrement) {
 
         if (!autoIncrement) {
             int flowId = this.nextFlowId.get();

@@ -8,10 +8,12 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
-public class DefaultJt808ResponseBuilder {
+import static io.github.hylexus.jt.utils.Assertions.check;
+import static io.github.hylexus.jt.utils.Assertions.requireNonNull;
+
+public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseBuilder {
     private Jt808ProtocolVersion version;
     private int msgId;
     private int encryptionType = 0b000;
@@ -21,76 +23,88 @@ public class DefaultJt808ResponseBuilder {
     private Integer flowId;
     private ByteBuf body;
 
-    public static DefaultJt808ResponseBuilder newBuilder() {
+    public static Jt808Response.Jt808ResponseBuilder newBuilder() {
         return new DefaultJt808ResponseBuilder();
     }
 
-    public DefaultJt808ResponseBuilder version(Jt808ProtocolVersion version) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder version(Jt808ProtocolVersion version) {
         this.version = version;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder body(ByteBuf body) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder body(ByteBuf body) {
         this.body = body;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder body(Consumer<Jt808ByteWriter> writerConsumer) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder body(Consumer<Jt808ByteWriter> writer) {
         if (this.body == null) {
             this.body = ByteBufAllocator.DEFAULT.buffer();
         }
-        writerConsumer.accept(Jt808ByteWriter.of(this.body));
+        writer.accept(Jt808ByteWriter.of(this.body));
         return this;
     }
 
-    public DefaultJt808ResponseBuilder terminalId(String terminalId) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder terminalId(String terminalId) {
         this.terminalId = terminalId;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder msgType(MsgType msgType) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder msgId(MsgType msgType) {
         this.msgId = msgType.getMsgId();
         return this;
     }
 
-    public DefaultJt808ResponseBuilder msgType(int msgId) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder msgId(int msgId) {
         this.msgId = msgId;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder encryptionType(int encryptionType) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder encryptionType(int encryptionType) {
         this.encryptionType = encryptionType;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder flowId(Integer flowId) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder flowId(Integer flowId) {
         this.flowId = flowId;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder maxPackageSize(int maxPackageSize) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder maxPackageSize(int maxPackageSize) {
         this.maxPackageSize = maxPackageSize;
         return this;
     }
 
-    public DefaultJt808ResponseBuilder reversedBit15InHeader(byte reversedBit15InHeader) {
+    @Override
+    public Jt808Response.Jt808ResponseBuilder reversedBit15InHeader(byte reversedBit15InHeader) {
         this.reversedBit15InHeader = reversedBit15InHeader;
         return this;
     }
 
+    @Override
     public Jt808Response build() {
         if (msgId == 0) {
             throw new JtIllegalArgumentException("msgId() can not be null");
         }
+
         return new DefaultJt808Response(
-                Objects.requireNonNull(version, "version() can not be null"),
-                msgId,
+                requireNonNull(version, "version() can not be null"),
+                check(msgId, id -> id > 0, "msgId() can not be null"),
                 encryptionType,
                 maxPackageSize,
                 reversedBit15InHeader,
-                Objects.requireNonNull(terminalId, "terminalId() can not be null"),
-                Objects.requireNonNull(flowId, "flowId() can not be null"),
-                Objects.requireNonNull(body, "body() can not be null")
+                requireNonNull(terminalId, "terminalId() can not be null"),
+                requireNonNull(flowId, "flowId() can not be null"),
+                requireNonNull(body, "body() can not be null")
         );
     }
 }

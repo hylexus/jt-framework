@@ -33,11 +33,11 @@ public class CommonHandler {
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
-    public TerminalRegisterReplyMsg processTerminalRegisterMsgV2019(Jt808RequestEntity<TerminalRegisterMsgV2019> entity) {
+    public TerminalRegisterReplyMsg processTerminalRegisterMsgV2019(Jt808RequestEntity<TerminalRegisterMsgV2019> request) {
 
-        log.info("V2019--TerminalRegister : {}", entity);
+        log.info("V2019--TerminalRegister : {}", request);
         return new TerminalRegisterReplyMsg()
-                .setFlowId(entity.header().flowId())
+                .setFlowId(request.flowId())
                 .setResult((byte) 0)
                 .setAuthCode("authCode2019-admin")
                 ;

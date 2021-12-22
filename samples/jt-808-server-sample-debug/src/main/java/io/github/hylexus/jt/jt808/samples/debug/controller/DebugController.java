@@ -45,8 +45,8 @@ public class DebugController {
         param.setTotalParamCount(paramList.size());
 
         final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow();
-        final int currentFlowId = session.currentFlowId();
-        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, currentFlowId);
+        final int nextFlowId = session.nextFlowId();
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, param, 15L, TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
         return resp;

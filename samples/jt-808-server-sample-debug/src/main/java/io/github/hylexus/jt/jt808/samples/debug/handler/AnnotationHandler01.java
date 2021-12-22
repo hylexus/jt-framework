@@ -48,10 +48,10 @@ public class AnnotationHandler01 {
     public Jt808Response processRegisterMsgV2019(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2019 authMsgV2019) {
         log.info("{}", authMsgV2019);
         return Jt808Response.newBuilder()
-                .msgType(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
                 .version(Jt808ProtocolVersion.VERSION_2019)
                 .terminalId(session.terminalId())
-                .flowId(session.currentFlowId())
+                .flowId(session.nextFlowId())
                 .body(bodyWriter -> bodyWriter
                         .writeWord(request.flowId())
                         .writeByte(0)

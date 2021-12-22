@@ -3,7 +3,11 @@ package io.github.hylexus.jt.jt808.support.codec;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * @author hylexus
+ */
 public interface Jt808ByteWriter {
+
     ByteBuf value();
 
     static Jt808ByteWriter of(ByteBuf value) {
