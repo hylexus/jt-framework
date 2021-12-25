@@ -121,7 +121,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         [
             "@snippetors/vuepress-plugin-code-copy",
             {
-                // your options
+                // selector: 'div[class="language-java"]'
             },
         ],
     ],
