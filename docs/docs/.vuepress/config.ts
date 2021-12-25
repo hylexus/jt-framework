@@ -1,7 +1,7 @@
-import {defineUserConfig} from '@vuepress/cli'
-import type {DefaultThemeOptions} from '@vuepress/theme-default'
-import {path} from '@vuepress/utils'
-import {navbar, sidebar} from './configs'
+import { defineUserConfig } from '@vuepress/cli'
+import type { DefaultThemeOptions } from '@vuepress/theme-default'
+import { path } from '@vuepress/utils'
+import { navbar, sidebar } from './configs'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -27,13 +27,13 @@ export default defineUserConfig<DefaultThemeOptions>({
             },
         ],
         // ['link', {rel: 'manifest', href: '/manifest.webmanifest'}],
-        ['meta', {name: 'application-name', content: 'VuePress'}],
-        ['meta', {name: 'apple-mobile-web-app-title', content: 'VuePress'}],
-        ['meta', {name: 'apple-mobile-web-app-status-bar-style', content: 'black'},],
-        ['link', {rel: 'apple-touch-icon', href: `/img/icons/apple-touch-icon.png`},],
-        ['link', {rel: 'mask-icon', href: '/img/icons/safari-pinned-tab.svg', color: '#3eaf7c',},],
-        ['meta', {name: 'msapplication-TileColor', content: '#3eaf7c'}],
-        ['meta', {name: 'theme-color', content: '#3eaf7c'}],
+        ['meta', { name: 'application-name', content: 'VuePress' }],
+        ['meta', { name: 'apple-mobile-web-app-title', content: 'VuePress' }],
+        ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },],
+        ['link', { rel: 'apple-touch-icon', href: `/img/icons/apple-touch-icon.png` },],
+        ['link', { rel: 'mask-icon', href: '/img/icons/safari-pinned-tab.svg', color: '#3eaf7c', },],
+        ['meta', { name: 'msapplication-TileColor', content: '#3eaf7c' }],
+        ['meta', { name: 'theme-color', content: '#3eaf7c' }],
     ],
 
     // site-level locales config
@@ -117,5 +117,12 @@ export default defineUserConfig<DefaultThemeOptions>({
         },
     },
 
-    plugins: [],
+    plugins: [
+        [
+            "@snippetors/vuepress-plugin-code-copy",
+            {
+                // your options
+            },
+        ],
+    ],
 })
