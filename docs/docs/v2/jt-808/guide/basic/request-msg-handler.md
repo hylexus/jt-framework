@@ -1,6 +1,6 @@
 # 请求消息处理器
 
-## 说明
+## 介绍
 
 ::: tip
 
@@ -60,27 +60,7 @@ public interface HandlerFunction<T extends ServerResponse> {
 
 :::
 
-<CodeGroup>
-
-  <CodeGroupItem title="示例1">
-
-@[code](@example-src/808/v2/basic/request-processing/TerminalRegisterMsgHandlerV2011.java)
-
-  </CodeGroupItem>
-
-  <CodeGroupItem title="示例2">
-
-@[code](@example-src/808/v2/basic/request-processing/TerminalRegisterMsgHandlerV2013.java)
-
-  </CodeGroupItem>
-
-  <CodeGroupItem title="示例3" active>
-
-@[code](@example-src/808/v2/basic/request-processing/TerminalRegisterMsgHandlerV2019.java)
-
-  </CodeGroupItem>
-
-</CodeGroup>
+@[code](@example-src/808/v2/basic/request-processing/SimpleJt808RequestHandler.java)
 
 ## @Jt808RequestHandlerMapping
 
@@ -88,33 +68,9 @@ public interface HandlerFunction<T extends ServerResponse> {
 
 这种处理器也是从 `Spring` 借鉴(抄袭)的。和 `Spring` 的 `@Controller`、`@RestController` 用法类似。
 
-作用就是标记一下当前类是一个消息处理器类。
+作用就是标记一下当前类是一个消息处理器类。被该注解标记的类中应该存在若干个能处理请求的方法。
 
 ### 示例
 
-```java
-@Component
-@Jt808RequestHandler
-public class BuiltinTerminalAuthenticationMsgHandler {
-
-    // 7E0102000C013912344321007B61646D696E2D3132333435364D7E
-    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = {VERSION_2013, VERSION_2011})
-    public BuiltinServerCommonReplyMsg authMsgV2013(Jt808Request request, BuiltinMsg0102V2013 body) {
-        log.info("V2013--auth : {}", body);
-        return new BuiltinServerCommonReplyMsg()
-                .setClientFlowId(request.flowId())
-                .setClientMsgId(request.msgType().getMsgId())
-                .setResult(0);
-    }
-
-    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2019)
-    public BuiltinServerCommonReplyMsg authMsgV2019(Jt808Request request, BuiltinMsg0102V2019 body) {
-        log.info("V2019--auth : {}", body);
-        return new BuiltinServerCommonReplyMsg()
-                .setClientFlowId(request.flowId())
-                .setClientMsgId(request.msgType().getMsgId())
-                .setResult(0);
-    }
-}
-```
+@[code](@example-src/808/v2/basic/request-processing/Jt808RequestHandlerAnnotation.java)
 

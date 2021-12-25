@@ -3,13 +3,14 @@ package io.github.hylexus.jt.jt808.spec;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseBuilder;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
-import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
+import java.nio.charset.Charset;
 import java.util.function.Consumer;
 
 /**
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
  * @see Jt808ResponseHandlerResultHandler
  */
 @BuiltinComponent
-public interface Jt808Response {
+public interface Jt808Response extends Jt808ByteWriter {
 
     int DEFAULT_MAX_PACKAGE_SIZE = 1024;
 
@@ -28,9 +29,13 @@ public interface Jt808Response {
     /**
      * byte[0,2) -- {@link  MsgDataType#WORD WORD} -- 消息ID
      */
-    int msgType();
+    int msgId();
 
-    Jt808Response msgType(int msgType);
+    Jt808Response msgId(int msgId);
+
+    default Jt808Response msgId(MsgType msgType) {
+        return this.msgId(msgType.getMsgId());
+    }
 
     Jt808ProtocolVersion version();
 
@@ -39,7 +44,7 @@ public interface Jt808Response {
      * <p>
      * byte[2,4).bit[13] -- {@link #maxPackageSize()}
      * <p>
-     * byte[2,4).bit[14] -- {@link #msgType()}
+     * byte[2,4).bit[14] -- {@link #msgId()}
      */
     default int msgBodyLength() {
         return body().readableBytes();
@@ -79,46 +84,82 @@ public interface Jt808Response {
 
     Jt808Response flowId(int flowId);
 
+    /**
+     * 响应消息大小超过该值(默认 {@value #DEFAULT_MAX_PACKAGE_SIZE})会自动分包发送(转义之前)
+     *
+     * @return 响应消息最大字节数
+     * @see Jt808ResponseBody#maxPackageSize()
+     */
     default int maxPackageSize() {
         return DEFAULT_MAX_PACKAGE_SIZE;
     }
 
+    /**
+     * 指定单个消息包的最大大小(转义之前)
+     *
+     * @param size 消息包最大大小
+     * @return 单个消息包的最大大小
+     */
     Jt808Response maxPackageSize(int size);
 
     ByteBuf body();
 
+    @Override
+    default ByteBuf writable() {
+        return body();
+    }
+
+    @Override
     default Jt808Response writeWord(int value) {
-        JtProtocolUtils.writeWord(body(), value);
+        Jt808ByteWriter.super.writeWord(value);
         return this;
     }
 
+    @Override
     default Jt808Response writeDWord(int value) {
-        JtProtocolUtils.writeDword(body(), value);
+        Jt808ByteWriter.super.writeDWord(value);
         return this;
     }
 
+    @Override
     default Jt808Response writeByte(int value) {
-        body().writeByte(value);
+        Jt808ByteWriter.super.writeByte(value);
         return this;
     }
 
+    @Override
     default Jt808Response writeBytes(ByteBuf byteBuf) {
-        body().writeBytes(byteBuf);
+        Jt808ByteWriter.super.writeBytes(byteBuf);
         return this;
     }
 
+    @Override
     default Jt808Response writeBytes(byte[] bytes) {
-        body().writeBytes(bytes);
+        Jt808ByteWriter.super.writeBytes(bytes);
         return this;
     }
 
+    @Override
     default Jt808Response writeBcd(String bcd) {
-        JtProtocolUtils.writeBcd(body(), bcd);
+        Jt808ByteWriter.super.writeBcd(bcd);
         return this;
     }
 
+    @Override
+    default Jt808Response writeString(String value, Charset charset) {
+        Jt808ByteWriter.super.writeString(value, charset);
+        return this;
+    }
+
+    @Override
+    default Jt808Response writeString(String string) {
+        Jt808ByteWriter.super.writeString(string);
+        return this;
+    }
+
+    @Override
     default Jt808Response clear() {
-        body().clear();
+        Jt808ByteWriter.super.clear();
         return this;
     }
 
@@ -128,7 +169,9 @@ public interface Jt808Response {
 
     interface Jt808ResponseBuilder {
 
-        Jt808ResponseBuilder msgId(MsgType msgType);
+        default Jt808ResponseBuilder msgId(MsgType msgType) {
+            return this.msgId(msgType.getMsgId());
+        }
 
         Jt808ResponseBuilder msgId(int msgId);
 

@@ -26,7 +26,7 @@ public class DefaultJt808CommandSender extends AbstractJt808CommandSender {
 
     @Override
     protected ByteBuf encode(Jt808Session session, Jt808Response response) throws Jt808EncodeException {
-        return this.msgEncoder.encode(response);
+        return this.msgEncoder.encode(response, session);
     }
 
     @Override

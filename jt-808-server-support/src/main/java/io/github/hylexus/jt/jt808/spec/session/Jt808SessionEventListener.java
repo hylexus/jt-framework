@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
+import io.github.hylexus.jt.core.OrderedComponent;
+
 import javax.annotation.Nullable;
 
 /**
@@ -11,13 +13,13 @@ import javax.annotation.Nullable;
  *     <li>注意：该接口实现类中不宜做耗时太长/阻塞的操作！！！</li>
  * </ul>
  * <p>
- * 如果有耗时操作，请异步处理。
+ * 如果有耗时操作，建议异步处理。
  * <p>
  * Created At 2020-06-22 20:33
  *
  * @author hylexus
  */
-public interface Jt808SessionManagerEventListener {
+public interface Jt808SessionEventListener extends OrderedComponent {
 
     /**
      * {@link Jt808Session} 新建事件
@@ -47,7 +49,7 @@ public interface Jt808SessionManagerEventListener {
      * @param session     被关闭的 {@link Jt808Session}
      * @param closeReason 关闭原因
      */
-    default void onSessionClose(@Nullable Jt808Session session, ISessionCloseReason closeReason) {
+    default void onSessionClose(@Nullable Jt808Session session, SessionCloseReason closeReason) {
     }
 
 }

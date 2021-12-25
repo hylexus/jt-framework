@@ -1,31 +1,15 @@
 server:
   port: 8808
 jt808:
-  print-component-statistics: true
   server:
-    idle-state-handler:
+    port: 6808
+  built-components:
+    component-statistics:
       enabled: true
-      reader-idle-time: 20m
-      writer-idle-time: 20m
-      all-idle-time: 20m
-  protocol:
-    version: auto_detection
-  entity-scan:
-    enabled: true
-    base-packages: io.github.hylexus.jt808.samples.annotation.entity.req
-    enable-builtin-entity: true
-    register-builtin-request-msg-converters: true
-  handler-scan:
-    enabled: true
-    base-packages: io.github.hylexus.jt808.samples.annotation.handler
-    register-builtin-msg-handlers: true
-  exception-handler-scan:
-    enabled: true
-    base-packages: ${jt808.handler-scan.base-packages:}
-    register-builtin-exception-handlers: true
+    request-handlers:
+      enabled: true
 logging:
-  level: debug
-  level.jt-808.channel.handler.adapter: debug
-#  level.io.github.hylexus: debug
-#  level.jt-808.msg.req.decoder: debug
-#  level.jt-808.msg.req.handler.abstract-msg-handler: info
+  level.root: info
+  level.io.github.hylexus: info
+  level.jt-808.request.decoder: debug
+  level.jt-808.response.encoder: debug

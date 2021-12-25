@@ -39,7 +39,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     }
 
     @Override
-    public Jt808Request decode(Jt808ProtocolVersion version, ByteBuf byteBuf) {
+    public Jt808Request decode(ByteBuf byteBuf) {
         if (log.isDebugEnabled()) {
             log.debug("- >>>>>>>>>>>>>>> : 7E{}7E", HexStringUtils.byteBufToString(byteBuf));
         }
@@ -108,7 +108,9 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         throw new JtIllegalStateException("未知版本: " + version);
     }
 
-    private Jt808RequestHeader parseHeaderGreatThanOrEqualsV2019(Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+    private Jt808RequestHeader parseHeaderGreatThanOrEqualsV2019(
+            Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
         headerSpec.version(version);
         // 1. bytes[0-1] WORD
@@ -128,7 +130,9 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return headerSpec;
     }
 
-    private Jt808RequestHeader parseHeaderLessThanOrEqualsV2013(Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+    private Jt808RequestHeader parseHeaderLessThanOrEqualsV2013(
+            Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
+
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
         headerSpec.version(version);
         // 1. bytes[0-1] WORD

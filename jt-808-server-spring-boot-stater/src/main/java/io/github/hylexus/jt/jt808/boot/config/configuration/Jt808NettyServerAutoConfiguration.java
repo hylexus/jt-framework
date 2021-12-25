@@ -10,9 +10,9 @@ import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.LocalEventBus;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.LocalEventBusListener;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
-import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManagerEventListener;
+import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManagerEventListener;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage;
@@ -47,14 +47,16 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808SessionManager supplyJt808SessionManager() {
-        return DefaultJt808SessionManager.getInstance();
+    public Jt808FlowIdGeneratorFactory jt808FlowIdGeneratorFactory() {
+        return new Jt808FlowIdGeneratorFactory.DefaultJt808FlowIdGeneratorFactory();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808SessionManagerEventListener jt808SessionManagerEventListener() {
-        return new DefaultJt808SessionManagerEventListener();
+    public Jt808SessionManager jt808SessionManager(ObjectProvider<Jt808SessionEventListener> listeners, Jt808FlowIdGeneratorFactory factory) {
+        final Jt808SessionManager manager = DefaultJt808SessionManager.getInstance(factory);
+        listeners.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).forEach(manager::addListener);
+        return manager;
     }
 
     @Bean(BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT)
@@ -95,8 +97,7 @@ public class Jt808NettyServerAutoConfiguration {
             Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
             Jt808RequestMsgDispatcher requestMsgDispatcher, Jt808ExceptionHandler exceptionHandler) {
 
-        return new Jt808DispatchChannelHandlerAdapter(
-                serverProps.getProtocol().getVersion(), decoder,
+        return new Jt808DispatchChannelHandlerAdapter(decoder,
                 jt808SessionManager, requestMsgDispatcher, exceptionHandler
         );
     }

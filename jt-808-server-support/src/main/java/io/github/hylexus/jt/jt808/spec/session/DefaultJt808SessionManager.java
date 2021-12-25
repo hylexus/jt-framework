@@ -6,10 +6,13 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /**
@@ -20,19 +23,30 @@ import java.util.stream.Stream;
 @Slf4j
 @BuiltinComponent
 public class DefaultJt808SessionManager implements Jt808SessionManager {
-    private static final Jt808SessionManager instance = new DefaultJt808SessionManager();
+    private final Jt808FlowIdGeneratorFactory flowIdGeneratorFactory;
+
+    private static volatile Jt808SessionManager INSTANCE;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     // <terminalId,Session>
     private final Map<String, Jt808Session> sessionMap = new ConcurrentHashMap<>();
     // <sessionId,terminalId>
     private final Map<String, String> sessionIdTerminalIdMapping = new ConcurrentHashMap<>();
-    private Jt808SessionManagerEventListener listener = new DefaultJt808SessionManagerEventListener();
 
-    private DefaultJt808SessionManager() {
+    private final List<Jt808SessionEventListener> listeners = new ArrayList<>();
+
+    private DefaultJt808SessionManager(Jt808FlowIdGeneratorFactory flowIdGeneratorFactory) {
+        this.flowIdGeneratorFactory = flowIdGeneratorFactory;
     }
 
-    public static Jt808SessionManager getInstance() {
-        return instance;
+    public static Jt808SessionManager getInstance(Jt808FlowIdGeneratorFactory factory) {
+        if (INSTANCE == null) {
+            synchronized (DefaultJt808SessionManager.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new DefaultJt808SessionManager(factory);
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public Stream<Jt808Session> list() {
@@ -50,11 +64,12 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     @Override
     public Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
-        return buildSession(terminalId, version, channel);
+        final Jt808FlowIdGenerator flowIdGenerator = this.flowIdGeneratorFactory.create();
+        return buildSession(terminalId, version, channel, flowIdGenerator);
     }
 
-    protected Session buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel) {
-        final Session session = new Session();
+    protected DefaultJt808Session buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel, Jt808FlowIdGenerator flowIdGenerator) {
+        final DefaultJt808Session session = new DefaultJt808Session(flowIdGenerator);
         session.channel(channel);
         session.id(generateSessionId(channel));
         session.terminalId(terminalId);
@@ -85,7 +100,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
             }
             return oldSession;
         }
-        Jt808Session newSession = generateSession(terminalId, version, channel);
+        final Jt808Session newSession = generateSession(terminalId, version, channel);
         persistence(newSession);
         return newSession;
     }
@@ -99,7 +114,17 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
         } finally {
             lock.writeLock().unlock();
         }
-        listener.onSessionAdd(session);
+        this.invokeListeners(listener -> listener.onSessionAdd(session));
+    }
+
+    private void invokeListeners(Consumer<Jt808SessionEventListener> consumer) {
+        for (Jt808SessionEventListener listener : this.listeners) {
+            try {
+                consumer.accept(listener);
+            } catch (Throwable e) {
+                log.error("An error occurred while invoke Jt808SessionManagerEventListener", e);
+            }
+        }
     }
 
     @Override
@@ -109,7 +134,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
             final String terminalId = sessionIdTerminalIdMapping.remove(sessionId);
             if (terminalId != null) {
                 final Jt808Session session = sessionMap.remove(terminalId);
-                listener.onSessionRemove(session);
+                this.invokeListeners(listener -> listener.onSessionRemove(session));
                 return session;
             }
         } finally {
@@ -120,12 +145,12 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
     }
 
     @Override
-    public void removeBySessionIdAndClose(String sessionId, ISessionCloseReason reason) {
+    public void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason) {
         lock.writeLock().lock();
         try {
             final Jt808Session session = this.removeBySessionId(sessionId);
             if (session != null) {
-                listener.onSessionClose(session, reason);
+                invokeListeners(listener -> listener.onSessionClose(session, reason));
                 session.channel().close();
             }
         } finally {
@@ -135,7 +160,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     @Override
     public Optional<Jt808Session> findByTerminalId(String terminalId, boolean updateLastCommunicateTime) {
-        Jt808Session session = sessionMap.get(terminalId);
+        final Jt808Session session = sessionMap.get(terminalId);
         if (session == null) {
             return Optional.empty();
         }
@@ -154,19 +179,20 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
     private boolean checkStatus(Jt808Session session) {
         //if (!session.getChannel().isOpen()) {
         if (!session.channel().isActive()) {
-            this.removeBySessionIdAndClose(session.id(), SessionCloseReason.CHANNEL_INACTIVE);
+            this.removeBySessionIdAndClose(session.id(), DefaultSessionCloseReason.CHANNEL_INACTIVE);
             return false;
         }
         return true;
     }
 
     @Override
-    public Jt808SessionManagerEventListener getEventListener() {
-        return this.listener;
+    public synchronized Jt808SessionManager addListener(Jt808SessionEventListener listener) {
+        this.listeners.add(listener);
+        return this;
     }
 
     @Override
-    public void setEventListener(Jt808SessionManagerEventListener listener) {
-        this.listener = listener;
+    public List<Jt808SessionEventListener> getListeners() {
+        return listeners;
     }
 }

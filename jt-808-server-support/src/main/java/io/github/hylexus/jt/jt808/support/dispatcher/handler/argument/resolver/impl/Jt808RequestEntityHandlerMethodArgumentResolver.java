@@ -22,7 +22,7 @@ public class Jt808RequestEntityHandlerMethodArgumentResolver implements Jt808Han
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().isAssignableFrom(Jt808RequestEntity.class);
+        return Jt808RequestEntity.class.isAssignableFrom(methodParameter.getParameterType());
     }
 
     @Override

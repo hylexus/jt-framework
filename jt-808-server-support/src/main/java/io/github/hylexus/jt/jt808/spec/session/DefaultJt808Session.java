@@ -11,19 +11,19 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * @author hylexus
  **/
 @ToString(exclude = "channel")
 @Accessors(chain = true, fluent = true)
 @BuiltinComponent
-public class Session implements Jt808Session {
-    public Session() {
+public class DefaultJt808Session implements Jt808Session {
+    protected final Jt808FlowIdGenerator delegateFlowIdGenerator;
+
+    public DefaultJt808Session(Jt808FlowIdGenerator delegateFlowIdGenerator) {
+        this.delegateFlowIdGenerator = delegateFlowIdGenerator;
     }
 
-    private final AtomicInteger nextFlowId = new AtomicInteger(0);
     @Getter
     @Setter
     private String id;
@@ -57,28 +57,7 @@ public class Session implements Jt808Session {
     }
 
     @Override
-    public int flowId(boolean autoIncrement) {
-
-        if (!autoIncrement) {
-            int flowId = this.nextFlowId.get();
-            if (flowId >= MAX_FLOW_ID) {
-                if (nextFlowId.compareAndSet(flowId, 0)) {
-                    return 0;
-                }
-                return nextFlowId.get();
-            }
-            return flowId;
-        }
-
-        final int flowId = this.nextFlowId.getAndIncrement();
-        if (flowId >= MAX_FLOW_ID) {
-            if (nextFlowId.compareAndSet(flowId, 0)) {
-                return 0;
-            }
-            return nextFlowId.getAndIncrement();
-        }
-
-        return flowId;
+    public int flowId(int increment) {
+        return this.delegateFlowIdGenerator.flowId(increment);
     }
-
 }

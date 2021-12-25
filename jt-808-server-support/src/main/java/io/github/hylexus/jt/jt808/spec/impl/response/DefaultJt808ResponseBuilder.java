@@ -3,8 +3,9 @@ package io.github.hylexus.jt.jt808.spec.impl.response;
 import io.github.hylexus.jt.exception.JtIllegalArgumentException;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
-import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
+import io.github.hylexus.jt.utils.Assertions;
+import io.github.hylexus.oaks.utils.Numbers;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -55,14 +56,8 @@ public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseB
     }
 
     @Override
-    public Jt808Response.Jt808ResponseBuilder msgId(MsgType msgType) {
-        this.msgId = msgType.getMsgId();
-        return this;
-    }
-
-    @Override
     public Jt808Response.Jt808ResponseBuilder msgId(int msgId) {
-        this.msgId = msgId;
+        this.msgId = Assertions.check(msgId, Numbers::isPositive, "msg > 0");
         return this;
     }
 

@@ -13,8 +13,8 @@ import java.util.Optional;
 public class BuiltinJt808MsgTypeParser implements Jt808MsgTypeParser {
 
     @Override
-    public Optional<MsgType> parseMsgType(int msgType) {
-        return BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgType);
+    public Optional<MsgType> parseMsgType(int msgId) {
+        return BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgId);
     }
 
 }

@@ -13,9 +13,7 @@ import io.netty.channel.Channel;
  * @author hylexus
  */
 @BuiltinComponent
-public interface Jt808Session {
-
-    int MAX_FLOW_ID = 0xffff;
+public interface Jt808Session extends Jt808FlowIdGenerator {
 
     /**
      * @param bytes 待发送给客户端的数据
@@ -29,27 +27,6 @@ public interface Jt808Session {
      * @param byteBuf 待发送给客户端的数据
      */
     void sendMsgToClient(ByteBuf byteBuf) throws JtCommunicationException;
-
-    /**
-     * @return 当前流水号(并自增)
-     * @see #flowId(boolean)
-     */
-    default int nextFlowId() {
-        return flowId(true);
-    }
-
-    /**
-     * @return 当前流水号(不会自增)
-     */
-    default int currentFlowId() {
-        return flowId(false);
-    }
-
-    /**
-     * @param autoIncrement 是否自增
-     * @return 当前流水号
-     */
-    int flowId(boolean autoIncrement);
 
     String id();
 

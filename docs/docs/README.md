@@ -36,9 +36,12 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 
 ## 致谢
 
+- [Netty](https://github.com/netty/netty)
+- [Spring Boot](https://docs.spring.io/spring-boot/docs/2.5.8/reference/html/)
+- [Spring WebFlux](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web-reactive.html#spring-webflux)
+- [Spring WebMvc](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web.html#spring-web)
 - 本文档基于 [VuePress](https://www.vuepress.cn/) 编写
-
-- `@ExtraMsgBody` 这块的逻辑，感谢这位仁兄[qianhongtang](https://github.com/qianhongtang)的启发
+- `@ExtraMsgBody` 这块的逻辑，感谢这位仁兄 [qianhongtang](https://github.com/qianhongtang) 的启发
 
 ## 软件版本
 

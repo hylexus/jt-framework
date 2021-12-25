@@ -6,20 +6,11 @@ logging:
   level.jt-808.request.decoder: debug
   level.jt-808.response.encoder: debug
 jt808:
-  print-component-statistics: true
+  built-components:
+    component-statistics:
+      enabled: true
   protocol:
-    version: auto_detection
-  entity-scan:
-    enabled: true
-    base-packages: io.github.hylexus.jt808.samples.mixedversion.entity.req
-    enable-builtin-entity: true
-  converter-scan:
-    enabled: true
-    base-packages: io.github.hylexus.jt808.samples.mixedversion.converter
-  handler-scan:
-    enabled: true
-    base-packages: io.github.hylexus.jt808.samples.mixedversion.handler
-    register-builtin-msg-handlers: true
+    max-frame-length: 1024
   server:
     port: 6808
     boss-thread-count: 0

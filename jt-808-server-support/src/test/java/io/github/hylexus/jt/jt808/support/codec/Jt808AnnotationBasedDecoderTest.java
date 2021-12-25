@@ -1,6 +1,5 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
-import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
@@ -39,6 +38,6 @@ public class Jt808AnnotationBasedDecoderTest {
                 + "4000000011504000000FA160400000000170200001803000000EA10FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF02020000EF0400000000F31B017118000000000000000000"
                 + "00000000000000000000000000000056";
         final ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer().writeBytes(HexStringUtils.hexString2Bytes(str));
-        return jt808MsgDecoder.decode(Jt808ProtocolVersion.VERSION_2019, byteBuf);
+        return jt808MsgDecoder.decode(byteBuf);
     }
 }

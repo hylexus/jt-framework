@@ -50,7 +50,7 @@ public class Jt808ResponseBodyHandlerResultHandler implements Jt808HandlerResult
 
         this.annotationBasedEncoder.encodeAndWriteToResponse(returnValue, exchange);
 
-        final ByteBuf respByteBuf = this.encoder.encode(exchange.response());
+        final ByteBuf respByteBuf = this.encoder.encode(exchange.response(), exchange.session());
         exchange.session().sendMsgToClient(respByteBuf);
     }
 }

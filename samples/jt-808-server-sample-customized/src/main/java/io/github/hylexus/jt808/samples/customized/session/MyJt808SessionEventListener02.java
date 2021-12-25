@@ -1,18 +1,22 @@
-package io.github.hylexus.jt.jt808.spec.session;
+package io.github.hylexus.jt808.samples.customized.session;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
+import io.github.hylexus.jt.jt808.spec.session.SessionCloseReason;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
 
 /**
- * Created At 2020-06-22 20:41
- *
  * @author hylexus
  */
 @Slf4j
-@BuiltinComponent
-public class DefaultJt808SessionManagerEventListener implements Jt808SessionManagerEventListener {
+public class MyJt808SessionEventListener02 implements Jt808SessionEventListener {
+
+    @Override
+    public int getOrder() {
+        return 100;
+    }
 
     @Override
     public void onSessionAdd(@Nullable Jt808Session session) {
@@ -31,7 +35,7 @@ public class DefaultJt808SessionManagerEventListener implements Jt808SessionMana
     }
 
     @Override
-    public void onSessionClose(@Nullable Jt808Session session, ISessionCloseReason closeReason) {
+    public void onSessionClose(@Nullable Jt808Session session, SessionCloseReason closeReason) {
         if (session == null) {
             return;
         }

@@ -1,7 +1,12 @@
+server:
+  port: 8808
 jt808:
-  print-component-statistics: true
+  built-components:
+    request-handlers:
+      enabled: true
+    component-statistics:
+      enabled: true
   protocol:
-    version: auto_detection
     max-frame-length: 1024
   server:
     port: 6808
@@ -12,19 +17,6 @@ jt808:
       reader-idle-time: 20m
       writer-idle-time: 20m
       all-idle-time: 20m
-  entity-scan:
-    enabled: true
-    enable-builtin-entity: true
-    base-packages:
-    register-builtin-request-msg-converters: true
-  handler-scan:
-    enabled: true
-    base-packages:
-    register-builtin-msg-handlers: true
-  exception-handler-scan:
-    enabled: true
-    base-packages: ${jt808.handler-scan.base-packages:}
-    register-builtin-exception-handlers: true
   msg-processor:
     thread-pool:
       # core-pool-size: Runtime.getRuntime().availableProcessors() + 1
@@ -33,7 +25,7 @@ jt808:
       blocking-queue-size: 100
       thread-name-format: '808-msg-processor-%d'
 logging:
-  level.io.github.hylexus: debug
-  level.jt-808.msg.req.decoder: info
-  level.jt-808.msg.req.handler.abstract-msg-handler: debug
-  level.jt-808.channel.handler.adapter: debug
+  level.root: info
+  level.io.github.hylexus: info
+  level.jt-808.request.decoder: info
+  level.jt-808.response.encoder: info

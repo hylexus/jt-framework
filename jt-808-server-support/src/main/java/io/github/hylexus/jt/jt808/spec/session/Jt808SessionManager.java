@@ -69,7 +69,7 @@ public interface Jt808SessionManager {
      * @see #list(int, int)
      */
     default <T> List<T> list(int page, int pageSize, Predicate<Jt808Session> filter, Comparator<Jt808Session> sorter, Function<Jt808Session, T> converter) {
-        return list().filter(filter).sorted(sorter).skip((page - 1) * pageSize).limit(pageSize).map(converter).collect(Collectors.toList());
+        return list().filter(filter).sorted(sorter).skip((long) (page - 1) * pageSize).limit(pageSize).map(converter).collect(Collectors.toList());
     }
 
     /**
@@ -115,7 +115,7 @@ public interface Jt808SessionManager {
         if (session.isPresent()) {
             return session.get();
         }
-        Jt808Session newSession = generateSession(terminalId, version, channel);
+        final Jt808Session newSession = generateSession(terminalId, version, channel);
         persistence(newSession);
         return newSession;
     }
@@ -132,7 +132,7 @@ public interface Jt808SessionManager {
      * @param sessionId sessionId
      * @param reason    关闭原因
      */
-    void removeBySessionIdAndClose(String sessionId, ISessionCloseReason reason);
+    void removeBySessionIdAndClose(String sessionId, SessionCloseReason reason);
 
     /**
      * @param sessionId sessionId
@@ -160,7 +160,7 @@ public interface Jt808SessionManager {
         session.sendMsgToClient(bytes);
     }
 
-    Jt808SessionManagerEventListener getEventListener();
+    Jt808SessionManager addListener(Jt808SessionEventListener listener);
 
-    void setEventListener(Jt808SessionManagerEventListener listener);
+    List<Jt808SessionEventListener> getListeners();
 }

@@ -32,6 +32,15 @@ public class AnnotationHandler01 {
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2013)
+    public Jt808Response process(Jt808Request request, Jt808Response response) {
+        // ... process(request)
+        return response.msgId(BuiltinJt808MsgType.SERVER_COMMON_REPLY.getMsgId())
+                .writeWord(request.flowId())
+                .writeByte(0)
+                .writeString("AuthCodeXxx");
+    }
+
+    // @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2013)
     public Object processRegisterMsgV2013(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2013 authMsgV2013) {
         log.info("{}", authMsgV2013);
         // 测试异常处理

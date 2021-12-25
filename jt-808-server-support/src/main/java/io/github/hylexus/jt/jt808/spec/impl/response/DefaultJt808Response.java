@@ -2,6 +2,8 @@ package io.github.hylexus.jt.jt808.spec.impl.response;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.utils.Assertions;
+import io.github.hylexus.oaks.utils.Numbers;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -12,8 +14,8 @@ public class DefaultJt808Response implements Jt808Response {
     private final Jt808ProtocolVersion version;
     private final String terminalId;
 
-    private int flowId;
-    private int msgType;
+    private int flowId = -1;
+    private int msgType = -1;
     private int encryptionType;
     private byte reversedBit15InHeader;
     private int maxPackageSize = Jt808Response.DEFAULT_MAX_PACKAGE_SIZE;
@@ -51,13 +53,13 @@ public class DefaultJt808Response implements Jt808Response {
     }
 
     @Override
-    public int msgType() {
+    public int msgId() {
         return msgType;
     }
 
     @Override
-    public Jt808Response msgType(int msgType) {
-        this.msgType = msgType;
+    public Jt808Response msgId(int msgId) {
+        this.msgType = Assertions.check(msgId, Numbers::isPositive, "msg > 0");
         return this;
     }
 

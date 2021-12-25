@@ -3,49 +3,61 @@ package io.github.hylexus.jt.jt808.support.codec;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
+import java.nio.charset.Charset;
+
 /**
  * @author hylexus
  */
 public interface Jt808ByteWriter {
 
-    ByteBuf value();
+    ByteBuf writable();
 
     static Jt808ByteWriter of(ByteBuf value) {
         return () -> value;
     }
 
     default Jt808ByteWriter writeBcd(String bcd) {
-        JtProtocolUtils.writeBcd(value(), bcd);
+        JtProtocolUtils.writeBcd(writable(), bcd);
+        return this;
+    }
+
+    default Jt808ByteWriter writeString(String string, Charset charset) {
+        JtProtocolUtils.writeString(writable(), string, charset);
         return this;
     }
 
     default Jt808ByteWriter writeString(String string) {
-        JtProtocolUtils.writeString(value(), string);
+        JtProtocolUtils.writeString(writable(), string);
         return this;
     }
 
     default Jt808ByteWriter writeWord(int value) {
-        JtProtocolUtils.writeWord(value(), value);
+        JtProtocolUtils.writeWord(writable(), value);
         return this;
     }
 
     default Jt808ByteWriter writeDWord(int value) {
-        JtProtocolUtils.writeDword(value(), value);
+        JtProtocolUtils.writeDword(writable(), value);
         return this;
     }
 
     default Jt808ByteWriter writeByte(int value) {
-        JtProtocolUtils.writeByte(value(), value);
+        JtProtocolUtils.writeByte(writable(), value);
         return this;
     }
 
     default Jt808ByteWriter writeBytes(ByteBuf byteBuf) {
-        value().readBytes(byteBuf);
+        writable().writeBytes(byteBuf);
         return this;
     }
 
     default Jt808ByteWriter writeBytes(byte[] bytes) {
-        value().readBytes(bytes);
+        writable().writeBytes(bytes);
+        return this;
+    }
+
+    default Jt808ByteWriter clear() {
+        writable().clear();
         return this;
     }
 }

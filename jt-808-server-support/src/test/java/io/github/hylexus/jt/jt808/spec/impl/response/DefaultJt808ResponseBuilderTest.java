@@ -3,11 +3,15 @@ package io.github.hylexus.jt.jt808.spec.impl.response;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
+import io.github.hylexus.jt.jt808.spec.session.DefaultJt808FlowIdGenerator;
+import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import org.junit.Test;
 
 /**
@@ -94,6 +98,9 @@ public class DefaultJt808ResponseBuilderTest {
     }
 
     private ByteBuf encode(Jt808Response response) {
-        return new DefaultJt808MsgEncoder(new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)).encode(response);
+        return new DefaultJt808MsgEncoder(
+                PooledByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
+                DefaultJt808SessionManager.getInstance(new Jt808FlowIdGeneratorFactory.DefaultJt808FlowIdGeneratorFactory())
+        ).encode(response, new DefaultJt808FlowIdGenerator());
     }
 }

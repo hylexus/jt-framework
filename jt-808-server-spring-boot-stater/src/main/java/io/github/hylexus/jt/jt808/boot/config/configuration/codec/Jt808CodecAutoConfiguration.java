@@ -6,6 +6,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinTerminalRegisterJt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetectorRegistry;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -19,6 +20,7 @@ import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserialize
 import io.github.hylexus.jt.jt808.support.data.serializer.DefaulJt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -39,11 +41,11 @@ public class Jt808CodecAutoConfiguration {
     @ConditionalOnMissingBean
     public Jt808ProtocolVersionDetectorRegistry jt808ProtocolVersionDetectorRegistry(ObjectProvider<Jt808ProtocolVersionDetector> versionDetectors) {
         final Jt808ProtocolVersionDetectorRegistry registry = new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector());
+
         versionDetectors.stream()
                 .sorted(Comparator.comparing(Jt808ProtocolVersionDetector::getOrder))
                 .forEach(detector -> detector.getSupportedMsgTypes()
-                        .forEach(msgId -> registry.register(msgId, detector))
-                );
+                        .forEach(msgId -> registry.register(msgId, detector)));
         return registry;
     }
 
@@ -65,8 +67,8 @@ public class Jt808CodecAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor) {
-        return new DefaultJt808MsgEncoder(msgBytesProcessor);
+    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor, Jt808SessionManager sessionManager) {
+        return new DefaultJt808MsgEncoder(PooledByteBufAllocator.DEFAULT, msgBytesProcessor, sessionManager);
     }
 
     @Bean

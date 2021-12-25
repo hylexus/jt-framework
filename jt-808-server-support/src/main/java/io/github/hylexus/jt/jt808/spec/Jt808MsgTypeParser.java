@@ -7,5 +7,5 @@ import java.util.Optional;
  **/
 public interface Jt808MsgTypeParser {
 
-    Optional<MsgType> parseMsgType(int msgType);
+    Optional<MsgType> parseMsgType(int msgId);
 }

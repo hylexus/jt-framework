@@ -9,7 +9,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt808.spec.session.SessionCloseReason.IDLE_TIMEOUT;
+import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.IDLE_TIMEOUT;
 
 /**
  * @author hylexus

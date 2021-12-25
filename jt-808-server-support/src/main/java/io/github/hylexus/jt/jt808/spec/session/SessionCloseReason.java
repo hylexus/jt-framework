@@ -1,23 +1,10 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
 /**
+ * Created At 2020-06-20 19:43
+ *
  * @author hylexus
- * Created At 2019-08-24 20:50
  */
-public enum SessionCloseReason implements ISessionCloseReason {
-    IDLE_TIMEOUT("idle timeout"),
-    CHANNEL_INACTIVE("channel inactive"),
-    SERVER_EXCEPTION_OCCURRED("server error"),
-    ;
-
-    private final String reason;
-
-    SessionCloseReason(String reason) {
-        this.reason = reason;
-    }
-
-    @Override
-    public String reason() {
-        return reason;
-    }
+public interface SessionCloseReason {
+    String reason();
 }

@@ -13,7 +13,7 @@ public class Jt808ResponseHandlerMethodArgumentResolver implements Jt808HandlerM
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().isAssignableFrom(Jt808Response.class);
+        return Jt808Response.class.isAssignableFrom(methodParameter.getParameterType());
     }
 
     @Override

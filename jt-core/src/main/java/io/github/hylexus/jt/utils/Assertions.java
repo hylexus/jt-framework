@@ -17,8 +17,9 @@ public abstract class Assertions {
     }
 
     public static <T> T requireNonNull(T obj, String msg) {
-        if (obj == null)
+        if (obj == null) {
             throw new NullPointerException(msg);
+        }
         return obj;
     }
 }

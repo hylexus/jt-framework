@@ -21,8 +21,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class Jt808ServerProps {
 
-    private boolean printComponentStatistics = true;
-
     @NestedConfigurationProperty
     private BuiltComponentsProps builtComponents = new BuiltComponentsProps();
 

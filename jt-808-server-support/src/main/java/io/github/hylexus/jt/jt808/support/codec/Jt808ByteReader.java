@@ -12,14 +12,14 @@ import java.util.function.Consumer;
  */
 public interface Jt808ByteReader {
 
-    ByteBuf value();
+    ByteBuf readable();
 
     static Jt808ByteReader of(ByteBuf value) {
         return () -> value;
     }
 
     default String readBcd(int length) {
-        return JtProtocolUtils.readBcd(value(), length);
+        return JtProtocolUtils.readBcd(readable(), length);
     }
 
     default Jt808ByteReader readBcd(int length, Consumer<String> consumer) {
@@ -33,11 +33,11 @@ public interface Jt808ByteReader {
     }
 
     default String readString(int length, Charset charset) {
-        return JtProtocolUtils.readString(value(), length, charset);
+        return JtProtocolUtils.readString(readable(), length, charset);
     }
 
     default Jt808ByteReader readString(int length, Charset charset, Consumer<String> consumer) {
-        final String string = JtProtocolUtils.readString(value(), length, charset);
+        final String string = JtProtocolUtils.readString(readable(), length, charset);
         consumer.accept(string);
         return this;
     }
@@ -49,7 +49,7 @@ public interface Jt808ByteReader {
     }
 
     default long readUnsignedDword() {
-        return JtProtocolUtils.readUnsignedDword(value());
+        return JtProtocolUtils.readUnsignedDword(readable());
     }
 
     default Jt808ByteReader readUnsignedDword(Consumer<Long> consumer) {
@@ -59,7 +59,7 @@ public interface Jt808ByteReader {
     }
 
     default int readDword() {
-        return JtProtocolUtils.readDword(value());
+        return JtProtocolUtils.readDword(readable());
     }
 
     default Jt808ByteReader readDword(Consumer<Integer> consumer) {
@@ -69,7 +69,7 @@ public interface Jt808ByteReader {
     }
 
     default short readWord() {
-        return JtProtocolUtils.readWord(value());
+        return JtProtocolUtils.readWord(readable());
     }
 
     default Jt808ByteReader readWord(Consumer<Short> consumer) {
@@ -79,7 +79,7 @@ public interface Jt808ByteReader {
     }
 
     default byte readByte() {
-        return value().readByte();
+        return readable().readByte();
     }
 
     default Jt808ByteReader readByte(Consumer<Byte> consumer) {
@@ -89,7 +89,7 @@ public interface Jt808ByteReader {
     }
 
     default byte[] readBytes(int length) {
-        return JtProtocolUtils.readBytes(value(), length);
+        return JtProtocolUtils.readBytes(readable(), length);
     }
 
     default Jt808ByteReader readBytes(int length, Consumer<byte[]> consumer) {
@@ -99,7 +99,7 @@ public interface Jt808ByteReader {
     }
 
     default int readUnsignedWord() {
-        return JtProtocolUtils.readUnsignedWord(value());
+        return JtProtocolUtils.readUnsignedWord(readable());
     }
 
     default Jt808ByteReader readUnsignedWord(Consumer<Integer> consumer) {

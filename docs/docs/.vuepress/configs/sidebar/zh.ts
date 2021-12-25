@@ -7,10 +7,13 @@ export const zh: SidebarConfig = {
             children: [
                 '/v2/jt-808/guide/basic/quick-start.md',
                 '/v2/jt-808/guide/basic/terminology.md',
+                '/v2/jt-808/guide/basic/jt808-msg-type-parser.md',
                 '/v2/jt-808/guide/basic/request-processing-overview.md',
                 '/v2/jt-808/guide/basic/request-msg-handler.md',
                 '/v2/jt-808/guide/basic/request-msg-handler-argument-resolver.md',
                 '/v2/jt-808/guide/basic/response-msg-handler.md',
+                '/v2/jt-808/guide/basic/command-sender.md',
+                '/v2/jt-808/guide/basic/sub-package.md',
                 '/v2/jt-808/guide/basic/summary.md',
             ],
         },
@@ -25,6 +28,8 @@ export const zh: SidebarConfig = {
             text: "定制化",
             children: [
                 '/v2/jt-808/guide/customization/netty-config.md',
+                '/v2/jt-808/guide/customization/codec-config.md',
+                '/v2/jt-808/guide/customization/session-config.md',
             ]
         },
         {

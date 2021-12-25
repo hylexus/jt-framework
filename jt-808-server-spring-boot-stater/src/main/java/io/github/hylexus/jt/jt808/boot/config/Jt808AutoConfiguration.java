@@ -66,7 +66,7 @@ public class Jt808AutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "jt808", name = "print-component-statistics", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "jt808.built-components.component-statistics", name = "enabled", havingValue = "true", matchIfMissing = true)
     public Jt808ServerComponentStatistics jt808ServerComponentStatistics() {
         return new Jt808ServerComponentStatistics();
     }

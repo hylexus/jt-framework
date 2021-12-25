@@ -19,7 +19,7 @@ public @interface Jt808ResponseBody {
 
     /**
      * @return 服务端响应消息的消息类型
-     * @see Jt808Response#msgType()
+     * @see Jt808Response#msgId()
      */
     int msgId();
 
@@ -30,8 +30,9 @@ public @interface Jt808ResponseBody {
     // byte encryptionType() default 0;
 
     /**
-     * @return 本次响应消息的最大字节数, 超过该值会自动分包发送
+     * @return 单个消息包的最大字节数, 超过该值会自动分包发送
      * @see Jt808Response#DEFAULT_MAX_PACKAGE_SIZE
+     * @see Jt808Response#maxPackageSize(int)
      */
     int maxPackageSize() default Jt808Response.DEFAULT_MAX_PACKAGE_SIZE;
 

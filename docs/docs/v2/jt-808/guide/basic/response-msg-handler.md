@@ -35,25 +35,54 @@
 
 ### 示例
 
-<CodeGroup>
-
-  <CodeGroupItem title="示例1" active>
-
-@[code](@example-src/808/v2/basic/response-processing/SimpleLocationInfoUploadHandlerSimple.java)
-
-  </CodeGroupItem>
-
-  <CodeGroupItem title="示例2">
-
-@[code](@example-src/808/v2/basic/response-processing/TerminalRegisterMsgHandlerV2013.java)
-
-  </CodeGroupItem>
-
-
-</CodeGroup>
+@[code](@example-src/808/v2/basic/response-processing/Jt808ResponseDemo.java)
 
 ## @Jt808ResponseBody
 
+### 说明
+
+这个注解也是借鉴(抄袭)`Spring` 的 `@ResponseBody` 注解，表示被标记的类是响应体。
+
 ### 示例
 
-### 说明
+下面是被 `@Jt808ResponseBody` 标记的类，表示该类是给客户端回复数据的 `body()` 部分：
+
+```java
+
+@Data
+@Accessors(chain = true)
+@Jt808ResponseBody(msgId = 0x8100, maxPackageSize = 33)
+public class TerminalRegisterReplyMsg {
+    // 1. byte[0,2) WORD 对应的终端注册消息的流水号
+    @ResponseField(order = 0, dataType = MsgDataType.WORD)
+    private int flowId;
+    // 2. byte[2,3) BYTE 0:成功;1:车辆已被注册;2:数据库中无该车辆; 3:终端已被注册;4:数据库中无该终端
+    @ResponseField(order = 1, dataType = MsgDataType.BYTE)
+    private byte result;
+    // 3. byte[3,x) STRING 鉴权码(只有在成功后才有该字段)
+    @ResponseField(order = 3, dataType = MsgDataType.STRING, conditionalOn = "result == 0")
+    private String authCode;
+}
+```
+
+下面是回复客户端的部分伪代码：
+
+```java
+
+@Slf4j
+@Component
+@Jt808RequestHandler
+public class CommonHandler {
+    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
+    public TerminalRegisterReplyMsg processTerminalRegisterMsgV2019(Jt808RequestEntity<TerminalRegisterMsgV2019> request) {
+
+        log.info("V2019--TerminalRegister : {}", request);
+        return new TerminalRegisterReplyMsg()
+                .setFlowId(request.flowId())
+                .setResult((byte) 0)
+                .setAuthCode("authCode2019-admin")
+                ;
+    }
+
+}
+```

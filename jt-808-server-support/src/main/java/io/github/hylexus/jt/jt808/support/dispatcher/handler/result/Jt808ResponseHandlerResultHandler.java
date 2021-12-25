@@ -39,11 +39,11 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
 
             JtProtocolUtils.release(exchange.response().body());
 
-            final ByteBuf byteBuf = this.encoder.encode(returnValue);
+            final ByteBuf byteBuf = this.encoder.encode(returnValue, exchange.session());
             exchange.session().sendMsgToClient(byteBuf);
             return;
         }
-        final ByteBuf byteBuf = this.encoder.encode(exchange.response());
+        final ByteBuf byteBuf = this.encoder.encode(exchange.response(), exchange.session());
         exchange.session().sendMsgToClient(byteBuf);
     }
 }

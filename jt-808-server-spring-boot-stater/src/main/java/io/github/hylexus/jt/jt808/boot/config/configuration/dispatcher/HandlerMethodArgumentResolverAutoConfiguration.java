@@ -40,6 +40,18 @@ public class HandlerMethodArgumentResolverAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public Jt808ResponseHandlerMethodArgumentResolver jt808ResponseHandlerMethodArgumentResolver() {
+        return new Jt808ResponseHandlerMethodArgumentResolver();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt808ServerExchangeHandlerMethodArgumentResolver jt808ServerExchangeHandlerMethodArgumentResolver() {
+        return new Jt808ServerExchangeHandlerMethodArgumentResolver();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public Jt808SessionHandlerMethodArgumentResolver jt808SessionArgumentResolver() {
         return new Jt808SessionHandlerMethodArgumentResolver();
     }

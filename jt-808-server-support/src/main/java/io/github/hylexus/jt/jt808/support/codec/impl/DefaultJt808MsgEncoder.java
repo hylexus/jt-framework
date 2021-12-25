@@ -5,6 +5,8 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
@@ -12,7 +14,6 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,22 +23,28 @@ import lombok.extern.slf4j.Slf4j;
 @BuiltinComponent
 public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
-    private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
+    private final ByteBufAllocator allocator;
 
     private final Jt808MsgBytesProcessor msgBytesProcessor;
+    private final Jt808SessionManager sessionManager;
 
-    public DefaultJt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor) {
+    public DefaultJt808MsgEncoder(ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor, Jt808SessionManager sessionManager) {
         this.msgBytesProcessor = msgBytesProcessor;
+        this.allocator = allocator;
+        this.sessionManager = sessionManager;
     }
 
     @Override
-    public ByteBuf encode(Jt808Response response) {
+    public ByteBuf encode(Jt808Response response, Jt808FlowIdGenerator flowIdGenerator) {
         final int maxPackageSize = response.maxPackageSize();
         final int msgBodyLength = response.msgBodyLength();
         final int estimatedPackageSize = Jt808RequestHeader.msgBodyStartIndex(response.version(), false) + msgBodyLength + 3;
 
         if (estimatedPackageSize <= maxPackageSize) {
-            return this.buildPackage(response, response.body(), 0, 0);
+            if (response.flowId() < 0) {
+                response.flowId(flowIdGenerator.nextFlowId());
+            }
+            return this.buildPackage(response, response.body(), 0, 0, response.flowId());
         }
 
         final int subPackageBodySize = maxPackageSize - Jt808RequestHeader.msgBodyStartIndex(response.version(), true) - 3;
@@ -47,20 +54,21 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
         final CompositeByteBuf allResponseBytes = allocator.compositeBuffer(subPackageCount);
         final ByteBuf body = response.body();
+        final int[] flowIds = flowIdGenerator.flowIds(subPackageCount);
         for (int i = 0; i < subPackageCount; i++) {
             final int offset = i * subPackageBodySize;
             final int length = (i == subPackageCount - 1)
                     ? Math.min(subPackageBodySize, msgBodyLength - offset)
                     : subPackageBodySize;
             final ByteBuf bodyData = body.retainedSlice(offset, length);
-            final CompositeByteBuf subPackage = this.buildPackage(response, bodyData, subPackageCount, i + 1);
+            final CompositeByteBuf subPackage = this.buildPackage(response, bodyData, subPackageCount, i + 1, flowIds[i]);
             allResponseBytes.addComponents(true, subPackage);
         }
         return allResponseBytes;
     }
 
-    private CompositeByteBuf buildPackage(Jt808Response response, ByteBuf body, int totalSubPackageCount, int currentPackageNo) {
-        final ByteBuf headerBuf = this.encodeMsgHeader(response, body, totalSubPackageCount > 0, totalSubPackageCount, currentPackageNo);
+    private CompositeByteBuf buildPackage(Jt808Response response, ByteBuf body, int totalSubPackageCount, int currentPackageNo, int flowId) {
+        final ByteBuf headerBuf = this.encodeMsgHeader(response, body, totalSubPackageCount > 0, totalSubPackageCount, currentPackageNo, flowId);
         final CompositeByteBuf compositeByteBuf = allocator.compositeBuffer()
                 .addComponent(true, headerBuf)
                 .addComponent(true, body);
@@ -71,7 +79,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         compositeByteBuf.resetReaderIndex();
         if (log.isDebugEnabled()) {
             log.debug("- <<<<<<<<<<<<<<< ({}--{}) {}/{}: 7E{}7E",
-                    HexStringUtils.int2HexString(response.msgType(), 4),
+                    HexStringUtils.int2HexString(response.msgId(), 4),
                     compositeByteBuf.readableBytes() + 2,
                     Math.max(currentPackageNo, 1), Math.max(totalSubPackageCount, 1),
                     HexStringUtils.byteBufToString(compositeByteBuf)
@@ -82,7 +90,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
         if (log.isDebugEnabled()) {
             log.debug("+ <<<<<<<<<<<<<<< ({}--{}) {}/{}: 7E{}7E",
-                    HexStringUtils.int2HexString(response.msgType(), 4),
+                    HexStringUtils.int2HexString(response.msgId(), 4),
                     escaped.readableBytes() + 2,
                     Math.max(currentPackageNo, 1), Math.max(totalSubPackageCount, 1),
                     HexStringUtils.byteBufToString(escaped)
@@ -94,11 +102,11 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
                 .addComponent(true, allocator.buffer().writeByte(JtProtocolConstant.PACKAGE_DELIMITER));
     }
 
-    private ByteBuf encodeMsgHeader(Jt808Response response, ByteBuf body, boolean hasSubPackage, int totalSubPackageCount, int currentSubPackageNo) {
+    private ByteBuf encodeMsgHeader(Jt808Response response, ByteBuf body, boolean hasSubPackage, int totalSubPkgCount, int currentSubPkgNo, int flowId) {
         final Jt808ProtocolVersion version = response.version();
         final ByteBuf header = allocator.buffer();
         // bytes[0-2) 消息ID Word
-        JtProtocolUtils.writeWord(header, response.msgType());
+        JtProtocolUtils.writeWord(header, response.msgId());
 
         // bytes[2-4) 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
@@ -117,16 +125,15 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
         JtProtocolUtils.writeBcd(header, response.terminalId());
 
         // bytes[15-17) 消息流水号  Word
-        // TODO bytes[10-12) 消息流水号  Word
-        JtProtocolUtils.writeWord(header, response.flowId());
+        JtProtocolUtils.writeWord(header, flowId);
 
         // bytes[17-21) 消息包封装项
         // bytes[12-16) 消息包封装项
         if (hasSubPackage) {
             // 消息总包包数
-            JtProtocolUtils.writeWord(header, totalSubPackageCount);
+            JtProtocolUtils.writeWord(header, totalSubPkgCount);
             // 包序号
-            JtProtocolUtils.writeWord(header, currentSubPackageNo);
+            JtProtocolUtils.writeWord(header, currentSubPkgNo);
         }
         return header;
     }

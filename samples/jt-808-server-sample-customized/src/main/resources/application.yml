@@ -6,7 +6,8 @@ logging:
   level.jt-808.request.decoder: debug
   level.jt-808.response.encoder: debug
 jt808:
-  print-component-statistics: true
   built-components:
+    component-statistics:
+      enabled: true
     request-handlers:
       enabled: true
