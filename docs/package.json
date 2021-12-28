@@ -16,8 +16,8 @@
   "license": "",
   "author": "hylexus",
   "devDependencies": {
-    "@snippetors/vuepress-plugin-code-copy": "^1.1.0",
-    "vuepress": "^2.0.0-beta.27"
+    "vuepress": "^2.0.0-beta.27",
+    "vuepress-plugin-vuepress2.x-code-copy": "^1.0.0"
   },
   "dependencies": {},
   "scripts": {

@@ -28,11 +28,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@snippetors/vuepress-plugin-code-copy@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmmirror.com/@snippetors/vuepress-plugin-code-copy/download/@snippetors/vuepress-plugin-code-copy-1.1.0.tgz#6e1305f259830eb7c37293fb162dee30782fbbcd"
-  integrity sha1-bhMF8lmDDrfDcpP7Fi3uMHgvu80=
-
 "@types/debug@^4.1.7":
   version "4.1.7"
   resolved "https://registry.npmmirror.com/@types/debug/download/@types/debug-4.1.7.tgz#7cc0ea761509124709b8b2d1090d8f6c17aadb82"
@@ -76,9 +71,9 @@
   integrity sha1-MbfKZAcSij0rvCf+LSGzRTl/YZc=
 
 "@types/node@*":
-  version "17.0.4"
-  resolved "https://registry.npmmirror.com/@types/node/download/@types/node-17.0.4.tgz#fec0ce0526abb6062fd206d72a642811b887a111"
-  integrity sha512-6xwbrW4JJiJLgF+zNypN5wr2ykM9/jHcL7rQ8fZe2vuftggjzZeRSM4OwRc6Xk8qWjwJ99qVHo/JgOGmomWRog==
+  version "17.0.5"
+  resolved "https://registry.npmmirror.com/@types/node/download/@types/node-17.0.5.tgz#57ca67ec4e57ad9e4ef5a6bab48a15387a1c83e0"
+  integrity sha512-w3mrvNXLeDYV1GKTZorGJQivK6XLCoGwpnyJFbJVK/aTBQUxOCaa/GlFAAN3OTDFcb7h5tiFG+YXCO2By+riZw==
 
 "@vitejs/plugin-vue@^1.10.2":
   version "1.10.2"
@@ -1398,9 +1393,9 @@ util-deprecate@^1.0.1:
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
 vite@^2.7.1:
-  version "2.7.6"
-  resolved "https://registry.npmmirror.com/vite/download/vite-2.7.6.tgz#766c7524d27ba21ff27ab37aaffba7abf2e72917"
-  integrity sha512-PBNoc87rDYLtkpFU9dbVeGdbcyKzz6c34oScqivE3FEa3BhVa4ASupCzcz0eDIiSECovfLcQnLUJt9vhiEU08g==
+  version "2.7.7"
+  resolved "https://registry.npmmirror.com/vite/download/vite-2.7.7.tgz#f2f1af5f9fc409053130261416000447347bc203"
+  integrity sha512-Nm4ingl//gMSj/p1aCBHuTc5Fd8W8Mwdci/HUvqCVq8xaJqF7z08S/LRq1M9kS0jRfJk1/f/CwUyQAr6YgsOLw==
   dependencies:
     esbuild "^0.13.12"
     postcss "^8.4.5"
@@ -1431,6 +1426,11 @@ vue@^3.2.24:
     "@vue/runtime-dom" "3.2.26"
     "@vue/server-renderer" "3.2.26"
     "@vue/shared" "3.2.26"
+
+vuepress-plugin-vuepress2.x-code-copy@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/vuepress-plugin-vuepress2.x-code-copy/download/vuepress-plugin-vuepress2.x-code-copy-1.0.0.tgz#c34171aebb273eab565d95287076c64d7e9c923b"
+  integrity sha1-w0FxrrsnPqtWXZUocHbGTX6ckjs=
 
 vuepress-vite@2.0.0-beta.31:
   version "2.0.0-beta.31"
