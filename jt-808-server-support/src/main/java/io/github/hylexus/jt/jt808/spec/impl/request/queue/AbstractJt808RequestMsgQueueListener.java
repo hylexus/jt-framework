@@ -48,7 +48,7 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
                 JtProtocolUtils.release(originalRequest.body(), originalRequest.rawByteBuf());
             }
 
-            final String terminalId = requestToDispatch.header().terminalId();
+            final String terminalId = requestToDispatch.terminalId();
             final Jt808Session session = this.sessionManager.findByTerminalId(terminalId)
                     // TODO exception
                     .orElseThrow();

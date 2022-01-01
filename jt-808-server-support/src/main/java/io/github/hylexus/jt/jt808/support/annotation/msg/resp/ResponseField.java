@@ -25,8 +25,7 @@ public @interface ResponseField {
      */
     String conditionalOn() default "";
 
-    boolean ignoreWhenNull() default true;
-
     Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass() default Jt808FieldSerializer.PlaceholderFiledSerializer.class;
 
+    String desc() default "";
 }

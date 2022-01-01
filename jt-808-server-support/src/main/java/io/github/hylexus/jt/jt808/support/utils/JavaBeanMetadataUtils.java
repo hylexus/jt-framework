@@ -67,7 +67,7 @@ public class JavaBeanMetadataUtils {
                 continue;
             }
 
-            JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
+            final JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
             if (javaBeanFieldMetadata.isAnnotationPresent(RequestField.class)) {
                 javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(RequestField.class).order());

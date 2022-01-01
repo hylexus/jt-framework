@@ -1,7 +1,13 @@
 package io.github.hylexus.jt808.samples.annotation.handler;
 
+import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.spec.CommandWaitingPool;
+import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2019;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalCommonReplyMsg;
+import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
@@ -21,6 +27,17 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 @Component
 @Jt808RequestHandler
 public class CommonHandler {
+
+    @Jt808RequestHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
+    public void processMsg0001(Jt808RequestEntity<BuiltinTerminalCommonReplyMsg> request) {
+        final BuiltinTerminalCommonReplyMsg body = request.body();
+        final String terminalId = request.header().terminalId();
+
+        // 2. 生成同样的Key
+        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, body.getServerFlowId());
+        // 将结果放入CommandWaitingPool
+        CommandWaitingPool.getInstance().putIfNecessary(commandKey, body);
+    }
 
     // terminalId: 013912344329
     // 7E010040560100000000013912344329007B000B00026964393837363534333231747970653030313233343536373831323334353637383837363534333231494

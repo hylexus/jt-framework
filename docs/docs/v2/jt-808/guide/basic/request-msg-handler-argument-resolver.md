@@ -42,8 +42,7 @@ public interface Jt808HandlerMethodArgumentResolver {
 
 在处理器方法中注入 `Jt808Request` 类型参数：
 
-```java
-
+```java{6}
 @Component
 @Jt808RequestHandler
 public class AnnotationHandler01 {
@@ -59,8 +58,7 @@ public class AnnotationHandler01 {
 
 在处理器方法中注入 `Jt808Response` 类型参数：
 
-```java
-
+```java{6}
 @Slf4j
 @Component
 @Jt808RequestHandler
@@ -80,8 +78,7 @@ public class AnnotationHandler01 {
 
 在处理器方法中注入 `Jt808Session` 类型参数：
 
-```java
-
+```java{6}
 @Slf4j
 @Component
 @Jt808RequestHandler
@@ -98,9 +95,7 @@ public class AnnotationHandler01 {
 
 在处理器方法中注入 `Jt808ServerExchange` 类型参数：
 
-```java
-
-@Slf4j
+```java{5}
 @Component
 @Jt808RequestHandler
 public class AnnotationHandler01 {
@@ -119,9 +114,7 @@ public class AnnotationHandler01 {
 
 在处理器方法中注入 `Jt808ServerExchange` 类型参数：
 
-```java
-
-@Slf4j
+```java{5}
 @Component
 @Jt808RequestHandler
 public class AnnotationHandler01 {
@@ -137,9 +130,7 @@ public class AnnotationHandler01 {
 
 下面的 `DebugTerminalRegisterMsgV2013` 被 `@Jt808RequestBody` 注解标记了，表示给类用来接收请求体。
 
-```java
-
-@Slf4j
+```java{5}
 @Component
 @Jt808RequestHandler
 public class AnnotationHandler01 {
@@ -184,8 +175,7 @@ public class Jt808RequestEntity<T> {
 
 示例如下：
 
-```java
-
+```java{6}
 @Component
 @Jt808RequestHandler
 public class BuiltinCommonHandler {

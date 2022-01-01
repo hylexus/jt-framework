@@ -59,7 +59,7 @@ public class DefaultJt808Response implements Jt808Response {
 
     @Override
     public Jt808Response msgId(int msgId) {
-        this.msgType = Assertions.check(msgId, Numbers::isPositive, "msg > 0");
+        this.msgType = Assertions.assertThat(msgId, Numbers::isPositive, "msg > 0");
         return this;
     }
 

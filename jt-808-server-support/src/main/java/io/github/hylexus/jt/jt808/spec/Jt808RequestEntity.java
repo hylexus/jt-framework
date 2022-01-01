@@ -32,6 +32,10 @@ public class Jt808RequestEntity<T> {
         return msgType;
     }
 
+    public int msgId() {
+        return msgType.getMsgId();
+    }
+
     public Jt808RequestHeader header() {
         return header;
     }

@@ -17,6 +17,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @BuiltinComponent
 public class BuiltinMsg0100V2019 {
     // 1. [0-2) WORD 省域ID
+    // WORD 类型固定长度就是2字节 所以无需指定length
     @RequestField(order = 1, startIndex = 0, dataType = WORD)
     private int provinceId;
 
@@ -41,6 +42,7 @@ public class BuiltinMsg0100V2019 {
     private byte color;
 
     // 7. [76,n)   String    车辆标识
+    // 使用 SpEL 计算消息长度(上下文中的消息体总长度减去前面消费掉的字节数)
     @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 76")
     private String carIdentifier;
 }

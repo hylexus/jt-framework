@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.condition;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Conditional;
 
 import java.lang.annotation.*;
 
@@ -10,6 +10,9 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ConditionalOnProperty(prefix = "jt808.built-components.request-handlers", name = "enabled", havingValue = "true", matchIfMissing = true)
+@Conditional(OnJt808BuiltinComponentsEnabledCondition.class)
 public @interface ConditionalOnJt808BuiltinComponentsEnabled {
+
+    BuiltinComponentType value();
+
 }

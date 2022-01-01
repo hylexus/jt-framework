@@ -30,7 +30,7 @@ logging:
 
 如果响应消息的大小(**转义之前**)超过 `maxPackageSize()` 的阈值，会自动将消息拆分为多个子包发送。
 
-```java
+```java{10-12,20}
 public interface Jt808Response extends Jt808ByteWriter {
 
     int DEFAULT_MAX_PACKAGE_SIZE = 1024;
@@ -60,7 +60,7 @@ public interface Jt808Response extends Jt808ByteWriter {
 
 `@Jt808ResponseBody` 注解也有个 `maxPackageSize` 属性用来控制单个消息包的最大大小(**转义之前**)。
 
-```java
+```java{8}
 public @interface Jt808ResponseBody {
 
     /**
@@ -80,13 +80,13 @@ public @interface Jt808ResponseBody {
 
   <CodeGroupItem title="示例1" active>
 
-@[code](@example-src/808/v2/basic/sub-package/resp/CommonHandler.java)
+@[code java{19}](@example-src/808/v2/basic/sub-package/resp/CommonHandler.java)
 
   </CodeGroupItem>
 
   <CodeGroupItem title="示例2" >
 
-@[code](@example-src/808/v2/basic/sub-package/resp/TerminalRegisterMsgHandlerV2019.java)
+@[code java{47}](@example-src/808/v2/basic/sub-package/resp/TerminalRegisterMsgHandlerV2019.java)
 
   </CodeGroupItem>
 

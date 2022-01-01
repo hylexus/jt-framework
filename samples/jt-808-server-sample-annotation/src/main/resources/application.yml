@@ -7,9 +7,10 @@ jt808:
     component-statistics:
       enabled: true
     request-handlers:
-      enabled: true
+      enabled: false
 logging:
   level.root: info
   level.io.github.hylexus: info
   level.jt-808.request.decoder: debug
   level.jt-808.response.encoder: debug
+  level.jt-808.command-sender: debug

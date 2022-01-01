@@ -9,7 +9,13 @@ public abstract class Assertions {
     private Assertions() {
     }
 
-    public static <T> T check(T t, Predicate<T> predicate, String msg) {
+    public static void assertThat(boolean condition, String msg) {
+        if (!condition) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    public static <T> T assertThat(T t, Predicate<T> predicate, String msg) {
         if (!predicate.test(t)) {
             throw new IllegalArgumentException(msg);
         }

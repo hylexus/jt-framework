@@ -46,6 +46,26 @@ public class DefaultJt808ResponseBuilderTest {
     }
 
     @Test
+    public void testBuildTerminalCommonReplyV2013() {
+        final Jt808Response response = Jt808Response.newBuilder()
+                .version(Jt808ProtocolVersion.VERSION_2013)
+                .msgId(BuiltinJt808MsgType.CLIENT_COMMON_REPLY)
+                .terminalId("013912344323")
+                .flowId(123)
+                .body(writer -> writer
+                        // 1. 应答流水号 WORD    对应的平台消息的流水号
+                        .writeWord(0)
+                        // 2. 应答id WORD     对应的平台消息的 ID
+                        .writeWord(0x8103)
+                        // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
+                        .writeByte(0)
+                )
+                .build();
+        final ByteBuf byteBuf = encode(response);
+        System.out.println(HexStringUtils.byteBufToString(byteBuf));
+    }
+
+    @Test
     public void testBuildRegisterMsgV2013() {
         final Jt808Response response = Jt808Response.newBuilder()
                 .version(Jt808ProtocolVersion.VERSION_2013)

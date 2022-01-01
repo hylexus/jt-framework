@@ -35,7 +35,7 @@
 
 ### 示例
 
-@[code](@example-src/808/v2/basic/response-processing/Jt808ResponseDemo.java)
+@[code java{23}](@example-src/808/v2/basic/response-processing/Jt808ResponseDemo.java)
 
 ## @Jt808ResponseBody
 
@@ -47,8 +47,7 @@
 
 下面是被 `@Jt808ResponseBody` 标记的类，表示该类是给客户端回复数据的 `body()` 部分：
 
-```java
-
+```java{3}
 @Data
 @Accessors(chain = true)
 @Jt808ResponseBody(msgId = 0x8100, maxPackageSize = 33)
@@ -67,9 +66,7 @@ public class TerminalRegisterReplyMsg {
 
 下面是回复客户端的部分伪代码：
 
-```java
-
-@Slf4j
+```java{5}
 @Component
 @Jt808RequestHandler
 public class CommonHandler {

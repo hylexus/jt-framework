@@ -13,6 +13,7 @@ import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.github.hylexus.jt.jt808.support.utils.JavaBeanMetadataUtils;
 import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
+import io.github.hylexus.jt.utils.Assertions;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,9 +58,10 @@ public class Jt808AnnotationBasedDecoder {
         evaluationContext.setVariable("request", request);
         evaluationContext.setVariable("header", request.header());
         evaluationContext.setVariable("ctx", new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf));
+        evaluationContext.setVariable("context", new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf));
         final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getFieldMetadataList();
         if (fieldMetadataList.isEmpty()) {
-            throw new Jt808AnnotationArgumentResolveException("Entity Class has empty field list.");
+            return instance;
         }
         for (JavaBeanFieldMetadata fieldMetadata : fieldMetadataList) {
             if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
@@ -83,7 +85,9 @@ public class Jt808AnnotationBasedDecoder {
         final Class<?> javaDataType = fieldMetadata.getFieldType();
 
         final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldMetadata);
+        Assertions.assertThat(startIndex >= 0, "field offset < 0 : [ " + fieldMetadata.getField() + " ]");
         final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, jtDataType, javaDataType);
+        Assertions.assertThat(length > 0, "field length <= 0 : [ " + fieldMetadata.getField() + " ]");
 
         final Class<? extends Jt808FieldDeserializer<?>> converterClass = annotation.customerFieldDeserializerClass();
         // 1. 优先使用用户自定义的属性转换器

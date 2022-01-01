@@ -17,6 +17,8 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+
 /**
  * @author hylexus
  */
@@ -63,15 +65,16 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
             final int currentNo = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex + MsgDataType.WORD.getByteCount());
             final ByteBuf subPackageBody = escaped.slice(msgBodyStartIndex, header.msgBodyLength()).copy();
             final Jt808SubPackageRequest.Jt808SubPackage subPackageSpec = new DefaultJt808SubPackage(
-                    header.terminalId(), header.msgId(),
+                    header.terminalId(), header.msgId(), header.flowId(),
                     total, currentNo,
-                    subPackageBody
+                    subPackageBody, LocalDateTime.now()
             );
 
             return new DefaultJt808SubPackageRequest(
                     msgType, header,
                     escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
-                    originalCheckSum, calculatedCheckSum, subPackageSpec
+                    originalCheckSum, calculatedCheckSum,
+                    subPackageSpec
             );
         } else {
             return new DefaultJt808Request(

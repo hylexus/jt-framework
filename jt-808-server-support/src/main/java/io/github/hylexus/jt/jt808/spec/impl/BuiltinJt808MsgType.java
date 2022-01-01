@@ -21,6 +21,9 @@ public enum BuiltinJt808MsgType implements MsgType {
     CLIENT_COMMON_REPLY(0x0001, "终端通用应答"),
     SERVER_COMMON_REPLY(0x8001, "平台通用应答"),
 
+    SERVER_RETRANSMISSION(0x8003, "服务器端补传分包请求"),
+    CLIENT_RETRANSMISSION(0x0005, "终端补传分包请求"),
+
     CLIENT_REGISTER(0x0100, "终端注册"),
     CLIENT_REGISTER_REPLY(0x8100, "终端注册应答"),
 

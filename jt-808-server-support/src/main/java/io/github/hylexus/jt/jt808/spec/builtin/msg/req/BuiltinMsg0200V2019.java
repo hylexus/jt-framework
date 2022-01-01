@@ -73,11 +73,11 @@ public class BuiltinMsg0200V2019 {
     public static class ExtraItem {
         // 附加信息ID
         @RequestField(order = 0, startIndex = 0, dataType = BYTE)
-        private byte id;
+        private int id;
 
         // 附加信息长度
         @RequestField(order = 1, startIndex = 1, dataType = BYTE)
-        private byte contentLength;
+        private int contentLength;
 
         // 附加信息内容
         @RequestField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)

@@ -17,6 +17,15 @@ import java.util.stream.Collectors;
 public class HandlerMethodArgumentResolverAutoConfiguration {
 
     @Bean
+    @Primary
+    public Jt808HandlerMethodArgumentResolver handlerMethodArgumentResolver(ObjectProvider<Jt808HandlerMethodArgumentResolver> argumentResolvers) {
+        final List<Jt808HandlerMethodArgumentResolver> resolverList = argumentResolvers.stream()
+                .filter(e -> e.getClass() != CompositeJt808HandlerMethodArgumentResolver.class)
+                .collect(Collectors.toList());
+        return new CompositeJt808HandlerMethodArgumentResolver(resolverList);
+    }
+
+    @Bean
     @ConditionalOnMissingBean
     public Jt808RequestBodyHandlerMethodArgumentResolver jt808RequestMsgBodyHandlerMethodArgumentResolver(
             Jt808AnnotationBasedDecoder annotationBasedDecoder) {
@@ -69,12 +78,9 @@ public class HandlerMethodArgumentResolverAutoConfiguration {
     }
 
     @Bean
-    @Primary
-    public Jt808HandlerMethodArgumentResolver handlerMethodArgumentResolver(ObjectProvider<Jt808HandlerMethodArgumentResolver> argumentResolvers) {
-        final List<Jt808HandlerMethodArgumentResolver> resolverList = argumentResolvers.stream()
-                .filter(e -> e.getClass() != CompositeJt808HandlerMethodArgumentResolver.class)
-                .collect(Collectors.toList());
-        return new CompositeJt808HandlerMethodArgumentResolver(resolverList);
+    @ConditionalOnMissingBean
+    public Jt808FlowIdGeneratorHandlerMethodArgumentResolver jt808FlowIdGeneratorHandlerMethodArgumentResolver(){
+        return new Jt808FlowIdGeneratorHandlerMethodArgumentResolver();
     }
 
 }

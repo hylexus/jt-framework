@@ -22,7 +22,7 @@ public class BuiltinMsg0704V2019 {
     @RequestField(order = 100, startIndex = 0, dataType = WORD)
     private int count;
 
-    // byte[2]    WORD    数据项个数
+    // byte[2]    WORD    位置数据类型
     @RequestField(order = 200, startIndex = 2, dataType = BYTE)
     private int type;
 

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hylexus
  */
-@Slf4j
+@Slf4j(topic = "jt-808.command-sender")
 public class CommandWaitingPool {
     private static final CommandWaitingPool instance = new CommandWaitingPool();
     private final BlockingMap<String, Object> blockingMap = new BlockingHashMap<>();
@@ -31,7 +31,7 @@ public class CommandWaitingPool {
 
         // Put result into blockingMap if there is a waiting-flag for this key
         this.blockingMap.put(key, msg);
-        log.info("[<<<COMMAND>>> ---> ] Put value for key [{}], {}", key, commandKey);
+        log.debug("[<<<COMMAND>>> ---> ] Put value for key [{}], {}", key, commandKey);
     }
 
     public Object waitingForKey(Jt808CommandKey commandKey, long time, TimeUnit unit) throws InterruptedException {
@@ -44,7 +44,7 @@ public class CommandWaitingPool {
         Object result;
         try {
             final String key = commandKey.getKeyAsString();
-            log.info("[<<<COMMAND>>> <--- ] Waiting for key [{}] {} {}", key, time, unit);
+            log.debug("[<<<COMMAND>>> <--- ] Waiting for key [{}] {} {}", key, time, unit);
             result = this.blockingMap.take(key, time, unit);
         } finally {
             // Remove tmp waiting-flag

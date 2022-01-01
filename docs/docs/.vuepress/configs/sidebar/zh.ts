@@ -22,6 +22,9 @@ export const zh: SidebarConfig = {
             children: [
                 '/v2/jt-808/guide/annotation-based-dev/req-msg-mapping.md',
                 '/v2/jt-808/guide/annotation-based-dev/resp-msg-mapping.md',
+                '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',
+                '/v2/jt-808/guide/annotation-based-dev/location-upload-msg-parse-demo.md',
+                '/v2/jt-808/guide/annotation-based-dev/location-batch-upload-msg-parse-demo.md',
             ]
         },
         {

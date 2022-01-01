@@ -25,7 +25,7 @@ public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableCompo
         log.info("V2013--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
                 .setClientFlowId(request.flowId())
-                .setClientMsgId(request.msgType().getMsgId())
+                .setClientMsgType(request.msgType().getMsgId())
                 .setResult(0);
     }
 
@@ -34,7 +34,7 @@ public class BuiltinTerminalAuthenticationMsgHandler implements ReplaceableCompo
         log.info("V2019--auth : {}", body);
         return new BuiltinServerCommonReplyMsg()
                 .setClientFlowId(request.flowId())
-                .setClientMsgId(request.msgType().getMsgId())
+                .setClientMsgType(request.msgType().getMsgId())
                 .setResult(0);
     }
 

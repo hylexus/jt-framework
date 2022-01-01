@@ -60,7 +60,7 @@ public interface HandlerFunction<T extends ServerResponse> {
 
 :::
 
-@[code](@example-src/808/v2/basic/request-processing/SimpleJt808RequestHandler.java)
+@[code java{2-3}](@example-src/808/v2/basic/request-processing/SimpleJt808RequestHandler.java)
 
 ## @Jt808RequestHandlerMapping
 
@@ -72,5 +72,5 @@ public interface HandlerFunction<T extends ServerResponse> {
 
 ### 示例
 
-@[code](@example-src/808/v2/basic/request-processing/Jt808RequestHandlerAnnotation.java)
+@[code java{3-4}](@example-src/808/v2/basic/request-processing/Jt808RequestHandlerAnnotation.java)
 

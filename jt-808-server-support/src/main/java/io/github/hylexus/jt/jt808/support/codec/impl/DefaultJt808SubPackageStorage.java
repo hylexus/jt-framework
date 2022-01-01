@@ -86,7 +86,7 @@ public class DefaultJt808SubPackageStorage implements Jt808SubPackageStorage {
         list.stream()
                 .sorted(Comparator.comparing(Jt808SubPackageRequest.Jt808SubPackage::currentPackageNo))
                 .peek(subPackage -> invokeListener(EventType.PACKAGE_CONSUMED, subPackage))
-                .forEach(jt808SubPackage -> compositeByteBuf.addComponents(true, jt808SubPackage.body().retain()));
+                .forEach(subPackage -> compositeByteBuf.addComponents(true, subPackage.body().retain()));
 
         this.cache.invalidate(key);
         return Optional.of(compositeByteBuf);
@@ -96,8 +96,9 @@ public class DefaultJt808SubPackageStorage implements Jt808SubPackageStorage {
         for (SubPackageEventListener listener : this.listenerList) {
             try {
                 listener.onEvent(new Event(eventType, subPackage));
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.error("An error occurred while callback SubPackageStorageListener.", e);
+                throw e;
             }
         }
     }
@@ -109,7 +110,7 @@ public class DefaultJt808SubPackageStorage implements Jt808SubPackageStorage {
     }
 
     protected String buildSubPackageCacheKey(Jt808Request request) {
-        return String.format("%s_%d", request.terminalId(), request.msgType().getMsgId());
+        return String.format("%s_%d_%d", request.terminalId(), request.msgType().getMsgId(), request.flowId());
     }
 
 }

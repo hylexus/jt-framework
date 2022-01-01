@@ -5,10 +5,10 @@ import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegister
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.TerminalCommonReplyMsg;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.TerminalRegisterReplyRespMsg;
-import io.github.hylexus.jt.jt808.spec.CommandWaitingPool;
-import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
-import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.*;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0005;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0102V2019;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg8003;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
@@ -16,7 +16,10 @@ import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Random;
+
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 @Slf4j
 @Component
@@ -53,12 +56,12 @@ public class AnnotationHandler01 {
                 .setAuthCode("AuthCode2013DebugDemo");
     }
 
-    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = Jt808ProtocolVersion.VERSION_2019)
+    @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
     public Jt808Response processRegisterMsgV2019(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2019 authMsgV2019) {
         log.info("{}", authMsgV2019);
         return Jt808Response.newBuilder()
                 .msgId(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
-                .version(Jt808ProtocolVersion.VERSION_2019)
+                .version(VERSION_2019)
                 .terminalId(session.terminalId())
                 .flowId(session.nextFlowId())
                 .body(bodyWriter -> bodyWriter
@@ -68,22 +71,24 @@ public class AnnotationHandler01 {
                 ).build()
                 ;
     }
-    //
-    //    @Jt808RequestHandlerMapping(msgType = 0x8100)
-    //    public DemoServerCommonReplyRespMsg debugTerminalRegisterReplyRespMsg(Jt808RequestEntity<TerminalRegisterReplySubPackageDebug> entity) {
-    //        log.info("{}", entity.body());
-    //        return new DemoServerCommonReplyRespMsg().setMsgId(0x8100).setFlowId(1).setResult(0);
-    //    }
-    //
-    //    public static class TerminalRegisterReplySubPackageDebug {
-    //        // 1. byte[0,2) WORD 对应的终端注册消息的流水号
-    //        @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.WORD)
-    //        private int flowId;
-    //        // 2. byte[2,3) BYTE 0:成功;1:车辆已被注册;2:数据库中无该车辆; 3:终端已被注册;4:数据库中无该终端
-    //        @RequestField(order = 1, startIndex = 2, dataType = MsgDataType.BYTE)
-    //        private byte result;
-    //        // 3. byte[3,x) STRING 鉴权码(只有在成功后才有该字段)
-    //        @RequestField(order = 3, startIndex = 3, dataType = MsgDataType.STRING, lengthExpression = "#header.msgBodyLength() - 3")
-    //        private String authCode;
-    //    }
+
+
+    @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2019)
+    public Object debug001(Jt808RequestEntity<BuiltinMsg0102V2019> request) {
+        log.info("{}", request.body());
+
+        return new BuiltinMsg8003()
+                .setFirstSubPackageFlowId(101)
+                .setTotalCount(3)
+                .setPackageIdList(List.of(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
+    }
+
+    @Jt808RequestHandlerMapping(msgType = 0x8003, versions = VERSION_2019)
+    public Object debug002(Jt808RequestEntity<BuiltinMsg0005> request) {
+        log.info("body: {}", request.body());
+        return new BuiltinMsg8003()
+                .setFirstSubPackageFlowId(101)
+                .setTotalCount(3)
+                .setPackageIdList(List.of(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
+    }
 }

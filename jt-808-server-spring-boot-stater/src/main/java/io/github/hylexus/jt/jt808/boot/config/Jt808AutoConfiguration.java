@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config;
 
+import io.github.hylexus.jt.jt808.boot.config.condition.BuiltinComponentType;
 import io.github.hylexus.jt.jt808.boot.config.condition.ConditionalOnJt808BuiltinComponentsEnabled;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808DispatcherHandlerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808NettyServerAutoConfiguration;
@@ -17,7 +18,6 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinComm
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalAuthenticationMsgHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalRegisterMsgHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -48,25 +48,25 @@ public class Jt808AutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnJt808BuiltinComponentsEnabled
+    @ConditionalOnJt808BuiltinComponentsEnabled(BuiltinComponentType.REQUEST_HANDLER)
     public BuiltinTerminalRegisterMsgHandler builtinJt808RequestHandlerForDebugging() {
         return new BuiltinTerminalRegisterMsgHandler();
     }
 
     @Bean
-    @ConditionalOnJt808BuiltinComponentsEnabled
+    @ConditionalOnJt808BuiltinComponentsEnabled(BuiltinComponentType.REQUEST_HANDLER)
     public BuiltinTerminalAuthenticationMsgHandler builtinTerminalAuthenticationMsgHandlerForDebugging() {
         return new BuiltinTerminalAuthenticationMsgHandler();
     }
 
     @Bean
-    @ConditionalOnJt808BuiltinComponentsEnabled
+    @ConditionalOnJt808BuiltinComponentsEnabled(BuiltinComponentType.REQUEST_HANDLER)
     public BuiltinCommonHandler builtinCommonHandler() {
         return new BuiltinCommonHandler();
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "jt808.built-components.component-statistics", name = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnJt808BuiltinComponentsEnabled(BuiltinComponentType.COMPONENT_STATISTICS)
     public Jt808ServerComponentStatistics jt808ServerComponentStatistics() {
         return new Jt808ServerComponentStatistics();
     }

@@ -11,7 +11,7 @@ import io.netty.buffer.ByteBufAllocator;
 
 import java.util.function.Consumer;
 
-import static io.github.hylexus.jt.utils.Assertions.check;
+import static io.github.hylexus.jt.utils.Assertions.assertThat;
 import static io.github.hylexus.jt.utils.Assertions.requireNonNull;
 
 public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseBuilder {
@@ -57,7 +57,7 @@ public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseB
 
     @Override
     public Jt808Response.Jt808ResponseBuilder msgId(int msgId) {
-        this.msgId = Assertions.check(msgId, Numbers::isPositive, "msg > 0");
+        this.msgId = Assertions.assertThat(msgId, Numbers::isPositive, "msg > 0");
         return this;
     }
 
@@ -93,7 +93,7 @@ public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseB
 
         return new DefaultJt808Response(
                 requireNonNull(version, "version() can not be null"),
-                check(msgId, id -> id > 0, "msgId() can not be null"),
+                assertThat(msgId, id -> id > 0, "msgId() can not be null"),
                 encryptionType,
                 maxPackageSize,
                 reversedBit15InHeader,

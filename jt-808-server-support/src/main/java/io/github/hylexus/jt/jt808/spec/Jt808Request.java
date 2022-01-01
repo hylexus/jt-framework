@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ public interface Jt808Request {
     /**
      * @return 原始报文(转义之后)
      */
+    @Nullable
     ByteBuf rawByteBuf();
 
     /**
