@@ -24,14 +24,15 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
 ├── docs            # 文档 (vue-press)
 ├── gradle
-├── jt-808-server-spring-boot-stater
-├── jt-808-server-support
-├── jt-core
-├── jt-spring
+├── jt-808-server-spring-boot-stater        # spring-boot 自动配置
+├── jt-808-server-support                   # jt-808的实现
+├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
+├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
 └── samples         # 示例项目
     ├── jt-808-server-sample-bare           # 几乎零配置的示例
     ├── jt-808-server-sample-annotation     # 注解相关的示例
-    └── jt-808-server-sample-customized     # 定制化示例
+    ├── jt-808-server-sample-customized     # 定制化示例
+    └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
 ```
 
 ## 致谢
