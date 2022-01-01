@@ -1,8 +1,8 @@
-package io.github.hylexus.jt.jt808.samples.mixedversion.controller;
+package io.github.hylexus.jt808.samples.annotation.controller;
 
-import io.github.hylexus.jt.jt808.samples.mixedversion.entity.vo.TerminalVo;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt808.samples.annotation.model.vo.TerminalVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

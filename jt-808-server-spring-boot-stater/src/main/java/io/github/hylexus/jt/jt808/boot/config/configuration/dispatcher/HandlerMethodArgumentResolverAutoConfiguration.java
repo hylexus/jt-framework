@@ -79,7 +79,7 @@ public class HandlerMethodArgumentResolverAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808FlowIdGeneratorHandlerMethodArgumentResolver jt808FlowIdGeneratorHandlerMethodArgumentResolver(){
+    public Jt808FlowIdGeneratorHandlerMethodArgumentResolver jt808FlowIdGeneratorHandlerMethodArgumentResolver() {
         return new Jt808FlowIdGeneratorHandlerMethodArgumentResolver();
     }
 

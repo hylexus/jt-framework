@@ -14,6 +14,7 @@ export const zh: SidebarConfig = {
                 '/v2/jt-808/guide/basic/response-msg-handler.md',
                 '/v2/jt-808/guide/basic/command-sender.md',
                 '/v2/jt-808/guide/basic/sub-package.md',
+                '/v2/jt-808/guide/basic/handler-interceptor.md',
                 '/v2/jt-808/guide/basic/summary.md',
             ],
         },

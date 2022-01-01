@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.samples.mixedversion.entity.vo;
+package io.github.hylexus.jt808.samples.annotation.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
