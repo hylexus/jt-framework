@@ -4,7 +4,7 @@ export const zh: NavbarConfig = [
     {
         text: '指南',
         children: [
-            {text: "v2.x", link: '/v2/jt-808/guide/basic/quick-start'},
+            {text: "v2.x", link: '/v2/jt-808/guide/quick-start/'},
             {text: "v1.x", link: '/v1/jt-808/guide/'},
         ]
     },

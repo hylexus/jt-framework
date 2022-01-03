@@ -49,7 +49,9 @@ public interface Jt808Request {
 与 `Jt808Request` 相对应，处理完消息之后回复给客户端的数据对应着 `Jt808Response` 接口：
 
 ```java
-public interface Jt808Response {
+public interface Jt808Response extends Jt808ByteWriter {
+
+    int DEFAULT_MAX_PACKAGE_SIZE = 1024;
 
     // ...
 
@@ -86,7 +88,7 @@ public interface Jt808Response {
 和客户端对应的连接都用一个叫做 `Jt808Session` 类来表示：
 
 ```java
-public interface Jt808Session {
+public interface Jt808Session extends Jt808FlowIdGenerator {
 
     // ...
 

@@ -3,11 +3,16 @@ import type {SidebarConfig} from '@vuepress/theme-default'
 export const zh: SidebarConfig = {
     '/v2/jt-808/guide/': [
         {
+            text: '入门',
+            children: [
+                '/v2/jt-808/guide/quick-start/',
+                '/v2/jt-808/guide/quick-start/terminology.md',
+                '/v2/jt-808/guide/quick-start/jt808-msg-type-parser.md',
+            ],
+        },
+        {
             text: '基础',
             children: [
-                '/v2/jt-808/guide/basic/quick-start.md',
-                '/v2/jt-808/guide/basic/terminology.md',
-                '/v2/jt-808/guide/basic/jt808-msg-type-parser.md',
                 '/v2/jt-808/guide/basic/request-processing-overview.md',
                 '/v2/jt-808/guide/basic/request-msg-handler.md',
                 '/v2/jt-808/guide/basic/request-msg-handler-argument-resolver.md',

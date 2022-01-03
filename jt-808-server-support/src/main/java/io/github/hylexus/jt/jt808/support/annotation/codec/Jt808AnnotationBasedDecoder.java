@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.support.annotation.codec;
 
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestAware;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeaderAware;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
@@ -51,7 +52,7 @@ public class Jt808AnnotationBasedDecoder {
     }
 
     public Object decode(Class<?> cls, Object instance, ByteBuf byteBuf, Jt808Request request) throws Jt808AnnotationArgumentResolveException {
-        this.processAwareMethod(cls, instance, request);
+        this.processAwareMethod(instance, request);
         final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
         final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
         evaluationContext.setVariable("this", instance);
@@ -257,10 +258,15 @@ public class Jt808AnnotationBasedDecoder {
         return method;
     }
 
-    private <T> void processAwareMethod(Class<T> cls, Object instance, Jt808Request request) {
+    private <T> void processAwareMethod(Object instance, Jt808Request request) {
         if (instance instanceof Jt808RequestHeaderAware) {
             ((Jt808RequestHeaderAware) instance).setHeader(request.header());
         }
+
+        if (instance instanceof Jt808RequestAware) {
+            ((Jt808RequestAware) instance).setRequest(request);
+        }
+
     }
 
 }

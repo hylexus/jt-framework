@@ -1,3 +1,20 @@
+## 2.0.0-SNAPSHOT
+
+### ⭐ New Features
+
+- 注解驱动开发(支持SpEL)
+- 支持消息分包
+- 支持多版本支持
+
+### 📔 Documentation
+
+新增 **2.x** 文档。
+
+### ❤️ Contributors
+
+- [@dfEric](https://github.com/dfEric)
+- [@hylexus](https://github.com/hylexus)
+
 # 1.0.12-RELEASE
 
 ### 🐞 Bug Fixes
