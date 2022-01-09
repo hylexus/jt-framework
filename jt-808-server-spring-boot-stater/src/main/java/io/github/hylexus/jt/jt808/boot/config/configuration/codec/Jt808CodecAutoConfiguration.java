@@ -6,12 +6,12 @@ import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinTerminalRegisterJt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetectorRegistry;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
@@ -67,8 +67,8 @@ public class Jt808CodecAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor, Jt808SessionManager sessionManager) {
-        return new DefaultJt808MsgEncoder(PooledByteBufAllocator.DEFAULT, msgBytesProcessor, sessionManager);
+    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor msgBytesProcessor, Jt808ResponseSubPackageEventListener subPackageEventConsumer) {
+        return new DefaultJt808MsgEncoder(PooledByteBufAllocator.DEFAULT, msgBytesProcessor, subPackageEventConsumer);
     }
 
     @Bean

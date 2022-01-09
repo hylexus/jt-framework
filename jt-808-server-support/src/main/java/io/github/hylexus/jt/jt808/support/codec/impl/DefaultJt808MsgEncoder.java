@@ -6,15 +6,17 @@ import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.CompositeByteBuf;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime;
 
 /**
  * @author hylexus
@@ -26,12 +28,18 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     private final ByteBufAllocator allocator;
 
     private final Jt808MsgBytesProcessor msgBytesProcessor;
-    private final Jt808SessionManager sessionManager;
+    private final Jt808ResponseSubPackageEventListener subPackageEventConsumer;
 
-    public DefaultJt808MsgEncoder(ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor, Jt808SessionManager sessionManager) {
+    public DefaultJt808MsgEncoder(ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor) {
+        this(allocator, msgBytesProcessor, Jt808ResponseSubPackageEventListener.NO_OPS_CONSUMER);
+    }
+
+    public DefaultJt808MsgEncoder(ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor, Jt808ResponseSubPackageEventListener subPackageEventConsumer) {
         this.msgBytesProcessor = msgBytesProcessor;
         this.allocator = allocator;
-        this.sessionManager = sessionManager;
+        this.subPackageEventConsumer = subPackageEventConsumer == null
+                ? Jt808ResponseSubPackageEventListener.NO_OPS_CONSUMER
+                : subPackageEventConsumer;
     }
 
     @Override
@@ -63,6 +71,16 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
             final ByteBuf bodyData = body.retainedSlice(offset, length);
             final CompositeByteBuf subPackage = this.buildPackage(response, bodyData, subPackageCount, i + 1, flowIds[i]);
             allResponseBytes.addComponents(true, subPackage);
+            this.subPackageEventConsumer.onSubPackage(Jt808Response.Jt808ResponseSubPackage.ofDefault(
+                            response.terminalId(),
+                            response.msgId(),
+                            flowIds[0],
+                            flowIds[i],
+                            subPackageCount,
+                            i + 1,
+                            subPackage, LocalDateTime.now()
+                    )
+            );
         }
         return allResponseBytes;
     }

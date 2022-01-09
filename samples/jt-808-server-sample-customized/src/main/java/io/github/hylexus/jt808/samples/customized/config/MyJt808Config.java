@@ -11,6 +11,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
@@ -61,8 +62,8 @@ public class MyJt808Config {
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808MsgEncoder
     @Bean
-    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor processor, Jt808SessionManager sessionManager) {
-        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, sessionManager);
+    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor processor) {
+        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, Jt808ResponseSubPackageEventListener.NO_OPS_CONSUMER);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808MsgDecoder

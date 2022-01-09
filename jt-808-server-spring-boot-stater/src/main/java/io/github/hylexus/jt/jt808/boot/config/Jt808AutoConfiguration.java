@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.boot.config.condition.ConditionalOnJt808Builti
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808DispatcherHandlerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808NettyServerAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808ServerComponentStatistics;
+import io.github.hylexus.jt.jt808.boot.config.configuration.Jt808SubPackageAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.config.configuration.codec.Jt808CodecAutoConfiguration;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
@@ -26,6 +27,7 @@ import org.springframework.context.annotation.Import;
  * @author hylexus
  */
 @Import({
+        Jt808SubPackageAutoConfiguration.class,
         Jt808CodecAutoConfiguration.class,
         Jt808DispatcherHandlerAutoConfiguration.class,
         Jt808NettyServerAutoConfiguration.class,

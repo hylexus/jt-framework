@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseBuilder;
+import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808ResponseSubPackage;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
@@ -11,6 +12,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 /**
@@ -194,4 +196,33 @@ public interface Jt808Response extends Jt808ByteWriter {
         Jt808Response build();
     }
 
+    interface Jt808ResponseSubPackage {
+
+        int firstFlowIdOfSubPackageGroup();
+
+        String terminalId();
+
+        int msgId();
+
+        int flowId();
+
+        int totalSubPackageCount();
+
+        int currentPackageNo();
+
+        ByteBuf msg();
+
+        LocalDateTime createdAt();
+
+        Jt808ResponseSubPackage copy();
+
+        static Jt808ResponseSubPackage ofDefault(
+                String terminalId, int msgId, int firstFlowIdOfPackageGroup, int flowId, int totalSubPackageCount, int currentPackageNo,
+                ByteBuf msg, LocalDateTime createdAt) {
+            return new DefaultJt808ResponseSubPackage(
+                    terminalId, msgId, firstFlowIdOfPackageGroup, flowId, totalSubPackageCount, currentPackageNo,
+                    msg, createdAt
+            );
+        }
+    }
 }

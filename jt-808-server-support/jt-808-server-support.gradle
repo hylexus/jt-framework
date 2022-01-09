@@ -16,6 +16,9 @@ dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
 
+    provided 'org.springframework.boot:spring-boot-starter-data-redis'
+    provided 'com.fasterxml.jackson.core:jackson-databind'
+
     testCompile "org.springframework.boot:spring-boot-starter-test"
 
 }

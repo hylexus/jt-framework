@@ -4,8 +4,6 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808FlowIdGenerator;
-import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
-import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -18,6 +16,26 @@ import org.junit.Test;
  * @author hylexus
  */
 public class DefaultJt808ResponseBuilderTest {
+
+    @Test
+    public void testBuildMsg0005() {
+        final Jt808Response response = Jt808Response.newBuilder()
+                .version(Jt808ProtocolVersion.VERSION_2019)
+                .msgId(BuiltinJt808MsgType.CLIENT_RETRANSMISSION)
+                .terminalId("00000000013912344329")
+                .flowId(1)
+                .body(writer -> writer
+                        // 第一包的流水号
+                        .writeWord(3)
+                        // 包总数
+                        .writeWord(2)
+                        .writeWord(1)
+                        .writeWord(2)
+                )
+                .build();
+        final ByteBuf byteBuf = encode(response);
+        System.out.println(HexStringUtils.byteBufToString(byteBuf));
+    }
 
     @Test
     public void testBuildRegisterMsgV2011() {
@@ -119,8 +137,7 @@ public class DefaultJt808ResponseBuilderTest {
 
     private ByteBuf encode(Jt808Response response) {
         return new DefaultJt808MsgEncoder(
-                PooledByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
-                DefaultJt808SessionManager.getInstance(new Jt808FlowIdGeneratorFactory.DefaultJt808FlowIdGeneratorFactory())
+                PooledByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)
         ).encode(response, new DefaultJt808FlowIdGenerator());
     }
 }

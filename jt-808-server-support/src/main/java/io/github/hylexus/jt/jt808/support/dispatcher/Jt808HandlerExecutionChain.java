@@ -6,6 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * 从 SpringMvc 的 HandlerExecutionChain 复制的代码。
+ */
 @Slf4j
 public class Jt808HandlerExecutionChain {
 

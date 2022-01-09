@@ -12,7 +12,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.LIST;
 import static io.github.hylexus.jt.jt808.support.data.MsgDataType.WORD;
 
 /**
- * 服务器端补传分包请求
+ * 终端补传分包请求
  *
  * @author hylexus
  */
