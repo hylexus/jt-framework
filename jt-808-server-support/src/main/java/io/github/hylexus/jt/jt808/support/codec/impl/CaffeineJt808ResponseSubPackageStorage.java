@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
@@ -19,16 +20,16 @@ import static java.util.Objects.requireNonNull;
  * @author hylexus
  */
 @Slf4j
-public class DefaultJt808ResponseSubPackageStorage implements Jt808ResponseSubPackageStorage {
+public class CaffeineJt808ResponseSubPackageStorage implements Jt808ResponseSubPackageStorage {
 
-    // <terminalId,<firstFlowIdOfSomeSubPackage, List<msg>>>
     protected final Cache<String, Map<Integer, List<Jt808Response.Jt808ResponseSubPackage>>> cache;
 
-    public DefaultJt808ResponseSubPackageStorage(long maximumSize, Duration expireAfterWrite) {
+    public CaffeineJt808ResponseSubPackageStorage(ResponseSubPackageStorageProps storageProps) {
+        // <terminalId,<firstFlowIdOfSomeSubPackage, List<msg>>>
         this.cache = Caffeine.newBuilder()
-                .maximumSize(maximumSize)
-                .expireAfterWrite(expireAfterWrite)
-                .expireAfterAccess(expireAfterWrite)
+                .maximumSize(storageProps.getMaximumSize())
+                .expireAfterWrite(storageProps.getTtl())
+                .expireAfterAccess(storageProps.getTtl())
                 .removalListener((RemovalListener<String, Map<Integer, List<Jt808Response.Jt808ResponseSubPackage>>>) (key, value, cause) -> {
                     if (value == null) {
                         return;
@@ -59,5 +60,11 @@ public class DefaultJt808ResponseSubPackageStorage implements Jt808ResponseSubPa
                 .sorted(Comparator.comparing(Jt808Response.Jt808ResponseSubPackage::currentPackageNo))
                 .map(Jt808Response.Jt808ResponseSubPackage::msg)
                 .collect(Collectors.toList());
+    }
+
+    @Data
+    public static class ResponseSubPackageStorageProps {
+        private long maximumSize = 200;
+        private Duration ttl = Duration.ofMinutes(3);
     }
 }

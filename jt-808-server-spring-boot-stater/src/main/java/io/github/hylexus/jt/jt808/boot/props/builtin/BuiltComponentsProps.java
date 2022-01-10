@@ -14,4 +14,7 @@ public class BuiltComponentsProps {
 
     @NestedConfigurationProperty
     private Switchable componentStatistics = new Switchable();
+
+    @NestedConfigurationProperty
+    private ResponseSubPackageStorageProps responseSubPackageStorage = new ResponseSubPackageStorageProps();
 }

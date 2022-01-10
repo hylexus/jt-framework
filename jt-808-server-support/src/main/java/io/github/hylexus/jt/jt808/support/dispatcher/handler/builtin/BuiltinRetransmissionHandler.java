@@ -6,7 +6,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
-import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808ResponseSubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808ResponseSubPackageStorage;
 
 import java.util.stream.Collectors;
 
@@ -18,9 +18,9 @@ public class BuiltinRetransmissionHandler {
 
     private final Jt808SessionManager sessionManager;
 
-    private final DefaultJt808ResponseSubPackageStorage subPackageEventConsumer;
+    private final CaffeineJt808ResponseSubPackageStorage subPackageEventConsumer;
 
-    public BuiltinRetransmissionHandler(Jt808SessionManager sessionManager, DefaultJt808ResponseSubPackageStorage subPackageEventConsumer) {
+    public BuiltinRetransmissionHandler(Jt808SessionManager sessionManager, CaffeineJt808ResponseSubPackageStorage subPackageEventConsumer) {
         this.sessionManager = sessionManager;
         this.subPackageEventConsumer = subPackageEventConsumer;
     }

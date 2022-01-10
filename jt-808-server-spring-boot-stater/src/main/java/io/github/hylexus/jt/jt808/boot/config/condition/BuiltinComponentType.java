@@ -5,5 +5,7 @@ package io.github.hylexus.jt.jt808.boot.config.condition;
  */
 public enum BuiltinComponentType {
     COMPONENT_STATISTICS,
-    REQUEST_HANDLER
+    REQUEST_HANDLER,
+    RESPONSE_SUB_PACKAGE_STORAGE_REDIS,
+    RESPONSE_SUB_PACKAGE_STORAGE_CAFFEINE,
 }
