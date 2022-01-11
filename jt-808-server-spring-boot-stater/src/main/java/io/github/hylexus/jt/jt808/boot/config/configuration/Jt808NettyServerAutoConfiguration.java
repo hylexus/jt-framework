@@ -14,8 +14,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
-import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
@@ -25,7 +24,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
-import java.time.Duration;
 import java.util.Comparator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -141,26 +139,9 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt808SubPackageStorage.SubPackageEventListener debugSubPackageEventListener() {
-        return new Jt808SubPackageStorage.DefaultDebuggingSubPackageEventListener();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public Jt808SubPackageStorage jt808SubPackageStorage(ObjectProvider<Jt808SubPackageStorage.SubPackageEventListener> subPackageEventListeners) {
-        final DefaultJt808SubPackageStorage storage = new DefaultJt808SubPackageStorage(128, Duration.ofSeconds(30));
-        subPackageEventListeners.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).forEach(storage::addListener);
-        return storage;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public Jt808RequestMsgQueueListener msgQueueListener(
             Jt808RequestMsgQueue requestMsgQueue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808SubPackageStorage jt808SubPackageStorage) {
-        return new LocalEventBusListener(
-                (LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager,
-                jt808SubPackageStorage
-        );
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage) {
+        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager, subPackageStorage);
     }
 }

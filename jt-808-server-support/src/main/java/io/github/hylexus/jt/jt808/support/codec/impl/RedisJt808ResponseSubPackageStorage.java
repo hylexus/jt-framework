@@ -26,10 +26,15 @@ public class RedisJt808ResponseSubPackageStorage implements Jt808ResponseSubPack
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final ResponseSubPackageStorageProps storageProps;
+    private final ByteBufAllocator byteBufAllocator;
 
-    public RedisJt808ResponseSubPackageStorage(ResponseSubPackageStorageProps storageProps, RedisTemplate<String, Object> redisTemplate) {
+    public RedisJt808ResponseSubPackageStorage(
+            ByteBufAllocator byteBufAllocator,
+            ResponseSubPackageStorageProps storageProps,
+            RedisTemplate<String, Object> redisTemplate) {
         this.storageProps = storageProps;
         this.redisTemplate = redisTemplate;
+        this.byteBufAllocator = byteBufAllocator;
     }
 
     @Override
@@ -56,7 +61,7 @@ public class RedisJt808ResponseSubPackageStorage implements Jt808ResponseSubPack
         final List<RedisJt808ResponseSubPackageCacheItem> list = hashOperations.multiGet(key, hashKeys);
 
         return list.stream()
-                .map(it -> ByteBufAllocator.DEFAULT.buffer()
+                .map(it -> byteBufAllocator.buffer()
                         .writeBytes(HexStringUtils.hexString2Bytes(it.getHexString()))
                 )
                 .collect(Collectors.toList());

@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.jt808.boot.props;
 
 import io.github.hylexus.jt.jt808.boot.props.builtin.BuiltComponentsProps;
+import io.github.hylexus.jt.jt808.boot.props.builtin.RequestSubPackageStorageProps;
+import io.github.hylexus.jt.jt808.boot.props.builtin.ResponseSubPackageStorageProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorProps;
 import io.github.hylexus.jt.jt808.boot.props.protocol.ProtocolConfig;
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
@@ -23,6 +25,12 @@ public class Jt808ServerProps {
 
     @NestedConfigurationProperty
     private BuiltComponentsProps builtComponents = new BuiltComponentsProps();
+
+    @NestedConfigurationProperty
+    private RequestSubPackageStorageProps requestSubPackageStorage = new RequestSubPackageStorageProps();
+
+    @NestedConfigurationProperty
+    private ResponseSubPackageStorageProps responseSubPackageStorage = new ResponseSubPackageStorageProps();
 
     @NestedConfigurationProperty
     private ProtocolConfig protocol = new ProtocolConfig();

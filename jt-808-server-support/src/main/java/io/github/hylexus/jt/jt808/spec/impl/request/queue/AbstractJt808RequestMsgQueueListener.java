@@ -1,19 +1,16 @@
 package io.github.hylexus.jt.jt808.spec.impl.request.queue;
 
-import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt808.spec.*;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
-import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * @author hylexus
@@ -23,11 +20,11 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
     protected T queue;
     private final Jt808DispatcherHandler dispatcherHandler;
     private final Jt808SessionManager sessionManager;
-    private final Jt808SubPackageStorage subPackageStorage;
+    private final Jt808RequestSubPackageStorage subPackageStorage;
 
     public AbstractJt808RequestMsgQueueListener(
             T queue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808SubPackageStorage subPackageStorage) {
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage) {
         this.queue = queue;
         this.dispatcherHandler = dispatcherHandler;
         this.sessionManager = sessionManager;
@@ -40,7 +37,7 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
         Jt808Request requestToDispatch = null;
         Jt808Response originalResponse = null;
         try {
-            requestToDispatch = getRequest(originalRequest);
+            requestToDispatch = this.getRequest(originalRequest);
             if (requestToDispatch == null) {
                 return;
             }
@@ -74,29 +71,7 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
         }
 
         final Jt808SubPackageRequest subPackageRequest = (Jt808SubPackageRequest) request;
-        final Optional<ByteBuf> allPackages = this.subPackageStorage.getAllSubPackages(subPackageRequest);
-        if (allPackages.isEmpty()) {
-            this.subPackageStorage.storeSubPackage(subPackageRequest);
-            return null;
-        }
-
-        final ByteBuf mergedBody = allPackages
-                .orElseThrow(() -> new JtIllegalStateException("No sub"));
-
-        final Jt808RequestHeader.Jt808MsgBodyProps newMsgBodyProps = request.header().msgBodyProps()
-                .mutate()
-                .msgBodyLength(mergedBody.readableBytes())
-                .subPackageIdentifier(false)
-                .build();
-
-        final Jt808RequestHeader newHeader = request.header().mutate().msgBodyProps(newMsgBodyProps).build();
-
-        return request.mutate()
-                .header(newHeader)
-                .body(mergedBody)
-                .rawByteBuf(null)
-                .calculatedCheckSum((byte) 0)
-                .originalCheckSum((byte) 0)
-                .build();
+        this.subPackageStorage.saveSubPackage(subPackageRequest);
+        return null;
     }
 }

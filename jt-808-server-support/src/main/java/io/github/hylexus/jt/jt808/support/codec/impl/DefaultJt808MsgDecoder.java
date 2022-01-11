@@ -69,18 +69,42 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
                     total, currentNo,
                     subPackageBody, LocalDateTime.now()
             );
-
-            return new DefaultJt808SubPackageRequest(
+            final DefaultJt808SubPackageRequest request = new DefaultJt808SubPackageRequest(
                     msgType, header,
                     escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
                     originalCheckSum, calculatedCheckSum,
                     subPackageSpec
             );
+            this.debugLog(msgType, subPackageSpec, request);
+            return request;
         } else {
             return new DefaultJt808Request(
                     msgType, header,
                     escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
                     originalCheckSum, calculatedCheckSum
+            );
+        }
+    }
+
+    private void debugLog(MsgType msgType, DefaultJt808Request request) {
+        if (log.isDebugEnabled()) {
+            log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
+                    HexStringUtils.int2HexString(msgType.getMsgId(), 4),
+                    request.rawByteBuf().readableBytes() + 2,
+                    1,
+                    1,
+                    HexStringUtils.byteBufToString(request.rawByteBuf())
+            );
+        }
+    }
+
+    private void debugLog(MsgType msgType, Jt808SubPackageRequest.Jt808SubPackage subPackageSpec, DefaultJt808SubPackageRequest request) {
+        if (log.isDebugEnabled()) {
+            log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
+                    HexStringUtils.int2HexString(msgType.getMsgId(), 4),
+                    request.rawByteBuf().readableBytes() + 2,
+                    Math.max(subPackageSpec.currentPackageNo(), 1), Math.max(subPackageSpec.totalSubPackageCount(), 1),
+                    HexStringUtils.byteBufToString(request.rawByteBuf())
             );
         }
     }

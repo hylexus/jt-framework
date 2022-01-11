@@ -8,12 +8,12 @@ jt808:
       enabled: true
     request-handlers:
       enabled: false
-    response-sub-package-storage:
-      enabled: true
-      type: redis
-      caffeine:
-        maximum-size: 30
-        ttl: 3m
+  response-sub-package-storage:
+    enabled: true
+    type: redis
+    caffeine:
+      maximum-size: 30
+      ttl: 3m
 logging:
   level.root: info
   level.io.github.hylexus: info

@@ -23,4 +23,8 @@ dependencies {
 
     provided "io.netty:netty-all:${jar_version_netty}"
     compile "com.google.guava:guava:${jar_version_guava}"
+
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }

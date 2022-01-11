@@ -5,10 +5,7 @@ import com.google.common.collect.Sets;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.*;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
-import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.*;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
@@ -63,7 +60,8 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     Jt808MsgBytesProcessor.class,
                     Jt808CommandSender.class,
                     Jt808SessionManager.class,
-                    Jt808SubPackageStorage.class,
+                    Jt808RequestSubPackageStorage.class,
+                    Jt808ResponseSubPackageStorage.class,
                     Jt808FieldDeserializerRegistry.class,
                     Jt808FieldSerializerRegistry.class,
                     Jt808TerminalHeatBeatHandler.class,

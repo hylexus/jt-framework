@@ -4,10 +4,31 @@ jt808:
   built-components:
     component-statistics:
       enabled: true
+    request-handlers:
+      enabled: true
+  request-sub-package-storage:
+    enabled: true
+    type: caffeine
+    caffeine:
+      maximum-size: 100
+      ttl: 3m
+  response-sub-package-storage:
+    enabled: true
+    type: redis
+    redis:
+      ttl: 3m
+    caffeine:
+      maximum-size: 100
+      ttl: 3m
+
 logging:
   level: info
   level.io.github.hylexus.jt: info
   level.jt-808.channel: debug
   level.jt-808.request.decoder: debug
   level.jt-808.response.encoder: debug
-  level.io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808SubPackageStorage: debug
+  level.io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
+spring:
+  redis:
+    database: 9
+    host: localhost

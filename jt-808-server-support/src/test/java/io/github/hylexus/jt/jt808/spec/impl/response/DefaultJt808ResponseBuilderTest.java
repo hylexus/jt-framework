@@ -135,9 +135,36 @@ public class DefaultJt808ResponseBuilderTest {
         System.out.println(HexStringUtils.byteBufToString(byteBuf));
     }
 
+    @Test
+    public void testBuildRegisterMsgV2019WithSubPackage() {
+        final Jt808Response response = Jt808Response.newBuilder()
+                .version(Jt808ProtocolVersion.VERSION_2019)
+                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
+                .terminalId("00000000013912344329")
+                .maxPackageSize(60)
+                .flowId(123)
+                .body(writer -> writer
+                        // 省域ID WORD
+                        .writeWord(11)
+                        // 市县域ID WORD
+                        .writeWord(2)
+                        // 制造商ID byte[11]
+                        .writeString("id987654321")
+                        // 终端型号 byte[30]
+                        .writeString("type00123456781234567887654321")
+                        // 终端ID byte[30]
+                        .writeString("ID0000123456781234567887654321")
+                        .writeByte(1)
+                        .writeString("甘J-123459")
+                )
+                .build();
+        final ByteBuf byteBuf = encode(response);
+        System.out.println(HexStringUtils.byteBufToString(byteBuf));
+    }
+
     private ByteBuf encode(Jt808Response response) {
         return new DefaultJt808MsgEncoder(
-                PooledByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)
+                ByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT)
         ).encode(response, new DefaultJt808FlowIdGenerator());
     }
 }

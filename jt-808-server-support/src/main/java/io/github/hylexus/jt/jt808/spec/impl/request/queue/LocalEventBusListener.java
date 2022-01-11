@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.support.codec.Jt808SubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ public class LocalEventBusListener extends AbstractJt808RequestMsgQueueListener<
 
     public LocalEventBusListener(
             LocalEventBus queue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808SubPackageStorage subPackageStorage) {
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage) {
         super(queue, dispatcherHandler, sessionManager, subPackageStorage);
     }
 

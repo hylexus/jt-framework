@@ -64,7 +64,7 @@ public class CaffeineJt808ResponseSubPackageStorage implements Jt808ResponseSubP
 
     @Data
     public static class ResponseSubPackageStorageProps {
-        private long maximumSize = 200;
-        private Duration ttl = Duration.ofMinutes(3);
+        private long maximumSize = 128;
+        private Duration ttl = Duration.ofSeconds(45);
     }
 }
