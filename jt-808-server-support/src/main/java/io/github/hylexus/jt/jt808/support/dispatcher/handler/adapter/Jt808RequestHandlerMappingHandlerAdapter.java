@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.Jt808HandlerMethodArgumentResolver;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import io.github.hylexus.jt.jt808.support.utils.ArgumentUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,5 +53,10 @@ public class Jt808RequestHandlerMappingHandlerAdapter implements Jt808HandlerAda
     private Object[] resolveArgs(HandlerMethod handlerMethod, Jt808ServerExchange exchange) {
         final ArgumentContext argumentContext = ArgumentContext.of(exchange, null);
         return ArgumentUtils.resolveArguments(handlerMethod, argumentContext, this.argumentResolver);
+    }
+
+    @Override
+    public int getOrder() {
+        return SimpleJt808RequestHandlerHandlerMapping.ORDER + 100;
     }
 }

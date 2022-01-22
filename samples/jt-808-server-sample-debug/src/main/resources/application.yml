@@ -7,13 +7,11 @@ jt808:
     request-handlers:
       enabled: true
   request-sub-package-storage:
-    enabled: true
     type: caffeine
     caffeine:
       maximum-size: 100
       ttl: 3m
   response-sub-package-storage:
-    enabled: true
     type: redis
     redis:
       ttl: 3m
@@ -25,9 +23,11 @@ logging:
   level: info
   level.io.github.hylexus.jt: info
   level.jt-808.channel: debug
+  # 将默认解码器的日志级别调整到debug 来观察分包请求消息的解码
   level.jt-808.request.decoder: debug
-  level.jt-808.response.encoder: debug
+  # 将请求分包暂存器(默认为基于Caffeine的实现)的日志级别调整的debug 来观察分包请求的处理过程
   level.io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
+  level.jt-808.response.encoder: debug
 spring:
   redis:
     database: 9

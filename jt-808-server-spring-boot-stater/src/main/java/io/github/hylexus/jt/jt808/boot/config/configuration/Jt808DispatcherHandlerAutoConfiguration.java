@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher.*;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,14 +24,12 @@ public class Jt808DispatcherHandlerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Jt808DispatcherHandler jt808DispatcherHandler(
-            Jt808SessionManager sessionManager,
             ObjectProvider<Jt808HandlerMapping> handlerMappings,
             ObjectProvider<Jt808HandlerAdapter> handlerAdapters,
             ObjectProvider<Jt808HandlerResultHandler> resultHandlers,
             Jt808ExceptionHandler exceptionHandler) {
 
         return new Jt808DispatcherHandler(
-                sessionManager,
                 handlerMappings.stream().collect(Collectors.toList()),
                 handlerAdapters.stream().collect(Collectors.toList()),
                 resultHandlers.stream().collect(Collectors.toList()),

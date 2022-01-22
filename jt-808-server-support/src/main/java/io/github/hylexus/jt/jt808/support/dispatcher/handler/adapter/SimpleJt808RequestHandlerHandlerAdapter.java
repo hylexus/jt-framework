@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -36,6 +37,11 @@ public class SimpleJt808RequestHandlerHandlerAdapter
             return Jt808HandlerResult.empty();
         }
         return Jt808HandlerResult.of(handler, result);
+    }
+
+    @Override
+    public int getOrder() {
+        return SimpleJt808RequestHandlerHandlerMapping.ORDER;
     }
 
     @Override

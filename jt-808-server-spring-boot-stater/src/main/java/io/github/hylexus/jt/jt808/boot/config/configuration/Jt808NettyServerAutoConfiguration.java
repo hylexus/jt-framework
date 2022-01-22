@@ -14,6 +14,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
@@ -141,7 +142,8 @@ public class Jt808NettyServerAutoConfiguration {
     @ConditionalOnMissingBean
     public Jt808RequestMsgQueueListener msgQueueListener(
             Jt808RequestMsgQueue requestMsgQueue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage) {
-        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager, subPackageStorage);
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
+            Jt808RequestSubPackageEventListener requestSubPackageEventListener) {
+        return new LocalEventBusListener((LocalEventBus) requestMsgQueue, dispatcherHandler, sessionManager, subPackageStorage, requestSubPackageEventListener);
     }
 }

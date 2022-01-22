@@ -31,6 +31,8 @@ public interface Jt808Request {
     Jt808RequestHeader header();
 
     /**
+     * WARNING!!! 内置的默认实现: 如果是「合并后」的分包消息，返回 {@code null}
+     *
      * @return 原始报文(转义之后)
      */
     @Nullable

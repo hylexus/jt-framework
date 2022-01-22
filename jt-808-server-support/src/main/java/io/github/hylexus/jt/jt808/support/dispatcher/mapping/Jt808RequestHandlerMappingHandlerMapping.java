@@ -45,6 +45,11 @@ public class Jt808RequestHandlerMappingHandlerMapping
     }
 
     @Override
+    public int getOrder() {
+        return SimpleJt808RequestHandlerHandlerMapping.ORDER + 100;
+    }
+
+    @Override
     public Stream<RequestMappingReporter> report() {
         return this.msgHandlerComponentMapping.getMappings().entrySet().stream().flatMap(entry -> {
             final Integer msgId = entry.getKey();

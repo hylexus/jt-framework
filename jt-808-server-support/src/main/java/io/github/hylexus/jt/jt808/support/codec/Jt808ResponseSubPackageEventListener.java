@@ -18,6 +18,4 @@ public interface Jt808ResponseSubPackageEventListener extends OrderedComponent {
      */
     void onSubPackage(Jt808Response.Jt808ResponseSubPackage responseSubPackage);
 
-    Jt808ResponseSubPackageEventListener NO_OPS_CONSUMER = responseSubPackage -> {
-    };
 }

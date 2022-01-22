@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -42,6 +43,11 @@ public class Jt808ResponseBodyHandlerResultHandler implements Jt808HandlerResult
             );
         }
         this.doHandleResult(exchange, handlerResult);
+    }
+
+    @Override
+    public int getOrder() {
+        return SimpleJt808RequestHandlerHandlerMapping.ORDER;
     }
 
     private void doHandleResult(Jt808ServerExchange exchange, Jt808HandlerResult handlerResult) {

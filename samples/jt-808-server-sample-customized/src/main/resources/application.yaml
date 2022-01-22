@@ -11,3 +11,34 @@ jt808:
       enabled: true
     request-handlers:
       enabled: true
+  protocol:
+    max-frame-length: 1024
+  server:
+    port: 6808
+    boss-thread-count: 0
+    worker-thread-count: 0
+    idle-state-handler:
+      enabled: true
+      reader-idle-time: 20m
+      writer-idle-time: 20m
+      all-idle-time: 20m
+  msg-processor:
+    thread-pool:
+      # core-pool-size: Runtime.getRuntime().availableProcessors() + 1
+      # maximum-pool-size: 2 * corePoolSize
+      keep-alive-time: 60s
+      blocking-queue-size: 100
+      thread-name-format: '808-msg-processor-%d'
+  request-sub-package-storage:
+    type: none
+    caffeine:
+      maximum-size: 1024
+      ttl: 45s
+  response-sub-package-storage:
+    type: none
+    caffeine:
+      maximum-size: 1024
+      ttl: 45s
+    redis:
+      ttl: 1m
+

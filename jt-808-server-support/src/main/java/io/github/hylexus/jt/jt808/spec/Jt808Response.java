@@ -99,8 +99,7 @@ public interface Jt808Response extends Jt808ByteWriter {
     /**
      * 指定单个消息包的最大大小(转义之前)
      *
-     * @param size 消息包最大大小
-     * @return 单个消息包的最大大小
+     * @param size 单个消息包的最大大小
      */
     Jt808Response maxPackageSize(int size);
 
@@ -179,7 +178,7 @@ public interface Jt808Response extends Jt808ByteWriter {
 
         Jt808ResponseBuilder version(Jt808ProtocolVersion version);
 
-        Jt808ResponseBuilder encryptionType(int encryptionType);
+        //Jt808ResponseBuilder encryptionType(int encryptionType);
 
         Jt808ResponseBuilder reversedBit15InHeader(byte reversedBit15InHeader);
 

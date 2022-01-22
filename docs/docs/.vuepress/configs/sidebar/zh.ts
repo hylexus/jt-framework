@@ -18,7 +18,8 @@ export const zh: SidebarConfig = {
                 '/v2/jt-808/guide/basic/request-msg-handler-argument-resolver.md',
                 '/v2/jt-808/guide/basic/response-msg-handler.md',
                 '/v2/jt-808/guide/basic/command-sender.md',
-                '/v2/jt-808/guide/basic/sub-package.md',
+                '/v2/jt-808/guide/basic/request-sub-package.md',
+                '/v2/jt-808/guide/basic/response-sub-package.md',
                 '/v2/jt-808/guide/basic/handler-interceptor.md',
                 '/v2/jt-808/guide/basic/summary.md',
             ],
@@ -39,6 +40,7 @@ export const zh: SidebarConfig = {
                 '/v2/jt-808/guide/customization/netty-config.md',
                 '/v2/jt-808/guide/customization/codec-config.md',
                 '/v2/jt-808/guide/customization/session-config.md',
+                '/v2/jt-808/guide/customization/sub-package-config.md',
             ]
         },
         {
@@ -104,5 +106,6 @@ export const zh: SidebarConfig = {
     '/frequently-asked-questions/': [
         "/frequently-asked-questions/debug.md",
         "/frequently-asked-questions/package-parsing.md",
+        "/frequently-asked-questions/what-is-the-difference-between-v1-and-v2.md",
     ]
 }

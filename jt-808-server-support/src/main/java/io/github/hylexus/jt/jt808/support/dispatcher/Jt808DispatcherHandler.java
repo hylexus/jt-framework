@@ -21,20 +21,17 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class Jt808DispatcherHandler {
-    private final Jt808SessionManager sessionManager;
     private final List<Jt808HandlerMapping> handlerMappings;
     private final List<Jt808HandlerAdapter> handlerAdapters;
     private final List<Jt808HandlerResultHandler> resultHandlers;
     private final Jt808ExceptionHandler exceptionHandler;
 
     public Jt808DispatcherHandler(
-            Jt808SessionManager sessionManager,
             List<Jt808HandlerMapping> handlerMappings,
             List<Jt808HandlerAdapter> handlerAdapters,
             List<Jt808HandlerResultHandler> resultHandlers,
             Jt808ExceptionHandler exceptionHandler) {
 
-        this.sessionManager = sessionManager;
         this.handlerMappings = this.sort(handlerMappings);
         this.handlerAdapters = this.sort(handlerAdapters);
         this.resultHandlers = this.sort(resultHandlers);

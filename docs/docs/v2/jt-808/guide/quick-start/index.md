@@ -49,7 +49,11 @@ dependencies {
 
 ```yaml
 jt808:
-  print-component-statistics: true
+  built-components:
+    component-statistics:
+      enabled: true
+    request-handlers:
+      enabled: true
 logging:
   level.root: info
   level.io.github.hylexus: info

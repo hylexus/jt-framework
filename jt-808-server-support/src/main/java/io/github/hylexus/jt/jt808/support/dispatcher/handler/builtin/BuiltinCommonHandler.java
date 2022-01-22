@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200V2013;

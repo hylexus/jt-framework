@@ -16,7 +16,7 @@ import java.util.Optional;
  * @see SimpleJt808RequestHandler
  */
 public class SimpleJt808RequestHandlerHandlerMapping extends AbstractJt808HandlerMapping {
-
+    public static final int ORDER = 0;
     private final ComponentMapping<SimpleJt808RequestHandler<?>> msgHandlerComponentMapping;
 
     public SimpleJt808RequestHandlerHandlerMapping(
@@ -33,5 +33,10 @@ public class SimpleJt808RequestHandlerHandlerMapping extends AbstractJt808Handle
         final Jt808Session session = exchange.session();
         return msgHandlerComponentMapping.getComponent(request.msgType(), request.header().version())
                 .map(handler -> super.buildHandlerExecutionChain(request, session, handler));
+    }
+
+    @Override
+    public int getOrder() {
+        return ORDER;
     }
 }

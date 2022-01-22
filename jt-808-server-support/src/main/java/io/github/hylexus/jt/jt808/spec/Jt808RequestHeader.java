@@ -40,6 +40,8 @@ public interface Jt808RequestHeader {
 
     int flowId();
 
+    Jt808SubPackageProps subPackage();
+
     String toString();
 
     default Jt808MsgHeaderBuilder mutate() {
@@ -80,15 +82,22 @@ public interface Jt808RequestHeader {
         }
     }
 
+    interface Jt808SubPackageProps {
+
+        int totalSubPackageCount();
+
+        int currentPackageNo();
+    }
+
     interface Jt808MsgBodyPropsBuilder {
 
         Jt808MsgBodyPropsBuilder msgBodyLength(int msgBodyLength);
 
         Jt808MsgBodyPropsBuilder encryptionType(int encryptionType);
 
-        Jt808MsgBodyPropsBuilder subPackageIdentifier(int subPackageIdentifier);
+        Jt808MsgBodyPropsBuilder hasSubPackage(int subPackageIdentifier);
 
-        Jt808MsgBodyPropsBuilder subPackageIdentifier(boolean hasSubPackage);
+        Jt808MsgBodyPropsBuilder hasSubPackage(boolean hasSubPackage);
 
         Jt808MsgBodyPropsBuilder versionIdentifier(int versionIdentifier);
 
@@ -109,6 +118,8 @@ public interface Jt808RequestHeader {
         Jt808MsgHeaderBuilder terminalId(String terminalId);
 
         Jt808MsgHeaderBuilder flowId(int flowId);
+
+        Jt808MsgHeaderBuilder subPackageProps(Jt808SubPackageProps subPackageProps);
 
         Jt808RequestHeader build();
     }

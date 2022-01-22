@@ -2,11 +2,11 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
-import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
@@ -33,7 +33,7 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
 
     public static final String LOG_PREFIX = "<SubPackage>";
     // <terminalId_msgId_totalSubPackageCount,Map<currentSubPackageNo,Request>>
-    protected final Cache<String, Map<Integer, Jt808SubPackageRequest.Jt808SubPackage>> cache;
+    protected final Cache<String, Map<Integer, Jt808Request>> cache;
 
     protected final ByteBufAllocator allocator;
     private final Jt808RequestMsgDispatcher requestMsgDispatcher;
@@ -41,7 +41,7 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
     public CaffeineJt808RequestSubPackageStorage(
             ByteBufAllocator allocator,
             Jt808RequestMsgDispatcher requestMsgDispatcher,
-            RequestSubPackageStorageConfig subPackageStorageConfig) {
+            StorageConfig subPackageStorageConfig) {
 
         this.allocator = allocator;
         this.requestMsgDispatcher = requestMsgDispatcher;
@@ -49,27 +49,32 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
                 .maximumSize(subPackageStorageConfig.maximumSize)
                 .expireAfterWrite(subPackageStorageConfig.getTtl())
                 .expireAfterAccess(subPackageStorageConfig.getTtl())
-                .removalListener((RemovalListener<String, Map<Integer, Jt808SubPackageRequest.Jt808SubPackage>>) (key, value, cause) -> {
+                .removalListener((RemovalListener<String, Map<Integer, Jt808Request>>) (key, value, cause) -> {
                     if (value == null) {
                         return;
                     }
-
-                    value.forEach((currentPackageNo, subPackage) -> {
-                        JtProtocolUtils.release(subPackage.body());
-                        log.debug("{} {} has been released.", LOG_PREFIX, subPackage);
-                    });
+                    final boolean isExpired = cause == RemovalCause.EXPIRED
+                                              || cause == RemovalCause.SIZE
+                                              || cause == RemovalCause.COLLECTED;
+                    if (isExpired) {
+                        value.forEach((currentPackageNo, subPackage) -> {
+                            JtProtocolUtils.release(subPackage.body(), subPackage.rawByteBuf());
+                            log.debug("{} {} has been released. reason = {}", LOG_PREFIX, subPackage, cause);
+                        });
+                    }
 
                 })
                 .build();
     }
 
     @Override
-    public void saveSubPackage(Jt808SubPackageRequest request) {
+    public void saveSubPackage(Jt808Request request) {
         final String key = this.buildSubPackageCacheKey(request);
-        final Map<Integer, Jt808SubPackageRequest.Jt808SubPackage> map = this.cache.get(key, k -> new ConcurrentHashMap<>());
-        requireNonNull(map).put(request.subPackage().currentPackageNo(), request.subPackage());
+        final Map<Integer, Jt808Request> map = this.cache.get(key, k -> new ConcurrentHashMap<>());
+        final Jt808RequestHeader.Jt808SubPackageProps jt808SubPackageProps = request.header().subPackage();
+        requireNonNull(map).put(jt808SubPackageProps.currentPackageNo(), request);
 
-        this.getAllSubPackages(request).ifPresent(mergedBody -> {
+        this.getAllSubPackages(key, request).ifPresent(mergedBody -> {
             final Jt808Request mergedRequest = this.buildRequest(request, mergedBody);
             if (log.isDebugEnabled()) {
                 log.debug("Redispatch mergedRequest : {}", mergedRequest);
@@ -82,14 +87,17 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
         });
     }
 
-    protected Jt808Request buildRequest(Jt808SubPackageRequest request, ByteBuf mergedBody) {
+    protected Jt808Request buildRequest(Jt808Request request, ByteBuf mergedBody) {
         final Jt808RequestHeader.Jt808MsgBodyProps newMsgBodyProps = request.header().msgBodyProps()
                 .mutate()
                 .msgBodyLength(mergedBody.readableBytes())
-                .subPackageIdentifier(false)
+                .hasSubPackage(false)
                 .build();
 
-        final Jt808RequestHeader newHeader = request.header().mutate().msgBodyProps(newMsgBodyProps).build();
+        final Jt808RequestHeader newHeader = request.header().mutate()
+                .msgBodyProps(newMsgBodyProps)
+                .subPackageProps(null)
+                .build();
 
         return request.mutate()
                 .header(newHeader)
@@ -100,31 +108,30 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
                 .build();
     }
 
-    public Optional<ByteBuf> getAllSubPackages(Jt808SubPackageRequest request) {
-        final String key = this.buildSubPackageCacheKey(request);
-        final Map<Integer, Jt808SubPackageRequest.Jt808SubPackage> map = this.cache.get(key, k -> new ConcurrentHashMap<>());
-        if (requireNonNull(map).size() < request.subPackage().totalSubPackageCount()) {
+    // TODO 分包补传(0x8003)
+    // TODO 分包消息 ACK
+    public Optional<ByteBuf> getAllSubPackages(String key, Jt808Request request) {
+        final Map<Integer, Jt808Request> map = this.cache.get(key, k -> new ConcurrentHashMap<>());
+        if (requireNonNull(map).size() < request.header().subPackage().totalSubPackageCount()) {
             return Optional.empty();
         }
 
-        map.put(request.subPackage().currentPackageNo(), request.subPackage());
-
         final CompositeByteBuf compositeByteBuf = this.allocator.compositeBuffer(map.size());
         map.values().stream()
-                .sorted(Comparator.comparing(Jt808SubPackageRequest.Jt808SubPackage::currentPackageNo))
+                .sorted(Comparator.comparing(e -> e.header().subPackage().currentPackageNo()))
                 .forEach(subPackage -> compositeByteBuf.addComponents(true, subPackage.body().retain()));
 
         this.cache.invalidate(key);
         return Optional.of(compositeByteBuf);
     }
 
-    protected String buildSubPackageCacheKey(Jt808SubPackageRequest request) {
-        return String.format("%s_%d_%d", request.terminalId(), request.msgType().getMsgId(), request.subPackage().totalSubPackageCount());
+    protected String buildSubPackageCacheKey(Jt808Request request) {
+        return String.format("%s_%d_%d", request.terminalId(), request.msgType().getMsgId(), request.header().subPackage().totalSubPackageCount());
     }
 
     @Data
-    public static class RequestSubPackageStorageConfig {
-        private long maximumSize = 128;
+    public static class StorageConfig {
+        private long maximumSize = 1024;
         private Duration ttl = Duration.ofSeconds(45);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageStorage;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -22,15 +23,16 @@ import java.util.stream.Collectors;
  * @author hylexus
  */
 @Slf4j
+@BuiltinComponent
 public class RedisJt808ResponseSubPackageStorage implements Jt808ResponseSubPackageStorage {
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ResponseSubPackageStorageProps storageProps;
+    private final StorageConfig storageProps;
     private final ByteBufAllocator byteBufAllocator;
 
     public RedisJt808ResponseSubPackageStorage(
             ByteBufAllocator byteBufAllocator,
-            ResponseSubPackageStorageProps storageProps,
+            StorageConfig storageProps,
             RedisTemplate<String, Object> redisTemplate) {
         this.storageProps = storageProps;
         this.redisTemplate = redisTemplate;
@@ -78,7 +80,7 @@ public class RedisJt808ResponseSubPackageStorage implements Jt808ResponseSubPack
     }
 
     @Data
-    public static class ResponseSubPackageStorageProps {
-        private Duration ttl = Duration.ofMinutes(3);
+    public static class StorageConfig {
+        private Duration ttl = Duration.ofMinutes(1);
     }
 }

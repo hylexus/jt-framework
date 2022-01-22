@@ -8,19 +8,17 @@ import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
-import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageEventListener;
-import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
-import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
+import io.github.hylexus.jt.jt808.support.codec.*;
+import io.github.hylexus.jt.jt808.support.codec.impl.*;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionEventListener01;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionEventListener02;
 import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
+import io.github.hylexus.jt808.samples.customized.subpackage.MyRequestSubPackageStorage;
+import io.github.hylexus.jt808.samples.customized.subpackage.MyResponseSubPackageStorage;
 import io.netty.buffer.ByteBufAllocator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
@@ -40,6 +38,18 @@ public class MyJt808Config {
         return msgId -> MyMsgType.CLIENT_AUTH.parseFromInt(msgId)
                 // 使用内置类型解析
                 .or(() -> BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgId));
+    }
+
+    // [[ 非必须配置 ]] -- 替换内置响应消息分包暂存器
+    @Bean
+    public Jt808ResponseSubPackageStorage myJt808ResponseSubPackageStorage() {
+        return new MyResponseSubPackageStorage(new CaffeineJt808ResponseSubPackageStorage.StorageConfig());
+    }
+
+    // [[ 非必须配置 ]] -- 替换内置请求消息分包暂存器
+    @Bean
+    public Jt808RequestSubPackageStorage myJt808RequestSubPackageStorage(Jt808RequestMsgDispatcher dispatcher) {
+        return new MyRequestSubPackageStorage(ByteBufAllocator.DEFAULT, dispatcher, new CaffeineJt808RequestSubPackageStorage.StorageConfig());
     }
 
     // [[ 非必须配置 ]] -- 替换流水号生成策略
@@ -62,8 +72,10 @@ public class MyJt808Config {
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808MsgEncoder
     @Bean
-    public Jt808MsgEncoder jt808MsgEncoder(Jt808MsgBytesProcessor processor) {
-        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, Jt808ResponseSubPackageEventListener.NO_OPS_CONSUMER);
+    public Jt808MsgEncoder jt808MsgEncoder(
+            Jt808MsgBytesProcessor processor, Jt808ResponseSubPackageEventListener listener,
+            Jt808ResponseSubPackageStorage subPackageStorage) {
+        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, listener, subPackageStorage);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808MsgDecoder

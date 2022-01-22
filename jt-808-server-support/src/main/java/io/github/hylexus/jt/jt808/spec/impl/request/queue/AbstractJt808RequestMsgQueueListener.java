@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
@@ -21,14 +22,17 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
     private final Jt808DispatcherHandler dispatcherHandler;
     private final Jt808SessionManager sessionManager;
     private final Jt808RequestSubPackageStorage subPackageStorage;
+    private final Jt808RequestSubPackageEventListener requestSubPackageEventListener;
 
     public AbstractJt808RequestMsgQueueListener(
             T queue, Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage) {
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
+            Jt808RequestSubPackageEventListener requestSubPackageEventListener) {
         this.queue = queue;
         this.dispatcherHandler = dispatcherHandler;
         this.sessionManager = sessionManager;
         this.subPackageStorage = subPackageStorage;
+        this.requestSubPackageEventListener = requestSubPackageEventListener;
     }
 
     @Override
@@ -40,9 +44,6 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
             requestToDispatch = this.getRequest(originalRequest);
             if (requestToDispatch == null) {
                 return;
-            }
-            if (requestToDispatch != originalRequest) {
-                JtProtocolUtils.release(originalRequest.body(), originalRequest.rawByteBuf());
             }
 
             final String terminalId = requestToDispatch.terminalId();
@@ -70,8 +71,8 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
             return request;
         }
 
-        final Jt808SubPackageRequest subPackageRequest = (Jt808SubPackageRequest) request;
-        this.subPackageStorage.saveSubPackage(subPackageRequest);
+        this.subPackageStorage.saveSubPackage(request);
+        this.requestSubPackageEventListener.onSubPackage(request);
         return null;
     }
 }

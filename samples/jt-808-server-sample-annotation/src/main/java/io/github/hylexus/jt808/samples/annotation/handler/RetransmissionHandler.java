@@ -39,14 +39,18 @@ public class RetransmissionHandler {
         final Jt808Session session = this.sessionManager.findByTerminalId(request.terminalId()).orElseThrow();
 
         final BuiltinMsg0005 body = request.body();
+        // 分包消息中第一包的流水号
         final int firstSubPackageFlowId = body.getFirstSubPackageFlowId();
+        // 需要重传的子包ID
         final List<Integer> packageIdList = body.getPackageIdList().stream().map(BuiltinMsg0005.PackageId::getValue).collect(Collectors.toList());
 
+        // 获取子包
         final Collection<ByteBuf> subPackageMsgList = responseSubPackageStorage.getSubPackageMsg(request.terminalId(), firstSubPackageFlowId, packageIdList);
 
         subPackageMsgList
                 .stream()
                 .peek(subPackageMsg -> log.info("re-send msg to client {} : {}", request.terminalId(), HexStringUtils.byteBufToString(subPackageMsg)))
+                // 将子包发送给终端
                 .forEach(session::sendMsgToClient);
     }
 

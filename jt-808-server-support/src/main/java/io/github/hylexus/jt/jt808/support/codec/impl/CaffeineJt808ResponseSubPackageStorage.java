@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalListener;
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
@@ -20,11 +21,12 @@ import static java.util.Objects.requireNonNull;
  * @author hylexus
  */
 @Slf4j
+@BuiltinComponent
 public class CaffeineJt808ResponseSubPackageStorage implements Jt808ResponseSubPackageStorage {
 
     protected final Cache<String, Map<Integer, List<Jt808Response.Jt808ResponseSubPackage>>> cache;
 
-    public CaffeineJt808ResponseSubPackageStorage(ResponseSubPackageStorageProps storageProps) {
+    public CaffeineJt808ResponseSubPackageStorage(StorageConfig storageProps) {
         // <terminalId,<firstFlowIdOfSomeSubPackage, List<msg>>>
         this.cache = Caffeine.newBuilder()
                 .maximumSize(storageProps.getMaximumSize())
@@ -63,8 +65,8 @@ public class CaffeineJt808ResponseSubPackageStorage implements Jt808ResponseSubP
     }
 
     @Data
-    public static class ResponseSubPackageStorageProps {
-        private long maximumSize = 128;
+    public static class StorageConfig {
+        private long maximumSize = 1024;
         private Duration ttl = Duration.ofSeconds(45);
     }
 }

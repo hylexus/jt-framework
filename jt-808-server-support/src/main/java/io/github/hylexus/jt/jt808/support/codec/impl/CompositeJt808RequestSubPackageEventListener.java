@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
-import io.github.hylexus.jt.jt808.spec.Jt808SubPackageRequest;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageEventListener;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ public class CompositeJt808RequestSubPackageEventListener implements Jt808Reques
     }
 
     @Override
-    public void onSubPackage(Jt808SubPackageRequest subPackageRequest) {
+    public void onSubPackage(Jt808Request subPackageRequest) {
         for (Jt808RequestSubPackageEventListener delegate : this.delegates) {
             try {
                 delegate.onSubPackage(subPackageRequest);

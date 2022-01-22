@@ -23,12 +23,21 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class Jt808ServerProps {
 
+    /**
+     * 内置组件配置
+     */
     @NestedConfigurationProperty
     private BuiltComponentsProps builtComponents = new BuiltComponentsProps();
 
+    /**
+     * 请求消息分包配置
+     */
     @NestedConfigurationProperty
     private RequestSubPackageStorageProps requestSubPackageStorage = new RequestSubPackageStorageProps();
 
+    /**
+     * 响应消息分包配置
+     */
     @NestedConfigurationProperty
     private ResponseSubPackageStorageProps responseSubPackageStorage = new ResponseSubPackageStorageProps();
 
@@ -38,6 +47,9 @@ public class Jt808ServerProps {
     @NestedConfigurationProperty
     private Jt808NettyTcpServerProps server = new Jt808NettyTcpServerProps();
 
+    /**
+     * 消息处理器线程池配置
+     */
     @NestedConfigurationProperty
     private MsgProcessorProps msgProcessor = new MsgProcessorProps();
 }

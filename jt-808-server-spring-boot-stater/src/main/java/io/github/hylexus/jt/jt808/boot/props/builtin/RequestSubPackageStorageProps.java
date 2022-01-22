@@ -12,15 +12,21 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @Getter
 @Setter
 @ToString
-public class RequestSubPackageStorageProps extends Switchable {
+public class RequestSubPackageStorageProps {
 
     private Type type = Type.CAFFEINE;
 
     @NestedConfigurationProperty
-    private CaffeineJt808RequestSubPackageStorage.RequestSubPackageStorageConfig caffeine =
-            new CaffeineJt808RequestSubPackageStorage.RequestSubPackageStorageConfig();
+    private CaffeineJt808RequestSubPackageStorage.StorageConfig caffeine = new CaffeineJt808RequestSubPackageStorage.StorageConfig();
 
     public enum Type {
+        /**
+         * 忽略分包请求
+         */
+        NONE,
+        /**
+         * 基于 caffeine 的请求分包消息暂存器
+         */
         CAFFEINE
     }
 

@@ -6,6 +6,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
@@ -24,6 +25,11 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
     @Override
     public boolean supports(Jt808HandlerResult handlerResult) {
         return handlerResult != null && handlerResult.getReturnValue() instanceof Jt808Response;
+    }
+
+    @Override
+    public int getOrder() {
+        return SimpleJt808RequestHandlerHandlerMapping.ORDER + 100;
     }
 
     @Override

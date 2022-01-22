@@ -150,14 +150,14 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
 
     private void appendBannerSuffix(StringBuilder stringBuilder) {
         stringBuilder.append(END_OF_LINE)
-                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<\n"));
+                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-Component-Statistics >>|<<\n"));
     }
 
     private void appendBannerPrefix(StringBuilder stringBuilder) {
         stringBuilder
                 .append(END_OF_LINE)
                 .append(END_OF_LINE)
-                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-component-Statistics >>|<<"))
+                .append(AnsiOutput.toString(SERVER_BANNER_COLOR, ">>|<< Jt808-Server-Component-Statistics >>|<<"))
                 .append(END_OF_LINE);
         stringBuilder.append(AnsiOutput.toString(BUILTIN_COMPONENT_COLOR, "[(B)uiltin-Component]"))
                 .append(AnsiOutput.toString(CUSTOM_COMPONENT_COLOR, " [(C)ustom-Component] "))

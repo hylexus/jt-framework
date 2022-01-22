@@ -6,18 +6,14 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.*;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808RequestHeader;
-import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808SubPackage;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808SubPackageProps;
 import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
-import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808SubPackageRequest;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
-import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
-
-import java.time.LocalDateTime;
 
 /**
  * @author hylexus
@@ -56,56 +52,34 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         final MsgType msgType = this.parseMsgType(header);
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
-        // 5. byte[17-20]     消息包封装项
-        if (header.msgBodyProps().hasSubPackage()) {
-            // byte[0-2)   消息包总数(word(16))
-            final int totalSubPackageCountStartIndex = msgBodyStartIndex - 2 * MsgDataType.WORD.getByteCount();
-            final int total = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex);
-            // byte[2-4)   包序号(word(16))
-            final int currentNo = JtProtocolUtils.getWord(byteBuf, totalSubPackageCountStartIndex + MsgDataType.WORD.getByteCount());
-            final ByteBuf subPackageBody = escaped.slice(msgBodyStartIndex, header.msgBodyLength()).copy();
-            final Jt808SubPackageRequest.Jt808SubPackage subPackageSpec = new DefaultJt808SubPackage(
-                    header.terminalId(), header.msgId(), header.flowId(),
-                    total, currentNo,
-                    subPackageBody, LocalDateTime.now()
-            );
-            final DefaultJt808SubPackageRequest request = new DefaultJt808SubPackageRequest(
-                    msgType, header,
-                    escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
-                    originalCheckSum, calculatedCheckSum,
-                    subPackageSpec
-            );
-            this.debugLog(msgType, subPackageSpec, request);
-            return request;
-        } else {
-            return new DefaultJt808Request(
-                    msgType, header,
-                    escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
-                    originalCheckSum, calculatedCheckSum
-            );
-        }
+        final DefaultJt808Request request = new DefaultJt808Request(
+                msgType, header,
+                escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
+                originalCheckSum, calculatedCheckSum
+        );
+        debugLog(msgType, request);
+        return request;
     }
 
     private void debugLog(MsgType msgType, DefaultJt808Request request) {
         if (log.isDebugEnabled()) {
-            log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
-                    HexStringUtils.int2HexString(msgType.getMsgId(), 4),
-                    request.rawByteBuf().readableBytes() + 2,
-                    1,
-                    1,
-                    HexStringUtils.byteBufToString(request.rawByteBuf())
-            );
-        }
-    }
-
-    private void debugLog(MsgType msgType, Jt808SubPackageRequest.Jt808SubPackage subPackageSpec, DefaultJt808SubPackageRequest request) {
-        if (log.isDebugEnabled()) {
-            log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
-                    HexStringUtils.int2HexString(msgType.getMsgId(), 4),
-                    request.rawByteBuf().readableBytes() + 2,
-                    Math.max(subPackageSpec.currentPackageNo(), 1), Math.max(subPackageSpec.totalSubPackageCount(), 1),
-                    HexStringUtils.byteBufToString(request.rawByteBuf())
-            );
+            if (request.header().msgBodyProps().hasSubPackage()) {
+                log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
+                        HexStringUtils.int2HexString(msgType.getMsgId(), 4),
+                        request.rawByteBuf().readableBytes() + 2,
+                        request.header().subPackage().currentPackageNo(),
+                        request.header().subPackage().totalSubPackageCount(),
+                        HexStringUtils.byteBufToString(request.rawByteBuf())
+                );
+            } else {
+                log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
+                        HexStringUtils.int2HexString(msgType.getMsgId(), 4),
+                        request.rawByteBuf().readableBytes() + 2,
+                        1,
+                        1,
+                        HexStringUtils.byteBufToString(request.rawByteBuf())
+                );
+            }
         }
     }
 
@@ -154,6 +128,12 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
         // 4. byte[15-16]     消息流水号
         headerSpec.flowId(JtProtocolUtils.getWord(byteBuf, 15));
+        if (msgBodyProps.hasSubPackage()) {
+            final DefaultJt808SubPackageProps subPackageProps = new DefaultJt808SubPackageProps();
+            subPackageProps.totalSubPackageCount(JtProtocolUtils.getWord(byteBuf, 17));
+            subPackageProps.currentPackageNo(JtProtocolUtils.getWord(byteBuf, 19));
+            headerSpec.subPackageProps(subPackageProps);
+        }
         return headerSpec;
     }
 
@@ -174,6 +154,12 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
         // 4. byte[10-11]     消息流水号
         headerSpec.flowId(JtProtocolUtils.getWord(byteBuf, 10));
+        if (msgBodyProps.hasSubPackage()) {
+            final DefaultJt808SubPackageProps subPackageProps = new DefaultJt808SubPackageProps();
+            subPackageProps.totalSubPackageCount(JtProtocolUtils.getWord(byteBuf, 12));
+            subPackageProps.currentPackageNo(JtProtocolUtils.getWord(byteBuf, 14));
+            headerSpec.subPackageProps(subPackageProps);
+        }
         return headerSpec;
     }
 

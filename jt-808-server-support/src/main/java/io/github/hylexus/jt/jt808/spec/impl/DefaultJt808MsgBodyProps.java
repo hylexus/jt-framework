@@ -53,14 +53,14 @@ public class DefaultJt808MsgBodyProps implements Jt808RequestHeader.Jt808MsgBody
         }
 
         @Override
-        public Jt808RequestHeader.Jt808MsgBodyPropsBuilder subPackageIdentifier(int subPackageIdentifier) {
+        public Jt808RequestHeader.Jt808MsgBodyPropsBuilder hasSubPackage(int subPackageIdentifier) {
             this.intValue = JtProtocolUtils.setBitRange(subPackageIdentifier, 1, intValue, 13);
             return this;
         }
 
         @Override
-        public Jt808RequestHeader.Jt808MsgBodyPropsBuilder subPackageIdentifier(boolean hasSubPackage) {
-            return this.subPackageIdentifier(hasSubPackage ? 1 : 0);
+        public Jt808RequestHeader.Jt808MsgBodyPropsBuilder hasSubPackage(boolean hasSubPackage) {
+            return this.hasSubPackage(hasSubPackage ? 1 : 0);
         }
 
         @Override
