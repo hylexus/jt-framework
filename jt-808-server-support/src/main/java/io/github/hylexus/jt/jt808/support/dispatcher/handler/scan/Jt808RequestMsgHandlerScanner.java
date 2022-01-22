@@ -56,7 +56,13 @@ public class Jt808RequestMsgHandlerScanner {
             } else if (beanInstance instanceof BuiltinComponent) {
                 order = OrderedComponent.LOWEST_PRECEDENCE;
             } else {
-                order = OrderedComponent.DEFAULT_ORDER;
+                final io.github.hylexus.jt.annotation.BuiltinComponent annotation =
+                        AnnotationUtils.findAnnotation(cls, io.github.hylexus.jt.annotation.BuiltinComponent.class);
+                if (annotation != null) {
+                    order = annotation.order();
+                } else {
+                    order = OrderedComponent.DEFAULT_ORDER;
+                }
             }
             for (Method method : declaredMethods) {
 

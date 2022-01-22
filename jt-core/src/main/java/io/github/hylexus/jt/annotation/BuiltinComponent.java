@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.annotation;
 
+import io.github.hylexus.jt.core.OrderedComponent;
+
 import java.lang.annotation.*;
 
 /**
@@ -10,4 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BuiltinComponent {
+
+    int order() default OrderedComponent.LOWEST_PRECEDENCE;
+
 }

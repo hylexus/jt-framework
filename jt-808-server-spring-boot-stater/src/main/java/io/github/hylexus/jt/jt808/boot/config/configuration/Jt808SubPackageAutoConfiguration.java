@@ -15,6 +15,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808ResponseSubPackageStorage;
 import io.github.hylexus.jt.jt808.support.codec.impl.*;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.netty.buffer.ByteBufAllocator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 /**
  * @author hylexus
  */
+@Slf4j
 @Import({
         // request
         Jt808SubPackageAutoConfiguration.NoOpsRequestSubPackageStorageAutoConfiguration.class,
@@ -47,6 +49,15 @@ public class Jt808SubPackageAutoConfiguration {
     @ConditionalOnMissingBean(Jt808RequestSubPackageStorage.class)
     @ConditionalOnJt808RequestSubPackageStorageEnabled(type = RequestSubPackageStorageProps.Type.NONE)
     public static class NoOpsRequestSubPackageStorageAutoConfiguration {
+
+        public NoOpsRequestSubPackageStorageAutoConfiguration() {
+            log.error("\n\nI hope you know what you have configured!"
+                      + "\nWhen jt808.request-sub-package-storage.type = 'NONE', it means that all Sub-Request-Message will be IGNORED!!!\n"
+                      + "\nWhen jt808.request-sub-package-storage.type = 'NONE', it means that all Sub-Request-Message will be IGNORED!!!\n"
+                      + "\nWhen jt808.request-sub-package-storage.type = 'NONE', it means that all Sub-Request-Message will be IGNORED!!!\n\n"
+            );
+        }
+
         @Bean
         public Jt808RequestSubPackageStorage jt808RequestSubPackageStorage() {
             return Jt808RequestSubPackageStorage.NO_OPS;
@@ -72,6 +83,13 @@ public class Jt808SubPackageAutoConfiguration {
     @ConditionalOnMissingBean(Jt808ResponseSubPackageStorage.class)
     @ConditionalOnJt808ResponseSubPackageStorageEnabled(type = ResponseSubPackageStorageProps.Type.NONE)
     public static class NoOpsResponseSubPackageStorageAutoConfiguration {
+        public NoOpsResponseSubPackageStorageAutoConfiguration() {
+            log.error("\n\nI hope you know what you have configured."
+                      + "\nWhen jt808.response-sub-package-storage.type = 'NONE', it means that the server-side will not temporarily store any "
+                      + "Response-Sub-Package, "
+                      + "and you may NOT be able to process message with id = 0X0005.\n\n");
+        }
+
         @Bean
         public Jt808ResponseSubPackageStorage jt808ResponseSubPackageStorage() {
             return Jt808ResponseSubPackageStorage.NO_OPS_STORAGE;
