@@ -1,10 +1,10 @@
-## 2.0.0-SNAPSHOT
+## 2.0.0-RELEASE
 
 ### ⭐ New Features
 
-- 注解驱动开发(支持SpEL)
+- 注解驱动开发(支持`SpEL`)
 - 支持消息分包
-- 支持多版本支持
+- 支持多版本
 
 ### 📔 Documentation
 

@@ -23,7 +23,7 @@ Jt-808协议服务端。
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "2.0.0-SNAPSHOT"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "2.0.0-RELEASE"
     // ...
 }
 ```
@@ -35,7 +35,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0-RELEASE</version>
 </dependency>
 ```
 
@@ -62,7 +62,7 @@ logging:
 - 注解驱动开发
 - 支持消息下发
 - 支持消息分包
-- 支持多版本支持
+- 支持多版本
 - 高度可定制
 
 ## Building from Source

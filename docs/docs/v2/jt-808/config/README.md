@@ -26,6 +26,10 @@ jt808:
   # ...
   msg-processor:
   # ...
+  request-sub-package-storage:
+  # ...
+  response-sub-package-storage:
+  # ...
 ```
 
 ## protocol
@@ -111,6 +115,40 @@ this.workerGroup=new NioEventLoopGroup(workThreadCount);
 
 线程池中线程的命名格式。
 
+## request-sub-package-storage
+
+请求分包消息暂存器相关配置。
+
+```yaml
+  request-sub-package-storage:
+    type: caffeine # caffeine || none
+    ## 当且仅当 jt808.request-sub-package-storage.type = caffeine 时生效
+    caffeine:
+      # 最多缓存多少条消息
+      maximum-size: 1024
+      # 最大缓存时间
+      ttl: 45s
+```
+
+## response-sub-package-storage
+
+响应分包消息暂存器相关配置。
+
+```yaml
+    response-sub-package-storage:
+    type: caffeine # caffeine || redis || none
+    ## 当且仅当 jt808.response-sub-package-storage.type = caffeine 时生效
+    caffeine:
+      # 最多缓存多少条消息
+      maximum-size: 1024
+      # 最大缓存时间
+      ttl: 45s
+    ## 当且仅当 jt808.response-sub-package-storage.type = redis 时生效
+    redis:
+      # 最大缓存时间
+      ttl: 1m
+```
+
 ## built-components
 
 ### component-statistics.enabled
@@ -143,8 +181,8 @@ this.workerGroup=new NioEventLoopGroup(workThreadCount);
 logging:
   level.root: info
   level.io.github.hylexus: info
-  # 对应 io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder 的日志
+  # 对应 io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder 的日志
   level.jt-808.request.decoder: info
-  # 对应 io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder 的日志
+  # 对应 io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder 的日志
   level.jt-808.response.encoder: info
 ```
