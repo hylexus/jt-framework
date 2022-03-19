@@ -165,6 +165,9 @@ public abstract class JtProtocolUtils {
             return;
         }
         for (Object object : objects) {
+            if (object == null) {
+                continue;
+            }
             try {
                 if (object instanceof ReferenceCounted) {
                     if (((ReferenceCounted) object).refCnt() > 0) {

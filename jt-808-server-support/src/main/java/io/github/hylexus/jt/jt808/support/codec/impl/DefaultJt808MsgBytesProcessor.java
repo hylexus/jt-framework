@@ -63,7 +63,7 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
 
         byteBufList.add(byteBuf.slice(from, readableBytes - from));
 
-        return allocator.compositeBuffer().addComponents(true, byteBufList);
+        return allocator.compositeBuffer(byteBufList.size()).addComponents(true, byteBufList);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
 
         do {
             if (from < indexOf) {
-                bufList.add(byteBuf.slice(from, indexOf - from));
+                bufList.add(byteBuf.retainedSlice(from, indexOf - from));
             }
             final byte current = byteBuf.getByte(indexOf);
             if (current == BYTE_7D) {
@@ -90,8 +90,8 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
             from = indexOf + 1;
         } while (from < readableBytes && (indexOf = nextIndexOf(byteBuf, from, readableBytes)) > 0);
 
-        bufList.add(byteBuf.slice(from, readableBytes - from));
-        return allocator.compositeBuffer().addComponents(true, bufList);
+        bufList.add(byteBuf.retainedSlice(from, readableBytes - from));
+        return allocator.compositeBuffer(bufList.size()).addComponents(true, bufList);
     }
 
 

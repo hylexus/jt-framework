@@ -54,7 +54,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
         final DefaultJt808Request request = new DefaultJt808Request(
                 msgType, header,
-                escaped, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
+                byteBuf, escaped.slice(msgBodyStartIndex, header.msgBodyLength()),
                 originalCheckSum, calculatedCheckSum
         );
         debugLog(msgType, request);

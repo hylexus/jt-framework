@@ -56,7 +56,7 @@ public abstract class AbstractJt808RequestMsgQueueListener<T extends Jt808Reques
             this.dispatcherHandler.handleRequest(exchange);
         } finally {
             if (requestToDispatch != null) {
-                JtProtocolUtils.release(requestToDispatch.body(), requestToDispatch.rawByteBuf());
+                JtProtocolUtils.release(requestToDispatch.rawByteBuf());
             }
 
             if (exchange != null && exchange.response() != originalResponse) {
