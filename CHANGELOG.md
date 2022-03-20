@@ -1,3 +1,9 @@
+## 2.0.1-RELEASE
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/63
+
 ## 2.0.0-RELEASE
 
 ### ⭐ New Features
