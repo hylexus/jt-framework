@@ -46,9 +46,19 @@ public interface Jt808ByteWriter {
         return this;
     }
 
+    default Jt808ByteWriter writeBytes(ByteBuf byteBuf, boolean autoClose) {
+        try {
+            writable().writeBytes(byteBuf);
+            return this;
+        } finally {
+            if (autoClose) {
+                JtProtocolUtils.release(byteBuf);
+            }
+        }
+    }
+
     default Jt808ByteWriter writeBytes(ByteBuf byteBuf) {
-        writable().writeBytes(byteBuf);
-        return this;
+        return this.writeBytes(byteBuf, true);
     }
 
     default Jt808ByteWriter writeBytes(byte[] bytes) {

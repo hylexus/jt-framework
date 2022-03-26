@@ -10,8 +10,10 @@ jt808:
       enabled: true
   request-sub-package-storage:
     type: caffeine
+    caffeine:
+      ttl: 30s
   response-sub-package-storage:
-    type: redis
+    type: caffeine
     caffeine:
       maximum-size: 30
       ttl: 3m

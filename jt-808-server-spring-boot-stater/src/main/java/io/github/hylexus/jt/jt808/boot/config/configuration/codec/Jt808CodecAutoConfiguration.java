@@ -14,7 +14,7 @@ import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializerRegistry;
-import io.github.hylexus.jt.jt808.support.data.serializer.DefaulJt808FieldSerializerRegistry;
+import io.github.hylexus.jt.jt808.support.data.serializer.DefaultJt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -86,7 +86,7 @@ public class Jt808CodecAutoConfiguration {
     public Jt808FieldSerializerRegistry jt808FieldSerializerRegistry(
             ObjectProvider<Jt808FieldSerializerRegistry.Jt808FieldSerializerRegistryCustomizer> customizers) {
 
-        final Jt808FieldSerializerRegistry registry = new DefaulJt808FieldSerializerRegistry(true);
+        final Jt808FieldSerializerRegistry registry = new DefaultJt808FieldSerializerRegistry(true);
         customizers.orderedStream().forEach(e -> e.customize(registry));
         return registry;
     }

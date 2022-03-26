@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -26,7 +27,7 @@ public class ByteBufFieldSerializer implements Jt808FieldSerializer<ByteBuf> {
     @Override
     public void serialize(ByteBuf object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
         if (msgDataType == MsgDataType.BYTES) {
-            byteBuf.writeBytes(object);
+            JtProtocolUtils.writeByteBuf(byteBuf, object, true);
             return;
         }
         throw new Jt808FieldSerializerException("Can not serialize [ByteBuf] as " + msgDataType);

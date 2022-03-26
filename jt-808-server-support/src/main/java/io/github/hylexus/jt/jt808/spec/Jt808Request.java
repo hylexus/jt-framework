@@ -6,6 +6,7 @@ import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteReader;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
@@ -63,6 +64,10 @@ public interface Jt808Request {
     // ==> Shortcut Methods Start
     // ++++++++++++++++++++++++++++++++++++++++++++
 
+    default void release() {
+        JtProtocolUtils.release(this.rawByteBuf(), this.body());
+    }
+
     default Jt808ByteReader bodyAsReader() {
         return this::body;
     }
@@ -113,6 +118,14 @@ public interface Jt808Request {
         return new DefaultJt808Request.DefaultJt808RequestBuilder(this);
     }
 
+    default Jt808Request copy() {
+        final ByteBuf rawByteBuf = this.rawByteBuf();
+        return mutate()
+                .body(this.body().copy(), false)
+                .rawByteBuf(rawByteBuf == null ? null : rawByteBuf.copy(), false)
+                .build();
+    }
+
     // ++++++++++++++++++++++++++++++++++++++++++++
     // <== Shortcut Methods End
     // ++++++++++++++++++++++++++++++++++++++++++++
@@ -121,9 +134,17 @@ public interface Jt808Request {
 
         Jt808RequestBuilder header(Jt808RequestHeader header);
 
-        Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf);
+        default Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf) {
+            return this.rawByteBuf(byteBuf, true);
+        }
 
-        Jt808RequestBuilder body(ByteBuf body);
+        Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf, boolean autoRelease);
+
+        Jt808RequestBuilder body(ByteBuf body, boolean autoRelease);
+
+        default Jt808RequestBuilder body(ByteBuf body) {
+            return this.body(body, true);
+        }
 
         Jt808RequestBuilder originalCheckSum(byte checkSum);
 

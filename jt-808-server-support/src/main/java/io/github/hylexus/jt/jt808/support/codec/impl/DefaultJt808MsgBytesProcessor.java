@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.exception.Jt808MsgEscapeException;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
         int from = byteBuf.readerIndex();
         int indexOf = byteBuf.indexOf(from, readableBytes, delimiter);
         if (indexOf < 0) {
-            return byteBuf;
+            return byteBuf.retain();
         }
 
         final List<ByteBuf> byteBufList = new ArrayList<>();
@@ -41,28 +42,30 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
             final byte current = byteBuf.getByte(indexOf);
             final byte next = byteBuf.getByte(indexOf + 1);
             if (current == 0x7d && next == 0x01) {
-                if (from < indexOf) {
-                    byteBufList.add(byteBuf.slice(from, indexOf - from));
+                if (from <= indexOf) {
+                    // xxx7D01xxx --> xxx7Dxxx
+                    byteBufList.add(byteBuf.retainedSlice(from, indexOf - from + 1));
                 }
-                byteBufList.add(allocator.buffer().writeByte(0x7d));
+                //byteBufList.add(allocator.buffer().writeByte(0x7d));
                 from = indexOf + 2;
             } else if (current == 0x7d && next == 0x02) {
-                if (from < indexOf) {
-                    byteBufList.add(byteBuf.slice(from, indexOf - from));
+                if (from <= indexOf) {
+                    // xxx7D02xxx --> xxx7Exxx
+                    byteBufList.add(byteBuf.retainedSlice(from, indexOf - from + 1));
                 }
-                byteBufList.add(allocator.buffer().writeByte(0x7e));
+                byteBuf.setByte(indexOf, 0x7E);
+                //byteBufList.add(allocator.buffer().writeByte(0x7e));
                 from = indexOf + 2;
             } else {
                 log.warn("0x7d should be followed by 0x01 or 0x02, but " + next);
-                if (from < indexOf) {
-                    byteBufList.add(byteBuf.slice(from, indexOf - from + 1));
+                if (from <= indexOf) {
+                    byteBufList.add(byteBuf.retainedSlice(from, indexOf - from + 1));
                 }
                 from = indexOf + 1;
             }
         } while (from < readableBytes && (indexOf = byteBuf.indexOf(from, readableBytes, delimiter)) >= 0);
 
-        byteBufList.add(byteBuf.slice(from, readableBytes - from));
-
+        byteBufList.add(byteBuf.retainedSlice(from, readableBytes - from));
         return allocator.compositeBuffer(byteBufList.size()).addComponents(true, byteBufList);
     }
 
@@ -76,21 +79,23 @@ public class DefaultJt808MsgBytesProcessor implements Jt808MsgBytesProcessor {
         }
 
         final List<ByteBuf> bufList = new ArrayList<>();
-
-        do {
-            if (from < indexOf) {
-                bufList.add(byteBuf.retainedSlice(from, indexOf - from));
-            }
-            final byte current = byteBuf.getByte(indexOf);
-            if (current == BYTE_7D) {
-                bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x01));
-            } else if (current == BYTE_7E) {
-                bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x02));
-            }
-            from = indexOf + 1;
-        } while (from < readableBytes && (indexOf = nextIndexOf(byteBuf, from, readableBytes)) > 0);
-
-        bufList.add(byteBuf.retainedSlice(from, readableBytes - from));
+        try {
+            do {
+                if (from < indexOf) {
+                    bufList.add(byteBuf.retainedSlice(from, indexOf - from));
+                }
+                final byte current = byteBuf.getByte(indexOf);
+                if (current == BYTE_7D) {
+                    bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x01));
+                } else if (current == BYTE_7E) {
+                    bufList.add(allocator.buffer().writeByte(0x7d).writeByte(0x02));
+                }
+                from = indexOf + 1;
+            } while (from < readableBytes && (indexOf = nextIndexOf(byteBuf, from, readableBytes)) > 0);
+            bufList.add(byteBuf.retainedSlice(from, readableBytes - from));
+        } finally {
+            JtProtocolUtils.release(byteBuf);
+        }
         return allocator.compositeBuffer(bufList.size()).addComponents(true, bufList);
     }
 

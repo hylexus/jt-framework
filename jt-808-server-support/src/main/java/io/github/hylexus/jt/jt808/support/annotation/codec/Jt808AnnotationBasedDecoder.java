@@ -77,7 +77,7 @@ public class Jt808AnnotationBasedDecoder {
         return instance;
     }
 
-    private Object processBasicField(
+    private void processBasicField(
             EvaluationContext evaluationContext, Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata,
             ByteBuf bodyDataBuf, Jt808Request request) {
 
@@ -95,7 +95,8 @@ public class Jt808AnnotationBasedDecoder {
         final Field field = fieldMetadata.getField();
         if (converterClass != Jt808FieldDeserializer.PlaceholderFieldDeserializer.class) {
             final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(converterClass);
-            return deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length);
+            deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length);
+            return;
         }
 
         // 2. 内嵌对象 特殊处理
@@ -106,7 +107,7 @@ public class Jt808AnnotationBasedDecoder {
             final Object objectInstance = ReflectionUtils.createInstance(objectClass);
             final Object value = decode(objectClass, objectInstance, slice, request);
             this.setFieldValue(instance, fieldMetadata, value);
-            return value;
+            return;
         }
 
         // 3 LIST 特殊处理
@@ -123,7 +124,7 @@ public class Jt808AnnotationBasedDecoder {
                 list.add(itemInstance);
             }
             this.setFieldValue(instance, fieldMetadata, list);
-            return list;
+            return;
         }
 
         // 没有配置【自定义属性转换器】&& 是【不支持的目标类型】
@@ -137,7 +138,7 @@ public class Jt808AnnotationBasedDecoder {
                 .orElseThrow(() -> new Jt808AnnotationArgumentResolveException(
                         "No Jt808FieldDeserializer found, Unsupported expectedTargetClassType " + javaDataType + " for field " + field));
 
-        return deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length);
+        deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length);
     }
 
     private Object deserialize(

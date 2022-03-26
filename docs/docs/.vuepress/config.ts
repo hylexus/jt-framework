@@ -117,12 +117,12 @@ export default defineUserConfig<DefaultThemeOptions>({
         },
     },
 
-    plugins: [
-        [
-            "vuepress-plugin-vuepress2.x-code-copy",
-            {
-                // selector: 'div[class="language-java"]'
-            },
-        ],
-    ],
+    // plugins: [
+    //     [
+    //         // "vuepress-plugin-vuepress2.x-code-copy",
+    //         {
+    //             // selector: 'div[class="language-java"]'
+    //         },
+    //     ],
+    // ],
 })

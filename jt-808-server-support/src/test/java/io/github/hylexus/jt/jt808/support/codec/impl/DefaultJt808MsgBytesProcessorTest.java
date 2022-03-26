@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.support.codec.impl;
 
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import org.junit.Test;
@@ -36,6 +37,12 @@ public class DefaultJt808MsgBytesProcessorTest {
 
         final byte[] result5 = escapeForReceive(new byte[]{1, 2, 0, 1, 2, 3, 0x7d, 0x02, 4, 5, 0x7d, 0x02, 9, 9, 0x7d, 0x01, 0x7d, 0x02, 1});
         assertArrayEquals(new byte[]{1, 2, 0, 1, 2, 3, 0x7e, 4, 5, 0x7e, 9, 9, 0x7d, 0x7e, 1}, result5);
+
+        final byte[] result6 = escapeForReceive(new byte[]{0x7d, 0x02, 0, 0, 0, 0});
+        assertArrayEquals(new byte[]{0x7e, 0, 0, 0, 0}, result6);
+
+        final byte[] result7 = escapeForReceive(new byte[]{0x7d, 0x22, 0, 0, 0, 0});
+        assertArrayEquals(new byte[]{0x7d, 0x22, 0, 0, 0, 0}, result7);
     }
 
     @Test
@@ -53,23 +60,22 @@ public class DefaultJt808MsgBytesProcessorTest {
         );
     }
 
-    String bytesToString(byte[] bytes) {
-        final StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            final String str = Integer.toHexString(b);
-            sb.append(str.length() == 1 ? "0" + str : str).append(" ");
-        }
-        return sb.toString();
-    }
-
     byte[] escapeForReceive(byte[] bytes) {
         final ByteBuf byteBuf = this.bytesProcessor.doEscapeForReceive(generateFromByteArray(bytes));
-        return fromByteBuf(byteBuf);
+        try {
+            return fromByteBuf(byteBuf);
+        } finally {
+            JtProtocolUtils.release(byteBuf);
+        }
     }
 
     byte[] escapeForSend(byte[] bytes) {
         final ByteBuf byteBuf = this.bytesProcessor.doEscapeForSend(generateFromByteArray(bytes));
-        return fromByteBuf(byteBuf);
+        try {
+            return fromByteBuf(byteBuf);
+        } finally {
+            JtProtocolUtils.release(byteBuf);
+        }
     }
 
     ByteBuf generateFromByteArray(byte[] bytes) {

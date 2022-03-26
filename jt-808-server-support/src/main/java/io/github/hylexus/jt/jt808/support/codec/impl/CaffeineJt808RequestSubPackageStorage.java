@@ -36,19 +36,22 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
     protected final Cache<String, Map<Integer, Jt808Request>> cache;
 
     protected final ByteBufAllocator allocator;
-    private final Jt808RequestMsgDispatcher requestMsgDispatcher;
+    private Jt808RequestMsgDispatcher requestMsgDispatcher;
+
+    public void setRequestMsgDispatcher(Jt808RequestMsgDispatcher requestMsgDispatcher) {
+        this.requestMsgDispatcher = requestMsgDispatcher;
+    }
 
     public CaffeineJt808RequestSubPackageStorage(
             ByteBufAllocator allocator,
-            Jt808RequestMsgDispatcher requestMsgDispatcher,
             StorageConfig subPackageStorageConfig) {
 
         this.allocator = allocator;
-        this.requestMsgDispatcher = requestMsgDispatcher;
+        //this.requestMsgDispatcher = requestMsgDispatcher;
         this.cache = Caffeine.newBuilder()
                 .maximumSize(subPackageStorageConfig.maximumSize)
                 .expireAfterWrite(subPackageStorageConfig.getTtl())
-                .expireAfterAccess(subPackageStorageConfig.getTtl())
+                //.expireAfterAccess(subPackageStorageConfig.getTtl())
                 .removalListener((RemovalListener<String, Map<Integer, Jt808Request>>) (key, value, cause) -> {
                     if (value == null) {
                         return;
@@ -58,7 +61,7 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
                                               || cause == RemovalCause.COLLECTED;
                     if (isExpired) {
                         value.forEach((currentPackageNo, subPackage) -> {
-                            JtProtocolUtils.release(subPackage.body(), subPackage.rawByteBuf());
+                            subPackage.release();
                             log.debug("{} {} has been released. reason = {}", LOG_PREFIX, subPackage, cause);
                         });
                     }
@@ -72,7 +75,7 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
         final String key = this.buildSubPackageCacheKey(request);
         final Map<Integer, Jt808Request> map = this.cache.get(key, k -> new ConcurrentHashMap<>());
         final Jt808RequestHeader.Jt808SubPackageProps jt808SubPackageProps = request.header().subPackage();
-        requireNonNull(map).put(jt808SubPackageProps.currentPackageNo(), request);
+        requireNonNull(map).put(jt808SubPackageProps.currentPackageNo(), request.copy());
 
         this.getAllSubPackages(key, request).ifPresent(mergedBody -> {
             final Jt808Request mergedRequest = this.buildRequest(request, mergedBody);
@@ -101,8 +104,8 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
 
         return request.mutate()
                 .header(newHeader)
-                .body(mergedBody)
-                .rawByteBuf(null)
+                .body(mergedBody, false)
+                .rawByteBuf(null, false)
                 .calculatedCheckSum((byte) 0)
                 .originalCheckSum((byte) 0)
                 .build();
@@ -119,7 +122,10 @@ public class CaffeineJt808RequestSubPackageStorage implements Jt808RequestSubPac
         final CompositeByteBuf compositeByteBuf = this.allocator.compositeBuffer(map.size());
         map.values().stream()
                 .sorted(Comparator.comparing(e -> e.header().subPackage().currentPackageNo()))
-                .forEach(subPackage -> compositeByteBuf.addComponents(true, subPackage.body().retain()));
+                .forEach(subPackage -> {
+                    compositeByteBuf.addComponents(true, subPackage.body());
+                    JtProtocolUtils.release(subPackage.rawByteBuf());
+                });
 
         this.cache.invalidate(key);
         return Optional.of(compositeByteBuf);

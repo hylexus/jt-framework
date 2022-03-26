@@ -40,6 +40,21 @@ public abstract class JtProtocolUtils {
         return byteBuf;
     }
 
+    public static ByteBuf writeByteBuf(ByteBuf to, ByteBuf from) {
+        return writeByteBuf(to, from, true);
+    }
+
+    public static ByteBuf writeByteBuf(ByteBuf to, ByteBuf from, boolean autoClose) {
+        try {
+            to.writeBytes(from);
+            return to;
+        } finally {
+            if (autoClose) {
+                release(from);
+            }
+        }
+    }
+
     public static int getWord(ByteBuf byteBuf, int start) {
         return byteBuf.getUnsignedShort(start);
     }

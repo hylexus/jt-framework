@@ -8,7 +8,7 @@ import io.netty.buffer.ByteBufAllocator;
  * @author hylexus
  */
 public class MyRequestSubPackageStorage extends CaffeineJt808RequestSubPackageStorage {
-    public MyRequestSubPackageStorage(ByteBufAllocator allocator, Jt808RequestMsgDispatcher requestMsgDispatcher, StorageConfig subPackageStorageConfig) {
-        super(allocator, requestMsgDispatcher, subPackageStorageConfig);
+    public MyRequestSubPackageStorage(ByteBufAllocator allocator, StorageConfig subPackageStorageConfig) {
+        super(allocator, subPackageStorageConfig);
     }
 }

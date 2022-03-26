@@ -15,17 +15,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @BuiltinComponent
-public class DefaulJt808FieldSerializerRegistry implements Jt808FieldSerializerRegistry {
+public class DefaultJt808FieldSerializerRegistry implements Jt808FieldSerializerRegistry {
 
     private final Map<ResponseMsgConvertibleMetadata, Jt808FieldSerializer<?>> converterMap = new ConcurrentHashMap<>();
 
-    public DefaulJt808FieldSerializerRegistry(boolean autoRegisterDefaultConverter) {
+    public DefaultJt808FieldSerializerRegistry(boolean autoRegisterDefaultConverter) {
         if (autoRegisterDefaultConverter) {
             registerDefaultConverter(this);
         }
     }
 
-    static void registerDefaultConverter(DefaulJt808FieldSerializerRegistry registry) {
+    static void registerDefaultConverter(DefaultJt808FieldSerializerRegistry registry) {
         registry.registerConverter(new IntegerFieldSerializer());
 
         registry.registerConverter(new ByteFieldSerializer());

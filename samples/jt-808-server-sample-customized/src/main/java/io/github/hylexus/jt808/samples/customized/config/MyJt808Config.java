@@ -20,6 +20,7 @@ import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
 import io.github.hylexus.jt808.samples.customized.subpackage.MyRequestSubPackageStorage;
 import io.github.hylexus.jt808.samples.customized.subpackage.MyResponseSubPackageStorage;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.util.concurrent.EventExecutorGroup;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +49,8 @@ public class MyJt808Config {
 
     // [[ 非必须配置 ]] -- 替换内置请求消息分包暂存器
     @Bean
-    public Jt808RequestSubPackageStorage myJt808RequestSubPackageStorage(Jt808RequestMsgDispatcher dispatcher) {
-        return new MyRequestSubPackageStorage(ByteBufAllocator.DEFAULT, dispatcher, new CaffeineJt808RequestSubPackageStorage.StorageConfig());
+    public Jt808RequestSubPackageStorage myJt808RequestSubPackageStorage() {
+        return new MyRequestSubPackageStorage(ByteBufAllocator.DEFAULT, new CaffeineJt808RequestSubPackageStorage.StorageConfig());
     }
 
     // [[ 非必须配置 ]] -- 替换流水号生成策略
@@ -99,6 +100,7 @@ public class MyJt808Config {
     // [[ 非必须配置 ]] -- 替换内置的 Netty 配置类
     @Bean
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
+            EventExecutorGroup eventExecutorGroup,
             Jt808ServerProps serverProps,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
@@ -113,7 +115,7 @@ public class MyJt808Config {
                         idleStateHandler.getAllIdleTime()
                 )
         );
-        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter);
+        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter, eventExecutorGroup);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的转义等逻辑

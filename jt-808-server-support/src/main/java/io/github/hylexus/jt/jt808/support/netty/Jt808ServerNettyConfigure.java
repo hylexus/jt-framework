@@ -7,6 +7,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.EventExecutorGroup;
 import lombok.Data;
 
 import java.time.Duration;
@@ -57,15 +58,17 @@ public interface Jt808ServerNettyConfigure {
         private final BuiltInServerBootstrapProps serverBootstrapProps;
         private final Jt808TerminalHeatBeatHandler heatBeatHandler;
         private final Jt808DispatchChannelHandlerAdapter jt808DispatchChannelHandlerAdapter;
+        private final EventExecutorGroup eventExecutorGroup;
 
         public DefaultJt808ServerNettyConfigure(
                 BuiltInServerBootstrapProps serverBootstrapProps,
                 Jt808TerminalHeatBeatHandler heatBeatHandler,
-                Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+                Jt808DispatchChannelHandlerAdapter channelHandlerAdapter, EventExecutorGroup eventExecutorGroup) {
 
             this.serverBootstrapProps = serverBootstrapProps;
             this.heatBeatHandler = heatBeatHandler;
             this.jt808DispatchChannelHandlerAdapter = channelHandlerAdapter;
+            this.eventExecutorGroup = eventExecutorGroup;
         }
 
         @Override
@@ -96,7 +99,7 @@ public interface Jt808ServerNettyConfigure {
                             Unpooled.copiedBuffer(new byte[]{PACKAGE_DELIMITER, PACKAGE_DELIMITER})
                     )
             );
-            ch.pipeline().addLast(NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER, jt808DispatchChannelHandlerAdapter);
+            ch.pipeline().addLast(this.eventExecutorGroup, NETTY_HANDLER_NAME_808_MSG_DISPATCHER_ADAPTER, jt808DispatchChannelHandlerAdapter);
         }
     }
 }

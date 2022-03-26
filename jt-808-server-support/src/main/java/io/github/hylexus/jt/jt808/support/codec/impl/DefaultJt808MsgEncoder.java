@@ -83,6 +83,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
             this.subPackageStorage.saveSubPackage(responseSubPackage);
             this.subPackageEventListener.onSubPackage(responseSubPackage);
         }
+        JtProtocolUtils.release(body);
         return allResponseBytes;
     }
 

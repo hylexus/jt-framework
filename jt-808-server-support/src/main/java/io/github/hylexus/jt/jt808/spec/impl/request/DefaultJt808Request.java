@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.impl.request;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.MsgType;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.util.HashMap;
@@ -103,15 +104,27 @@ public class DefaultJt808Request implements Jt808Request {
         }
 
         @Override
-        public Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf) {
-            this.rawByteBuf = byteBuf;
-            return this;
+        public Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf, boolean autoRelease) {
+            try {
+                this.rawByteBuf = byteBuf;
+                return this;
+            } finally {
+                if (autoRelease) {
+                    JtProtocolUtils.release(this.rawByteBuf);
+                }
+            }
         }
 
         @Override
-        public Jt808RequestBuilder body(ByteBuf body) {
-            this.body = body;
-            return this;
+        public Jt808RequestBuilder body(ByteBuf body, boolean autoRelease) {
+            try {
+                this.body = body;
+                return this;
+            } finally {
+                if (autoRelease) {
+                    JtProtocolUtils.release(this.body);
+                }
+            }
         }
 
         @Override

@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseHandlerResultHandler;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
@@ -104,6 +105,10 @@ public interface Jt808Response extends Jt808ByteWriter {
     Jt808Response maxPackageSize(int size);
 
     ByteBuf body();
+
+    default void release() {
+        JtProtocolUtils.release(this.body());
+    }
 
     @Override
     default ByteBuf writable() {

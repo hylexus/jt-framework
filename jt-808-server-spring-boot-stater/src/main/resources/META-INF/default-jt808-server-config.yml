@@ -23,7 +23,7 @@ jt808:
       # maximum-pool-size: 2 * corePoolSize
       keep-alive-time: 60s
       blocking-queue-size: 100
-      thread-name-format: '808-msg-processor-%d'
+      thread-name-format: '808-msg-processor'
 logging:
   level.root: info
   level.io.github.hylexus: info

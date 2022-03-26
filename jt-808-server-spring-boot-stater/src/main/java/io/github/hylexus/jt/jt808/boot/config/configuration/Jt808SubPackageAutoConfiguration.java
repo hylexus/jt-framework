@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
@@ -74,9 +75,33 @@ public class Jt808SubPackageAutoConfiguration {
         }
 
         @Bean
-        public Jt808RequestSubPackageStorage jt808RequestSubPackageStorage(Jt808RequestMsgDispatcher requestMsgDispatcher) {
+        public Jt808RequestSubPackageStorage jt808RequestSubPackageStorage() {
             final CaffeineJt808RequestSubPackageStorage.StorageConfig caffeineCacheConfig = storageProps.getRequestSubPackageStorage().getCaffeine();
-            return new CaffeineJt808RequestSubPackageStorage(ByteBufAllocator.DEFAULT, requestMsgDispatcher, caffeineCacheConfig);
+            final CaffeineJt808RequestSubPackageStorage storage = new CaffeineJt808RequestSubPackageStorage(ByteBufAllocator.DEFAULT, caffeineCacheConfig);
+            // 这里有个循环依赖
+            //storage.setRequestMsgDispatcher(requestMsgDispatcher);
+            return storage;
+        }
+
+        @Bean
+        public Jt808RequestSubPackageStoragePropertySetter jt808RequestSubPackageStoragePropertySetter(ApplicationContext applicationContext) {
+            return new Jt808RequestSubPackageStoragePropertySetter(applicationContext);
+        }
+    }
+
+    @Slf4j
+    static class Jt808RequestSubPackageStoragePropertySetter {
+        public Jt808RequestSubPackageStoragePropertySetter(ApplicationContext applicationContext) {
+            this.doBind(applicationContext);
+        }
+
+        private void doBind(ApplicationContext applicationContext) {
+            final Jt808RequestSubPackageStorage singleton = applicationContext.getBean(Jt808RequestSubPackageStorage.class);
+            if (singleton instanceof CaffeineJt808RequestSubPackageStorage) {
+                final Jt808RequestMsgDispatcher dispatcher = applicationContext.getBean(Jt808RequestMsgDispatcher.class);
+                ((CaffeineJt808RequestSubPackageStorage) singleton).setRequestMsgDispatcher(dispatcher);
+                log.info("--> Binding [{}] to [{}]", dispatcher.getClass().getName(), singleton.getClass().getName());
+            }
         }
     }
 
