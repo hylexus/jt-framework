@@ -1,11 +1,11 @@
 apply plugin: 'org.springframework.boot'
 
 springBoot {
-    mainClassName = 'io.github.hylexus.jt808.samples.bare.Jt808ServerSampleBareApplication'
+    getMainClass().set('io.github.hylexus.jt808.samples.bare.Jt808ServerSampleBareApplication')
 }
 
 bootJar {
-    archiveName("${project.name}.jar")
+    getArchiveFileName().set("${project.name}.jar")
 }
 
 dependencies {
@@ -21,6 +21,6 @@ dependencies {
     implementation(project(":jt-808-server-support"))
     implementation(project(":jt-808-server-spring-boot-stater"))
 
-    provided "io.netty:netty-all:${jar_version_netty}"
+    provided "io.netty:netty-all"
     compile "com.google.guava:guava:${jar_version_guava}"
 }

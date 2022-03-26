@@ -1,5 +1,5 @@
 dependencies {
-    testCompile group: 'junit', name: 'junit'
+    testImplementation group: 'junit', name: 'junit'
 
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation group: 'org.springframework', name: 'spring-context'

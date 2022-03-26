@@ -38,7 +38,7 @@ public class ClassScanner {
     public Set<Class> doScan(String[] packagesToScan, Predicate<Class<?>> classFilter) throws IOException {
         Set<Class> ret = new HashSet<>();
         for (String packageName : packagesToScan) {
-            if (StringUtils.isEmpty(packageName)) {
+            if (!StringUtils.hasLength(packageName)) {
                 continue;
             }
             Set<Class> classSet = this.doScan(packageName, classFilter);

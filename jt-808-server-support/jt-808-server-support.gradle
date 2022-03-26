@@ -11,7 +11,7 @@ dependencies {
     implementation group: 'com.github.sarveswaran-m', name: 'util.concurrent.blockingMap', version: "${jar_version_blocking_map}"
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine'
 
-    compile "io.netty:netty-all:${jar_version_netty}"
+    compile "io.netty:netty-all"
 
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'

@@ -4,8 +4,8 @@ buildscript {
     repositories {
         mavenLocal()
         [
-                'http://maven.aliyun.com/nexus/content/repositories/jcenter',
-                'http://maven.aliyun.com/nexus/content/groups/public/',
+                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
+                'https://maven.aliyun.com/nexus/content/groups/public/',
                 "https://plugins.gradle.org/m2/",
                 "https://repo.spring.io/plugins-release",
         ].each { repo ->
@@ -16,8 +16,7 @@ buildscript {
 
     dependencies {
         classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.7.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootBomVersion}"
         classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
     }
 }
@@ -25,14 +24,11 @@ buildscript {
 plugins {
     id 'java'
     id 'maven'
-    id "io.spring.dependency-management" version "1.0.7.RELEASE" apply false
 }
 
 ext {
     jar_version_guava = "23.0"
-    jar_version_netty = "4.1.19.Final"
     jar_version_commons_io = "2.6"
-    jar_version_ok_http = "3.14.2"
     jar_version_oaks = "1.0.6"
     jar_version_commons_collection = "3.2.2"
     jar_version_blocking_map = "0.91"

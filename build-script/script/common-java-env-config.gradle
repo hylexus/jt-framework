@@ -12,7 +12,7 @@ tasks.withType(JavaCompile) {
 repositories {
     mavenLocal()
     maven {
-        url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        url 'https://maven.aliyun.com/nexus/content/groups/public/'
     }
     mavenCentral()
 }
@@ -36,7 +36,8 @@ dependencyManagement {
         enabled = false
     }
     imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:2.1.7.RELEASE"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootBomVersion}"
+        mavenBom "io.netty:netty-bom:${nettyBomVersionNetty}"
     }
 }
 
@@ -71,7 +72,7 @@ javadoc {
 apply plugin: "checkstyle"
 checkstyle {
     toolVersion = "8.23"
-    configDir = project(":build-script").file("checkstyle/")
+    getConfigDirectory().set(project(":build-script").file("checkstyle/"))
 }
 
 apply plugin: 'idea'

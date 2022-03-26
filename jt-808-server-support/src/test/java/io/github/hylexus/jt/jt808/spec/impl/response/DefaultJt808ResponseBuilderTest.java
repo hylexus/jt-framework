@@ -11,7 +11,7 @@ import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 

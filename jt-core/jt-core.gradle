@@ -6,7 +6,7 @@ dependencies {
 
     compile "com.google.guava:guava:${jar_version_guava}"
 
-    provided "io.netty:netty-all:${jar_version_netty}"
+    provided "io.netty:netty-all"
 
     testCompile group: 'junit', name: 'junit'
     compile group: 'javax.annotation', name: 'javax.annotation-api', version: "${jar_javax_annotation_api}"
