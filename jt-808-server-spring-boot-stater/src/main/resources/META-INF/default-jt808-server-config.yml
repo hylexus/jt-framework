@@ -18,12 +18,10 @@ jt808:
       writer-idle-time: 20m
       all-idle-time: 20m
   msg-processor:
-    thread-pool:
-      # core-pool-size: Runtime.getRuntime().availableProcessors() + 1
-      # maximum-pool-size: 2 * corePoolSize
-      keep-alive-time: 60s
-      blocking-queue-size: 100
-      thread-name-format: '808-msg-processor'
+    executor-group:
+      # thread-count: Runtime.getRuntime().availableProcessors() * 2
+      pool-name: 808-msg-processer
+      max-pending-tasks: 128
 logging:
   level.root: info
   level.io.github.hylexus: info

@@ -8,6 +8,11 @@ jt808:
       enabled: true
     request-handlers:
       enabled: true
+  msg-processor:
+    executor-group:
+      thread-count: 2
+      pool-name: 808-msg-processer
+      max-pending-tasks: 128
   request-sub-package-storage:
     type: caffeine
     caffeine:

@@ -18,6 +18,7 @@ import java.time.Duration;
 @ToString
 @Slf4j
 @Validated
+@Deprecated
 public class MsgProcessorThreadPoolProps {
 
     /**

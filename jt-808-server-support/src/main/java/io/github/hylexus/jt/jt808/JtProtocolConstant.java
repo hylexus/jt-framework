@@ -12,6 +12,7 @@ public interface JtProtocolConstant {
     int MAX_PACKAGE_LENGTH = 1024;
 
     String BEAN_NAME_JT808_INTERCEPTORS = "jt808Interceptors";
+    String BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP = "jt808MsgProcessorEventExecutorGroup";
     String BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT = "Jt808NettyHeartBeatHandler";
 
     String NETTY_HANDLER_NAME_808_IDLE_STATE = "Jt808NettyIdleStateHandler";

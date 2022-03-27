@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
-import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorThreadPoolProps;
+import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.DefaultJt808RequestMsgQueueListener;
@@ -24,17 +24,21 @@ import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.RejectedExecutionHandlers;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Comparator;
 
+import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP;
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT;
 
 /**
  * @author hylexus
  */
+@Slf4j
 public class Jt808NettyServerAutoConfiguration {
 
     private final Jt808ServerProps serverProps;
@@ -107,29 +111,18 @@ public class Jt808NettyServerAutoConfiguration {
         return new Jt808DispatchChannelHandlerAdapter(requestProcessor, jt808SessionManager);
     }
 
-    @Bean
+    @Bean(name = BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
+    @ConditionalOnMissingBean(name = BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
     public EventExecutorGroup eventExecutorGroup() {
-        final MsgProcessorThreadPoolProps poolProps = serverProps.getMsgProcessor().getThreadPool();
-        //final ThreadFactory threadFactory = new ThreadFactoryBuilder()
-        //        .setNameFormat(poolProps.getThreadNameFormat())
-        //        .setDaemon(true)
-        //        .build();
-        //final ThreadPoolExecutor executor = new ThreadPoolExecutor(
-        //        poolProps.getCorePoolSize(),
-        //        poolProps.getMaximumPoolSize(),
-        //        poolProps.getKeepAliveTime().getSeconds(),
-        //        TimeUnit.SECONDS,
-        //        new LinkedBlockingQueue<>(poolProps.getBlockingQueueSize()),
-        //        threadFactory,
-        //        new ThreadPoolExecutor.AbortPolicy()
-        //);
-        //return new DefaultEventExecutorGroup(poolProps.getCorePoolSize(), threadFactory, poolProps.getBlockingQueueSize(),
-        // RejectedExecutionHandlers.reject());
-        final DefaultThreadFactory threadFactory = new DefaultThreadFactory(poolProps.getThreadNameFormat());
+
+        final MsgProcessorExecutorGroupProps poolProps = serverProps.getMsgProcessor().getExecutorGroup();
+        final DefaultThreadFactory threadFactory = new DefaultThreadFactory(poolProps.getPoolName());
+
+        log.info("MsgProcessorConfig = {}", poolProps);
         return new DefaultEventExecutorGroup(
-                poolProps.getCorePoolSize(),
+                poolProps.getThreadCount(),
                 threadFactory,
-                poolProps.getBlockingQueueSize(),
+                poolProps.getMaxPendingTasks(),
                 RejectedExecutionHandlers.reject()
         );
     }
@@ -137,7 +130,7 @@ public class Jt808NettyServerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
-            EventExecutorGroup eventExecutorGroup,
+            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
 
