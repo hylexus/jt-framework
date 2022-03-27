@@ -1,3 +1,24 @@
+## 2.0.2-rc1
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/64
+
+### ⭐ New Features
+
+- 去掉 `EventBus`，业务线程池使用自定义的 `EventExecutorGroup`
+- 废弃 `jt808.msg-processor.thread-pool.xxx` 配置项，使用 `jt808.msg-processor.executor-group.xxx` 代替
+
+### 🔨 Dependency Upgrades
+
+- `Gradle` 版本升级到 **6.8.1**
+- `Spring-Boot` 版本升级到 **2.5.7**
+- `Netty` 版本升级到 **4.1.75.Final**
+
+### ❤️ Contributors
+
+- [@hylexus](https://github.com/hylexus)
+
 ## 2.0.1-RELEASE
 
 ### 🐞 Bug Fixes
