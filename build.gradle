@@ -4,8 +4,8 @@ buildscript {
     repositories {
         mavenLocal()
         [
-                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
-                'https://maven.aliyun.com/nexus/content/groups/public/',
+//                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
+//                'https://maven.aliyun.com/nexus/content/groups/public/',
                 "https://plugins.gradle.org/m2/",
                 "https://repo.spring.io/plugins-release",
         ].each { repo ->

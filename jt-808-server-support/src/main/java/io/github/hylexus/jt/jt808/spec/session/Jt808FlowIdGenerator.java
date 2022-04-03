@@ -5,6 +5,8 @@ package io.github.hylexus.jt.jt808.spec.session;
  */
 public interface Jt808FlowIdGenerator {
 
+    Jt808FlowIdGenerator DEFAULT = new DefaultJt808FlowIdGenerator();
+
     int MAX_FLOW_ID = 0xffff;
 
     /**

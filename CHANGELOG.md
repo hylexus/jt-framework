@@ -1,3 +1,18 @@
+## 2.0.2-rc2
+
+### ⭐ New Features
+
+- 新增 `Jt808MsgBuilder`
+- 新增 `ByteArrayFieldSerializer`
+
+### 🔨 Dependency Upgrades
+
+- `Spring-Boot` 版本升级到 **2.5.12**
+
+### ❤️ Contributors
+
+- [@hylexus](https://github.com/hylexus)
+
 ## 2.0.2-rc1
 
 ### 🐞 Bug Fixes

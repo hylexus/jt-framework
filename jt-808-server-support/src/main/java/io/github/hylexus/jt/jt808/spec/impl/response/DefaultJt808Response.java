@@ -48,10 +48,6 @@ public class DefaultJt808Response implements Jt808Response {
         this.body = body;
     }
 
-    public void setMsgType(int msgType) {
-        this.msgType = msgType;
-    }
-
     @Override
     public int msgId() {
         return msgType;

@@ -59,7 +59,6 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
         return result;
     }
 
-
     @Override
     public void sendCommand(String terminalId, ByteBuf byteBuf) throws JtCommunicationException {
         final Jt808Session session = getSession(terminalId);

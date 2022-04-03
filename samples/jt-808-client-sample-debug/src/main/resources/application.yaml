@@ -1,0 +1,4 @@
+client:
+  server-ip: 127.0.0.1
+  server-port: 6808
+  client-count: 3

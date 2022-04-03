@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.impl.response;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteWriter;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.Assertions;
 import io.github.hylexus.oaks.utils.Numbers;
 import io.netty.buffer.ByteBuf;
@@ -34,9 +35,16 @@ public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseB
     }
 
     @Override
-    public Jt808Response.Jt808ResponseBuilder body(ByteBuf body) {
-        this.body = body;
-        return this;
+    public Jt808Response.Jt808ResponseBuilder body(ByteBuf body, boolean autoRelease) {
+        final ByteBuf old = this.body;
+        try {
+            this.body = body;
+            return this;
+        } finally {
+            if (autoRelease) {
+                JtProtocolUtils.release(old);
+            }
+        }
     }
 
     @Override

@@ -15,6 +15,7 @@ import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRe
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.github.hylexus.jt.jt808.support.utils.JavaBeanMetadataUtils;
+import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -81,11 +82,16 @@ public class Jt808AnnotationBasedEncoder {
                 .build();
     }
 
-    private ByteBuf encodeMsgBody(Jt808Request request, Object instance, Jt808Session session) {
+    public ByteBuf encodeMsgBody(Jt808Request request, Object instance, Jt808Session session) {
         final Class<?> entityClass = instance.getClass();
         final ByteBuf byteBuf = allocator.buffer();
 
-        doEncode(instance, entityClass, byteBuf, request, session);
+        try {
+            doEncode(instance, entityClass, byteBuf, request, session);
+        } catch (Exception e) {
+            JtProtocolUtils.release(byteBuf);
+            throw e;
+        }
 
         return byteBuf;
     }

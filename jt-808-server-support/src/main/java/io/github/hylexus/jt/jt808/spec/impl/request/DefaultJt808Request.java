@@ -105,24 +105,26 @@ public class DefaultJt808Request implements Jt808Request {
 
         @Override
         public Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf, boolean autoRelease) {
+            final ByteBuf old = this.rawByteBuf;
             try {
                 this.rawByteBuf = byteBuf;
                 return this;
             } finally {
                 if (autoRelease) {
-                    JtProtocolUtils.release(this.rawByteBuf);
+                    JtProtocolUtils.release(old);
                 }
             }
         }
 
         @Override
         public Jt808RequestBuilder body(ByteBuf body, boolean autoRelease) {
+            final ByteBuf old = this.body;
             try {
                 this.body = body;
                 return this;
             } finally {
                 if (autoRelease) {
-                    JtProtocolUtils.release(this.body);
+                    JtProtocolUtils.release(old);
                 }
             }
         }

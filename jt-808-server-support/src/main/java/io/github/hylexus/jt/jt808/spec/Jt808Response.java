@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 public interface Jt808Response extends Jt808ByteWriter {
 
     int DEFAULT_MAX_PACKAGE_SIZE = 1024;
+    int DEFAULT_ENCRYPTION_TYPE = 0b000;
 
     default ByteBufAllocator allocator() {
         return ByteBufAllocator.DEFAULT;
@@ -191,7 +192,11 @@ public interface Jt808Response extends Jt808ByteWriter {
 
         Jt808ResponseBuilder flowId(Integer flowId);
 
-        Jt808ResponseBuilder body(ByteBuf body);
+        Jt808ResponseBuilder body(ByteBuf body, boolean autoRelease);
+
+        default Jt808ResponseBuilder body(ByteBuf body) {
+            return this.body(body, true);
+        }
 
         Jt808ResponseBuilder body(Consumer<Jt808ByteWriter> writer);
 
