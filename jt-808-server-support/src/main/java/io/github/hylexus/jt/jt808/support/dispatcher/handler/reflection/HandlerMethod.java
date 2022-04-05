@@ -7,7 +7,6 @@ import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.MultipleVersionSupport;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +14,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -24,7 +24,6 @@ import java.util.Set;
  */
 @Getter
 @Setter
-@ToString
 @Accessors(chain = true)
 @Slf4j
 public class HandlerMethod implements MultipleVersionSupport {
@@ -90,5 +89,15 @@ public class HandlerMethod implements MultipleVersionSupport {
     @Override
     public int getOrder() {
         return order;
+    }
+
+    @Override
+    public String toString() {
+        return "HandlerMethod{"
+               + "beanInstance=" + beanInstance
+               + ", method=" + method
+               + ", parameters=" + Arrays.toString(parameters)
+               + ", isVoidReturnType=" + isVoidReturnType
+               + '}';
     }
 }

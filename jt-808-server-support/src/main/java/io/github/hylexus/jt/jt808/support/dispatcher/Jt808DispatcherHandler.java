@@ -1,8 +1,9 @@
 package io.github.hylexus.jt.jt808.support.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListener;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListenerAware;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerAdapterNotFoundException;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerNotFoundException;
@@ -20,11 +21,12 @@ import java.util.stream.Collectors;
  * @author hylexus
  */
 @Slf4j
-public class Jt808DispatcherHandler {
+public class Jt808DispatcherHandler implements Jt808RequestLifecycleListenerAware {
     private final List<Jt808HandlerMapping> handlerMappings;
     private final List<Jt808HandlerAdapter> handlerAdapters;
     private final List<Jt808HandlerResultHandler> resultHandlers;
     private final Jt808ExceptionHandler exceptionHandler;
+    private Jt808RequestLifecycleListener lifecycleListener;
 
     public Jt808DispatcherHandler(
             List<Jt808HandlerMapping> handlerMappings,
@@ -39,6 +41,9 @@ public class Jt808DispatcherHandler {
     }
 
     public void handleRequest(Jt808ServerExchange exchange) {
+        if (!this.lifecycleListener.beforeDispatch(exchange)) {
+            return;
+        }
         // final Jt808Session session = getSession(request);
         Throwable dispatcherException = null;
         Jt808HandlerExecutionChain executionChain = null;
@@ -47,6 +52,10 @@ public class Jt808DispatcherHandler {
             try {
                 // 1. Detect a handler that can handle the current request
                 executionChain = this.getHandler(exchange);
+                if (!this.lifecycleListener.beforeHandle(exchange, executionChain.getHandler())) {
+                    return;
+                }
+
                 if (!executionChain.applyPreHandle(exchange)) {
                     return;
                 }
@@ -114,6 +123,9 @@ public class Jt808DispatcherHandler {
     }
 
     protected void handleResult(Jt808ServerExchange exchange, Jt808HandlerResult result) {
+        if (!this.lifecycleListener.beforeEncode(exchange, result)) {
+            return;
+        }
         if (Jt808HandlerResult.isEmptyResult(result)) {
             return;
         }
@@ -160,5 +172,10 @@ public class Jt808DispatcherHandler {
 
     protected <T extends OrderedComponent> List<T> sort(Collection<T> components) {
         return components.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public void setRequestLifecycleListener(Jt808RequestLifecycleListener requestLifecycleListener) {
+        this.lifecycleListener = requestLifecycleListener;
     }
 }

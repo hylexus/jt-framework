@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 /**
  * @author hylexus
  **/
-@ToString(exclude = "channel")
+@ToString(exclude = {"channel", "delegateFlowIdGenerator"})
 @Accessors(chain = true, fluent = true)
 @BuiltinComponent
 public class DefaultJt808Session implements Jt808Session {
