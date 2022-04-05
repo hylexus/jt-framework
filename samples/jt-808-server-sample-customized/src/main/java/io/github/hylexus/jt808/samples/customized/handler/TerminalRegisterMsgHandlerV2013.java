@@ -59,6 +59,7 @@ public class TerminalRegisterMsgHandlerV2013 implements SimpleJt808RequestHandle
                 .terminalId(exchange.request().terminalId())
                 .flowId(exchange.session().nextFlowId())
                 .version(exchange.request().version())
+                // 这里演示手动写入数据
                 .body(writer -> writer
                         // 1. byte[0,2) WORD 对应的终端注册消息的流水号
                         .writeWord(exchange.request().flowId())

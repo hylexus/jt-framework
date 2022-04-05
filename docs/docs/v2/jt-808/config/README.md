@@ -14,7 +14,7 @@ sidebarDepth: 3
     <img :src="$withBase('/img/default-config-property-source.png')" alt="default-config-property-source">
 </p> 
 
-## 配置项
+## 配置项总览
 
 ```yaml
 jt808:
@@ -31,6 +31,12 @@ jt808:
   response-sub-package-storage:
   # ...
 ```
+
+## 默认配置
+
+默认的配置可以在
+[default-jt808-server-config.yml](https://github.com/hylexus/jt-framework/tree/master/jt-808-server-spring-boot-stater/src/main/resources/META-INF/default-jt808-server-config.yml)
+中查看。 并且已经将默认的配置加入到了 `Spring` 的 `PropertySources` 中，并将其置于最后，名称为 `default-jt808-server-config` 。
 
 ## protocol
 
@@ -75,45 +81,40 @@ this.workerGroup=new NioEventLoopGroup(workThreadCount);
 
 如果你的项目不需要 `IdleStateHandler` 的话，将 `jt808.server.idle-state-handler.enabled` 配置为 `false` 即可。
 
-## msg-processor.thread-pool
+## ~~msg-processor.thread-pool~~
 
-::: tip 此处为 `消息处理线程池` 相关的配置。其实就是 `Java线程池` 几个关键参数的配置。
+::: danger 提示
+
+`msg-processor.thread-pool.xxx` 系列配置在 `2.0.2` 中已经废弃(存在跨线程资源回收问题)。
+
+使用 `msg-processor.executor-group` 代替。
+
 :::
 
-### core-pool-size
+## msg-processor.executor-group
+
+::: tip 此处为 `消息处理线程池` 相关的配置。
+
+参见 `io.netty.util.concurrent.DefaultEventExecutorGroup` 。
+
+:::
+
+### thread-count
 
 - 类型：`int`
-- 默认值：`Runtime.getRuntime().availableProcessors() + 1`
+- 默认值：`Runtime.getRuntime().availableProcessors() * 2`
 
-消息处理线程池的核心线程数，即 `java.util.concurrent.ThreadPoolExecutor.corePoolSize`。
-
-### maximum-pool-size
+### max-pending-tasks
 
 - 类型：`int`
-- 默认值：`2 * corePoolSize`
+- 默认值：`128`
 
-同 `java.util.concurrent.ThreadPoolExecutor.maximumPoolSize` 。
-
-### keep-alive-time
-
-- 类型：`Duration`
-- 默认值：`60s`
-
-同 `java.util.concurrent.ThreadPoolExecutor.keepAliveTime` 。
-
-### blocking-queue-size
-
-- 类型：`int`
-- 默认值：`20`
-
-`java.util.concurrent.ThreadPoolExecutor.workQueue` 的 `size()` 。
-
-### thread-name-format
+### pool-name
 
 - 类型：`String`
-- 默认值：`808-msg-processor-%d`
+- 默认值：`808-msg-processer`
 
-线程池中线程的命名格式。
+线程池名称。
 
 ## request-sub-package-storage
 

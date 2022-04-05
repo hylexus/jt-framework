@@ -70,7 +70,6 @@ import io.netty.channel.ChannelHandlerContext;
  * @see Jt808DispatcherHandler#handleRequest(Jt808ServerExchange)
  * @see Jt808HandlerResultHandler#handleResult(Jt808ServerExchange, Jt808HandlerResult)
  * @see io.github.hylexus.jt.jt808.spec.impl.Jt808RequestLifecycleListeners
- * @since 2.0.2
  */
 public interface Jt808RequestLifecycleListener extends OrderedComponent {
 

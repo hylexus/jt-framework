@@ -25,6 +25,13 @@ export const zh: SidebarConfig = {
             ],
         },
         {
+            text: "辅助工具",
+            children: [
+                '/v2/jt-808/guide/utilities/jt808-data-type-ops.md',
+                '/v2/jt-808/guide/utilities/msg-builder.md',
+            ]
+        },
+        {
             text: "注解驱动开发",
             children: [
                 '/v2/jt-808/guide/annotation-based-dev/req-msg-mapping.md',
@@ -41,6 +48,7 @@ export const zh: SidebarConfig = {
                 '/v2/jt-808/guide/customization/codec-config.md',
                 '/v2/jt-808/guide/customization/session-config.md',
                 '/v2/jt-808/guide/customization/sub-package-config.md',
+                '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
             ]
         },
         {
