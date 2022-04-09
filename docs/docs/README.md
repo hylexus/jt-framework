@@ -52,6 +52,6 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 - JDK : 11+
 - Netty : 4.x
 - VuePress : ^2.0.0-beta.27
-- Gradle : 5.5.1
+- Gradle : 6.8.1
 
 :::

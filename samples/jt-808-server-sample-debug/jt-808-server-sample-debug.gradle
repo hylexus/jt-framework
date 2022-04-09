@@ -27,4 +27,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus'
+
 }

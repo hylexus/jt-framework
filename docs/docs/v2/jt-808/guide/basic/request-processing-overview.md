@@ -6,4 +6,6 @@
 - 处理业务逻辑
 - 返回 `Jt808Response` (或可以转换为 `Jt808Response` 的其他类型)
 
+具体流程可以结合 [请求生命周期监听器](../customization/request-lifecycle-listener.md) 来了解。
+
 TODO ... 这里补充流程图……………………

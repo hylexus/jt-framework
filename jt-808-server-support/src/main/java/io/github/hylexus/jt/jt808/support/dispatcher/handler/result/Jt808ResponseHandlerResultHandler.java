@@ -5,7 +5,6 @@ import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
-import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.mapping.SimpleJt808RequestHandlerHandlerMapping;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -14,7 +13,7 @@ import io.netty.buffer.ByteBuf;
  * @author hylexus
  * @see Jt808Response
  */
-public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHandler {
+public class Jt808ResponseHandlerResultHandler extends AbstractJt808HandlerResultHandler {
 
     private final Jt808MsgEncoder encoder;
 
@@ -46,10 +45,17 @@ public class Jt808ResponseHandlerResultHandler implements Jt808HandlerResultHand
             JtProtocolUtils.release(exchange.response().body());
 
             final ByteBuf byteBuf = this.encoder.encode(returnValue, exchange.session());
+            if (this.shouldSkipResponse(exchange, handlerResult, byteBuf)) {
+                return;
+            }
             exchange.session().sendMsgToClient(byteBuf);
             return;
         }
+
         final ByteBuf byteBuf = this.encoder.encode(exchange.response(), exchange.session());
+        if (this.shouldSkipResponse(exchange, handlerResult, byteBuf)) {
+            return;
+        }
         exchange.session().sendMsgToClient(byteBuf);
     }
 }

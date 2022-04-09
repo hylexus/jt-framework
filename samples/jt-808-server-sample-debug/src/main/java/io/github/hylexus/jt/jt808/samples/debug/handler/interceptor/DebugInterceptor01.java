@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 /**
  * @author hylexus
  */
-@Component
+//@Component
 @Slf4j
 public class DebugInterceptor01 implements Jt808HandlerInterceptor {
 

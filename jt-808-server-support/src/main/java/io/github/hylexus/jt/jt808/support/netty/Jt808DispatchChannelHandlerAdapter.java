@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
+import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListener;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListenerAware;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestProcessor;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
@@ -8,6 +10,8 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
 
 import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.CHANNEL_INACTIVE;
 import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.SERVER_EXCEPTION_OCCURRED;
@@ -18,10 +22,11 @@ import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.
  **/
 @Slf4j
 @ChannelHandler.Sharable
-public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAdapter {
+public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAdapter implements Jt808RequestLifecycleListenerAware {
 
     private final Jt808SessionManager sessionManager;
     private final Jt808RequestProcessor requestProcessor;
+    private Jt808RequestLifecycleListener requestLifecycleListener;
 
     public Jt808DispatchChannelHandlerAdapter(Jt808RequestProcessor requestProcessor, Jt808SessionManager sessionManager) {
         this.requestProcessor = requestProcessor;
@@ -29,11 +34,15 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(@Nonnull ChannelHandlerContext ctx, @Nonnull Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
             final ByteBuf buf = (ByteBuf) msg;
             try {
                 if (buf.readableBytes() <= 0) {
+                    return;
+                }
+                final boolean continueProcess = this.requestLifecycleListener.beforeDecode(buf, ctx.channel());
+                if (!continueProcess) {
                     return;
                 }
                 this.requestProcessor.processJt808Request(buf, ctx.channel());
@@ -54,5 +63,10 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
+    }
+
+    @Override
+    public void setRequestLifecycleListener(Jt808RequestLifecycleListener requestLifecycleListener) {
+        this.requestLifecycleListener = requestLifecycleListener;
     }
 }

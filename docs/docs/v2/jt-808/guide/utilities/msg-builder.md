@@ -1,26 +1,15 @@
-package io.github.hylexus.jt.jt808.spec;
+# 报文构建器
 
-import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
-import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.spec.impl.msg.builder.ByteBufJt808MsgBuilder;
-import io.github.hylexus.jt.jt808.spec.impl.msg.builder.EntityJt808MsgBuilder;
-import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
-import io.github.hylexus.jt.utils.HexStringUtils;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import lombok.Data;
-import lombok.experimental.Accessors;
-import org.junit.jupiter.api.Test;
+内置了两种 `Jt808MsgBuilder` 实现类用来构建报文：
 
-import static io.github.hylexus.jt.jt808.support.data.MsgDataType.BYTE;
-import static io.github.hylexus.jt.jt808.support.data.MsgDataType.WORD;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+- 用来构建调试报文
+- 回复客户端的消息也可以使用 `Jt808MsgBuilder` 来构建
 
-/**
- * @author hylexus
- */
+## EntityJt808MsgBuilder
+
+该实现类通过被 `@Jt808ResponseBody` 标记的实体类来构建报文。
+
+```java
 public class Jt808MsgBuilderTest {
 
     // 这里使用-1，通过 Jt808MsgBuilder.msgId(int msgId) 来指定了消息ID
@@ -70,6 +59,19 @@ public class Jt808MsgBuilderTest {
         result.release();
         assertEquals(0, result.refCnt());
     }
+}
+```
+
+## ByteBufJt808MsgBuilder
+
+该实现类通过 `Jt808ByteWriter` (`ByteBuf`) 来构建报文。
+
+```java
+public class Jt808MsgBuilderTest {
+
+    // 流水号生成器(这里使用一个永远返回0的生成器用来调试)
+    // 可以使用 Jt808Session(已经实现了Jt808FlowIdGenerator) 或者 Jt808FlowIdGenerator.DEFAULT(默认实现类) 来生成自增的流水号
+    private static final Jt808FlowIdGenerator ALWAYS_RETURN_0 = step -> 0;
 
     @Test
     public void testByteBufMsgBuilder() {
@@ -102,3 +104,6 @@ public class Jt808MsgBuilderTest {
         assertEquals(result.refCnt(), originalBuf.refCnt());
     }
 }
+```
+
+

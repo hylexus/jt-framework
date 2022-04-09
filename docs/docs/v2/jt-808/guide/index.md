@@ -33,6 +33,8 @@
     - [Netty相关](./customization/netty-config.md)
     - [编码相关](./customization/codec-config.md)
     - [Session相关](./customization/session-config.md)
+    - [分包相关](./customization/sub-package-config.md)
+    - [请求生存周期监听器](./customization/request-lifecycle-listener.md)
 - 深入
     - [Aware接口](./more/aware-interface.md)
     - TODO

@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 /**
  * @author hylexus
  */
-@Component
+//@Component
 @Slf4j
 public class DebugInterceptor02 implements MatchableHandlerInterceptor {
 
