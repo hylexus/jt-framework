@@ -1,3 +1,18 @@
+## 2.0.2-RELEASE
+
+### ⭐ New Features
+
+- 新增 `Jt808RequestLifecycleListener`
+
+### 📔 Documentation
+
+- 新增 **Jt808RequestLifecycleListener** 文档
+- 新增 **辅助工具** 文档
+
+### ❤️ Contributors
+
+- [@hylexus](https://github.com/hylexus)
+
 ## 2.0.2-rc2
 
 ### ⭐ New Features
