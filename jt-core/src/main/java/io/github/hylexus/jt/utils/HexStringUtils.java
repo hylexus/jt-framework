@@ -26,6 +26,16 @@ public class HexStringUtils {
         return builder.toString();
     }
 
+    private static String encodeHexString(ByteBuf byteBuf, int start, int length) {
+        final StringBuilder builder = new StringBuilder();
+
+        for (int i = start; i < length; i++) {
+            final byte b = byteBuf.getByte(i);
+            builder.append(DIGITS_HEX[(0xF0 & b) >>> 4]).append(DIGITS_HEX[0x0F & b]);
+        }
+        return builder.toString();
+    }
+
     private static byte[] decodeHex(char[] data) {
         int len = data.length;
         if ((len & 1) != 0) {
@@ -56,6 +66,14 @@ public class HexStringUtils {
 
     public static String byteBufToString(ByteBuf byteBuf) {
         return encodeHex(byteBuf);
+    }
+
+    public static String byteBufToHexString(ByteBuf byteBuf) {
+        return byteBufToHexString(byteBuf, byteBuf.readerIndex(), byteBuf.readableBytes());
+    }
+
+    public static String byteBufToHexString(ByteBuf byteBuf, int start, int length) {
+        return encodeHexString(byteBuf, start, length);
     }
 
     public static String bytes2HexString(byte[] bs) {

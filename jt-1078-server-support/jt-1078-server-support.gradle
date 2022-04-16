@@ -1,0 +1,22 @@
+dependencies {
+    implementation(project(":jt-core"))
+    implementation(project(":jt-spring"))
+    implementation "com.google.guava:guava:${jar_version_guava}"
+
+    compile group: 'org.springframework', name: 'spring-context'
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    implementation 'org.apache.commons:commons-lang3'
+    implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
+
+    compile "io.netty:netty-all"
+
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
+
+    provided 'org.springframework.boot:spring-boot-starter-data-redis'
+    provided 'com.fasterxml.jackson.core:jackson-databind'
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+
+}

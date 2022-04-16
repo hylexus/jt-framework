@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelOption;
@@ -21,11 +22,7 @@ import static io.github.hylexus.jt.jt808.JtProtocolConstant.*;
  * @author lirenhao
  * @author hylexus
  */
-public interface Jt808ServerNettyConfigure {
-
-    void configureServerBootstrap(ServerBootstrap serverBootstrap);
-
-    void configureSocketChannel(SocketChannel ch);
+public interface Jt808ServerNettyConfigure extends JtServerNettyConfigure {
 
     @BuiltinComponent
     class DefaultJt808ServerNettyConfigure implements Jt808ServerNettyConfigure {

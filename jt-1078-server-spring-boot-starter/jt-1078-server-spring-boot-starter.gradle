@@ -1,0 +1,17 @@
+dependencies {
+    compile(project(":jt-1078-server-support"))
+    compile(project(":jt-core"))
+
+    implementation "org.springframework.boot:spring-boot-starter"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation "com.google.guava:guava:${jar_version_guava}"
+    compile "io.netty:netty-all"
+
+    compile group: 'javax.validation', name: 'validation-api'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${jar_version_hibernate_validator}"
+
+}
+
+compileJava.dependsOn(processResources)

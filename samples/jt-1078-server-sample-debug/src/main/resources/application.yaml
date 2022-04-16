@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: jt-1078-server-sample-debug
+  profiles:
+    active: local
+
