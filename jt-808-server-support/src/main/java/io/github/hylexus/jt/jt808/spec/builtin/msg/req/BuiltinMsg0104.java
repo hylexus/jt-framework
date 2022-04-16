@@ -15,7 +15,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
  *
  * <p>使用参考:
  *
- * <code>
+ * <pre> {@code
  *  @Component
  *  @Jt808RequestHandler
  *  public class TerminalParamQueryHandler {
@@ -29,11 +29,11 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
  *     return BuiltinServerCommonReplyMsg.success(
  *             requestEntity.msgType().getMsgId(), requestEntity.flowId());
  *     }
- *  }
- * </code>
+ *  }} </pre>
  *
  * @author puruidong
  * @version 2022/4/12
+ * @see <a href="https://github.com/hylexus/jt-framework/issues/61">issues#61</a>
  */
 @Data
 @Accessors(chain = true)

@@ -11,6 +11,7 @@ import java.util.Optional;
 
 /**
  * @author hylexus
+ * @author puruidong
  **/
 @Getter
 public enum BuiltinJt808MsgType implements MsgType {
