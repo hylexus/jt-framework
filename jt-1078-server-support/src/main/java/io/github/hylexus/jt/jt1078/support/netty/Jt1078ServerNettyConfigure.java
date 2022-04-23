@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.netty;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
-import io.github.hylexus.jt.jt1078.support.codec.impl.DefaultJt1078MsgDecoder;
 import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
@@ -17,6 +16,12 @@ public interface Jt1078ServerNettyConfigure extends JtServerNettyConfigure {
 
     @BuiltinComponent
     class DefaultJt1078ServerNettyConfigure implements Jt1078ServerNettyConfigure {
+
+        private final Jt1078DispatcherChannelHandler jt1078DispatcherChannelHandler;
+
+        public DefaultJt1078ServerNettyConfigure(Jt1078DispatcherChannelHandler jt1078DispatcherChannelHandler) {
+            this.jt1078DispatcherChannelHandler = jt1078DispatcherChannelHandler;
+        }
 
         @Override
         public void configureServerBootstrap(ServerBootstrap serverBootstrap) {
@@ -38,7 +43,7 @@ public interface Jt1078ServerNettyConfigure extends JtServerNettyConfigure {
                     )
             );
 
-            pipeline.addLast(new Jt1078DispatcherChannelHandler(new DefaultJt1078MsgDecoder()));
+            pipeline.addLast(jt1078DispatcherChannelHandler);
         }
     }
 }
