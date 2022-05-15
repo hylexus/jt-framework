@@ -112,10 +112,10 @@ public interface Jt1078SubscriptionSelector {
             }
             final DefaultJt1078SubscriptionSelector that = (DefaultJt1078SubscriptionSelector) o;
             return Objects.equals(sim, that.sim)
-                   && Objects.equals(channelNumber, that.channelNumber)
-                   // TODO value and code
-                   && Objects.equals(sourceType, that.sourceType)
-                   && Objects.equals(targetType, that.targetType);
+                    && Objects.equals(channelNumber, that.channelNumber)
+                    // TODO value and code
+                    && Objects.equals(sourceType, that.sourceType)
+                    && Objects.equals(targetType, that.targetType);
         }
 
         @Override
@@ -126,11 +126,11 @@ public interface Jt1078SubscriptionSelector {
         @Override
         public String toString() {
             return "Selector{" +
-                   "sim='" + sim + '\'' +
-                   ", channelNumber=" + channelNumber +
-                   ", sourceType=" + sourceType +
-                   ", targetType=" + targetType +
-                   '}';
+                    "sim='" + sim + '\'' +
+                    ", channelNumber=" + channelNumber +
+                    ", sourceType=" + sourceType +
+                    ", targetType=" + targetType +
+                    '}';
         }
     }
 }

@@ -19,7 +19,7 @@ public interface Jt1078Session {
 
     Jt1078Session lastCommunicateTimestamp(long time);
 
-    Collection<Jt1078Collector> collectors(short channelNumber);
+    Collection<Jt1078Collector> getChannelConverters(short channelNumber);
 
-    Jt1078Session collectors(short channelNumber, Collection<Jt1078Collector> collectors);
+    Jt1078Session addChannelConverter(short channelNumber, Jt1078Collector collector);
 }

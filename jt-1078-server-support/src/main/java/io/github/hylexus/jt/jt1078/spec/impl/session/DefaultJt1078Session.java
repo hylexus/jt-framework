@@ -6,10 +6,7 @@ import io.netty.channel.Channel;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author hylexus
@@ -21,7 +18,8 @@ import java.util.Map;
 @ToString(exclude = {"channel"})
 public class DefaultJt1078Session implements Jt1078Session {
     @Builder.Default
-    private Map<Short, Collection<Jt1078Collector>> collectorsMap = new HashMap<>();
+    private Map<Short, Collection<Jt1078Collector>> converters = new HashMap<>();
+
     @Getter
     @Setter
     private String sim;
@@ -40,13 +38,14 @@ public class DefaultJt1078Session implements Jt1078Session {
     private long lastCommunicateTimestamp = 0L;
 
     @Override
-    public Collection<Jt1078Collector> collectors(short channelNumber) {
-        return collectorsMap.getOrDefault(channelNumber, Collections.EMPTY_LIST);
+    public Collection<Jt1078Collector> getChannelConverters(short channelNumber) {
+        return this.converters.getOrDefault(channelNumber, Collections.emptyList());
     }
 
     @Override
-    public Jt1078Session collectors(short channelNumber, Collection<Jt1078Collector> collectors) {
-        this.collectorsMap.put(channelNumber, collectors);
+    public synchronized Jt1078Session addChannelConverter(short channelNumber, Jt1078Collector collector) {
+        final Collection<Jt1078Collector> collection = this.converters.computeIfAbsent(channelNumber, cn -> new ArrayList<>());
+        collection.add(collector);
         return this;
     }
 }

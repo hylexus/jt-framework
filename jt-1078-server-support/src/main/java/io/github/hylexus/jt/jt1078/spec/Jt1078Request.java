@@ -49,7 +49,13 @@ public interface Jt1078Request {
         return header().pt();
     }
 
-    default byte dataTypeValue(){return header().dataTypeValue();}
+    default Jt1078PayloadType payloadType() {
+        return header().payloadType();
+    }
+
+    default byte dataTypeValue() {
+        return header().dataTypeValue();
+    }
 
     interface Jt1078RequestBuilder {
         Jt1078RequestBuilder header(Jt1078RequestHeader header);

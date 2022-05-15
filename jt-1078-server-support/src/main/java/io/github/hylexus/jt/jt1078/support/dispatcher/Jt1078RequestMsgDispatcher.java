@@ -1,4 +1,6 @@
-package io.github.hylexus.jt.jt1078.spec;
+package io.github.hylexus.jt.jt1078.support.dispatcher;
+
+import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 
 /**
  * @author hylexus

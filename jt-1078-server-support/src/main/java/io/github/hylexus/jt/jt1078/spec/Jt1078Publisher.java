@@ -7,9 +7,7 @@ import org.reactivestreams.Publisher;
  */
 public interface Jt1078Publisher {
 
-    void publish(Jt1078Subscription subscription);
-
-    Publisher<Jt1078Subscription> subscribe();
+    Publisher<Jt1078Subscription> asStreamPublisher();
 
     void destroy();
 }

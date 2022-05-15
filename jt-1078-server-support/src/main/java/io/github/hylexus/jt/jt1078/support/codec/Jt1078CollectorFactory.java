@@ -1,8 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.codec;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionType;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionSelector;
 
 import java.util.Optional;
 
@@ -11,9 +9,6 @@ import java.util.Optional;
  */
 public interface Jt1078CollectorFactory {
 
-    Optional<Jt1078Collector<Jt1078Subscription>> createCollector(Jt1078PayloadType payloadType, Jt1078SubscriptionType subscriptionType);
+    Optional<Jt1078Collector> createCollector(Jt1078SubscriptionSelector selector);
 
-    default Optional<Jt1078Collector<Jt1078Subscription>> createCollector(Jt1078Collector.ConvertiblePair convertiblePair) {
-        return this.createCollector(convertiblePair.getSourceType(), convertiblePair.getTargetType());
-    }
 }

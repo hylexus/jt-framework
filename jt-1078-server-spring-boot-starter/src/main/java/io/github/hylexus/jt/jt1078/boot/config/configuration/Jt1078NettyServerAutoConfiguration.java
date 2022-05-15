@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.jt1078.boot.config.configuration;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherManager;
-import io.github.hylexus.jt.jt1078.spec.Jt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionManager;
+import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
-import io.github.hylexus.jt.jt1078.spec.impl.DefaultJt1078PublisherManager;
-import io.github.hylexus.jt.jt1078.spec.impl.DefaultJt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriptionManager;
+import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionManager;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078CollectorFactory;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078MsgDecoder;
@@ -72,12 +72,14 @@ public class Jt1078NettyServerAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public Jt1078CollectorFactory jt1078CollectorFactory() {
         return new DefaultJt1078CollectorFactory();
     }
 
     @Bean
-    public Jt1078PublisherManager jt1078PublisherManager(Jt1078SessionManager sessionManager, Jt1078CollectorFactory collectorFactory) {
-        return new DefaultJt1078PublisherManager(sessionManager, collectorFactory);
+    @ConditionalOnMissingBean
+    public Jt1078SubscriptionManager jt1078PublisherManager(Jt1078SessionManager sessionManager, Jt1078CollectorFactory collectorFactory) {
+        return new DefaultJt1078SubscriptionManager(sessionManager, collectorFactory);
     }
 }

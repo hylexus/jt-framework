@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public enum BuiltinJt1078MediaType implements Jt1078SubscriptionType {
+public enum DefaultJt1078SubscriptionType implements Jt1078SubscriptionType {
     RAW(-1, "Raw bytes from client"),
     FLV(1, ".flv"),
     MP4(2, ".mp4"),
@@ -14,15 +14,15 @@ public enum BuiltinJt1078MediaType implements Jt1078SubscriptionType {
     private final int id;
     private final String desc;
 
-    BuiltinJt1078MediaType(int id, String desc) {
+    DefaultJt1078SubscriptionType(int id, String desc) {
         this.id = id;
         this.desc = desc;
     }
 
-    private static final Map<Integer, BuiltinJt1078MediaType> MAPPING = new HashMap<>();
+    private static final Map<Integer, DefaultJt1078SubscriptionType> MAPPING = new HashMap<>();
 
     static {
-        for (BuiltinJt1078MediaType value : values()) {
+        for (DefaultJt1078SubscriptionType value : values()) {
             MAPPING.put(value.id, value);
         }
     }
@@ -37,7 +37,7 @@ public enum BuiltinJt1078MediaType implements Jt1078SubscriptionType {
         return desc;
     }
 
-    public static Optional<BuiltinJt1078MediaType> findByCode(int code) {
+    public static Optional<DefaultJt1078SubscriptionType> findByCode(int code) {
         return Optional.ofNullable(MAPPING.get(code));
     }
 }

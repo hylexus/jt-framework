@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt1078.spec.impl.subpub;
+package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionType;
@@ -6,7 +6,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionType;
 /**
  * @author hylexus
  */
-public class DefaultJt1078Subscription implements Jt1078Subscription {
+public class DefaultJt1078Subscription implements Jt1078Subscription<byte[]> {
 
     private final Jt1078SubscriptionType type;
     private final byte[] payload;

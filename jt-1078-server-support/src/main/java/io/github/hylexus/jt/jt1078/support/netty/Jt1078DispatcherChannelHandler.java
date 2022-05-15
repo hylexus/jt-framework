@@ -2,9 +2,9 @@ package io.github.hylexus.jt.jt1078.support.netty;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
-import io.github.hylexus.jt.jt1078.spec.Jt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078MsgDecoder;
+import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -42,12 +42,14 @@ public class Jt1078DispatcherChannelHandler extends ChannelInboundHandlerAdapter
 
                 Jt1078Request request = null;
                 try {
-                    log.info("{}", HexStringUtils.byteBufToHexString(buf));
+                    if (log.isDebugEnabled()) {
+                        log.debug("---> 30316364{}", HexStringUtils.byteBufToHexString(buf));
+                    }
                     request = this.msgDecoder.decode(buf);
 
                     // update session
                     this.sessionManager.persistenceIfNecessary(request.sim(), ctx.channel());
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     if (request != null) {
                         request.release();
                     }
@@ -55,6 +57,9 @@ public class Jt1078DispatcherChannelHandler extends ChannelInboundHandlerAdapter
                 }
                 // dispatch
                 this.requestMsgDispatcher.doDispatch(request);
+                if (log.isDebugEnabled()) {
+                    log.debug("{}\n", request);
+                }
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             } finally {
