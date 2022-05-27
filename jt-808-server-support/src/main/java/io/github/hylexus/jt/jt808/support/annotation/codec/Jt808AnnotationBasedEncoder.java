@@ -135,6 +135,9 @@ public class Jt808AnnotationBasedEncoder {
         }
         // 2. LIST
         if (jtDataType == MsgDataType.LIST) {
+            if (fieldValue == null) {
+                throw new NullPointerException("fieldValue == null");
+            }
             if (!(fieldValue instanceof Iterable)) {
                 throw new JtIllegalArgumentException(fieldMetadata.getFieldType().getName() + " should be Iterable");
             }
