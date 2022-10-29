@@ -1,10 +1,11 @@
 server:
   port: 8808
 logging:
-  level.root: info
-  level.io.github.hylexus: info
-  level.jt-808.request.decoder: debug
-  level.jt-808.response.encoder: debug
+  level:
+    root: info
+    io.github.hylexus: info
+    jt-808.request.decoder: debug
+    jt-808.response.encoder: debug
 jt808:
   built-components:
     component-statistics:

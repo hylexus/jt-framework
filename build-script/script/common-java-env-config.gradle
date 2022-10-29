@@ -1,6 +1,4 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: "propdeps-maven"
+apply plugin: 'java-library'
 
 sourceCompatibility = "${defaultJavaVersion}"
 targetCompatibility = "${defaultJavaVersion}"
@@ -11,8 +9,16 @@ tasks.withType(JavaCompile) {
 
 repositories {
     mavenLocal()
-    maven {
-        url 'https://maven.aliyun.com/nexus/content/groups/public/'
+    [
+            'https://maven.aliyun.com/repository/google',
+            'https://maven.aliyun.com/repository/public',
+            'https://maven.aliyun.com/repository/gradle-plugin',
+            'https://maven.aliyun.com/nexus/content/repositories/jcenter',
+            'https://maven.aliyun.com/nexus/content/groups/public/',
+            "https://plugins.gradle.org/m2/",
+            "https://repo.spring.io/plugins-release",
+    ].each { repoUrl ->
+        maven { url repoUrl }
     }
     mavenCentral()
 }

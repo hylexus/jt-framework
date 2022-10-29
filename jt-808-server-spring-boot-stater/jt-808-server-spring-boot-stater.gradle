@@ -1,20 +1,15 @@
 dependencies {
-    compile(project(":jt-808-server-support"))
-    compile(project(":jt-core"))
-
-    implementation "org.springframework.boot:spring-boot-starter"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
-    implementation "com.google.guava:guava:${jar_version_guava}"
-    compile "io.netty:netty-all"
+    api(project(":jt-808-server-support"))
 
-    compile group: 'javax.validation', name: 'validation-api'
-    compile group: 'org.hibernate', name: 'hibernate-validator', version: "${jar_version_hibernate_validator}"
+    api "org.springframework.boot:spring-boot-starter"
 
-    provided 'org.springframework.boot:spring-boot-starter-data-redis'
-    provided 'com.fasterxml.jackson.core:jackson-databind'
-    provided 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    api thirdParty['hibernate-validator']
+
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
+    compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 }
 

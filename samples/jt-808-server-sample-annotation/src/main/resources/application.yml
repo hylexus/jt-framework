@@ -26,14 +26,15 @@ jt808:
       ttl: 3m
 
 logging:
-  level.root: info
-  level.io.github.hylexus: info
-  # 将默认解码器的日志级别调整到debug 来观察分包请求消息的解码
-  level.jt-808.request.decoder: debug
-  # 将请求分包暂存器(默认为基于Caffeine的实现)的日志级别调整的debug 来观察分包请求的处理过程
-  level.io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
-  level.jt-808.response.encoder: debug
-  level.jt-808.command-sender: debug
+  level:
+    root: info
+    io.github.hylexus: info
+    # 将默认解码器的日志级别调整到debug 来观察分包请求消息的解码
+    jt-808.request.decoder: debug
+    # 将请求分包暂存器(默认为基于Caffeine的实现)的日志级别调整的debug 来观察分包请求的处理过程
+    io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
+    jt-808.response.encoder: debug
+    jt-808.command-sender: debug
 
 ## @see jt808.response-sub-package-storage.redis
 spring:

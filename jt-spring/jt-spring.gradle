@@ -1,6 +1,6 @@
 dependencies {
     testImplementation group: 'junit', name: 'junit'
 
-    implementation "org.springframework.boot:spring-boot-starter-logging"
-    implementation group: 'org.springframework', name: 'spring-context'
+    compileOnly "org.springframework.boot:spring-boot-starter-logging"
+    api group: 'org.springframework', name: 'spring-context'
 }

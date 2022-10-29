@@ -7,7 +7,8 @@ jt808:
     request-handlers:
       enabled: true
 logging:
-  level.root: info
-  level.io.github.hylexus: info
-  level.jt-808.request.decoder: debug
-  level.jt-808.response.encoder: debug
+  level:
+    root: info
+    io.github.hylexus: info
+    jt-808.request.decoder: debug
+    jt-808.response.encoder: debug

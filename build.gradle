@@ -4,39 +4,46 @@ buildscript {
     repositories {
         mavenLocal()
         [
-//                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
-//                'https://maven.aliyun.com/nexus/content/groups/public/',
+                'https://maven.aliyun.com/repository/google',
+                'https://maven.aliyun.com/repository/public',
+                'https://maven.aliyun.com/repository/gradle-plugin',
+                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
+                'https://maven.aliyun.com/nexus/content/groups/public/',
                 "https://plugins.gradle.org/m2/",
                 "https://repo.spring.io/plugins-release",
-        ].each { repo ->
-            maven { url repo }
+        ].each { repoUrl ->
+            maven { url repoUrl }
         }
         mavenCentral()
     }
 
     dependencies {
-        classpath("io.spring.gradle:propdeps-plugin:0.0.9.RELEASE")
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootBomVersion}"
         classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
     }
 }
 
 plugins {
-    id 'java'
-    id 'maven'
+    id 'java-library'
 }
 
 ext {
-    jar_version_guava = "23.0"
-    jar_version_commons_io = "2.6"
-    jar_version_oaks = "1.0.6"
-    jar_version_commons_collection = "3.2.2"
-    jar_version_blocking_map = "0.91"
-    jar_version_hibernate_validator = "6.0.17.Final"
-    jar_javax_annotation_api = "1.3.2"
-
     defaultCharset = StandardCharsets.UTF_8.name()
     defaultJavaVersion = JavaVersion.VERSION_11
+
+    thirdParty = [
+            oaks                 : ['common-utils': 'io.github.hylexus.oaks:oaks-common-utils:1.0.6'],
+            blockingMap          : 'com.github.sarveswaran-m:util.concurrent.blockingMap:0.91',
+            google               : [
+                    findbugs: [
+                            jsr305     : 'com.google.code.findbugs:jsr305:3.0.2',
+                            annotations: 'com.google.code.findbugs:annotations:3.0.1'
+                    ],
+                    guava   : 'com.google.guava:guava:31.1-jre',
+            ],
+            javax                : ['annotation-api': 'javax.annotation:javax.annotation-api:1.3.2'],
+            'hibernate-validator': 'org.hibernate:hibernate-validator:8.0.0.Final',
+    ]
 }
 
 configurations {
