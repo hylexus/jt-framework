@@ -43,7 +43,7 @@ dependencyManagement {
     }
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootBomVersion}"
-        mavenBom "io.netty:netty-bom:${nettyBomVersionNetty}"
+        mavenBom "io.netty:netty-bom:${nettyBomVersion}"
     }
 }
 
