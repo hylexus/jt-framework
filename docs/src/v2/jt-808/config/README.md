@@ -78,9 +78,42 @@ this.workerGroup=new NioEventLoopGroup(workThreadCount);
 
 ### idle-state-handler
 
-该配置项对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+该配置项对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。
 
 如果你的项目不需要 `IdleStateHandler` 的话，将 `jt808.server.idle-state-handler.enabled` 配置为 `false` 即可。
+
+::: danger
+
+- 在 2.0.3(不包括) 以下的版本中这三个配置项的默认值都是 `20m`
+- 同时其实现类 `Jt808TerminalHeatBeatHandler` 有 `Bug`，详情见: [issues#66](https://github.com/hylexus/jt-framework/issues/66)
+
+:::
+
+::: danger
+
+- 在 2.0.3(不包括) 以下的版本中这三个配置项的默认值都是 `20m`
+- 同时其实现类 `Jt808TerminalHeatBeatHandler` 有 `Bug`，详情见: [issues#66](https://github.com/hylexus/jt-framework/issues/66)
+
+:::
+
+::: danger
+
+- 在 2.0.3(不包括) 以下的版本中这三个配置项的默认值都是 `20m`
+- 同时其实现类 `Jt808TerminalHeatBeatHandler` 有 `Bug`，详情见: [issues#66](https://github.com/hylexus/jt-framework/issues/66)
+
+:::
+
+- 2.0.3 的默认配置如下：
+
+```yaml
+jt808:
+  server:
+    idle-state-handler:
+      enabled: true
+      reader-idle-time: 20m # 20m内没有发送数据的客户端将被断开
+      writer-idle-time: 0s # disabled
+      all-idle-time: 0s # disabled
+```
 
 ## ~~msg-processor.thread-pool~~
 
