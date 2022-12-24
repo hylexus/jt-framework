@@ -2,10 +2,10 @@ package io.github.hylexus.jt808.samples.annotation.controller;
 
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt808.samples.annotation.handler.LocationMsgHandler;
 import io.github.hylexus.jt808.samples.annotation.model.vo.TerminalVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
@@ -21,11 +21,6 @@ public class DebugController {
         this.sessionManager = sessionManager;
     }
 
-    @RequestMapping({"/", "/index", "/index.html"})
-    public String index() {
-        return "index";
-    }
-
     @GetMapping("/debug/terminals")
     @ResponseBody
     public List<TerminalVo> terminalList() {
@@ -33,8 +28,10 @@ public class DebugController {
     }
 
     private TerminalVo toTerminalVo(Jt808Session session) {
+        final String location = session.getAttribute(LocationMsgHandler.LATEST_GEO_KEY);
         return new TerminalVo().setTerminalId(session.terminalId())
                 .setVersion(session.protocolVersion().getShortDesc())
-                .setLastCommunicationTime(new Date(session.lastCommunicateTimestamp()));
+                .setLastCommunicationTime(new Date(session.lastCommunicateTimestamp()))
+                .setLatestGeo(location);
     }
 }

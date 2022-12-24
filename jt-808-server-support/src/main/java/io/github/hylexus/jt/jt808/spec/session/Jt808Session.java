@@ -7,6 +7,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Supplier;
+
 /**
  * Created At 2020-06-20 15:58
  *
@@ -51,6 +55,94 @@ public interface Jt808Session extends Jt808FlowIdGenerator {
     long lastCommunicateTimestamp();
 
     Jt808Session lastCommunicateTimestamp(long lastCommunicateTimestamp);
+
+    /**
+     * 给当前会话中存储一些 Key-Value 属性
+     *
+     * @since 2.0.3
+     */
+    default Jt808Session setAttribute(String key, Object value) {
+        getAttributes().put(key, value);
+        return this;
+    }
+
+    default Jt808Session removeAttribute(String key) {
+        getAttributes().remove(key);
+        return this;
+    }
+
+    default Jt808Session removeAttributes(Iterable<String> keys) {
+        final Map<String, Object> attributes = getAttributes();
+        for (final String key : keys) {
+            attributes.remove(key);
+        }
+        return this;
+    }
+
+    default Jt808Session removeAttributes(String... keys) {
+        if (keys == null) {
+            return this;
+        }
+        final Map<String, Object> attributes = getAttributes();
+        for (final String key : keys) {
+            attributes.remove(key);
+        }
+        return this;
+    }
+
+    /**
+     * 获取当前会话中存储的所有 Key-Value 属性
+     *
+     * @since 2.0.3
+     */
+    Map<String, Object> getAttributes();
+
+    /**
+     * 从当前会话中获取指定名称的属性
+     *
+     * @since 2.0.3
+     */
+    @SuppressWarnings("unchecked")
+    default <T> T getAttribute(String key) {
+        return (T) getAttributes().get(key);
+    }
+
+    /**
+     * 从当前会话中获取指定名称的属性, 如果获取不到，会抛 NPE 异常
+     *
+     * @since 2.0.3
+     */
+    default <T> T getRequiredAttribute(String key) {
+        T value = getAttribute(key);
+        Objects.requireNonNull(value, () -> "Required attribute '" + key + "' is missing");
+        return value;
+    }
+
+    /**
+     * 从当前会话中获取指定名称的属性。 如果获取不到，返回 {@code defaultValue}给定的默认值
+     *
+     * @since 2.0.3
+     */
+    @SuppressWarnings("unchecked")
+    default <T> T getAttributeOrDefault(String key, T defaultValue) {
+        return (T) getAttributes().getOrDefault(key, defaultValue);
+    }
+
+    /**
+     * 从当前会话中获取指定名称的属性。 如果获取不到，返回 {@code supplier} 返回的默认值。
+     * <p>
+     * 和 {@link #getAttributeOrDefault(String, Object)} 的区别是: 如果能通过 {@code key} 获取到属性，就不会执行 {@code supplier} 的逻辑。
+     *
+     * @since 2.0.3
+     */
+    @SuppressWarnings("unchecked")
+    default <T> T getAttributeOrDefault(String key, Supplier<T> supplier) {
+        final Object value = getAttributes().get(key);
+        if (value == null) {
+            return supplier.get();
+        }
+        return (T) value;
+    }
 
     String toString();
 }
