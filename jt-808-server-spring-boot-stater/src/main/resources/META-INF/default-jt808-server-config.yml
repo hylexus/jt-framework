@@ -15,8 +15,8 @@ jt808:
     idle-state-handler:
       enabled: true
       reader-idle-time: 20m
-      writer-idle-time: 20m
-      all-idle-time: 20m
+      writer-idle-time: 0s # disabled
+      all-idle-time: 0s # disabled
   msg-processor:
     executor-group:
       # thread-count: Runtime.getRuntime().availableProcessors() * 2

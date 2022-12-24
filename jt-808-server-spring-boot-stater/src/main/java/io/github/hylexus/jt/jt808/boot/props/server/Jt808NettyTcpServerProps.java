@@ -33,7 +33,7 @@ public class Jt808NettyTcpServerProps {
     public static class IdleStateHandlerProps {
         private boolean enabled = true;
         private Duration readerIdleTime = Duration.ofMinutes(20);
-        private Duration writerIdleTime = Duration.ofMinutes(20);
-        private Duration allIdleTime = Duration.ofMinutes(20);
+        private Duration writerIdleTime = Duration.ZERO;
+        private Duration allIdleTime = Duration.ZERO;
     }
 }

@@ -3,6 +3,11 @@ server:
 jt808:
   server:
     port: 6808
+    idle-state-handler:
+      reader-idle-time: 10m
+      #writer-idle-time: 0s
+      #all-idle-time: 0s
+      enabled: true
   built-components:
     component-statistics:
       enabled: true
@@ -35,6 +40,7 @@ logging:
     io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
     jt-808.response.encoder: debug
     jt-808.command-sender: debug
+    io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler: debug
 
 ## @see jt808.response-sub-package-storage.redis
 spring:
