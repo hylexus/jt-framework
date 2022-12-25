@@ -35,7 +35,7 @@ icon: launch
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>2.0.2-RELEASE</version>
+    <version>2.0.3-rc1</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ icon: launch
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "2.0.2-RELEASE"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "2.0.3-rc1"
     // ...
 }
 ```
