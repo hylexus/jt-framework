@@ -1,15 +1,12 @@
 dependencies {
 
-    compile "org.springframework.boot:spring-boot-starter-logging"
+    compileOnly "org.springframework.boot:spring-boot-starter-logging"
 
-    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
+    api "io.netty:netty-buffer"
 
-    compile "com.google.guava:guava:${jar_version_guava}"
-
-    provided "io.netty:netty-all"
-
-    testCompile group: 'junit', name: 'junit'
-    compile group: 'javax.annotation', name: 'javax.annotation-api', version: "${jar_javax_annotation_api}"
+    api thirdParty['oaks']['common-utils']
+    api thirdParty['google']['guava']
+    api thirdParty['javax']['annotation-api']
 }
 
 test {

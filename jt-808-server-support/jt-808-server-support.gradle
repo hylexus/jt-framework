@@ -1,24 +1,25 @@
 dependencies {
-    implementation(project(":jt-core"))
-    implementation(project(":jt-spring"))
-    implementation "com.google.guava:guava:${jar_version_guava}"
+    api(project(":jt-core"))
 
-    compile group: 'org.springframework', name: 'spring-context'
-    implementation "org.springframework.boot:spring-boot-starter-logging"
-    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
-    implementation 'org.apache.commons:commons-lang3'
-    implementation group: 'commons-collections', name: 'commons-collections', version: "${jar_version_commons_collection}"
-    implementation group: 'com.github.sarveswaran-m', name: 'util.concurrent.blockingMap', version: "${jar_version_blocking_map}"
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine'
+    api group: 'org.springframework', name: 'spring-context'
 
-    compile "io.netty:netty-all"
+    api 'org.apache.commons:commons-lang3'
 
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    compile group: 'com.google.code.findbugs', name: 'annotations', version: '3.0.1'
+    api thirdParty['blockingMap']
+    api group: 'com.github.ben-manes.caffeine', name: 'caffeine'
 
-    provided 'org.springframework.boot:spring-boot-starter-data-redis'
-    provided 'com.fasterxml.jackson.core:jackson-databind'
+    api "io.netty:netty-all"
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
+    compileOnly "org.springframework.boot:spring-boot-starter-logging"
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 
+    compileOnly thirdParty['google']['findbugs']['jsr305']
+    compileOnly thirdParty['google']['findbugs']['annotations']
+
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
+}
+
+test {
+    useJUnitPlatform()
 }

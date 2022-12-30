@@ -19,12 +19,36 @@ public interface Jt808ServerExchange {
 
     Jt808Session session();
 
-    Map<String, Object> getAttributes();
-
     default Jt808ServerExchange setAttribute(String key, Object value) {
         getAttributes().put(key, value);
         return this;
     }
+
+    default Jt808ServerExchange removeAttribute(String key) {
+        getAttributes().remove(key);
+        return this;
+    }
+
+    default Jt808ServerExchange removeAttributes(Iterable<String> keys) {
+        final Map<String, Object> attributes = getAttributes();
+        for (final String key : keys) {
+            attributes.remove(key);
+        }
+        return this;
+    }
+
+    default Jt808ServerExchange removeAttributes(String... keys) {
+        if (keys == null) {
+            return this;
+        }
+        final Map<String, Object> attributes = getAttributes();
+        for (final String key : keys) {
+            attributes.remove(key);
+        }
+        return this;
+    }
+
+    Map<String, Object> getAttributes();
 
     @SuppressWarnings("unchecked")
     default <T> T getAttribute(String name) {
@@ -44,7 +68,11 @@ public interface Jt808ServerExchange {
 
     @SuppressWarnings("unchecked")
     default <T> T getAttributeOrDefault(String name, Supplier<T> supplier) {
-        return (T) getAttributes().getOrDefault(name, supplier.get());
+        final Object value = getAttributes().get(name);
+        if (value == null) {
+            return supplier.get();
+        }
+        return (T) value;
     }
 
 }

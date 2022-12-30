@@ -1,3 +1,29 @@
+## 2.0.3-rc1
+
+### ⭐ New Features
+
+- `Jt808Session` 新增如下方法:
+    - `setAttribute`
+    - `getAttribute`
+    - `getRequiredAttribute`
+    - `removeAttribute`
+- `Jt808ServerExchange` 新增如下方法
+    - `removeAttribute`
+
+### 🐞 Bug Fixes
+
+- https://github.com/hylexus/jt-framework/issues/66
+- 配置项默认值调整:
+
+```yaml
+jt808:
+  server:
+    idle-state-handler:
+      # 改动原因见 https://github.com/hylexus/jt-framework/issues/66
+      writer-idle-time: 0s # 由 20m 改为 0s(disabled)
+      all-idle-time: 0s # 由 20m 改为 0s(disabled)
+```
+
 ## 2.0.2-RELEASE
 
 ### ⭐ New Features

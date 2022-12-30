@@ -1,0 +1,74 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+</head>
+<body>
+
+<div id="app" class="container">
+    <form class="form-inline" style="margin: 10px 0;">
+        <div class="form-group">
+            <button class="btn btn-success btn-sm" @click="loadTerminals()">Refresh</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">TerminalId</th>
+            <th scope="col">Version</th>
+            <th scope="col">LastCommunicationTime</th>
+            <th scope="col">LatestGeo</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr v-for="it in terminalList">
+            <td>{{ it.terminalId }}</td>
+            <td>{{ it.version }}</td>
+            <td>{{ it.lastCommunicationTime }}</td>
+            <td>{{ it.latestGeo }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            terminalList: []
+        },
+        created: function () {
+            this.loadTerminals()
+        },
+        methods: {
+            loadTerminals: function () {
+                const context = this
+                axios.get('/debug/terminals')
+                    .then(function (response) {
+                        context.terminalList = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+        },
+        watch: {}
+    })
+</script>
+</body>
+</html>

@@ -5,8 +5,8 @@ import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author hylexus
@@ -22,7 +22,7 @@ public class DefaultJt808ServerExchange implements Jt808ServerExchange {
         this.request = request;
         this.response = response;
         this.session = session;
-        this.attributes = new HashMap<>();
+        this.attributes = new ConcurrentHashMap<>();
     }
 
     @Override

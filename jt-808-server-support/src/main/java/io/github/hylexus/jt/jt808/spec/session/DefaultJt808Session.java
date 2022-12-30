@@ -11,6 +11,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author hylexus
  **/
@@ -22,6 +25,7 @@ public class DefaultJt808Session implements Jt808Session {
 
     public DefaultJt808Session(Jt808FlowIdGenerator delegateFlowIdGenerator) {
         this.delegateFlowIdGenerator = delegateFlowIdGenerator;
+        this.attributes = new ConcurrentHashMap<>();
     }
 
     @Getter
@@ -44,6 +48,8 @@ public class DefaultJt808Session implements Jt808Session {
     @Setter
     private Jt808ProtocolVersion protocolVersion;
 
+    private final Map<String, Object> attributes;
+
     @Override
     public void sendMsgToClient(ByteBuf byteBuf) throws JtCommunicationException {
         try {
@@ -54,6 +60,11 @@ public class DefaultJt808Session implements Jt808Session {
         } catch (InterruptedException e) {
             throw new JtCommunicationException(e);
         }
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
     }
 
     @Override
