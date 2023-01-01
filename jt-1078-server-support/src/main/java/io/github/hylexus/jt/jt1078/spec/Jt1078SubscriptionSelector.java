@@ -125,12 +125,12 @@ public interface Jt1078SubscriptionSelector {
 
         @Override
         public String toString() {
-            return "Selector{" +
-                    "sim='" + sim + '\'' +
-                    ", channelNumber=" + channelNumber +
-                    ", sourceType=" + sourceType +
-                    ", targetType=" + targetType +
-                    '}';
+            return "Selector{"
+                    + "sim='" + sim + '\''
+                    + ", channelNumber=" + channelNumber
+                    + ", sourceType=" + sourceType
+                    + ", targetType=" + targetType
+                    + '}';
         }
     }
 }

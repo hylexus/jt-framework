@@ -43,6 +43,9 @@ ext {
             ],
             javax                : ['annotation-api': 'javax.annotation:javax.annotation-api:1.3.2'],
             'hibernate-validator': 'org.hibernate:hibernate-validator:8.0.0.Final',
+            apache               : [
+                    'commons-collections4': 'org.apache.commons:commons-collections4:4.4'
+            ]
     ]
 }
 

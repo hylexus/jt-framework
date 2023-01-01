@@ -3,6 +3,7 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
 
     api "io.netty:netty-buffer"
+    api 'io.netty:netty-transport'
 
     api thirdParty['oaks']['common-utils']
     api thirdParty['google']['guava']

@@ -33,7 +33,9 @@ public class Jt1078CollectorNotFoundException extends AbstractJt1078Exception {
         this.subscriptionType = subscriptionType;
     }
 
-    public Jt1078CollectorNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, Jt1078PayloadType payloadType, Jt1078SubscriptionType subscriptionType) {
+    public Jt1078CollectorNotFoundException(
+            String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
+            Jt1078PayloadType payloadType, Jt1078SubscriptionType subscriptionType) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.payloadType = payloadType;
         this.subscriptionType = subscriptionType;

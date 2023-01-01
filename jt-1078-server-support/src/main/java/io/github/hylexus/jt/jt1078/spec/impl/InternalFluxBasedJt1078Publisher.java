@@ -19,6 +19,7 @@ public class InternalFluxBasedJt1078Publisher implements InternalJt1078Publisher
     private Jt1078Sink<Jt1078Subscription> delegate;
     private final Flux<Jt1078Subscription> flux;
 
+    @SuppressWarnings("checkstyle:indentation")
     public InternalFluxBasedJt1078Publisher(Consumer<Jt1078Sink> onSubscribe, BiConsumer<SignalType, Jt1078Sink> onFinally) {
         this.flux = Flux.<Jt1078Subscription>create(
                         jt1078SubscriptionFluxSink -> {

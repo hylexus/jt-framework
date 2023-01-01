@@ -1,11 +1,12 @@
 package io.github.hylexus.jt.jt1078.support.dispatcher;
 
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt1078.spec.*;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-public interface Jt1078RequestHandler {
+public interface Jt1078RequestHandler extends OrderedComponent {
 
     boolean support(Jt1078Request request);
 

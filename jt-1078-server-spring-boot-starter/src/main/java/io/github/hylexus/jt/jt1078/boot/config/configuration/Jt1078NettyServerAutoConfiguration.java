@@ -1,21 +1,24 @@
 package io.github.hylexus.jt.jt1078.boot.config.configuration;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionManager;
-import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
-import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriptionManager;
-import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionManager;
 import io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriptionManager;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078CollectorFactory;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078MsgDecoder;
 import io.github.hylexus.jt.jt1078.support.codec.impl.DefaultJt1078CollectorFactory;
 import io.github.hylexus.jt.jt1078.support.codec.impl.DefaultJt1078MsgDecoder;
+import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
+import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyChildHandlerInitializer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyTcpServer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078ServerNettyConfigure;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 /**
  * @author hylexus
@@ -37,8 +40,8 @@ public class Jt1078NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jt1078RequestMsgDispatcher jt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager) {
-        return new DefaultJt1078RequestMsgDispatcher(sessionManager);
+    public Jt1078RequestMsgDispatcher jt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager, List<Jt1078RequestHandler> handlers) {
+        return new DefaultJt1078RequestMsgDispatcher(sessionManager, handlers);
     }
 
     @Bean

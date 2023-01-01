@@ -1,13 +1,15 @@
 package io.github.hylexus.jt.jt1078.support.dispatcher.impl;
 
+import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author hylexus
@@ -19,10 +21,9 @@ public class DefaultJt1078RequestMsgDispatcher implements Jt1078RequestMsgDispat
     private final List<Jt1078RequestHandler> handlers;
     private final Jt1078RequestHandler loggingHandler = new Jt1078RequestHandler.LoggingJt1078RequestHandler();
 
-    public DefaultJt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager) {
+    public DefaultJt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager, List<Jt1078RequestHandler> handlers) {
         this.sessionManager = sessionManager;
-        this.handlers = new ArrayList<>();
-        this.handlers.add(new SimpleJt1078RequestHandler(sessionManager));
+        this.handlers = handlers.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).collect(Collectors.toList());
     }
 
     @Override

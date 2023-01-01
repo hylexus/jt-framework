@@ -10,17 +10,9 @@ bootJar {
 
 dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation "org.springframework.boot:spring-boot-starter"
-    implementation "org.springframework.boot:spring-boot-starter-webflux"
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
+    api(project(":jt-1078-server-spring-boot-starter"))
+    api "org.springframework.boot:spring-boot-starter-webflux"
 
-    compile "io.github.hylexus.oaks:oaks-common-utils:${jar_version_oaks}"
-
-    implementation(project(":jt-core"))
-    implementation(project(":jt-1078-server-support"))
-    implementation(project(":jt-1078-server-spring-boot-starter"))
-
-    provided "io.netty:netty-all"
-
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

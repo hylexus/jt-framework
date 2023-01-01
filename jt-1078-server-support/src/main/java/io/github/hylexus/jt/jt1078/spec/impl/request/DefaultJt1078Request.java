@@ -37,6 +37,12 @@ public class DefaultJt1078Request implements Jt1078Request, Jt1078Request.Jt1078
     }
 
     @Override
+    public Jt1078RequestBuilder header(Jt1078RequestHeader header) {
+        this.header = header;
+        return this;
+    }
+
+    @Override
     public ByteBuf rawByteBuf() {
         return this.rawByteBuf;
     }
@@ -57,12 +63,6 @@ public class DefaultJt1078Request implements Jt1078Request, Jt1078Request.Jt1078
     @Override
     public ByteBuf body() {
         return this.body;
-    }
-
-    @Override
-    public Jt1078RequestBuilder header(Jt1078RequestHeader header) {
-        this.header = header;
-        return this;
     }
 
     @Override
