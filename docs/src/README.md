@@ -3,7 +3,7 @@ home: true
 icon: home
 title: 主页
 heroText: JT-framework
-heroImage: /logo.svg
+heroImage: /logo.png
 tagline: 基于 spring-boot-2.x 的 JT/T-808 服务端
 actions:
   - text: 接入指南
