@@ -23,6 +23,7 @@ export default hopeTheme({
     iconAssets: "iconfont",
 
     logo: "/logo.png",
+    logoDark: "/logo-dark.png",
     repo: "https://github.com/hylexus/jt-framework",
     repoDisplay: true,
 
