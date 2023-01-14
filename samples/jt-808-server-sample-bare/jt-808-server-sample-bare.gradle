@@ -11,5 +11,5 @@ bootJar {
 dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    api(project(":jt-808-server-spring-boot-stater"))
+    api(project(":jt-808-server-spring-boot-starter-2"))
 }
