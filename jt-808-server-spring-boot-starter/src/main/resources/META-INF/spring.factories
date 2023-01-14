@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  io.github.hylexus.jt.jt808.boot.env.Jt808DefaultEnvironmentPostProcessor

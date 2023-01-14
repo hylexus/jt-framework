@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.boot.config;
+package io.github.hylexus.jt.jt808.boot2.config;
 
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.config.condition.BuiltinComponentType;

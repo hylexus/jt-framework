@@ -18,7 +18,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootBomVersion}"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${defaultSpringBootBomVersion}"
         classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
     }
 }
@@ -29,7 +29,6 @@ plugins {
 
 ext {
     defaultCharset = StandardCharsets.UTF_8.name()
-    defaultJavaVersion = JavaVersion.VERSION_11
 
     thirdParty = [
             oaks                 : ['common-utils': 'io.github.hylexus.oaks:oaks-common-utils:1.0.6'],
@@ -82,7 +81,12 @@ configure(subprojects.findAll {
 // 2. maven config
 apply from: getBuildScriptPath("repo-credentials.gradle")
 
-def modulesToPublishToMavenRepo = ["jt-core", "jt-spring", "jt-808-server-support", "jt-808-server-spring-boot-stater"]
+def modulesToPublishToMavenRepo = [
+        "jt-core", "jt-spring", "jt-808-server-support",
+        "jt-808-server-spring-boot-autoconfigure",
+        "jt-808-server-spring-boot-starter-2",
+        "jt-808-server-spring-boot-starter"
+]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)
 }) { subProject ->
