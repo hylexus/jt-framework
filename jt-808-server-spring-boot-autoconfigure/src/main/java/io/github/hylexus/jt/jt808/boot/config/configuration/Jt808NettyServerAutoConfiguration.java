@@ -149,7 +149,7 @@ public class Jt808NettyServerAutoConfiguration {
         return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter, eventExecutorGroup);
     }
 
-    @Bean
+    @Bean(initMethod = "doStart", destroyMethod = "doStop")
     @ConditionalOnMissingBean
     public Jt808NettyTcpServer jt808NettyTcpServer(Jt808ServerNettyConfigure configure) {
         final Jt808NettyTcpServer server = new Jt808NettyTcpServer(

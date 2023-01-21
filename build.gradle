@@ -29,20 +29,6 @@ plugins {
 
 ext {
     defaultCharset = StandardCharsets.UTF_8.name()
-
-    thirdParty = [
-            oaks                 : ['common-utils': 'io.github.hylexus.oaks:oaks-common-utils:1.0.6'],
-            blockingMap          : 'com.github.sarveswaran-m:util.concurrent.blockingMap:0.91',
-            google               : [
-                    findbugs: [
-                            jsr305     : 'com.google.code.findbugs:jsr305:3.0.2',
-                            annotations: 'com.google.code.findbugs:annotations:3.0.1'
-                    ],
-                    guava   : 'com.google.guava:guava:31.1-jre',
-            ],
-            javax                : ['annotation-api': 'javax.annotation:javax.annotation-api:1.3.2'],
-            'hibernate-validator': 'org.hibernate:hibernate-validator:8.0.0.Final',
-    ]
 }
 
 configurations {

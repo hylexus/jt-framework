@@ -44,6 +44,17 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:${defaultSpringBootBomVersion}"
     }
+    dependencies {
+        dependency "org.hibernate:hibernate-validator:8.0.0.Final"
+        dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.6") {
+            exclude "org.projectlombok:lombok"
+        }
+        dependency "com.github.sarveswaran-m:util.concurrent.blockingMap:0.91"
+        dependency "com.google.guava:guava:31.1-jre"
+        dependency "com.google.code.findbugs:jsr305:3.0.2"
+        dependency "com.google.code.findbugs:annotations:3.0.1"
+        dependency "javax.annotation:javax.annotation-api:1.3.2"
+    }
 }
 
 compileJava {

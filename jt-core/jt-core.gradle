@@ -1,12 +1,15 @@
 dependencies {
 
-    compileOnly "org.springframework.boot:spring-boot-starter-logging"
+    compileOnly("org.springframework.boot:spring-boot-starter-logging")
 
-    api "io.netty:netty-buffer"
+    api("io.netty:netty-buffer")
 
-    api thirdParty['oaks']['common-utils']
-    api thirdParty['google']['guava']
-    api thirdParty['javax']['annotation-api']
+    api("io.github.hylexus.oaks:oaks-common-utils") {
+        exclude(group: "org.projectlombok", module: "lombok")
+    }
+    api("com.google.guava:guava") {
+        exclude(group: "org.checkerframework", module: "checker-qual")
+    }
 }
 
 test {

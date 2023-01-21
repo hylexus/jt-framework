@@ -9,14 +9,14 @@ bootJar {
 }
 
 dependencies {
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     api(project(":jt-808-server-spring-boot-starter-boot2"))
 
-    api "org.springframework.boot:spring-boot-starter-web"
-    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    api("org.springframework.boot:spring-boot-starter-web")
+    api("org.springframework.boot:spring-boot-starter-data-redis")
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 test {
