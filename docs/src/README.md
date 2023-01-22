@@ -34,7 +34,8 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
 ├── docs            # 文档 (vue-press)
 ├── gradle
-├── jt-808-server-spring-boot-stater        # spring-boot 自动配置
+├── jt-808-server-spring-boot-starter       # spring-boot-v3 自动配置 (jdk17+)
+├── jt-808-server-spring-boot-starter-boot2 # spring-boot-v2 自动配置 (jdk11+)
 ├── jt-808-server-support                   # jt-808的实现
 ├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
 ├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)

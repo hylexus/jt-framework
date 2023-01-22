@@ -24,7 +24,9 @@ icon: launch
 
 ## 添加依赖
 
-引入为 `808协议` 提供的 `spring-boot-starter`
+### spring-boot-2.x
+
+使用 `spring-boot-2.x` 的项目引入为 `808协议` 提供的 `jt-808-server-spring-boot-starter-boot2`
 
 ::: code-tabs#gradle
 
@@ -34,8 +36,8 @@ icon: launch
 
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
-    <artifactId>jt-808-server-spring-boot-stater</artifactId>
-    <version>2.0.3-rc1</version>
+    <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
+    <version>2.1.0-rc1</version>
 </dependency>
 ```
 
@@ -44,7 +46,36 @@ icon: launch
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-stater', version: "2.0.3-rc1"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-rc1"
+    // ...
+}
+```
+
+:::
+
+### spring-boot-3.x
+
+使用 `spring-boot-3.x` 的项目引入为 `808协议` 提供的 `jt-808-server-spring-boot-starter`
+
+::: code-tabs#gradle
+
+@tab maven
+
+```xml
+
+<dependency>
+    <groupId>io.github.hylexus.jt</groupId>
+    <artifactId>jt-808-server-spring-boot-starter</artifactId>
+    <version>2.1.0-rc1</version>
+</dependency>
+```
+
+@tab:active gradle
+
+```groovy
+dependencies {
+    // ...
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: "2.1.0-rc1"
     // ...
 }
 ```

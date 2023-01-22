@@ -28,6 +28,11 @@ export const zhNavbar = navbar([
             icon: 'question',
         },
         {
+            text: '升级指南',
+            link: '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
+            icon: 'merge'
+        },
+        {
             text: '历史版本',
             icon: 'list',
             children: [

@@ -70,6 +70,14 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/more/aware-interface.md',
                 ]
             },
+            {
+                text: "升级指南",
+                collapsible: true,
+                icon: 'merge',
+                children: [
+                    '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
+                ]
+            },
         ],
         '/v2/jt-808/config/': ["/v2/jt-808/config/"],
         '/v1/jt-808/config/': ["/v1/jt-808/config/"],
