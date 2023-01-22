@@ -2,6 +2,38 @@
 
 Jt-808协议服务端。
 
+支持 `spring-boot-2.x` 和 `spring-boot-3.x` 。
+
+## Modules
+
+- `JDK` 和 `spring-boot` 版本要求
+
+| 模块                                        | spring-boot(默认) | JDK     | spring-boot(最低)                |
+|-------------------------------------------|-----------------|---------|--------------------------------|
+| `jt-808-server-spring-boot-starter`       | 3.0.2           | **17+** | `spring-boot.version >= 3.0.0` |
+| `jt-808-server-spring-boot-starter-boot2` | 2.6.14          | 11+     | `spring-boot.version >= 2.2.x` |
+| `jt-808-server-support`                   | 2.6.14          | 11+     | --                             |
+| `jt-core`                                 | --              | 11+     | --                             |
+
+- 模块介绍
+
+```sh
+.
+├── build-script    # gradle用到的构建脚本和checkstyle配置
+├── docs            # 文档 (vue-press)
+├── gradle
+├── jt-808-server-spring-boot-starter       # spring-boot-v3 自动配置 (jdk17+)
+├── jt-808-server-spring-boot-starter-boot2 # spring-boot-v2 自动配置 (jdk11+)
+├── jt-808-server-support                   # jt-808的实现
+├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
+├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
+└── samples         # 示例项目
+    ├── jt-808-server-sample-bare           # 几乎零配置的示例
+    ├── jt-808-server-sample-annotation     # 注解相关的示例
+    ├── jt-808-server-sample-customized     # 定制化示例
+    └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
+```
+
 ## Docs
 
 - 文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)
@@ -67,7 +99,15 @@ logging:
 
 ## Building from Source
 
-请事先安装 `Lombok` 插件。
+编译所需的 `JDK` 版本必须在 `17` (包括)以上。
+
+编译之后生成的 `.class` 文件：
+
+[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
+
+[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
+
+[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
 
 - Mac/Linux/Unix-Based System
 
@@ -79,25 +119,6 @@ logging:
 
 ```shell script
 ./gradlew.bat clean build
-```
-
-## Modules
-
-```sh
-.
-├── build-script    # gradle用到的构建脚本和checkstyle配置
-├── docs            # 文档 (vue-press)
-├── gradle
-├── jt-808-server-spring-boot-starter       # spring-boot-v3+ 自动配置
-├── jt-808-server-spring-boot-starter-2     # spring-boot-v2 自动配置
-├── jt-808-server-support                   # jt-808的实现
-├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
-├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
-└── samples         # 示例项目
-    ├── jt-808-server-sample-bare           # 几乎零配置的示例
-    ├── jt-808-server-sample-annotation     # 注解相关的示例
-    ├── jt-808-server-sample-customized     # 定制化示例
-    └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
 ```
 
 ## Reporting Issues

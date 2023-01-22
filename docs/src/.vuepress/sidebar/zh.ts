@@ -10,6 +10,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/quick-start/quick-start.md',
                     '/v2/jt-808/guide/quick-start/terminology.md',
                     '/v2/jt-808/guide/quick-start/jt808-msg-type-parser.md',
+                    '/v2/jt-808/guide/quick-start/building-from-source.md',
                 ],
             },
             {
