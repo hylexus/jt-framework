@@ -132,7 +132,14 @@ BUILD SUCCESSFUL in 7s
 
 :::
 
-### 导入idea
+### 导入Idea
+
+::: warning
+
+- 请先给 **Idea** 装好 `lombok` 插件
+- 请确保 `jdk.version >= 17`
+
+:::
 
 - 1). 项目 **JDK版本** 配置：
 
@@ -153,4 +160,27 @@ BUILD SUCCESSFUL in 7s
 <p class="">
     <img :src="$withBase('/img/v2/quick-start/build-from-source/gradle-jdk-step-2.png')">
 </p>
+
+### 导入Eclipse
+
+::: warning
+
+- 请先给 **Eclipse** 装好 `lombok` 插件
+- 请确保 `jdk.version >= 17`
+
+:::
+
+::: danger 第一次导入报错
+
+- 先执行 `./gradlew eclipse` 命令，为 `eclipse` 生成配置。
+- 然后 `refresh` 所有模块
+
+:::
+
+导入后，效果如下：
+
+<p class="">
+    <img :src="$withBase('/img/v2/quick-start/build-from-source/eclipse-project-view.png')">
+</p>
+
 
