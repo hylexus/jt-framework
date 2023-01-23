@@ -6,14 +6,15 @@ Jt-808协议服务端。
 
 ## Modules
 
-- `JDK` 和 `spring-boot` 版本要求
+本项目默认的 **JDK版本** 和 **spring-boot版本** 见下表(有必要的话,根据实际情况自行调整):
 
-| 模块                                        | spring-boot(默认) | JDK     | spring-boot(最低)                |
-|-------------------------------------------|-----------------|---------|--------------------------------|
-| `jt-808-server-spring-boot-starter`       | 3.0.2           | **17+** | `spring-boot.version >= 3.0.0` |
-| `jt-808-server-spring-boot-starter-boot2` | 2.6.14          | 11+     | `spring-boot.version >= 2.2.x` |
-| `jt-808-server-support`                   | 2.6.14          | 11+     | --                             |
-| `jt-core`                                 | --              | 11+     | --                             |
+| Module                                  | JDK | CompileLevel | .class      | spring-boot |
+|-----------------------------------------|-----|--------------|-------------|-------------|
+| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.0.2**_ |
+| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
+| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
+| jt-808-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |
+| jt-808-server-core                      | 17  | JDK-11       | 55 (JDK-11) | --          |
 
 - 模块介绍
 
@@ -48,16 +49,32 @@ Jt-808协议服务端。
 
 ### 2. 添加依赖
 
-引入为 `808协议` 提供的 `spring-boot-starter`
+关于 `starter` 项目名称的说明:
+
+- **2.1.x** 开始
+    - 1). 分为 **spring-boot-2.x** 和 **spring-boot-3.x** 两个版本
+    - 2). **RELEASE** 版本命名不带任何后缀(不再以 `-RELEASE` 结尾)
+    - 3). 低版本中写错的单词 `stater` 更正为 `starter`
+    - 4). **RELEASE** 版本命名如下所示:
+        - **spring-boot-3.x**
+            - `jt-808-server-spring-boot-starter:2.1.0.jar`
+        - **spring-boot-2.x**
+            - `jt-808-server-spring-boot-starter-boot2:2.1.0.jar`
+- **2.1.x** 之前
+    - 1). **RELEASE** 版本命名以 `-RELEASE` 结尾
+    - 2). 模块名中的单词 `starter` 误写为 `stater`
+    - 3). **RELEASE** 版本命名如下所示:
+        - `jt-808-server-spring-boot-stater-2.0.3-RELEASE.jar`
+        - `jt-808-server-spring-boot-stater-2.0.1-RELEASE.jar`
+        - ...
+        - `jt-808-server-spring-boot-stater-1.0.0-RELEASE.jar`
+
+按需求引入为 `808协议` 提供的 `spring-boot-starter`：
 
 - gradle
 
 ```groovy
-dependencies {
-    // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-rc1"
-    // ...
-}
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-RC1"
 ```
 
 - maven
@@ -67,7 +84,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0-rc1</version>
+    <version>2.1.0-RC1</version>
 </dependency>
 ```
 

@@ -8,6 +8,7 @@ export const zhSidebar = sidebar({
                 icon: 'launch',
                 children: [
                     '/v2/jt-808/guide/quick-start/quick-start.md',
+                    '/v2/jt-808/guide/quick-start/compatibility.md',
                     '/v2/jt-808/guide/quick-start/terminology.md',
                     '/v2/jt-808/guide/quick-start/jt808-msg-type-parser.md',
                     '/v2/jt-808/guide/quick-start/building-from-source.md',
