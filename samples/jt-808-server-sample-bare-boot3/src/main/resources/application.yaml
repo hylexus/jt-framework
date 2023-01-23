@@ -1,0 +1,14 @@
+server:
+  port: 8808
+jt808:
+  built-components:
+    component-statistics:
+      enabled: true
+    request-handlers:
+      enabled: true
+logging:
+  level:
+    root: info
+    io.github.hylexus: info
+    jt-808.request.decoder: debug
+    jt-808.response.encoder: debug

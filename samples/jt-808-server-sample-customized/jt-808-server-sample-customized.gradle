@@ -1,3 +1,6 @@
+plugins {
+    id "org.springframework.boot" version "${defaultSpringBootBomVersion}"
+}
 apply plugin: 'org.springframework.boot'
 
 springBoot {

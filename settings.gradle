@@ -1,3 +1,33 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        [
+                'https://maven.aliyun.com/repository/google',
+                'https://maven.aliyun.com/repository/public',
+                'https://maven.aliyun.com/repository/gradle-plugin',
+                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
+                'https://maven.aliyun.com/nexus/content/groups/public/',
+                "https://plugins.gradle.org/m2/",
+                "https://repo.spring.io/release",
+                "https://repo.spring.io/snapshot",
+        ].each { repoUrl ->
+            maven { url repoUrl }
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+//    resolutionStrategy {
+//        eachPlugin {
+//            if (requested.id.id == "org.jetbrains.kotlin.jvm") {
+//                useVersion "${kotlinVersion}"
+//            }
+//            if (requested.id.id == "org.jetbrains.kotlin.plugin.spring") {
+//                useVersion "${kotlinVersion}"
+//            }
+//        }
+//    }
+}
+
 // docs
 include 'docs'
 
@@ -16,6 +46,7 @@ include 'jt-808-server-spring-boot-starter'
 include 'samples'
 include 'samples:jt-808-server-sample-debug'
 include 'samples:jt-808-server-sample-bare'
+include 'samples:jt-808-server-sample-bare-boot3'
 include 'samples:jt-808-server-sample-customized'
 include 'samples:jt-808-server-sample-annotation'
 include 'samples:jt-808-client-sample-debug'

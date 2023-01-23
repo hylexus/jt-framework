@@ -1,34 +1,18 @@
 import java.nio.charset.StandardCharsets
 
-buildscript {
-    repositories {
-        mavenLocal()
-        [
-                'https://maven.aliyun.com/repository/google',
-                'https://maven.aliyun.com/repository/public',
-                'https://maven.aliyun.com/repository/gradle-plugin',
-                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
-                'https://maven.aliyun.com/nexus/content/groups/public/',
-                "https://plugins.gradle.org/m2/",
-                "https://repo.spring.io/plugins-release",
-        ].each { repoUrl ->
-            maven { url repoUrl }
-        }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${defaultSpringBootBomVersion}"
-        classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
-    }
-}
-
 plugins {
     id 'java-library'
+    // A Gradle plugin that provides Maven-like dependency management and exclusions
+    // @see https://docs.spring.io/dependency-management-plugin/docs/1.1.0/reference/html/#getting-started
+    id "io.spring.dependency-management" version "1.1.0"
 }
 
 ext {
     defaultCharset = StandardCharsets.UTF_8.name()
+    springBoot3Modules = [
+            "jt-808-server-sample-bare-boot3",
+            "jt-808-server-spring-boot-starter",
+    ]
 }
 
 configurations {
@@ -78,9 +62,6 @@ configure(subprojects.findAll {
 }) { subProject ->
     apply from: getBuildScriptPath("common-maven-config.gradle")
 }
-
-// 3. changelog.md
-apply from: getBuildScriptPath("change-log-config.gradle")
 
 def getBuildScriptPath(String path) {
     return "${project(":build-script").projectDir}/script/${path}"
