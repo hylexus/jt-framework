@@ -2,7 +2,16 @@
 
 Jt-808协议服务端。
 
+## Compatibility
+
 支持 `spring-boot-2.x` 和 `spring-boot-3.x` 。
+
+两个 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
+
+| Module                                    | JDK   | spring-boot      | Desc                              |
+|-------------------------------------------|-------|------------------|-----------------------------------|
+| `jt-808-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.6.x]` | 为 **spring-boot-2.x** 提供的 starter |
+| `jt-808-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter |
 
 ## Modules
 
@@ -55,15 +64,15 @@ Jt-808协议服务端。
     - 1). 分为 **spring-boot-2.x** 和 **spring-boot-3.x** 两个版本
     - 2). **RELEASE** 版本命名不带任何后缀(不再以 `-RELEASE` 结尾)
     - 3). 低版本中写错的单词 `stater` 更正为 `starter`
-    - 4). **RELEASE** 版本命名如下所示:
+    - 4). **RELEASE** 版本命名规则如下所示:
         - **spring-boot-3.x**
-            - `jt-808-server-spring-boot-starter:2.1.0.jar`
+            - `jt-808-server-spring-boot-starter-2.1.0.jar`
         - **spring-boot-2.x**
-            - `jt-808-server-spring-boot-starter-boot2:2.1.0.jar`
+            - `jt-808-server-spring-boot-starter-boot2-2.1.0.jar`
 - **2.1.x** 之前
     - 1). **RELEASE** 版本命名以 `-RELEASE` 结尾
     - 2). 模块名中的单词 `starter` 误写为 `stater`
-    - 3). **RELEASE** 版本命名如下所示:
+    - 3). **RELEASE** 版本命名规则如下所示:
         - `jt-808-server-spring-boot-stater-2.0.3-RELEASE.jar`
         - `jt-808-server-spring-boot-stater-2.0.1-RELEASE.jar`
         - ...
