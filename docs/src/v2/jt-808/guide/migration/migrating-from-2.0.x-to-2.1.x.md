@@ -88,14 +88,14 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0-RC1</version>
+    <version>2.1.0-RC2</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: '2.1.0-RC1'
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: '2.1.0-RC2'
 ```
 
 :::
@@ -108,7 +108,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
     - `stater --> starter`
 - 版本改为 `2.1.x` 的最新版即可
 
-修改为 **2.1.x** 的依赖坐标(`stater --> starter`):
+**2.0.x** 的依赖如下:
 
 ::: code-tabs#dependency-boot3
 
@@ -131,7 +131,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 
 :::
 
-修改为 **2.1.x** 的依赖坐标:
+修改为 **2.1.x** 的依赖坐标(`stater --> starter`):
 
 ::: code-tabs#dependency-boot3
 
@@ -142,14 +142,14 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter</artifactId>
-    <version>2.1.0-RC1</version>
+    <version>2.1.0-RC2</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: '2.1.0-RC1'
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: '2.1.0-RC2'
 ```
 
 :::

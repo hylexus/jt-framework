@@ -71,16 +71,16 @@ export default defineUserConfig({
                 indexContent: true,
                 hotKeys: [{key: 'k', ctrl: true}],
                 // 为分类和标签添加索引
-                customFields: [
-                    {
-                        getter: (page) => page.frontmatter.category,
-                        formatter: "分类：$content",
-                    },
-                    {
-                        getter: (page) => page.frontmatter.tag,
-                        formatter: "标签：$content",
-                    },
-                ],
+                // customFields: [
+                //     {
+                //         getter: (page) => page.frontmatter.category,
+                //         formatter: "分类：$content",
+                //     },
+                //     {
+                //         getter: (page) => page.frontmatter.tag,
+                //         formatter: "标签：$content",
+                //     },
+                // ],
             }
         ),
     ]

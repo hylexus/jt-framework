@@ -54,7 +54,7 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 - [Spring WebFlux](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web-reactive.html#spring-webflux)
 - [Spring WebMvc](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web.html#spring-web)
 - 本文档基于 [VuePress](https://www.vuepress.cn/) 编写
-- 感谢 [vuepress-theme-hope](https://vuepress-theme-hope.gitee.io/v2/zh/guide/)
+- 感谢 [vuepress-theme-hope](https://theme-hope.vuejs.press/zh/)
 - `@ExtraMsgBody` 这块的逻辑，感谢这位仁兄 [qianhongtang](https://github.com/qianhongtang) 的启发
 
 ## 软件版本

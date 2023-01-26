@@ -2,9 +2,22 @@
 
 Jt-808协议服务端。
 
+最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
+
+最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
+
+最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
+
 ## Compatibility
 
-支持 `spring-boot-2.x` 和 `spring-boot-3.x` 。
+支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
+和 **spring-boot-3.x** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
+
+更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
+
+更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
+
+更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
 
 两个 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
 
@@ -52,6 +65,12 @@ Jt-808协议服务端。
 
 ## QuickStart
 
+更多信息，请移步 [入门--快速开始](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/quick-start.html) 。
+
+更多信息，请移步 [入门--快速开始](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/quick-start.html) 。
+
+更多信息，请移步 [入门--快速开始](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/quick-start.html) 。
+
 ### 1. 创建工程
 
 创建一个空的 `spring-boot` 工程。
@@ -83,7 +102,7 @@ Jt-808协议服务端。
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-RC1"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-RC2"
 ```
 
 - maven
@@ -93,7 +112,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0-RC1</version>
+    <version>2.1.0-RC2</version>
 </dependency>
 ```
 
@@ -125,15 +144,11 @@ logging:
 
 ## Building from Source
 
-编译所需的 `JDK` 版本必须在 `17` (包括)以上。
+更多有关编译源码的信息，请移步 [入门--编译源码](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/building-from-source.html) 。
 
-编译之后生成的 `.class` 文件：
+更多有关编译源码的信息，请移步 [入门--编译源码](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/building-from-source.html) 。
 
-[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
-
-[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
-
-[jt-808-server-spring-boot-starter](jt-808-server-spring-boot-starter) 模块为 `JDK17`；其余模块都为 `JDK11`。
+更多有关编译源码的信息，请移步 [入门--编译源码](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/building-from-source.html) 。
 
 - Mac/Linux/Unix-Based System
 

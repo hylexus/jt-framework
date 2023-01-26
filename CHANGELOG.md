@@ -1,3 +1,11 @@
+## 2.1.0-RC2
+
+### ⭐ New Features
+
+- **jt-808-server-spring-boot-starter** 模块
+    - 排除 **jt-808-server-spring-boot-autoconfigure** 中自带的 **2.x** 版的 **spring-boot**
+    - 显式引入 **3.x** 版的 **spring-boot**
+
 ## 2.1.0-RC1
 
 ### ⭐ New Features

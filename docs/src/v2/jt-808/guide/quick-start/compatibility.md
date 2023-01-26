@@ -12,7 +12,7 @@ icon: plugin
     - 只有一个为 **spring-boot-2.x** 提供的 `jt-808-server-spring-boot-stater`
     - 并且模块名中的 **starter** 单词拼写错误(写成了 `stater`)
     - 并没有为 `spring-boot-3.x` 提供 `starter`
-    - 实际上，至少在 **spring-boot-3.0.1** 中还是能正常解析 **2.x** 的 `starter` 的
+    - 实际上，至少在 **spring-boot-3.0.1** 中还是能正常解析 **spring-boot-2.x** 的 `starter` 的
 - **2.1.x** 开始，提供了两个 `starter`
     - `jt-808-server-spring-boot-starter` 为 **spring-boot-3.x** 提供的 `starter`
     - `jt-808-server-spring-boot-starter-boot2` 为 **spring-boot-2.x** 提供的 `starter`
@@ -84,7 +84,7 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-        <version>2.1.0-RC1</version>
+        <version>2.1.0-RC2</version>
         <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(2.6.14) -->
         <exclusions>
             <exclusion>
@@ -117,7 +117,7 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter</artifactId>
-        <version>2.1.0-RC1</version>
+        <version>2.1.0-RC2</version>
         <exclusions>
             <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(3.0.2) -->
             <exclusion>

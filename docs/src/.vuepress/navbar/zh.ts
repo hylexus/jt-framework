@@ -61,7 +61,7 @@ export const zhNavbar = navbar([
                 {
                     text: 'Vue', children: [
                         {text: 'VuePress', icon: 'vue', link: 'https://www.vuepress.cn/'},
-                        {text: 'vuepress-theme-hope', icon: 'vue', link: 'https://vuepress-theme-hope.gitee.io/v2/zh/guide/'},
+                        {text: 'vuepress-theme-hope', icon: 'vue', link: 'https://theme-hope.vuejs.press/zh/'},
                     ],
                 },
                 {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
