@@ -66,6 +66,9 @@ export const zhNavbar = navbar([
                 },
                 {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
             ]
+        },
+        {
+            text: '关于我们', link: '/about.md', icon: 'home'
         }
     ]
 )

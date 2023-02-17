@@ -37,7 +37,7 @@ icon: launch
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0-RC2</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -46,7 +46,7 @@ icon: launch
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-RC2"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0"
     // ...
 }
 ```
@@ -66,7 +66,7 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter</artifactId>
-    <version>2.1.0-RC2</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -75,7 +75,7 @@ dependencies {
 ```groovy
 dependencies {
     // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: "2.1.0-RC2"
+    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: "2.1.0"
     // ...
 }
 ```

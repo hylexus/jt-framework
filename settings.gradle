@@ -28,9 +28,6 @@ pluginManagement {
 //    }
 }
 
-// docs
-include 'docs'
-
 // build-script
 include 'build-script'
 

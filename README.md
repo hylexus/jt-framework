@@ -10,8 +10,10 @@ Jt-808协议服务端。
 
 ## Compatibility
 
-支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
-和 **spring-boot-3.x** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
+支持 **spring-boot-2.x
+** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
+和 **spring-boot-3.x
+** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
 
 更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
 
@@ -51,9 +53,11 @@ Jt-808协议服务端。
 ├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
 ├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
 └── samples         # 示例项目
-    ├── jt-808-server-sample-bare           # 几乎零配置的示例
-    ├── jt-808-server-sample-annotation     # 注解相关的示例
-    ├── jt-808-server-sample-customized     # 定制化示例
+    ├── jt-808-server-sample-bare           # 几乎零配置的示例(spring-boot-2.x)
+    ├── jt-808-server-sample-bare-boot3     # 几乎零配置的示例(spring-boot-3.x)
+    ├── jt-808-server-sample-annotation     # 注解相关的示例(spring-boot-2.x)
+    ├── jt-808-server-sample-customized     # 定制化示例(spring-boot-2.x)
+    ├── jt-808-client-sample-debug          # 开发时用来Debug的项目,请忽略
     └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
 ```
 
@@ -102,7 +106,7 @@ Jt-808协议服务端。
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0-RC2"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0"
 ```
 
 - maven
@@ -112,7 +116,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0-RC2</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -170,3 +174,9 @@ logging:
 ## Community
 
 ![QQ交流群](https://hylexus.github.io/jt-framework/img/QQ-Group.jpeg)
+
+## Funding
+
+项目的发展离不开你的支持，请作者喝一杯🍺吧！
+
+![有钱的捧个钱场 没钱的捧个人场](http://img.dferic.com/img/pay.png)

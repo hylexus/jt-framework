@@ -1,3 +1,10 @@
+## 2.1.0
+
+### ⭐ New Features
+
+- 参见 **2.1.0-RC2** 和 **2.1.0-RC1** 的改动记录
+- `settings.gradle` 中删除 `docs` 子模块(无需 gradle 管理)
+
 ## 2.1.0-RC2
 
 ### ⭐ New Features
