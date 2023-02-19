@@ -146,6 +146,13 @@ logging:
 - 支持多版本
 - 高度可定制
 
+## Maven版示例
+
+Maven版示例项目
+
+- Github: [https://github.com/hylexus/jt-framework-samples-maven](https://github.com/hylexus/jt-framework-samples-maven)
+- Gitee: [https://gitee.com/hylexus/jt-framework-samples-maven](https://gitee.com/hylexus/jt-framework-samples-maven)
+
 ## Building from Source
 
 更多有关编译源码的信息，请移步 [入门--编译源码](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/building-from-source.html) 。
