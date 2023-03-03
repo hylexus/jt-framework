@@ -22,8 +22,8 @@ export default hopeTheme({
     // iconAssets: "//at.alicdn.com/t/c/font_3831129_6mpn8dhchwt.css",
     iconAssets: "iconfont",
 
-    logo: "/logo.svg",
-
+    logo: "/logo.png",
+    logoDark: "/logo-dark.png",
     repo: "https://github.com/hylexus/jt-framework",
     repoDisplay: true,
 
@@ -69,8 +69,8 @@ export default hopeTheme({
             figure: true,
             flowchart: true,
             gfm: true,
-            imageLazyload: true,
-            imageSize: true,
+            imgLazyload: true,
+            imgSize: true,
             include: true,
             katex: true,
             mark: true,

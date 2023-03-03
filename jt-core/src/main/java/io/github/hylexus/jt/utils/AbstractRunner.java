@@ -2,9 +2,6 @@ package io.github.hylexus.jt.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 /**
  * @author hylexus
  * createdAt 2019/2/1
@@ -22,7 +19,6 @@ public abstract class AbstractRunner {
 
     public abstract void onDestroy() throws Exception;
 
-    @PostConstruct
     public synchronized void doStart() {
         if (this.isRunning) {
             throw new IllegalStateException(this.getName() + " is already started .");
@@ -40,7 +36,6 @@ public abstract class AbstractRunner {
         log.info("{} started successfully ", getName());
     }
 
-    @PreDestroy
     public synchronized void doStop() {
         if (!this.isRunning) {
             throw new IllegalStateException(this.getName() + " is not yet started .");

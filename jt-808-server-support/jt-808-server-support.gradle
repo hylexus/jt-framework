@@ -1,23 +1,25 @@
 dependencies {
     api(project(":jt-core"))
 
-    api group: 'org.springframework', name: 'spring-context'
+    api("org.springframework:spring-context")
 
-    api 'org.apache.commons:commons-lang3'
+    api("org.apache.commons:commons-lang3")
 
-    api thirdParty['blockingMap']
-    api group: 'com.github.ben-manes.caffeine', name: 'caffeine'
+    api("com.github.sarveswaran-m:util.concurrent.blockingMap")
+    api("com.github.ben-manes.caffeine:caffeine") {
+        exclude(group: "com.google.errorprone", module: "error_prone_annotations")
+    }
 
-    api "io.netty:netty-all"
+    api("io.netty:netty-all")
 
-    compileOnly "org.springframework.boot:spring-boot-starter-logging"
-    compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    compileOnly("org.springframework.boot:spring-boot-starter-logging")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    compileOnly thirdParty['google']['findbugs']['jsr305']
-    compileOnly thirdParty['google']['findbugs']['annotations']
+    compileOnly("com.google.code.findbugs:jsr305")
+    compileOnly("com.google.code.findbugs:annotations")
 
-    compileOnly 'com.fasterxml.jackson.core:jackson-databind'
+    compileOnly('com.fasterxml.jackson.core:jackson-databind')
 }
 
 test {

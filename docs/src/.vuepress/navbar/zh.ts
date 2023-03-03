@@ -28,6 +28,11 @@ export const zhNavbar = navbar([
             icon: 'question',
         },
         {
+            text: '升级指南',
+            link: '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
+            icon: 'merge'
+        },
+        {
             text: '历史版本',
             icon: 'list',
             children: [
@@ -56,11 +61,14 @@ export const zhNavbar = navbar([
                 {
                     text: 'Vue', children: [
                         {text: 'VuePress', icon: 'vue', link: 'https://www.vuepress.cn/'},
-                        {text: 'vuepress-theme-hope', icon: 'vue', link: 'https://vuepress-theme-hope.gitee.io/v2/zh/guide/'},
+                        {text: 'vuepress-theme-hope', icon: 'vue', link: 'https://theme-hope.vuejs.press/zh/'},
                     ],
                 },
                 {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
             ]
+        },
+        {
+            text: '关于我们', link: '/about.md', icon: 'home'
         }
     ]
 )

@@ -1,7 +1,41 @@
-apply plugin: 'java-library'
+apply plugin: "io.spring.dependency-management"
 
-sourceCompatibility = "${defaultJavaVersion}"
-targetCompatibility = "${defaultJavaVersion}"
+def obtainJavaVersion() {
+    springBoot3Modules.contains(project.name) ? maximumJavaVersion : defaultJavaVersion
+}
+
+def obtainSpringBootBomVersion() {
+    springBoot3Modules.contains(project.name) ? maximumSpringBootBomVersion : defaultSpringBootBomVersion
+}
+
+dependencyManagement {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, "seconds"
+    }
+    applyMavenExclusions = false
+    generatedPomCustomization {
+        enabled = false
+    }
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion()}"
+    }
+    dependencies {
+        dependency "org.hibernate:hibernate-validator:8.0.0.Final"
+        dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.6") {
+            exclude "org.projectlombok:lombok"
+        }
+        dependency "com.github.sarveswaran-m:util.concurrent.blockingMap:0.91"
+        dependency "com.google.guava:guava:31.1-jre"
+        dependency "com.google.code.findbugs:jsr305:3.0.2"
+        dependency "com.google.code.findbugs:annotations:3.0.1"
+        dependency "javax.annotation:javax.annotation-api:1.3.2"
+        dependency "org.apache.commons:commons-collections4:4.4"
+    }
+}
+
+apply plugin: 'java-library'
+sourceCompatibility = obtainJavaVersion()
+targetCompatibility = obtainJavaVersion()
 
 tasks.withType(JavaCompile) {
     options.encoding = "${defaultCharset}"
@@ -32,24 +66,9 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
 }
 
-apply plugin: "io.spring.dependency-management"
-dependencyManagement {
-    resolutionStrategy {
-        cacheChangingModulesFor 0, "seconds"
-    }
-    applyMavenExclusions = false
-    generatedPomCustomization {
-        enabled = false
-    }
-    imports {
-        mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootBomVersion}"
-        mavenBom "io.netty:netty-bom:${nettyBomVersion}"
-    }
-}
-
 compileJava {
-    sourceCompatibility = "${defaultJavaVersion}"
-    targetCompatibility = "${defaultJavaVersion}"
+    sourceCompatibility = obtainJavaVersion()
+    targetCompatibility = obtainJavaVersion()
     options.encoding = "${defaultCharset}"
 }
 
@@ -82,7 +101,6 @@ checkstyle {
 }
 
 apply plugin: 'idea'
-
 idea {
     module {
         inheritOutputDirs = false

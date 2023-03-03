@@ -8,8 +8,11 @@ export const zhSidebar = sidebar({
                 icon: 'launch',
                 children: [
                     '/v2/jt-808/guide/quick-start/quick-start.md',
+                    '/v2/jt-808/guide/quick-start/compatibility.md',
                     '/v2/jt-808/guide/quick-start/terminology.md',
                     '/v2/jt-808/guide/quick-start/jt808-msg-type-parser.md',
+                    '/v2/jt-808/guide/quick-start/building-from-source.md',
+                    '/v2/jt-808/guide/quick-start/maven-samples.md',
                 ],
             },
             {
@@ -67,6 +70,14 @@ export const zhSidebar = sidebar({
                 icon: 'more',
                 children: [
                     '/v2/jt-808/guide/more/aware-interface.md',
+                ]
+            },
+            {
+                text: "升级指南",
+                collapsible: true,
+                icon: 'merge',
+                children: [
+                    '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
                 ]
             },
         ],

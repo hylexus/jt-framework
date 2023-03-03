@@ -1,0 +1,15 @@
+dependencies {
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    api(project(":jt-808-server-support"))
+
+    api("org.springframework.boot:spring-boot-starter")
+    api("org.hibernate:hibernate-validator")
+
+    compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind")
+    compileOnly("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
+}
+
+compileJava.dependsOn(processResources)

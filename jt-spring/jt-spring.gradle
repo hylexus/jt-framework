@@ -1,6 +1,7 @@
 dependencies {
-    testImplementation group: 'junit', name: 'junit'
+    api("org.springframework:spring-context")
 
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
-    api group: 'org.springframework', name: 'spring-context'
+
+    testImplementation("junit:junit")
 }

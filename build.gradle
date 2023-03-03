@@ -1,51 +1,17 @@
 import java.nio.charset.StandardCharsets
 
-buildscript {
-    repositories {
-        mavenLocal()
-        [
-                'https://maven.aliyun.com/repository/google',
-                'https://maven.aliyun.com/repository/public',
-                'https://maven.aliyun.com/repository/gradle-plugin',
-                'https://maven.aliyun.com/nexus/content/repositories/jcenter',
-                'https://maven.aliyun.com/nexus/content/groups/public/',
-                "https://plugins.gradle.org/m2/",
-                "https://repo.spring.io/plugins-release",
-        ].each { repoUrl ->
-            maven { url repoUrl }
-        }
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootBomVersion}"
-        classpath 'com.github.marcpoppleton:git-changelog:0.1.3'
-    }
-}
-
 plugins {
     id 'java-library'
+    // A Gradle plugin that provides Maven-like dependency management and exclusions
+    // @see https://docs.spring.io/dependency-management-plugin/docs/1.1.0/reference/html/#getting-started
+    id "io.spring.dependency-management" version "1.1.0"
 }
 
 ext {
     defaultCharset = StandardCharsets.UTF_8.name()
-    defaultJavaVersion = JavaVersion.VERSION_11
-
-    thirdParty = [
-            oaks                 : ['common-utils': 'io.github.hylexus.oaks:oaks-common-utils:1.0.6'],
-            blockingMap          : 'com.github.sarveswaran-m:util.concurrent.blockingMap:0.91',
-            google               : [
-                    findbugs: [
-                            jsr305     : 'com.google.code.findbugs:jsr305:3.0.2',
-                            annotations: 'com.google.code.findbugs:annotations:3.0.1'
-                    ],
-                    guava   : 'com.google.guava:guava:31.1-jre',
-            ],
-            javax                : ['annotation-api': 'javax.annotation:javax.annotation-api:1.3.2'],
-            'hibernate-validator': 'org.hibernate:hibernate-validator:8.0.0.Final',
-            apache               : [
-                    'commons-collections4': 'org.apache.commons:commons-collections4:4.4'
-            ]
+    springBoot3Modules = [
+            "jt-808-server-sample-bare-boot3",
+            "jt-808-server-spring-boot-starter",
     ]
 }
 
@@ -85,15 +51,17 @@ configure(subprojects.findAll {
 // 2. maven config
 apply from: getBuildScriptPath("repo-credentials.gradle")
 
-def modulesToPublishToMavenRepo = ["jt-core", "jt-spring", "jt-808-server-support", "jt-808-server-spring-boot-stater"]
+def modulesToPublishToMavenRepo = [
+        "jt-core", "jt-spring", "jt-808-server-support",
+        "jt-808-server-spring-boot-autoconfigure",
+        "jt-808-server-spring-boot-starter-boot2",
+        "jt-808-server-spring-boot-starter"
+]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)
 }) { subProject ->
     apply from: getBuildScriptPath("common-maven-config.gradle")
 }
-
-// 3. changelog.md
-apply from: getBuildScriptPath("change-log-config.gradle")
 
 def getBuildScriptPath(String path) {
     return "${project(":build-script").projectDir}/script/${path}"

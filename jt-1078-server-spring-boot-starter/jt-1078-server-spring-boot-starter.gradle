@@ -2,14 +2,16 @@ dependencies {
     api(project(":jt-1078-server-support"))
     api(project(":jt-core"))
 
-    api "org.springframework.boot:spring-boot-starter"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    api("org.springframework.boot:spring-boot-starter")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    api thirdParty['google']['guava']
-    api "io.netty:netty-all"
+    api("com.google.guava:guava") {
+        exclude(group: "org.checkerframework", module: "checker-qual")
+    }
+    api("io.netty:netty-all")
 
 //    compile group: 'javax.validation', name: 'validation-api'
-    api thirdParty['hibernate-validator']
+    api("org.hibernate:hibernate-validator")
 
 }
 

@@ -1,0 +1,12 @@
+dependencies {
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    api(project(":jt-808-server-spring-boot-autoconfigure")) {
+        exclude(group: "org.springframework.boot", module: "spring-boot-starter")
+    }
+
+    api("org.springframework.boot:spring-boot-starter")
+
+}
+
+compileJava.dependsOn(processResources)

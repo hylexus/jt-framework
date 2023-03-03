@@ -1,3 +1,6 @@
+plugins {
+    id "org.springframework.boot" version "${defaultSpringBootBomVersion}"
+}
 apply plugin: 'org.springframework.boot'
 
 springBoot {
@@ -9,12 +12,12 @@ bootJar {
 }
 
 dependencies {
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     api(project(":jt-808-server-support"))
-    api "org.springframework.boot:spring-boot-starter"
+    api("org.springframework.boot:spring-boot-starter")
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 test {

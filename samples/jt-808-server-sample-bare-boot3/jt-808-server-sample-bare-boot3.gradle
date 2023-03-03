@@ -1,0 +1,34 @@
+plugins {
+    id "org.springframework.boot" version "${maximumSpringBootBomVersion}"
+}
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    getMainClass().set('io.github.hylexus.jt808.samples.bare.Jt808ServerSampleBareApplication')
+}
+
+bootJar {
+    getArchiveFileName().set("${project.name}.jar")
+}
+
+//dependencyManagement {
+//    imports {
+//        mavenBom "org.springframework.boot:spring-boot-dependencies:${maximumSpringBootBomVersion}"
+//    }
+//}
+//
+//sourceCompatibility = "${maximumJavaVersion}"
+//targetCompatibility = "${maximumJavaVersion}"
+//
+//compileJava {
+//    sourceCompatibility = "${maximumJavaVersion}"
+//    targetCompatibility = "${maximumJavaVersion}"
+//    options.encoding = "${defaultCharset}"
+//}
+
+dependencies {
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
+    api(project(":jt-808-server-spring-boot-starter"))
+//    api("org.springframework.boot:spring-boot-starter:3.0.2")
+}

@@ -5,14 +5,18 @@ dependencies {
     api 'org.springframework:spring-context'
     api 'org.apache.commons:commons-lang3'
 
-    api thirdParty['google']['guava']
-    api thirdParty['oaks']['common-utils']
-    api thirdParty['apache']['commons-collections4']
+    api("com.google.guava:guava") {
+        exclude(group: "org.checkerframework", module: "checker-qual")
+    }
+    api("io.github.hylexus.oaks:oaks-common-utils") {
+        exclude(group: "org.projectlombok", module: "lombok")
+    }
+    api("org.apache.commons:commons-collections4")
 
 
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
-    compileOnly thirdParty['google']['findbugs']['jsr305']
-    compileOnly thirdParty['google']['findbugs']['annotations']
+    compileOnly("com.google.code.findbugs:jsr305")
+    compileOnly("com.google.code.findbugs:annotations")
 
     compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
     compileOnly 'com.fasterxml.jackson.core:jackson-databind'

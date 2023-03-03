@@ -1,3 +1,62 @@
+## 2.1.0
+
+### ⭐ New Features
+
+- 参见 **2.1.0-RC2** 和 **2.1.0-RC1** 的改动记录
+- `settings.gradle` 中删除 `docs` 子模块(无需 gradle 管理)
+
+## 2.1.0-RC2
+
+### ⭐ New Features
+
+- **jt-808-server-spring-boot-starter** 模块
+    - 排除 **jt-808-server-spring-boot-autoconfigure** 中自带的 **2.x** 版的 **spring-boot**
+    - 显式引入 **3.x** 版的 **spring-boot**
+
+## 2.1.0-RC1
+
+### ⭐ New Features
+
+从 **2.1.x** 开始，同时支持 **spring-boot-2.x** 和 **spring-boot-3.x**。
+
+提供的 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
+
+| Module                                    | JDK   | spring-boot      | Desc                              |
+|-------------------------------------------|-------|------------------|-----------------------------------|
+| `jt-808-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.6.x]` | 为 **spring-boot-2.x** 提供的 starter |
+| `jt-808-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter |
+
+变更如下:
+
+- 1). 模块名称拼写错误修改
+    - **2.0.x** 中的 `jt-808-server-spring-boot-stater` 有单词拼写错误(😂): **starter** 写成了 **stater**
+    - 在 **2.1.x** 中改成了 `jt-808-server-spring-boot-starter-boot2`
+        - **stater** 修改为 **starter**
+        - 添加了 **-boot2** 后缀，表示这个模块是给 **spring-boot-2.x** 提供的
+- 2). **JDK版本** 和 **spring-boot版本** 修改
+    - `jt-808-server-spring-boot-starter`
+        - 给 **spring-boot-3.x** 的项目提供的，是本次新增的模块
+        - `JDK`: **17**
+        - 编译之后的 `.class` 文件版本 : **61**(**JDK-17**)
+        - `spring-boot`: **3.0.2**
+        - 单独依赖该模块时必须满足: `jdk.version >=17 && spring-boot.version >= 3.0.0`
+    - `jt-808-server-spring-boot-starter-boot2`
+        - 给 **spring-boot-2.x** 的项目提供的，是从之前的 `jt-808-server-spring-boot-stater` 重命名过来的
+        - `JDK`: **17**
+        - 编译之后的 `.class` 文件版本 : **55**(**JDK-11**)
+        - `spring-boot`: **2.6.14**
+        - 单独依赖该模块时必须满足: `jdk.version >= 11 && spring-boot.version >= 2.2.x && spring-boot.version <= 2.6.x`
+- 3). **spring-boot版本** 升级
+    - 从 **2.5.12** 升级到 **2.6.24**
+    - 新增了 **spring-boot-3.x** 的支持
+
+### 🔨 Dependency Upgrades
+
+- `Gradle` 版本升级到 **7.6**
+- `Spring-Boot` 版本升级到 **2.6.14**
+
+## 2.0.3-RELEASE
+
 ## 2.0.3-rc1
 
 ### ⭐ New Features

@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import lombok.Data;
@@ -19,6 +20,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.WORD;
 @Data
 @Accessors(chain = true)
 @Jt808RequestBody
+@BuiltinComponent
 public class BuiltinMsg0005 {
 
     // byte[0,2)  WORD  原始消息流水号(对应要求重传的原始消息第一包的消息流水号)
