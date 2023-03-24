@@ -33,7 +33,7 @@ export default hopeTheme({
 
     copyright: false,
 
-    footer: 'TODO',
+    footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">备案号: 沪ICP备2022029946号-2</a >',
     displayFooter: true,
 
     locales: {

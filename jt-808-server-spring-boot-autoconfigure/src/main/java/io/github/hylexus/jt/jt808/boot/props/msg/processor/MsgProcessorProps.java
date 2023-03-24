@@ -15,13 +15,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class MsgProcessorProps {
 
-    /**
-     * @deprecated 使用 executor-group 代替
-     */
-    @Deprecated
-    @NestedConfigurationProperty
-    private MsgProcessorThreadPoolProps threadPool = new MsgProcessorThreadPoolProps();
-
     @NestedConfigurationProperty
     private MsgProcessorExecutorGroupProps executorGroup = new MsgProcessorExecutorGroupProps();
 }

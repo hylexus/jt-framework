@@ -24,7 +24,7 @@ features:
 - title: 简洁至上
   details: 注解驱动开发，省时省力。
   icon: semantic
-footer: XXX Licensed | Copyright © 2020-present TODO
+footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">备案号: 沪ICP备2022029946号-2</a >'
 ---
 
 ## 项目结构
