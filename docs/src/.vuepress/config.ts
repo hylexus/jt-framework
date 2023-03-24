@@ -4,7 +4,8 @@ import theme from "./theme"
 import {searchProPlugin} from "vuepress-plugin-search-pro"
 
 export default defineUserConfig({
-    base: '/jt-framework/',
+    // base: '/jt-framework/',
+    base: '/',
     head: [
         [
             'link',

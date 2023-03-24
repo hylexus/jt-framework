@@ -99,6 +99,6 @@ export default hopeTheme({
             vPre: true,
             vuePlayground: true,
         },
-        copyCode: {pure: true,},
+        copyCode: {fancy: false,},
     },
 });

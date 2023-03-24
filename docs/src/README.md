@@ -60,9 +60,9 @@ footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">
 
 ::: tip
 
-- JDK : 11+
-- Netty : 4.x
-- VuePress : 2.0.0-beta.59
-- Gradle : 7.5.1
+- JDK : 17+
+- Netty : 4.7.x
+- VuePress : 2.0.0-beta.61
+- Gradle : 7.6
 
 :::
