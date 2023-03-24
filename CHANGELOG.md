@@ -1,3 +1,13 @@
+# 1.0.14-RELEASE
+
+### 🐞 Bug Fixes
+
+- 修复 `CommandSender` 下发 **2019** 版消息时，终端手机号前导零导致的版本错误。
+
+### 📢 Notices
+
+**1.x** 不再增加新特性，只修改严重 **bug**。 建议使用 **2.x**。
+
 # 1.0.13-RELEASE
 
 ### 🐞 Bug Fixes

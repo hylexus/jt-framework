@@ -82,7 +82,7 @@ public class Encoder {
         int reversedLastBit = 0;
         Jt808ProtocolVersion version = Jt808ProtocolVersion.VERSION_2011;
         // 根据终端手机判断版本: BcdOps.bcd2String 中截断最前面的0,所以2019版本为19位
-        if (19 == terminalPhone.length()) {
+        if (19 <= terminalPhone.length()) {
             // 2019 14bit=1
             reversedLastBit = 1;
             version = Jt808ProtocolVersion.VERSION_2019;
