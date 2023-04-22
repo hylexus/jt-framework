@@ -97,7 +97,7 @@ public class Jt808AnnotationBasedEncoder {
     }
 
     private void doEncode(Object instance, Class<?> entityClass, ByteBuf byteBuf, Jt808Request request, Jt808Session session) {
-        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
+
         final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
         evaluationContext.setVariable("this", instance);
         if (request != null) {
@@ -107,10 +107,11 @@ public class Jt808AnnotationBasedEncoder {
         if (session != null) {
             evaluationContext.setVariable("session", session);
         }
-        for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
-            if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
-                this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
-            }
+        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
+        for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getResponseFieldMetadataList()) {
+            //if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
+            this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
+            //}
         }
     }
 
@@ -130,7 +131,7 @@ public class Jt808AnnotationBasedEncoder {
         final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = fieldAnnotation.customerFieldSerializerClass();
         if (customerFieldSerializerClass != Jt808FieldSerializer.PlaceholderFiledSerializer.class) {
             final Jt808FieldSerializer<Object> fieldSerializer = this.getFieldSerializer(customerFieldSerializerClass);
-            fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
+            fieldSerializer.serialize(fieldValue, jtDataType, byteBuf, new Jt808FieldSerializer.DefaultInternalEncoderContext(fieldMetadata));
             return;
         }
         // 2. LIST
@@ -163,7 +164,7 @@ public class Jt808AnnotationBasedEncoder {
         final Jt808FieldSerializer<Object> fieldSerializer = fieldSerializerRegistry.getConverter(forJt808ResponseMsgDataType(fieldType, jtDataType))
                 .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
 
-        fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
+        fieldSerializer.serialize(fieldValue, jtDataType, byteBuf, new Jt808FieldSerializer.DefaultInternalEncoderContext(fieldMetadata));
     }
 
     private boolean isConditionNotMatch(String expression, EvaluationContext evaluationContext) {

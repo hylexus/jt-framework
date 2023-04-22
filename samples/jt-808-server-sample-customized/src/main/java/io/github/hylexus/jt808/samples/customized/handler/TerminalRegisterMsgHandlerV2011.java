@@ -3,8 +3,9 @@ package io.github.hylexus.jt808.samples.customized.handler;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.MsgType;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg8100;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg8100Alias;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseFieldAlias;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -18,7 +19,7 @@ import java.util.Set;
  */
 @Slf4j
 @Component
-public class TerminalRegisterMsgHandlerV2011 implements SimpleJt808RequestHandler<BuiltinMsg8100> {
+public class TerminalRegisterMsgHandlerV2011 implements SimpleJt808RequestHandler<BuiltinMsg8100Alias> {
 
     /**
      * 处理 [终端注册] 消息
@@ -36,9 +37,14 @@ public class TerminalRegisterMsgHandlerV2011 implements SimpleJt808RequestHandle
         return Jt808ProtocolVersion.unmodifiableSetVersion2011();
     }
 
+    /**
+     * 这里以 {@link ResponseFieldAlias} 注解来作示例
+     *
+     * @see ResponseFieldAlias
+     */
     // 7E01000023013912344321007B000B0002696431323361626364656667684944313233343501B8CA4A2D313233343531317E
     @Override
-    public BuiltinMsg8100 handleMsg(Jt808ServerExchange exchange) {
+    public BuiltinMsg8100Alias handleMsg(Jt808ServerExchange exchange) {
         final ByteBuf body = exchange.request().body();
         // 1. [0-2) WORD 省域ID
         final int province = JtProtocolUtils.readUnsignedWord(body);
@@ -56,9 +62,9 @@ public class TerminalRegisterMsgHandlerV2011 implements SimpleJt808RequestHandle
         final String carIdentifier = JtProtocolUtils.readString(body, exchange.request().msgBodyLength() - 25);
         log.info("terminalId={}, terminalIdentifier={}, carIdentifier={}", exchange.request().terminalId(), terminalIdentifier, carIdentifier);
 
-        return new BuiltinMsg8100()
+        return new BuiltinMsg8100Alias()
                 .setTerminalFlowId(exchange.request().flowId())
-                .setAuthCode("AuthCode-admin-2019")
+                .setAuthCode("AuthCode-admin-2011")
                 .setResult((byte) 0);
     }
 }

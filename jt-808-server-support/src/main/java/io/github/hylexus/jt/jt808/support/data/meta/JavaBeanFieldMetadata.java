@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hylexus
@@ -22,6 +23,14 @@ public class JavaBeanFieldMetadata {
     private Class<?> fieldType;
     private List<Class<?>> genericType;
     private int order = 0;
+    private RequestFieldOffsetExtractor requestFieldOffsetExtractor;
+    private RequestFieldLengthExtractor requestFieldLengthExtractor;
+
+    private final Map<Class<Annotation>, Annotation> annotationCache;
+
+    public JavaBeanFieldMetadata(Map<Class<Annotation>, Annotation> annotationCache) {
+        this.annotationCache = annotationCache;
+    }
 
     public boolean isIntType() {
         return fieldType == Integer.class || fieldType == int.class;
@@ -50,7 +59,7 @@ public class JavaBeanFieldMetadata {
     public Object getFieldValue(Object instance, boolean createNewIfNull) {
 
         try {
-            //if (!field.isAccessible()) {
+            // if (!field.isAccessible()) {
             if (!field.canAccess(instance)) {
 
                 field.setAccessible(true);
@@ -67,10 +76,12 @@ public class JavaBeanFieldMetadata {
     }
 
     public <T extends Annotation> boolean isAnnotationPresent(Class<T> annotationClass) {
-        return field.getAnnotation(annotationClass) != null;
+        return this.annotationCache.containsKey(annotationClass);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        return field.getAnnotation(annotationClass);
+        final Annotation annotation = this.annotationCache.get(annotationClass);
+        return (T) annotation;
     }
 }

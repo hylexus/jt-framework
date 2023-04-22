@@ -8,13 +8,13 @@ import java.lang.annotation.*;
 /**
  * @author hylexus
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ResponseField {
 
     /**
-     * @return 赋值顺序，值越小优先级越高
+     * @return 序列化的顺序，值越小优先级越高(不要求连续，只比较大小)
      */
     int order();
 

@@ -1,3 +1,7 @@
+## 2.1.1-RC1
+
+- 内置的空的心跳消息 `BuiltinMsg0200` 改名为 `BuiltinMsg0002`(之前命名错误)
+
 ## 2.1.0
 
 ### ⭐ New Features
@@ -167,7 +171,8 @@ jt808:
 
 新增配置项：
 
-- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。
+  默认值都是 `20m`;
 - `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
 
 # 1.0.11-RELEASE

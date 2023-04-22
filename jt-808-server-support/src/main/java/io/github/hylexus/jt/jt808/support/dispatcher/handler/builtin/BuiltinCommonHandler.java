@@ -2,7 +2,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0002;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200V2013;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0704V2013;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalCommonReplyMsg;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BuiltinCommonHandler {
 
     @Jt808RequestHandlerMapping(msgType = 0x0002)
-    public void processTerminalHeartBeatMsg(Jt808RequestEntity<BuiltinMsg0200> request) {
+    public void processTerminalHeartBeatMsg(Jt808RequestEntity<BuiltinMsg0002> request) {
         log.info("TerminalHeartBeatMsg, terminalId={}, flowId={}", request.terminalId(), request.flowId());
     }
 

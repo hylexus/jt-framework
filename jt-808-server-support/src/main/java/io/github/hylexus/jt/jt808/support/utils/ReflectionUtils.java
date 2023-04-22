@@ -1,9 +1,14 @@
 package io.github.hylexus.jt.jt808.support.utils;
 
 import io.github.hylexus.jt.exception.JtIllegalStateException;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author hylexus
@@ -31,6 +36,15 @@ public class ReflectionUtils {
         }
     }
 
+    public static <T> Method searchMethod(Class<T> cls, String method) {
+        return org.springframework.util.ReflectionUtils.findMethod(cls, method);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T invokeMethod(Object instance, Method method) {
+        return (T) org.springframework.util.ReflectionUtils.invokeMethod(method, instance);
+    }
+
     private static boolean isIntType(Class<?> cls) {
         return cls == Integer.class || cls == int.class;
     }
@@ -53,5 +67,37 @@ public class ReflectionUtils {
         } catch (IllegalAccessException e) {
             throw new JtIllegalStateException(e);
         }
+    }
+
+    public static <A extends Annotation> A getAnnotation(AnnotatedElement annotatedElement, Class<A> annotation) {
+        return AnnotatedElementUtils.getMergedAnnotation(annotatedElement, annotation);
+    }
+
+    public static <A extends Annotation> boolean isAnnotationPresent(AnnotatedElement annotatedElement, Class<A> annotation) {
+        // TODO cache???
+        return AnnotatedElementUtils.isAnnotated(annotatedElement, annotation);
+    }
+
+    @SafeVarargs
+    public static <A extends Annotation> Map<Class<A>, Annotation> getAllAnnotations(Field field, Class<? extends Annotation>... extra) {
+        final Map<Class<A>, Annotation> cache = new HashMap<>();
+        for (Annotation annotation : field.getAnnotations()) {
+            final Annotation mergedAnnotation = AnnotatedElementUtils.getMergedAnnotation(field, annotation.annotationType());
+            if (mergedAnnotation != null) {
+                @SuppressWarnings("unchecked") final Class<A> key = (Class<A>) annotation.annotationType();
+                cache.put(key, mergedAnnotation);
+            }
+        }
+
+        if (extra != null) {
+            for (Class<? extends Annotation> annotationClass : extra) {
+                final Annotation mergedAnnotation = AnnotatedElementUtils.getMergedAnnotation(field, annotationClass);
+                if (mergedAnnotation != null) {
+                    @SuppressWarnings("unchecked") final Class<A> key = (Class<A>) annotationClass;
+                    cache.put(key, mergedAnnotation);
+                }
+            }
+        }
+        return cache;
     }
 }

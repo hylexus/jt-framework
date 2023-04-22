@@ -1,18 +1,22 @@
 package io.github.hylexus.jt.jt808.support.utils;
 
-import com.google.common.collect.Sets;
 import io.github.hylexus.jt.annotation.Transient;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
+import io.github.hylexus.jt.jt808.support.data.meta.RequestFieldLengthExtractor;
+import io.github.hylexus.jt.jt808.support.data.meta.RequestFieldOffsetExtractor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -24,17 +28,12 @@ public class JavaBeanMetadataUtils {
     /**
      * 支持按bit拆分的类型
      */
-    public static final Set<Class<?>> SLICED_TYPE;
+    public static final Set<Class<?>> SLICED_TYPE = Set.of(
+            Byte.class, byte.class,
+            Short.class, short.class,
+            Integer.class, int.class
+    );
     private static final ConcurrentMap<Class<?>, JavaBeanMetadata> CLASS_METADATA_CACHE = new ConcurrentHashMap<>();
-
-    static {
-        final Set<Class<?>> set = Sets.newHashSet(
-                Byte.class, byte.class,
-                Short.class, short.class,
-                Integer.class, int.class
-        );
-        SLICED_TYPE = Collections.unmodifiableSet(set);
-    }
 
     public static boolean isSlicedType(Class<?> cls) {
         return SLICED_TYPE.contains(cls);
@@ -58,6 +57,8 @@ public class JavaBeanMetadataUtils {
         javaBeanMetadata.setFieldMetadataList(new ArrayList<>());
         javaBeanMetadata.setFieldMapping(new HashMap<>());
         javaBeanMetadata.setSliceFromSupportedFieldList(new ArrayList<>());
+        javaBeanMetadata.setRequestFieldMetadataList(new ArrayList<>());
+        javaBeanMetadata.setResponseFieldMetadataList(new ArrayList<>());
 
         for (Field field : cls.getDeclaredFields()) {
             final Class<?> fieldType = field.getType();
@@ -70,25 +71,34 @@ public class JavaBeanMetadataUtils {
             final JavaBeanFieldMetadata javaBeanFieldMetadata = buildFieldMetadata(field, fieldType);
             javaBeanFieldMetadata.setRawBeanMetadata(javaBeanMetadata);
             if (javaBeanFieldMetadata.isAnnotationPresent(RequestField.class)) {
-                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(RequestField.class).order());
+                final RequestField annotation = javaBeanFieldMetadata.getAnnotation(RequestField.class);
+                javaBeanFieldMetadata.setOrder(annotation.order());
+                javaBeanFieldMetadata.setRequestFieldOffsetExtractor(RequestFieldOffsetExtractor.createFor(javaBeanFieldMetadata, annotation));
+                javaBeanFieldMetadata.setRequestFieldLengthExtractor(RequestFieldLengthExtractor.createFor(fieldType, annotation.dataType(), annotation));
+                javaBeanMetadata.getRequestFieldMetadataList().add(javaBeanFieldMetadata);
             } else if (javaBeanFieldMetadata.isAnnotationPresent(ResponseField.class)) {
                 javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(ResponseField.class).order());
+                javaBeanMetadata.getResponseFieldMetadataList().add(javaBeanFieldMetadata);
             }
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);
             javaBeanMetadata.getFieldMapping().put(field.getName(), javaBeanFieldMetadata);
-            if (field.getAnnotation(SlicedFrom.class) != null) {
+            if (ReflectionUtils.getAnnotation(field, SlicedFrom.class) != null) {
                 javaBeanMetadata.getSliceFromSupportedFieldList().add(javaBeanFieldMetadata);
             }
         }
-
+        javaBeanMetadata.getRequestFieldMetadataList().sort(Comparator.comparing(JavaBeanFieldMetadata::getOrder));
+        javaBeanMetadata.getResponseFieldMetadataList().sort(Comparator.comparing(JavaBeanFieldMetadata::getOrder));
         javaBeanMetadata.getFieldMetadataList().sort(Comparator.comparing(JavaBeanFieldMetadata::getOrder));
 
         return javaBeanMetadata;
     }
 
     private static JavaBeanFieldMetadata buildFieldMetadata(Field field, Class<?> fieldType) {
-        JavaBeanFieldMetadata javaBeanFieldMetadata = new JavaBeanFieldMetadata();
+        final JavaBeanFieldMetadata javaBeanFieldMetadata = new JavaBeanFieldMetadata(
+                ReflectionUtils.getAllAnnotations(field, RequestField.class, ResponseField.class, SlicedFrom.class)
+        );
+
         javaBeanFieldMetadata.setField(field);
         javaBeanFieldMetadata.setFieldType(fieldType);
         javaBeanFieldMetadata.setGenericType(new ArrayList<>());
@@ -110,6 +120,6 @@ public class JavaBeanMetadataUtils {
 
     private static boolean shouldBeIgnore(Field field) {
         return field.getAnnotation(Transient.class) != null
-               || field.getAnnotation(java.beans.Transient.class) != null;
+                || field.getAnnotation(java.beans.Transient.class) != null;
     }
 }

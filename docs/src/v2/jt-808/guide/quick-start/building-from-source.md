@@ -19,6 +19,16 @@ icon: code
 
 ## 要求
 
+### 为什么编译源码一定要 JDK17？
+
+::: tip 为什么编译源码一定要 JDK17？
+
+因为 `jt-808-server-spring-boot-starter` 模块是为 `spring-boot-3.x` 提供的，`spring-boot-3.x` 必须使用 `JDK17+`。
+
+其他模块虽然也用了 `JDK17`，但是编译级别是 `JDK11`。
+
+:::
+
 ### JDK版本要求
 
 从 `2.1.0` 开始支持 `spring-boot-3.x`，所以编译源码的 `JDK` 版本必须在 `JDK-17` (包括)以上。
