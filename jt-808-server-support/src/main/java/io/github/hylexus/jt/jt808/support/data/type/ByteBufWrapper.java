@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author hylexus
  */
+@Deprecated(since = "2.1.1")
 public class ByteBufWrapper implements BytesValueWrapper<ByteBuf> {
     private ByteBuf value;
 

@@ -1,5 +1,39 @@
 ## 2.1.1-RC1
 
+### ⭐ New Features
+
+- 支持通过 **注解别名** 来扩展`@RequestField` 和 `@ResponseField`
+    - 并内置了 `@RequestFieldAlias` 和 `@ResponseFieldAlias` 别名
+    - 现在你可以自定义注解来扩展自定义的数据类型，比如可以自定义一种 `LWord`(`LongWord`,`64bit`) 类型
+- 扩展注解别名: `@RequestFieldAlias` 和 `@ResponseFieldAlias`
+    - 支持 `MsgDataType#BYTES` 和 `java.lang.String` 互转
+    - `Geo` 类型(经纬度)支持转换为 `long/Long`、`double/Double`、`BigDecimal`
+    - 表达时间语义的 `BCD` 可以转换为 `java.lang.String`、`java.util.Date`、`java.time.LocalDateTime`
+    - `java.util.Date` 和 `java.time.LocalDateTime` 可以转为 `BCD`
+- `Jt808FieldDeserializer` 扩展 `Context` 参数，方便自定义注解
+- `Jt808FieldSerializer` 扩展 `Context` 参数，方便自定义注解
+- 废弃 `BytesValueWrapper`
+    - 使用 `ByteBufContainer` 或 `ByteArrayContainer` 代替
+    - 内置 `ByteBufContainer` 或 `ByteArrayContainer` 的类型转换器
+- 新增如下示例消息(按需修改)
+    - `BuiltinMsg8103`
+    - `BuiltinMsg8103Alias`
+    - `BuiltinMsg8100Alias`
+    - `BuiltinMsg8300`
+    - `BuiltinMsg8300Alias`
+    - `BuiltinMsg8600V2011Alias`
+    - `BuiltinMsg8600V2013Alias`
+    - `BuiltinMsg8600V2019Alias`
+    - `BuiltinMsg8602V2011Alias`
+    - `BuiltinMsg8602V2013Alias`
+    - `BuiltinMsg8602V2019Alias`
+    - `BuiltinMsg8604V2011Alias`
+    - `BuiltinMsg8604V2013Alias`
+    - `BuiltinMsg8604V2019Alias`
+
+### 🐞 Bug Fixes
+
+- `@RequestField#length()` 支持返回 `0`
 - 内置的空的心跳消息 `BuiltinMsg0200` 改名为 `BuiltinMsg0002`(之前命名错误)
 
 ## 2.1.0

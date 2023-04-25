@@ -43,6 +43,10 @@ public class DefaultJt808FieldDeserializerRegistry implements Jt808FieldDeserial
 
         registry.registerConverter(new StringFieldDeserializer());
 
+        registry.registerConverter(new ByteArrayContainerFieldDeserializer());
+
+        registry.registerConverter(new ByteBufContainerFieldDeserializer());
+
     }
 
     @Override

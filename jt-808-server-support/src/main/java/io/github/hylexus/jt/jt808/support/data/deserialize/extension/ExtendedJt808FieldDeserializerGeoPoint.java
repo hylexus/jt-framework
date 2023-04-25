@@ -34,7 +34,7 @@ public class ExtendedJt808FieldDeserializerGeoPoint extends AbstractExtendedJt80
         } else if (Double.class.isAssignableFrom(targetClass) || double.class.isAssignableFrom(targetClass)) {
             return dword * 1.0 / 1_000_000;
         } else if (BigDecimal.class.isAssignableFrom(targetClass)) {
-            return new BigDecimal(String.valueOf(dword)).divide(new BigDecimal("1000000"), RoundingMode.UP);
+            return new BigDecimal(String.valueOf(dword)).setScale(6, RoundingMode.UP).divide(new BigDecimal("1000000"), RoundingMode.UP);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to " + targetClass);
     }

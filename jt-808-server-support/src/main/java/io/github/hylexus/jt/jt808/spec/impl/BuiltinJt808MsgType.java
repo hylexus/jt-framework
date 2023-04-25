@@ -44,6 +44,7 @@ public enum BuiltinJt808MsgType implements MsgType {
     SERVER_DELETE_POLYGON_AREA(0x8605, "删除多边形区域"),
 
     SERVER_TEXT_MESSAGE_DISTRIBUTION(0x8300, "文本信息下发"),
+    SERVER_SET_TERMINAL_PARAM(0x8103, "设置终端参数"),
     ;
 
     private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);

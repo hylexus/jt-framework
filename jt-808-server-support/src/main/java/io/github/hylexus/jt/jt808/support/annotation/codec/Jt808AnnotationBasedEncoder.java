@@ -20,6 +20,7 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
@@ -34,6 +35,11 @@ import java.util.Map;
 import static io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata.forJt808ResponseMsgDataType;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * @author pruidong
+ * @author hylexus
+ */
+@Slf4j
 public class Jt808AnnotationBasedEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
@@ -131,7 +137,7 @@ public class Jt808AnnotationBasedEncoder {
         final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = fieldAnnotation.customerFieldSerializerClass();
         if (customerFieldSerializerClass != Jt808FieldSerializer.PlaceholderFiledSerializer.class) {
             final Jt808FieldSerializer<Object> fieldSerializer = this.getFieldSerializer(customerFieldSerializerClass);
-            fieldSerializer.serialize(fieldValue, jtDataType, byteBuf, new Jt808FieldSerializer.DefaultInternalEncoderContext(fieldMetadata));
+            this.serialize(fieldMetadata, byteBuf, jtDataType, fieldValue, fieldSerializer);
             return;
         }
         // 2. LIST
@@ -163,6 +169,19 @@ public class Jt808AnnotationBasedEncoder {
         // 4. 内置转换器
         final Jt808FieldSerializer<Object> fieldSerializer = fieldSerializerRegistry.getConverter(forJt808ResponseMsgDataType(fieldType, jtDataType))
                 .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
+
+        this.serialize(fieldMetadata, byteBuf, jtDataType, fieldValue, fieldSerializer);
+    }
+
+    private void serialize(
+            JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf,
+            MsgDataType jtDataType, Object fieldValue, Jt808FieldSerializer<Object> fieldSerializer) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Serialize field [{}#{}] by {}",
+                    fieldMetadata.getRawBeanMetadata().getOriginalClass().getSimpleName(),
+                    fieldMetadata.getField().getName(), fieldSerializer);
+        }
 
         fieldSerializer.serialize(fieldValue, jtDataType, byteBuf, new Jt808FieldSerializer.DefaultInternalEncoderContext(fieldMetadata));
     }

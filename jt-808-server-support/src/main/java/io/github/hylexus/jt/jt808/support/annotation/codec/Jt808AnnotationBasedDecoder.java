@@ -151,8 +151,8 @@ public class Jt808AnnotationBasedDecoder {
                 new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata));
 
         if (log.isDebugEnabled()) {
-            log.debug("Convert field {}({}) by converter : {}, result : {}",
-                    field.getName(), instance.getClass().getSimpleName(), deserializer, value);
+            log.debug("Deserialize field [{}#{}] by {}, result : {}",
+                    instance.getClass().getSimpleName(), field.getName(), deserializer, value);
         }
         ReflectionUtils.setFieldValue(instance, field, value);
     }

@@ -1,8 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.serializer.extension;
 
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
-import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.data.serializer.impl.StringFieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.netty.buffer.ByteBuf;
@@ -10,25 +8,13 @@ import io.netty.buffer.ByteBuf;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.DEFAULT_DATE_TIME_FORMAT;
 
-public class ExtendedJt808FieldSerializerBcdTime implements Jt808FieldSerializer<Object> {
+public class ExtendedJt808FieldSerializerBcdTime extends AbstractExtendedJt808FieldSerializer {
     private final StringFieldSerializer delegate = new StringFieldSerializer();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
-
-    @Override
-    public Set<ResponseMsgConvertibleMetadata> getSupportedTypes() {
-        return Collections.emptySet();
-    }
-
-    @Override
-    public void serialize(Object object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
-        // do nothing
-    }
 
     @Override
     public void serialize(Object object, MsgDataType msgDataType, ByteBuf byteBuf, Context context) throws Jt808FieldSerializerException {

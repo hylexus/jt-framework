@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,7 +52,9 @@ public class LocationUploadReqMsgV2019AliasTest {
     // private Long intLat;
 
     @RequestFieldAlias.GeoPoint(order = 2, startIndex = 8)
+    // 地理位置(经纬度)支持: long/Long, double/Double, BigDecimal
     private Double intLat;
+    // private BigDecimal intLat;
 
     // (4). 经度(尚未除以 10^6)
     // @RequestField(order = 3, startIndex = 12, dataType = DWORD)

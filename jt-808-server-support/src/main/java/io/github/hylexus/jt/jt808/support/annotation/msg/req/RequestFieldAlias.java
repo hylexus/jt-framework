@@ -253,7 +253,7 @@ public @interface RequestFieldAlias {
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @RequestField(dataType = MsgDataType.DWORD, customerFieldDeserializerClass = ExtendedJt808FieldDeserializerGeoPoint.class, order = -1)
+    @RequestField(dataType = MsgDataType.DWORD, order = -1)
     @interface GeoPoint {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
@@ -266,5 +266,7 @@ public @interface RequestFieldAlias {
 
         @AliasFor(annotation = RequestField.class, attribute = "startIndexMethod")
         java.lang.String startIndexMethod() default "";
+
+        Class<? extends Jt808FieldDeserializer<?>> customerFieldDeserializerClass() default ExtendedJt808FieldDeserializerGeoPoint.class;
     }
 }

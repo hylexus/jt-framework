@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.utils;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Padding;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCounted;
@@ -40,6 +41,11 @@ public abstract class JtProtocolUtils {
         return byteBuf;
     }
 
+    public static ByteBuf writeBytes(ByteBuf byteBuf, byte[] bytes) {
+        byteBuf.writeBytes(bytes);
+        return byteBuf;
+    }
+
     public static ByteBuf writeByteBuf(ByteBuf to, ByteBuf from) {
         return writeByteBuf(to, from, true);
     }
@@ -75,6 +81,10 @@ public abstract class JtProtocolUtils {
         return byteBuf.getInt(start);
     }
 
+    public static long getUnsignedDword(ByteBuf byteBuf, int start) {
+        return byteBuf.getUnsignedInt(start);
+    }
+
     public static int readDword(ByteBuf byteBuf) {
         return byteBuf.readInt();
     }
@@ -85,6 +95,10 @@ public abstract class JtProtocolUtils {
 
     public static ByteBuf writeDword(ByteBuf byteBuf, int value) {
         return byteBuf.writeInt(value);
+    }
+
+    public static ByteBuf writeDword(ByteBuf byteBuf, long value) {
+        return byteBuf.writeInt((int) value);
     }
 
     public static String getBcd(ByteBuf byteBuf, int startIndex, int length) {
@@ -146,21 +160,21 @@ public abstract class JtProtocolUtils {
     public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, Jt808ProtocolVersion version, int reversedBit15) {
         // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
         int props = (msgBodySize & 0x3FF)
-                    // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
-                    | ((encryptionType << 10) & 0x1C00)
-                    // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
-                    | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
-                    // [14_ ]  0100,0000,0000,0000(4000)(保留位)
-                    | ((version.getVersionBit() << 14) & 0x4000)
-                    // [15_ ]  1000,0000,0000,0000(8000)(保留位)
-                    | ((reversedBit15 << 15) & 0x8000);
+                // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
+                | ((encryptionType << 10) & 0x1C00)
+                // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
+                | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
+                // [14_ ]  0100,0000,0000,0000(4000)(保留位)
+                | ((version.getVersionBit() << 14) & 0x4000)
+                // [15_ ]  1000,0000,0000,0000(8000)(保留位)
+                | ((reversedBit15 << 15) & 0x8000);
         return props & 0xFFFF;
     }
 
     public static int setBitRange(int from, int length, int target, int offset) {
         return ((~(((1 << length) - 1) << offset)) & target)
-               |
-               (from << offset);
+                |
+                (from << offset);
     }
 
     public static String toBinaryString(int value, int width) {
@@ -194,4 +208,21 @@ public abstract class JtProtocolUtils {
             }
         }
     }
+
+    public static void paddingLeft(ByteBuf source, byte[] data, Padding padding) {
+        final int delta = padding.minLength() - data.length;
+        for (int i = 0; i < delta; i++) {
+            source.writeByte(padding.paddingElement());
+        }
+        source.writeBytes(data);
+    }
+
+    public static void paddingRight(ByteBuf source, byte[] data, Padding padding) {
+        source.writeBytes(data);
+        final int delta = padding.minLength() - data.length;
+        for (int i = 0; i < delta; i++) {
+            source.writeByte(padding.paddingElement());
+        }
+    }
+
 }

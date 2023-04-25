@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.BaseReqRespMsgTest;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Padding;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseFieldAlias;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -52,10 +53,14 @@ class BuiltinMsg0102Test extends BaseReqRespMsgTest {
             private String authCode;
             // bytes 15
             @ResponseFieldAlias.Bytes(order = 3)
-            private byte[] imei;
+            private String imei;
             // bytes 20
-            @ResponseFieldAlias.Bytes(order = 4)
-            private byte[] softwareVersion;
+
+            @ResponseFieldAlias.Bytes(order = 4, charset = "GBK", paddingRight = @Padding(minLength = 20))
+            private String softwareVersion;
+
+            //@ResponseField(order = 4, dataType = MsgDataType.BYTES)
+            // private byte[] softwareVersion;
         }
 
         final int authCodeLength = authCode.getBytes(JtProtocolConstant.JT_808_STRING_ENCODING).length;
@@ -63,8 +68,9 @@ class BuiltinMsg0102Test extends BaseReqRespMsgTest {
         final Msg0102V2019Placeholder msg = new Msg0102V2019Placeholder()
                 .setAuthCodeLength((byte) authCodeLength)
                 .setAuthCode(authCode)
-                .setImei("123456789011111".getBytes())
-                .setSoftwareVersion("v1.2.300000000000000".getBytes());
+                .setImei("123456789011111")
+                //  .setSoftwareVersion("v1.2.3".getBytes());
+                .setSoftwareVersion("v1.2.300000000000000");
 
         return encode(msg, builder -> builder.msgId(BuiltinJt808MsgType.CLIENT_AUTH)
                 .version(Jt808ProtocolVersion.VERSION_2019)
