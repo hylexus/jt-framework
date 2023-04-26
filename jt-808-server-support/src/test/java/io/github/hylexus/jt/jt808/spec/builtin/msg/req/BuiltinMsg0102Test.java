@@ -15,9 +15,30 @@ import org.junit.jupiter.api.Test;
 class BuiltinMsg0102Test extends BaseReqRespMsgTest {
 
     @Test
-    void test() {
+    void test2011() {
+        final String hex = "7E0102000C013912344321007B61646D696E2D3132333435364D7E";
+        final BuiltinMsg0102V2011 msg = decode(hex, BuiltinMsg0102V2011.class);
+        Assertions.assertEquals("admin-123456", msg.getAuthCode());
+    }
+
+    @Test
+    void test2011Alias() {
+        final String hex = "7E0102000C013912344321007B61646D696E2D3132333435364D7E";
+        final BuiltinMsg0102V2011Alias msg = decode(hex, BuiltinMsg0102V2011Alias.class);
+        Assertions.assertEquals("admin-123456", msg.getAuthCode());
+    }
+
+    @Test
+    void test2013() {
         final String hex = "7E0102000C013912344321007B61646D696E2D3132333435364D7E";
         final BuiltinMsg0102V2013 msg = decode(hex, BuiltinMsg0102V2013.class);
+        Assertions.assertEquals("admin-123456", msg.getAuthCode());
+    }
+
+    @Test
+    void test2013Alias() {
+        final String hex = "7E0102000C013912344321007B61646D696E2D3132333435364D7E";
+        final BuiltinMsg0102V2013Alias msg = decode(hex, BuiltinMsg0102V2013Alias.class);
         Assertions.assertEquals("admin-123456", msg.getAuthCode());
     }
 
@@ -27,6 +48,18 @@ class BuiltinMsg0102Test extends BaseReqRespMsgTest {
         final String hex = this.buildMsg2019(authCode);
         final BuiltinMsg0102V2019 msg = decode(hex, BuiltinMsg0102V2019.class);
 
+        Assertions.assertEquals(authCode, msg.getAuthCode());
+        Assertions.assertEquals("123456789011111", msg.getImei());
+        Assertions.assertEquals("v1.2.300000000000000", msg.getSoftwareVersion());
+    }
+
+    @Test
+    void test2019Alias() {
+        final String authCode = "这不是Bug,这是Feature!!!";
+        final String hex = this.buildMsg2019(authCode);
+        final BuiltinMsg0102V2019Alias msg = decode(hex, BuiltinMsg0102V2019Alias.class);
+
+        Assertions.assertEquals(msg.getAuthCodeLength(), msg.getAuthCode().getBytes(JtProtocolConstant.JT_808_STRING_ENCODING).length);
         Assertions.assertEquals(authCode, msg.getAuthCode());
         Assertions.assertEquals("123456789011111", msg.getImei());
         Assertions.assertEquals("v1.2.300000000000000", msg.getSoftwareVersion());

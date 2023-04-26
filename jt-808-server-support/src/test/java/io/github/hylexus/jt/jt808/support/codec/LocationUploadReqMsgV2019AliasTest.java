@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,11 +28,11 @@ public class LocationUploadReqMsgV2019AliasTest {
 
     // (1). 报警标志
     // @RequestField(order = 0, startIndex = 0, dataType = DWORD)
-    @RequestFieldAlias.Dword(order = 0, startIndex = 0)
+    @RequestFieldAlias.Dword(order = 0)
     private int alarmFlag;
     // (2). 状态
     // @RequestField(order = 1, startIndex = 4, dataType = DWORD)
-    @RequestFieldAlias.Dword(order = 1, startIndex = 4)
+    @RequestFieldAlias.Dword(order = 1)
     private int status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型
@@ -51,26 +50,26 @@ public class LocationUploadReqMsgV2019AliasTest {
     // @RequestFields.DWORD(order = 2, startIndex = 8)
     // private Long intLat;
 
-    @RequestFieldAlias.GeoPoint(order = 2, startIndex = 8)
+    @RequestFieldAlias.GeoPoint(order = 2)
     // 地理位置(经纬度)支持: long/Long, double/Double, BigDecimal
     private Double intLat;
     // private BigDecimal intLat;
 
     // (4). 经度(尚未除以 10^6)
     // @RequestField(order = 3, startIndex = 12, dataType = DWORD)
-    @RequestFieldAlias.Dword(order = 3, startIndex = 12)
+    @RequestFieldAlias.Dword(order = 3)
     private Long intLng;
     // (5). 高度
     // @RequestField(order = 4, startIndex = 16, dataType = WORD)
-    @RequestFieldAlias.Word(order = 4, startIndex = 16)
+    @RequestFieldAlias.Word(order = 4)
     private Integer height;
     // (6). 速度
     // @RequestField(order = 5, startIndex = 18, dataType = WORD)
-    @RequestFieldAlias.Word(order = 5, startIndex = 18)
+    @RequestFieldAlias.Word(order = 5)
     private int speed;
     // (7). 方向
     // @RequestField(order = 6, startIndex = 20, dataType = WORD)
-    @RequestFieldAlias.Word(order = 6, startIndex = 20)
+    @RequestFieldAlias.Word(order = 6)
     private Integer direction;
 
     // (8). 时间
@@ -90,20 +89,20 @@ public class LocationUploadReqMsgV2019AliasTest {
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, byteCountMethod = "getExtraInfoLength")
     // @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "getExtraInfoLength()")
     // @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 28")
-    @RequestFieldAlias.List(order = 8, startIndex = 28, lengthExpression = "#ctx.msgBodyLength() - 28")
+    @RequestFieldAlias.List(order = 8, lengthExpression = "#ctx.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data
     public static class ExtraItem {
         // @RequestField(order = 0, startIndex = 0, dataType = BYTE)
-        @RequestFieldAlias.Byte(order = 0, startIndex = 0)
+        @RequestFieldAlias.Byte(order = 0)
         private byte id;
         // @RequestField(order = 1, startIndex = 1, dataType = BYTE)
-        @RequestFieldAlias.Byte(order = 1, startIndex = 1)
+        @RequestFieldAlias.Byte(order = 1)
         private byte contentLength;
 
         // @RequestField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)
-        @RequestFieldAlias.Bytes(order = 3, startIndex = 2, lengthExpression = "#this.contentLength")
+        @RequestFieldAlias.Bytes(order = 3, lengthExpression = "#this.contentLength")
         private byte[] content;
 
         public int getContentLengthMethod() {

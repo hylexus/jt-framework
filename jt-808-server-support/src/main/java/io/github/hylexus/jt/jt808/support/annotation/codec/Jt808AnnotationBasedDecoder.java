@@ -66,7 +66,7 @@ public class Jt808AnnotationBasedDecoder {
         // 仅仅处理被  @RequestField 标记的属性
         final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getRequestFieldMetadataList();
         for (JavaBeanFieldMetadata fieldMetadata : fieldMetadataList) {
-            //if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
+            // if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
             this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
             //}
         }
@@ -86,8 +86,9 @@ public class Jt808AnnotationBasedDecoder {
         final MsgDataType jtDataType = annotation.dataType();
         final Class<?> javaDataType = fieldMetadata.getFieldType();
 
+        // v2.1.1 开始可以不再返回 `startIndex` 这个偏移量(2.x 中是按照 ByteBuf 顺序读取的,用不到1.x中遗留的 `startIndex` 逻辑)
         final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldMetadata);
-        Assertions.assertThat(startIndex >= 0, "field offset < 0 : [ " + fieldMetadata.getField() + " ]");
+        // Assertions.assertThat(startIndex >= 0, "field offset < 0 : [ " + fieldMetadata.getField() + " ]");
 
         final int length = getBasicFieldLength(evaluationContext, instance, annotation, jtDataType, fieldMetadata);
         Assertions.assertThat(length >= 0, "field length < 0 : [ " + fieldMetadata.getField() + " ]");

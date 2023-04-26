@@ -15,6 +15,7 @@ public @interface RequestField {
 
     /**
      * @return 赋值顺序，值越小优先级越高(不要求连续，只比较大小)
+     * @see <a href="https://stackoverflow.com/questions/5001172/java-reflection-getting-fields-and-methods-in-declaration-order">java-reflection-getting-fields-and-methods-in-declaration-order</a>
      */
     int order();
 

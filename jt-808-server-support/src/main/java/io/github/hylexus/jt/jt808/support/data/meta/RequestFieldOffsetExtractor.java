@@ -30,13 +30,14 @@ public interface RequestFieldOffsetExtractor {
         if (StringUtils.isNotEmpty(annotation.startIndexExpression())) {
             return START_INDEX_EXPRESSION_EXTRACTOR;
         }
-        if (StringUtils.isEmpty(annotation.startIndexMethod())) {
-            throw new Jt808AnnotationArgumentResolveException("Can not determine startIndex for field[" + fieldMetadata.getField().getName() + "]");
+        if (!StringUtils.isEmpty(annotation.startIndexMethod())) {
+            return START_INDEX_METHOD_SUPPLIER;
         }
 
-        return START_INDEX_METHOD_SUPPLIER;
+        return PLACEHOLDER;
     }
 
+    RequestFieldOffsetExtractor PLACEHOLDER = (evaluationContext, containerInstance, annotation, fieldMetadata) -> -2;
     RequestFieldOffsetExtractor START_INDEX_EXTRACTOR = (evaluationContext, containerInstance, annotation, fieldMetadata) -> annotation.startIndex();
 
     RequestFieldOffsetExtractor START_INDEX_EXPRESSION_EXTRACTOR = new RequestFieldOffsetExtractor() {

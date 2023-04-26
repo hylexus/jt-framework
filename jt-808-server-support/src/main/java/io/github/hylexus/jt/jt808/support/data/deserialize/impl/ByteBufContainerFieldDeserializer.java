@@ -35,7 +35,7 @@ public class ByteBufContainerFieldDeserializer implements Jt808FieldDeserializer
     @Override
     public ByteBufContainer deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length, Context context) {
         // TODO release issue ...
-        final ByteBuf content = byteBuf.slice(start, length);
+        final ByteBuf content = byteBuf.slice(byteBuf.readerIndex(), length);
         return new DefaultByteBufContainer(content);
     }
 }

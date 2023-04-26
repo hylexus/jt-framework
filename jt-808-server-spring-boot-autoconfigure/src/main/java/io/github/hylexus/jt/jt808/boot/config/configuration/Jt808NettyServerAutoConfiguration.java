@@ -4,8 +4,10 @@ import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestFilter;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.DefaultJt808RequestMsgQueueListener;
+import io.github.hylexus.jt.jt808.spec.impl.request.queue.FilteringJt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
@@ -28,9 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP;
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT;
@@ -69,7 +74,7 @@ public class Jt808NettyServerAutoConfiguration {
 
     //@Bean
     //@ConditionalOnMissingBean
-    //public Jt808RequestMsgQueue requestMsgQueue() {
+    // public Jt808RequestMsgQueue requestMsgQueue() {
     //    final MsgProcessorThreadPoolProps poolProps = serverProps.getMsgProcessor().getThreadPool();
     //    final ThreadFactory threadFactory = new ThreadFactoryBuilder()
     //            .setNameFormat(poolProps.getThreadNameFormat())
@@ -163,6 +168,19 @@ public class Jt808NettyServerAutoConfiguration {
         server.setBossThreadCount(nettyProps.getBossThreadCount());
         server.setWorkThreadCount(nettyProps.getWorkerThreadCount());
         return server;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "jt808.plugins.request-filter", name = "enabled", havingValue = "true", matchIfMissing = false)
+    public Jt808RequestMsgQueueListener filteringMsgQueueListener(
+            Jt808DispatcherHandler dispatcherHandler,
+            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
+            Jt808RequestSubPackageEventListener requestSubPackageEventListener,
+            ObjectProvider<Jt808RequestFilter> filters) {
+
+        final List<Jt808RequestFilter> allFilters = filters.orderedStream().collect(Collectors.toList());
+        return new FilteringJt808RequestMsgQueueListener(dispatcherHandler, sessionManager, subPackageStorage, requestSubPackageEventListener, allFilters);
     }
 
     @Bean

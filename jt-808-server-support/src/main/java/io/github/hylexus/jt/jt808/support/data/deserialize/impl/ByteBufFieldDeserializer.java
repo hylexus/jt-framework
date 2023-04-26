@@ -25,7 +25,7 @@ public class ByteBufFieldDeserializer implements Jt808FieldDeserializer<ByteBuf>
     @Override
     public ByteBuf deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
         if (msgDataType == MsgDataType.BYTES) {
-            return byteBuf.slice(start, length);
+            return byteBuf.slice(byteBuf.readerIndex(), length);
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to ByteBuf");
     }

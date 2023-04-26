@@ -6,6 +6,9 @@ jt808:
       enabled: true
     request-handlers:
       enabled: true
+  plugins:
+    request-filter:
+      enabled: true
   request-sub-package-storage:
     type: caffeine
     caffeine:
