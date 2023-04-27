@@ -12,6 +12,7 @@
     - `java.util.Date` 和 `java.time.LocalDateTime` 可以转为 `BCD`
 - `Jt808FieldDeserializer` 扩展 `Context` 参数，方便自定义注解
 - `Jt808FieldSerializer` 扩展 `Context` 参数，方便自定义注解
+- 新增 `Jt808RequestFilter`(需要配置 `jt808.features.request-filter.enabled=true`) 支持
 - 废弃 `BytesValueWrapper`
     - 使用 `ByteBufContainer` 或 `ByteArrayContainer` 代替
     - 内置 `ByteBufContainer` 或 `ByteArrayContainer` 的类型转换器
@@ -35,6 +36,11 @@
 
 - `@RequestField#length()` 支持返回 `0`
 - 内置的空的心跳消息 `BuiltinMsg0200` 改名为 `BuiltinMsg0002`(之前命名错误)
+
+### 🔨 Others
+
+- `jt808.msg-processor.executor-group.thread-count` 默认值改为 `128`
+- 新增配置项 `jt808.features.program-param-printer.enabled`
 
 ## 2.1.0
 

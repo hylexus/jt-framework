@@ -6,8 +6,10 @@ jt808:
       enabled: true
     request-handlers:
       enabled: true
-  plugins:
+  features:
     request-filter:
+      enabled: true
+    program-param-printer:
       enabled: true
   request-sub-package-storage:
     type: caffeine

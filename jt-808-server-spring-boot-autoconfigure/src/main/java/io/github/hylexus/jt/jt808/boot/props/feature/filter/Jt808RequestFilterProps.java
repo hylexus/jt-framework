@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.boot.props.plugin.filter;
+package io.github.hylexus.jt.jt808.boot.props.feature.filter;
 
 import lombok.Getter;
 import lombok.Setter;

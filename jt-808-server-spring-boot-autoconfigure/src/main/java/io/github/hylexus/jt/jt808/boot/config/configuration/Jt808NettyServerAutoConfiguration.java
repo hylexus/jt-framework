@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
@@ -29,6 +31,7 @@ import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -172,7 +175,7 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "jt808.plugins.request-filter", name = "enabled", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "jt808.features.request-filter", name = "enabled", havingValue = "true", matchIfMissing = false)
     public Jt808RequestMsgQueueListener filteringMsgQueueListener(
             Jt808DispatcherHandler dispatcherHandler,
             Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
@@ -190,5 +193,15 @@ public class Jt808NettyServerAutoConfiguration {
             Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
             Jt808RequestSubPackageEventListener requestSubPackageEventListener) {
         return new DefaultJt808RequestMsgQueueListener(dispatcherHandler, sessionManager, subPackageStorage, requestSubPackageEventListener);
+    }
+
+
+    @Bean
+    @ConditionalOnProperty(prefix = "jt808.features.program-param-printer", name = "enabled", havingValue = "true", matchIfMissing = true)
+    public CommandLineRunner jt808ServerParamPrinter(Jt808ServerProps props) {
+        return args -> {
+            final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+            log.info("Jt808 server config ::: {}", objectMapper.writeValueAsString(props));
+        };
     }
 }
