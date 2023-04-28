@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.data.deserialize.impl;
 
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
@@ -32,10 +33,15 @@ public class ByteBufContainerFieldDeserializer implements Jt808FieldDeserializer
         throw new NotImplementedException();
     }
 
+    /**
+     * 请求消息中的 {@link ByteBufContainer} 实例会随着 {@link Jt808Request#release()} 一起释放。
+     *
+     * @see Jt808Request#release()
+     */
     @Override
     public ByteBufContainer deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length, Context context) {
-        // TODO release issue ...
-        final ByteBuf content = byteBuf.slice(byteBuf.readerIndex(), length);
+        // 这里没有 retain: 随着 Request.release 一起释放掉
+        final ByteBuf content = byteBuf.readSlice(length);
         return new DefaultByteBufContainer(content);
     }
 }

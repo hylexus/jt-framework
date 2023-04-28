@@ -35,7 +35,9 @@ public class ByteArrayContainerFieldDeserializer implements Jt808FieldDeserializ
             case BCD:
             case WORD:
             case DWORD: {
-                return () -> JtProtocolUtils.readBytes(byteBuf, length);
+                // 这里必须先读取
+                final byte[] bytes = JtProtocolUtils.readBytes(byteBuf, length);
+                return () -> bytes;
             }
             default: {
                 throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Integer");

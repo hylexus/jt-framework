@@ -68,4 +68,5 @@ public @interface RequestField {
 
     Class<? extends Jt808FieldDeserializer<?>> customerFieldDeserializerClass() default Jt808FieldDeserializer.PlaceholderFieldDeserializer.class;
 
+    String desc() default "";
 }

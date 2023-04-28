@@ -30,12 +30,19 @@ public class BaseReqRespMsgTest {
 
 
     protected <T> T decode(String hex, Class<T> cls) {
+        return this.decodeWithConsumer(hex, cls, msg -> {
+        });
+    }
+
+    protected <T> T decodeWithConsumer(String hex, Class<T> cls, Consumer<T> msgConsumer) {
         ByteBuf byteBuf = null;
         Jt808Request request = null;
         try {
             byteBuf = ByteBufAllocator.DEFAULT.buffer().writeBytes(HexStringUtils.hexString2Bytes(hex));
             request = jt808MsgDecoder.decode(byteBuf.slice(1, byteBuf.readableBytes() - 1));
-            return this.annotationBasedDecoder.decode(request, cls);
+            final T msg = this.annotationBasedDecoder.decode(request, cls);
+            msgConsumer.accept(msg);
+            return msg;
         } finally {
             if (byteBuf != null) {
                 byteBuf.release();

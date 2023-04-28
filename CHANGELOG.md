@@ -13,6 +13,7 @@
 - `Jt808FieldDeserializer` 扩展 `Context` 参数，方便自定义注解
 - `Jt808FieldSerializer` 扩展 `Context` 参数，方便自定义注解
 - 新增 `Jt808RequestFilter`(需要配置 `jt808.features.request-filter.enabled=true`) 支持
+- 新增 `BitOperator`, 支持将 `WORD`, `DWORD`, `BYTE` 反序列化为 `BitOperator`
 - 废弃 `BytesValueWrapper`
     - 使用 `ByteBufContainer` 或 `ByteArrayContainer` 代替
     - 内置 `ByteBufContainer` 或 `ByteArrayContainer` 的类型转换器

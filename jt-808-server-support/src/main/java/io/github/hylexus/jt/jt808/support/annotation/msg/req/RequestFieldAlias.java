@@ -4,7 +4,6 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerBcdTime;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerGeoPoint;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerString;
-import io.github.hylexus.jt.jt808.support.data.deserialize.impl.ByteFieldDeserializer;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -24,6 +23,9 @@ public @interface RequestFieldAlias {
     @interface Word {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -33,6 +35,9 @@ public @interface RequestFieldAlias {
     @interface Dword {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -52,6 +57,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
 
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
+
     }
 
     @Target({ElementType.FIELD})
@@ -70,6 +78,9 @@ public @interface RequestFieldAlias {
 
         @AliasFor(annotation = RequestField.class, attribute = "startIndexMethod")
         java.lang.String startIndexMethod() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -88,16 +99,21 @@ public @interface RequestFieldAlias {
 
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @RequestField(dataType = MsgDataType.BYTE, order = -1, length = 1, customerFieldDeserializerClass = ByteFieldDeserializer.class)
+    @RequestField(dataType = MsgDataType.BYTE, order = -1)
     @interface Byte {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -117,6 +133,8 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
 
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -138,6 +156,8 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
 
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -156,6 +176,9 @@ public @interface RequestFieldAlias {
 
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 
     @Target({ElementType.FIELD})
@@ -165,5 +188,8 @@ public @interface RequestFieldAlias {
     @interface GeoPoint {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
     }
 }

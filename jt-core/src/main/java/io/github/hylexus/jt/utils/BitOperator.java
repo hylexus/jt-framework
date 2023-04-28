@@ -7,6 +7,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+/**
+ * 位操作工具类，最多支持8字节。
+ */
 public interface BitOperator {
 
     /**
@@ -55,8 +58,12 @@ public interface BitOperator {
     }
 
     default BitOperator set(int offset) {
-        Assertions.assertThat(offset >= 0 && offset < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
+        Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
         return map(it -> Numbers.setBitAt(it, offset));
+    }
+
+    default int get(int offset) {
+        return Numbers.getBitAt(this.value(), offset);
     }
 
     default BitOperator set(int offset, Predicate<Long> predicate) {
@@ -102,6 +109,14 @@ public interface BitOperator {
 
     default long longValue() {
         return this.value();
+    }
+
+    default long dwordValue() {
+        return this.value();
+    }
+
+    default int wordValue() {
+        return this.intValue();
     }
 
     default BitOperator intValue(int start, int end, Consumer<Integer> consumer) {
