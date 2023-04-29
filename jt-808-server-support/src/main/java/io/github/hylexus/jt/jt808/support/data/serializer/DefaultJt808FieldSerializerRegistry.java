@@ -43,6 +43,8 @@ public class DefaultJt808FieldSerializerRegistry implements Jt808FieldSerializer
         registry.registerConverter(new ByteBufContainerFieldSerializer());
 
         registry.registerConverter(new ByteArrayContainerFieldSerializer());
+
+        registry.registerConverter(new BitOperatorFieldSerializer());
     }
 
     @Override

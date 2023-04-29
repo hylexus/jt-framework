@@ -45,6 +45,7 @@ export const zhSidebar = sidebar({
                 icon: 'semantic',
                 collapsible: true,
                 children: [
+                    '/v2/jt-808/guide/annotation-based-dev/data-type-mapping.md',
                     '/v2/jt-808/guide/annotation-based-dev/req-msg-mapping.md',
                     '/v2/jt-808/guide/annotation-based-dev/resp-msg-mapping.md',
                     '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',

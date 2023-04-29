@@ -62,10 +62,6 @@ public interface BitOperator {
         return map(it -> Numbers.setBitAt(it, offset));
     }
 
-    default int get(int offset) {
-        return Numbers.getBitAt(this.value(), offset);
-    }
-
     default BitOperator set(int offset, Predicate<Long> predicate) {
         if (predicate.test(this.value())) {
             return this.set(offset);
@@ -88,6 +84,10 @@ public interface BitOperator {
     default BitOperator reset(int offset) {
         Assertions.assertThat(offset >= 0 && offset < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
         return map(it -> Numbers.resetBitAt(it, offset));
+    }
+
+    default int get(int offset) {
+        return Numbers.getBitAt(this.value(), offset);
     }
 
     default BitOperator longValue(int start, int end, Consumer<Long> consumer) {

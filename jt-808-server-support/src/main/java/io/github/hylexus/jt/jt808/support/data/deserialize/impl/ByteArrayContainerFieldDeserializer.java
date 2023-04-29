@@ -5,7 +5,6 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer;
-import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
@@ -28,20 +27,8 @@ public class ByteArrayContainerFieldDeserializer implements Jt808FieldDeserializ
 
     @Override
     public ByteArrayContainer deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length) {
-        switch (msgDataType) {
-            case BYTE:
-            case BYTES:
-            case STRING:
-            case BCD:
-            case WORD:
-            case DWORD: {
-                // 这里必须先读取
-                final byte[] bytes = JtProtocolUtils.readBytes(byteBuf, length);
-                return () -> bytes;
-            }
-            default: {
-                throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to Integer");
-            }
-        }
+        // 这里必须先读取
+        final byte[] bytes = JtProtocolUtils.readBytes(byteBuf, length);
+        return () -> bytes;
     }
 }
