@@ -80,14 +80,14 @@ public interface BitOperator {
         return this;
     }
 
-    default BitOperator resetRange(int offset, int length) {
-        Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
-        return map(it -> it & (~(~0L >>> (Long.SIZE - length) << offset)));
-    }
-
     default BitOperator reset(int offset) {
         Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
         return map(it -> Numbers.resetBitAt(it, offset));
+    }
+
+    default BitOperator resetRange(int offset, int length) {
+        Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
+        return map(it -> it & (~(~0L >>> (Long.SIZE - length) << offset)));
     }
 
     default int get(int offset) {
