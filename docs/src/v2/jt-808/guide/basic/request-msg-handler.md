@@ -21,6 +21,18 @@ icon: wrap
 - `SimpleJt808RequestHandlerHandlerMapping` 能将消息路由到 `SimpleJt808RequestHandler` 类型的 **类级别** 处理器。
 - `Jt808RequestHandlerMappingHandlerMapping` 能将消息路由到 `@Jt808RequestHandlerMapping` 注解修饰的 **方法级别** 处理器。
 
+## @Jt808RequestHandlerMapping
+
+### 介绍
+
+被 `@Jt808RequestHandlerMapping` 标记的这种处理器也是从 `Spring` 借鉴(抄袭)的。和 `Spring` 的 `@Controller`、`@RestController` 用法类似。
+
+作用就是标记一下当前类是一个消息处理器类。被该注解标记的类中应该存在若干个能处理请求的方法。
+
+### 示例
+
+@[code java{3-4}](@example-src/808/v2/basic/request-processing/Jt808RequestHandlerAnnotation.java)
+
 ## SimpleJt808RequestHandler
 
 ### 介绍
@@ -85,16 +97,4 @@ public interface SimpleJt808RequestHandler<T> extends MultipleVersionSupport {
 :::
 
 @[code java{2-3}](@example-src/808/v2/basic/request-processing/SimpleJt808RequestHandler.java)
-
-## @Jt808RequestHandlerMapping
-
-### 介绍
-
-被 `@Jt808RequestHandlerMapping` 标记的这种处理器也是从 `Spring` 借鉴(抄袭)的。和 `Spring` 的 `@Controller`、`@RestController` 用法类似。
-
-作用就是标记一下当前类是一个消息处理器类。被该注解标记的类中应该存在若干个能处理请求的方法。
-
-### 示例
-
-@[code java{3-4}](@example-src/808/v2/basic/request-processing/Jt808RequestHandlerAnnotation.java)
 

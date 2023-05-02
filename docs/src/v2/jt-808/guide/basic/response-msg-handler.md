@@ -27,19 +27,12 @@ icon: return
 
 ::: tip
 
-本小节主要介绍 `Jt808ResponseHandlerResultHandler` 类型的 **类级别** 处理器，毕竟当注解不方便处理请求时，这种类型的 **HandlerResultHandler** 是内置的 **HandlerResultHandler** 中唯一的选择。
+本小节主要介绍 `Jt808ResponseHandlerResultHandler` 类型的 **类级别** 处理器，毕竟当注解不方便处理请求时，这种类型的 **HandlerResultHandler** 是内置的 *
+*HandlerResultHandler** 中唯一的选择。
 
 [//]: # (基于注解的请求消息处理，请移步 todo)
 
 :::
-
-## Jt808Response
-
-### 说明
-
-### 示例
-
-@[code java{23}](@example-src/808/v2/basic/response-processing/Jt808ResponseDemo.java)
 
 ## @Jt808ResponseBody
 
@@ -87,3 +80,12 @@ public class CommonHandler {
 
 }
 ```
+
+## Jt808Response
+
+### 说明
+
+### 示例
+
+@[code java{23}](@example-src/808/v2/basic/response-processing/Jt808ResponseDemo.java)
+

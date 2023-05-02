@@ -38,6 +38,9 @@ export const zhSidebar = sidebar({
                 children: [
                     '/v2/jt-808/guide/utilities/jt808-data-type-ops.md',
                     '/v2/jt-808/guide/utilities/msg-builder.md',
+                    '/v2/jt-808/guide/utilities/bit-operator.md',
+                    '/v2/jt-808/guide/utilities/byte-buf-container.md',
+                    '/v2/jt-808/guide/utilities/byte-array-container.md',
                 ]
             },
             {
