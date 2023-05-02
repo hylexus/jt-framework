@@ -15,7 +15,6 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 /**
  * @author hylexus
  */
-@Slf4j
 @Data
 @Accessors(chain = true)
 @Jt808RequestBody

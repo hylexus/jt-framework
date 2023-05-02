@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class JavaBeanFieldMetadata {
     private int order = 0;
     private RequestFieldOffsetExtractor requestFieldOffsetExtractor;
     private RequestFieldLengthExtractor requestFieldLengthExtractor;
+    private Charset fieldCharset;
 
     private final Map<Class<Annotation>, Annotation> annotationCache;
 

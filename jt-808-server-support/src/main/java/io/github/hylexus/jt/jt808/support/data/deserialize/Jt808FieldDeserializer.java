@@ -15,6 +15,11 @@ public interface Jt808FieldDeserializer<T> extends ReplaceableComponent {
 
     Set<RequestMsgConvertibleMetadata> getConvertibleTypes();
 
+    /**
+     * 该方法并没有废弃。
+     * <p>
+     * 但是在 {@code 2.1.1} 之后推荐使用重载过的 {@link #deserialize(ByteBuf, MsgDataType, int, int, Context)}，因为可以获取到 {@link Context}
+     */
     T deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length);
 
     /**

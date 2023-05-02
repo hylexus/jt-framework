@@ -3,13 +3,13 @@ package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerBcdTime;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerGeoPoint;
-import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerString;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
 
 /**
  * @author hylexus
+ * @since 2.1.1
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -69,15 +69,6 @@ public @interface RequestFieldAlias {
     @interface BcdDateTime {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
-
-        @AliasFor(annotation = RequestField.class, attribute = "startIndex")
-        int startIndex() default -1;
-
-        @AliasFor(annotation = RequestField.class, attribute = "startIndexExpression")
-        java.lang.String startIndexExpression() default "";
-
-        @AliasFor(annotation = RequestField.class, attribute = "startIndexMethod")
-        java.lang.String startIndexMethod() default "";
 
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
@@ -140,8 +131,10 @@ public @interface RequestFieldAlias {
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    @RequestField(dataType = MsgDataType.STRING, order = -1, customerFieldDeserializerClass = ExtendedJt808FieldDeserializerString.class)
+    @RequestField(dataType = MsgDataType.STRING, order = -1)
     @interface String {
+
+        @AliasFor(annotation = RequestField.class, attribute = "charset")
         java.lang.String charset() default "GBK";
 
         @AliasFor(annotation = RequestField.class, attribute = "order")

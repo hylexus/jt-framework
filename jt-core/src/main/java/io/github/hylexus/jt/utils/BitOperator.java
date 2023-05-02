@@ -69,10 +69,9 @@ public interface BitOperator {
         return this;
     }
 
-    //    todo setRange
-    //    default BitOperator setRange(int offset,int len){
-    //        Numbers.getBitRangeAsLong()
-    //    }
+    default BitOperator setRange(int offset, int length) {
+        return map(it -> it | (~0L >>> (Long.SIZE - length) << offset));
+    }
 
     default BitOperator reset(int offset, Predicate<Long> predicate) {
         if (predicate.test(this.value())) {
@@ -81,8 +80,13 @@ public interface BitOperator {
         return this;
     }
 
+    default BitOperator resetRange(int offset, int length) {
+        Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
+        return map(it -> it & (~(~0L >>> (Long.SIZE - length) << offset)));
+    }
+
     default BitOperator reset(int offset) {
-        Assertions.assertThat(offset >= 0 && offset < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
+        Assertions.assertThat(offset >= 0 && offset < Long.SIZE, "offset >= 0 && offset < Long.SIZE");
         return map(it -> Numbers.resetBitAt(it, offset));
     }
 
@@ -125,6 +129,7 @@ public interface BitOperator {
     }
 
     default int intValue(int start, int end) {
+        // TODO end,len??? ---> len
         Assertions.assertThat(start >= 0 && start < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
         Assertions.assertThat(end >= 0 && end < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
         Assertions.assertThat(start <= end, "start <= end");
@@ -172,12 +177,24 @@ public interface BitOperator {
         return this;
     }
 
-    default String binaryString(int leadingZeros) {
-        final String string = this.binaryString();
+    static String binaryString(int value, int leadingZeros) {
+        final String string = Integer.toBinaryString(value);
         if (string.length() < leadingZeros) {
             return "0".repeat(leadingZeros - string.length()) + string;
         }
         return string;
+    }
+
+    static String binaryString(long value, int leadingZeros) {
+        final String string = Long.toBinaryString(value);
+        if (string.length() < leadingZeros) {
+            return "0".repeat(leadingZeros - string.length()) + string;
+        }
+        return string;
+    }
+
+    default String binaryString(int leadingZeros) {
+        return binaryString(this.value(), leadingZeros);
     }
 
     default String binaryString() {

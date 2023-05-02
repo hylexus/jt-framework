@@ -30,6 +30,6 @@ public class ExtendedJt808FieldSerializerBcdTime extends AbstractExtendedJt808Fi
             throw new Jt808FieldSerializerException("Can not serializer field: " + context.fieldMetadata().getField());
         }
 
-        this.delegate.serialize(bcd, MsgDataType.BCD, byteBuf);
+        this.delegate.serialize(bcd, MsgDataType.BCD, byteBuf, context);
     }
 }

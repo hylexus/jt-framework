@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt808.support.annotation.msg.resp;
+package io.github.hylexus.jt.jt808.support.annotation.msg;
 
 public @interface Padding {
     /**

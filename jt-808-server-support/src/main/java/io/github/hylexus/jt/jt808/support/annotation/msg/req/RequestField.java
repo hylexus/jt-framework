@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
+import io.github.hylexus.jt.jt808.support.data.deserialize.impl.StringFieldDeserializer;
 
 import java.lang.annotation.*;
 
@@ -65,6 +66,18 @@ public @interface RequestField {
     String lengthMethod() default "";
 
     MsgDataType dataType();
+
+    /**
+     * 仅仅在下面两个场景下生效:
+     * <ol>
+     * <li>从 {@link MsgDataType#STRING} 到 {@link java.lang.String}</li>
+     * <li>从 {@link MsgDataType#BYTES} 到 {@link java.lang.String}</li>
+     * </ol>
+     *
+     * @see StringFieldDeserializer
+     * @since 2.1.1
+     */
+    String charset() default "GBK";
 
     Class<? extends Jt808FieldDeserializer<?>> customerFieldDeserializerClass() default Jt808FieldDeserializer.PlaceholderFieldDeserializer.class;
 

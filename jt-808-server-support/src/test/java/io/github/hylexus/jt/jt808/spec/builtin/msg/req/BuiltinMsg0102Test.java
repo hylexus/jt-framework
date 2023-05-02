@@ -5,7 +5,7 @@ import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.BaseReqRespMsgTest;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Padding;
+import io.github.hylexus.jt.jt808.support.annotation.msg.Padding;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseFieldAlias;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -103,7 +103,8 @@ class BuiltinMsg0102Test extends BaseReqRespMsgTest {
                 .setAuthCode(authCode)
                 .setImei("123456789011111")
                 //  .setSoftwareVersion("v1.2.3".getBytes());
-                .setSoftwareVersion("v1.2.300000000000000");
+                // .setSoftwareVersion("v1.2.300000000000000");
+                .setSoftwareVersion("v1.2.30");
 
         return encode(msg, builder -> builder.msgId(BuiltinJt808MsgType.CLIENT_AUTH)
                 .version(Jt808ProtocolVersion.VERSION_2019)

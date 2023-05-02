@@ -13,6 +13,11 @@ public interface Jt808FieldSerializer<T> extends ReplaceableComponent {
 
     Set<ResponseMsgConvertibleMetadata> getSupportedTypes();
 
+    /**
+     * 该方法并没有废弃。
+     * <p>
+     * 但是在 {@code 2.1.1} 之后推荐使用重载过的 {@link #serialize(Object, MsgDataType, ByteBuf, Context)}，因为可以获取到 {@link Context}
+     */
     void serialize(T object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException;
 
     /**

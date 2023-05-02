@@ -79,7 +79,7 @@ public class LocationUploadReqMsgV2019AliasTest {
     // private String time;
 
     // 2. 解析为 LocalDateTime
-    @RequestFieldAlias.BcdDateTime(order = 7, startIndex = 22)
+    @RequestFieldAlias.BcdDateTime(order = 7)
     private LocalDateTime time;
 
     // 3. 解析为 java.util.Date

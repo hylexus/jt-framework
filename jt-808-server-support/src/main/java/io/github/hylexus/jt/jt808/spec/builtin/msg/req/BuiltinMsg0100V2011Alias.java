@@ -41,4 +41,6 @@ public class BuiltinMsg0100V2011Alias {
     // 7. [25,n)   String    车辆标识
     @RequestFieldAlias.String(order = 7, lengthExpression = "#ctx.msgBodyLength() - 25")
     private String carIdentifier;
+    // private ByteArrayContainer carIdentifier;
+    // private ByteBufContainer carIdentifier;
 }

@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -75,10 +76,13 @@ public class JavaBeanMetadataUtils {
                 javaBeanFieldMetadata.setOrder(annotation.order());
                 javaBeanFieldMetadata.setRequestFieldOffsetExtractor(RequestFieldOffsetExtractor.createFor(javaBeanFieldMetadata, annotation));
                 javaBeanFieldMetadata.setRequestFieldLengthExtractor(RequestFieldLengthExtractor.createFor(fieldType, annotation.dataType(), annotation));
+                javaBeanFieldMetadata.setFieldCharset(Charset.forName(annotation.charset()));
                 javaBeanMetadata.getRequestFieldMetadataList().add(javaBeanFieldMetadata);
             } else if (javaBeanFieldMetadata.isAnnotationPresent(ResponseField.class)) {
-                javaBeanFieldMetadata.setOrder(javaBeanFieldMetadata.getAnnotation(ResponseField.class).order());
+                final ResponseField annotation = javaBeanFieldMetadata.getAnnotation(ResponseField.class);
+                javaBeanFieldMetadata.setOrder(annotation.order());
                 javaBeanMetadata.getResponseFieldMetadataList().add(javaBeanFieldMetadata);
+                javaBeanFieldMetadata.setFieldCharset(Charset.forName(annotation.charset()));
             }
 
             javaBeanMetadata.getFieldMetadataList().add(javaBeanFieldMetadata);

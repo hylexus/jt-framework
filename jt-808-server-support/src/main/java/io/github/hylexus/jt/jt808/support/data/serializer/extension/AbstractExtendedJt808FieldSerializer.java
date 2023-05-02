@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.netty.buffer.ByteBuf;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Collections;
 import java.util.Set;
@@ -17,6 +18,6 @@ public class AbstractExtendedJt808FieldSerializer implements Jt808FieldSerialize
 
     @Override
     public void serialize(Object object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
-        // do nothing
+        throw new NotImplementedException();
     }
 }

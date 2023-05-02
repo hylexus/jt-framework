@@ -38,6 +38,8 @@ public class ExtendedJt808FieldDeserializerBcdTime extends AbstractExtendedJt808
             } catch (ParseException e) {
                 throw new Jt808FieldSerializerException(e);
             }
+        } else if (String.class.isAssignableFrom(targetClass)) {
+            return bcd;
         }
         throw new Jt808AnnotationArgumentResolveException("Cannot convert DataType from " + msgDataType + " to " + targetClass);
     }

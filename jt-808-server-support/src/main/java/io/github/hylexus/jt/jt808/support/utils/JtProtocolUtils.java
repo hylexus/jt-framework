@@ -2,12 +2,14 @@ package io.github.hylexus.jt.jt808.support.utils;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
-import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Padding;
+import io.github.hylexus.jt.jt808.support.annotation.msg.Padding;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCounted;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
@@ -135,6 +137,15 @@ public abstract class JtProtocolUtils {
         return new String(bytes, charset);
     }
 
+    public static ByteBuf writeString(ByteBuf byteBuf, String value, String charset) {
+        try {
+            byteBuf.writeBytes(value.getBytes(charset));
+            return byteBuf;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static ByteBuf writeString(ByteBuf byteBuf, String value, Charset charset) {
         byteBuf.writeBytes(value.getBytes(charset));
         return byteBuf;
@@ -222,6 +233,16 @@ public abstract class JtProtocolUtils {
         final int delta = padding.minLength() - data.length;
         for (int i = 0; i < delta; i++) {
             source.writeByte(padding.paddingElement());
+        }
+    }
+
+    public static void writeBytesWithPadding(ByteBuf source, byte[] data, ResponseField annotation) {
+        if (data.length < annotation.paddingRight().minLength()) {
+            paddingRight(source, data, annotation.paddingRight());
+        } else if (data.length < annotation.paddingLeft().minLength()) {
+            paddingLeft(source, data, annotation.paddingLeft());
+        } else {
+            source.writeBytes(data);
         }
     }
 

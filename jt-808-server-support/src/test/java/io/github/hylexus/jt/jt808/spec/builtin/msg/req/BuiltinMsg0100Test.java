@@ -27,7 +27,9 @@ class BuiltinMsg0100Test extends BaseReqRespMsgTest {
 
     @Test
     void test2011Alias() {
-        final BuiltinMsg0100V2011Alias msg = decode(hex2011, BuiltinMsg0100V2011Alias.class);
+        final BuiltinMsg0100V2011Alias msg = decodeWithConsumer(hex2011, BuiltinMsg0100V2011Alias.class, msg1 -> {
+            // assertEquals("甘J-123451", msg1.getCarIdentifier().stringValue());
+        });
         assertEquals(11, msg.getProvinceId());
         assertEquals(2, msg.getCityId());
         assertEquals("id123", msg.getManufacturerId());

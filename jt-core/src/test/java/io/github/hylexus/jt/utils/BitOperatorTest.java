@@ -6,6 +6,20 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BitOperatorTest {
+
+    @Test
+    void test1() {
+        int x = -0b001000001011111100001;
+        int offset = 2;
+        int length = 2;
+        // 3,5
+        System.out.println(BitOperator.binaryString(x, 64));
+        System.out.println(BitOperator.binaryString(~(~0L >>> (64 - length) << offset), 64));
+        System.out.println(BitOperator.binaryString(x & (~(~0L >>> (64 - length) << offset)), 64));
+        System.out.println(BitOperator.mutable(x).resetRange(offset, length).binaryString(64));
+
+    }
+
     @Test
     void test() {
         assertEquals("10001010", BitOperator.immutable(0).set(1).set(7).set(3).binaryString());
