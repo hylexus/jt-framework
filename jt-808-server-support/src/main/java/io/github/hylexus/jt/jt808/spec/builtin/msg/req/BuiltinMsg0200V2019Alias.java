@@ -27,7 +27,7 @@ public class BuiltinMsg0200V2019Alias {
 
     // (2). byte[4,8) DWORD 状态
     @RequestFieldAlias.Dword(order = 2)
-    private int status;
+    private long status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)

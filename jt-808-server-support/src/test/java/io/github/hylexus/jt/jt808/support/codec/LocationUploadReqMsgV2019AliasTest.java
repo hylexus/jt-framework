@@ -29,11 +29,11 @@ public class LocationUploadReqMsgV2019AliasTest {
     // (1). 报警标志
     // @RequestField(order = 0, startIndex = 0, dataType = DWORD)
     @RequestFieldAlias.Dword(order = 0)
-    private int alarmFlag;
+    private long alarmFlag;
     // (2). 状态
     // @RequestField(order = 1, startIndex = 4, dataType = DWORD)
     @RequestFieldAlias.Dword(order = 1)
-    private int status;
+    private long status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)
@@ -80,6 +80,7 @@ public class LocationUploadReqMsgV2019AliasTest {
 
     // 2. 解析为 LocalDateTime
     @RequestFieldAlias.BcdDateTime(order = 7)
+    // @BcdDateTime(order = 7, pattern = "yyMMddHHmmss")
     private LocalDateTime time;
 
     // 3. 解析为 java.util.Date

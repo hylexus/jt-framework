@@ -50,6 +50,10 @@ public class JavaBeanFieldMetadata {
         return fieldType == Short.class || fieldType == short.class;
     }
 
+    public boolean isLongType() {
+        return fieldType == Long.class || fieldType == long.class;
+    }
+
     public void setFieldValue(Object instance, Object value) throws IllegalAccessException {
         ReflectionUtils.setFieldValue(instance, field, value);
     }

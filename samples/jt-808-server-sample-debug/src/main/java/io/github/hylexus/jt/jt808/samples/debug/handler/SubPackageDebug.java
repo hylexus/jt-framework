@@ -29,13 +29,13 @@ public class SubPackageDebug {
     @Data
     public static class TerminalRegisterReplySubPackageDebug {
         // 1. byte[0,2) WORD 对应的终端注册消息的流水号
-        @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.WORD)
+        @RequestField(order = 0, dataType = MsgDataType.WORD)
         private int flowId;
         // 2. byte[2,3) BYTE 0:成功;1:车辆已被注册;2:数据库中无该车辆; 3:终端已被注册;4:数据库中无该终端
-        @RequestField(order = 1, startIndex = 2, dataType = MsgDataType.BYTE)
+        @RequestField(order = 1, dataType = MsgDataType.BYTE)
         private byte result;
         // 3. byte[3,x) STRING 鉴权码(只有在成功后才有该字段)
-        @RequestField(order = 3, startIndex = 3, dataType = MsgDataType.STRING, lengthExpression = "#ctx.msgBodyLength() - 3")
+        @RequestField(order = 3, dataType = MsgDataType.STRING, lengthExpression = "#ctx.msgBodyLength() - 3")
         private String authCode;
     }
 

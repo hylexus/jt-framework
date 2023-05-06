@@ -4,8 +4,8 @@ import theme from "./theme"
 import {searchProPlugin} from "vuepress-plugin-search-pro"
 
 export default defineUserConfig({
-    // base: '/jt-framework/',
-    base: '/',
+    base: '/jt-framework/',
+    // base: '/',
     head: [
         [
             'link',
@@ -25,13 +25,7 @@ export default defineUserConfig({
                 href: `/img/icons/favicon-32x32.png`,
             },
         ],
-        // ['link', {rel: 'manifest', href: '/manifest.webmanifest'}],
         ['meta', {name: 'application-name', content: 'jt808'}],
-        ['meta', {name: 'apple-mobile-web-app-title', content: 'jt808'}],
-        ['meta', {name: 'apple-mobile-web-app-status-bar-style', content: 'black'},],
-        ['link', {rel: 'apple-touch-icon', href: `/img/icons/apple-touch-icon.png`},],
-        ['link', {rel: 'mask-icon', href: '/img/icons/safari-pinned-tab.svg', color: '#3eaf7c',},],
-        ['meta', {name: 'msapplication-TileColor', content: '#3eaf7c'}],
         ['meta', {name: 'theme-color', content: '#3eaf7c'}],
     ],
 
@@ -39,7 +33,7 @@ export default defineUserConfig({
         '/': {
             lang: 'zh-CN',
             title: 'jt-framework',
-            description: 'Vue 驱动的静态网站生成器',
+            description: 'JT/T 808',
         },
         // '/en/': {
         //     lang: 'en-US',

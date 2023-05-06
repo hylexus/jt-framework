@@ -1,5 +1,5 @@
 ---
-icon: wrap
+icon: at
 ---
 
 # 请求消息映射
@@ -57,17 +57,17 @@ public class CommonHandler {
 
 ### 属性
 
-| 属性                               | 说明                                     | 默认值  | 示例                                 |
-|----------------------------------|----------------------------------------|------|------------------------------------|
-| `order`                          | 字段解析顺序                                 | --   | `0`、`1`、`2`                        |
-| `startIndex`                     | 起始字节索引                                 | `-1` | `0`、`2`、`4`、`8`                    |
-| `startIndexExpression`           | 作用和 `startIndex` 相同,但是该属性是基于 SpEL 的    | `""` | `"#ctx.msgBodyLength() - 27 + 1"`  |
-| `startIndexMethod`               | 作用和 `startIndex` 相同,但是该属性返回的是一个**方法名** | ""   | `somMethodName`                    |
-| `length`                         | 该字段所占的字节数、长度                           | `-1` | `2`、`4`                            |
-| `lengthExpression`               | 作用和 `length` 相同,但是该属性是基于 `SpEL` 的      | ""   | `#this.someFieldValue + 1 - 2 * 3` |
-| `lengthMethod`                   | 作用和 `length` 相同, 但是该属性返回的是一个 **方法名**   | `""` | `"SomMethodName"`                  |
-| `dataType`                       | 数据类型                                   | --   | `DWORD` 、`BYTES`                   |
-| `customerFieldDeserializerClass` | 自定义的类型转换器                              | --   | `XxxDeserializer.class`            |
+| 属性                               | 说明                                                        | 默认值  | 示例                                 |
+|----------------------------------|-----------------------------------------------------------|------|------------------------------------|
+| `order`                          | 字段解析顺序(不要求连续，只比较大小)                                       | --   | `0`、`1`、`2`                        |
+| ~~startIndex~~                   | 起始字节索引(**2.1.1**开始不再需要指定)                                 | `-1` | `0`、`2`、`4`、`8`                    |
+| ~~startIndexExpression~~         | 作用和 `startIndex` 相同,但是该属性是基于 SpEL 的(**2.1.1**开始不再需要指定)    | `""` | `"#ctx.msgBodyLength() - 27 + 1"`  |
+| ~~startIndexMethod~~             | 作用和 `startIndex` 相同,但是该属性返回的是一个**方法名**(**2.1.1**开始不再需要指定) | ""   | `somMethodName`                    |
+| `length`                         | 该字段所占的字节数、长度                                              | `-1` | `2`、`4`                            |
+| `lengthExpression`               | 作用和 `length` 相同,但是该属性是基于 `SpEL` 的                         | ""   | `#this.someFieldValue + 1 - 2 * 3` |
+| `lengthMethod`                   | 作用和 `length` 相同, 但是该属性返回的是一个 **方法名**                      | `""` | `"SomMethodName"`                  |
+| `dataType`                       | 数据类型                                                      | --   | `DWORD` 、`BYTES`                   |
+| `customerFieldDeserializerClass` | 自定义的类型转换器                                                 | --   | `XxxDeserializer.class`            |
 
 ### SpEL
 
@@ -91,37 +91,43 @@ public class CommonHandler {
 
 ### 示例
 
+::: tip
+
+从 **2.1.1** 开始 `startIndex`, `startIndexExpression`, `startIndexMethod` 可以省略。
+
+:::
+
 ```java{5,9,13,17,21,25,30}
 @Jt808RequestBody
 public class BuiltinMsg0100V2019 {
     // 1. [0-2) WORD 省域ID
     // WORD 类型固定长度就是2字节 所以无需指定length
-    @RequestField(order = 1, startIndex = 0, dataType = WORD)
+    @RequestField(order = 1, dataType = WORD)
     private int provinceId;
 
     // 2. [2-4) WORD 省域ID
-    @RequestField(order = 2, startIndex = 2, dataType = WORD)
+    @RequestField(order = 2, dataType = WORD)
     private int cityId;
 
     // 3. [4-15) BYTE[11] 制造商ID
-    @RequestField(order = 3, startIndex = 4, dataType = STRING, length = 11)
+    @RequestField(order = 3, dataType = STRING, length = 11)
     private String manufacturerId;
 
     // 4. [15-45) BYTE[30] 终端型号
-    @RequestField(order = 4, startIndex = 15, dataType = STRING, length = 30)
+    @RequestField(order = 4, dataType = STRING, length = 30)
     private String terminalType;
 
     // 5. [45-75) BYTE[30] 终端ID
-    @RequestField(order = 5, startIndex = 45, dataType = STRING, length = 30)
+    @RequestField(order = 5, dataType = STRING, length = 30)
     private String terminalId;
 
     // 6. [75]   BYTE    车牌颜色
-    @RequestField(order = 6, startIndex = 75, dataType = BYTE)
+    @RequestField(order = 6, dataType = BYTE)
     private byte color;
 
     // 7. [76,n)   String    车辆标识
     // 使用 SpEL 计算消息长度(上下文中的消息体总长度减去前面消费掉的字节数)
-    @RequestField(order = 7, startIndex = 76, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 76")
+    @RequestField(order = 7, dataType = STRING, lengthExpression = "#ctx.msgBodyLength() - 76")
     private String carIdentifier;
 }
 ```
@@ -132,24 +138,32 @@ public class BuiltinMsg0100V2019 {
 
 该注解目前仅仅适用于 `int` 、 `short` 、 `byte` 类型的字段。
 
+**2.1.1** 开始支持 `long` 类型。
+
 :::
 
 ### 属性
 
-| `sourceFieldName` | 源字段名           |     |
-|-------------------|----------------|-----|
-| `bitIndex`        | 源字段中的第几个`bit`  | 0   |
-| `startBitIndex`   | 源字段中的起始`bit`索引 | 1   |
-| `endBitIndex`     | 源字段中的终止`bit`索引 | 2   |
+| `sourceFieldName` | 源字段名           |   |
+|-------------------|----------------|---|
+| `bitIndex`        | 源字段中的第几个`bit`  | 0 |
+| `startBitIndex`   | 源字段中的起始`bit`索引 | 1 |
+| `endBitIndex`     | 源字段中的终止`bit`索引 | 2 |
 
 ### 示例
+
+::: tip
+
+从 **2.1.1** 开始 `startIndex`, `startIndexExpression`, `startIndexMethod` 可以省略。
+
+:::
 
 ```java{9,13,18}
 @Jt808RequestBody
 public class BuiltinMsg0200V2013 {
 
     // (2). byte[4,8) DWORD 状态
-    @RequestField(order = 2, startIndex = 4, dataType = DWORD)
+    @RequestField(order = 2, dataType = DWORD)
     private int status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型

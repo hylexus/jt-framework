@@ -32,7 +32,8 @@ public class JavaBeanMetadataUtils {
     public static final Set<Class<?>> SLICED_TYPE = Set.of(
             Byte.class, byte.class,
             Short.class, short.class,
-            Integer.class, int.class
+            Integer.class, int.class,
+            Long.class, long.class
     );
     private static final ConcurrentMap<Class<?>, JavaBeanMetadata> CLASS_METADATA_CACHE = new ConcurrentHashMap<>();
 

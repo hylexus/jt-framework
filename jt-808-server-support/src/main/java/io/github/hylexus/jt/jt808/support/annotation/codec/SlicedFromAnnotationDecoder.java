@@ -48,13 +48,13 @@ public class SlicedFromAnnotationDecoder {
                 log.debug("source value is null, skip @SlicedFrom processing on {}", fieldMetadata.getField());
                 continue;
             }
-            int intValue = ((Number) sourceValue).intValue();
+            long intValue = ((Number) sourceValue).longValue();
 
             setFieldValue(instance, fieldMetadata, annotation, intValue);
         }
     }
 
-    private void setFieldValue(Object instance, JavaBeanFieldMetadata fieldMetadata, SlicedFrom annotation, int intValue) throws IllegalAccessException {
+    private void setFieldValue(Object instance, JavaBeanFieldMetadata fieldMetadata, SlicedFrom annotation, long intValue) throws IllegalAccessException {
         if (annotation.bitIndex() != DEFAULT_BIT_INDEX) {
             int sliceValue = Numbers.getBitAt(intValue, annotation.bitIndex());
             setValue(instance, fieldMetadata, sliceValue);
@@ -63,16 +63,22 @@ public class SlicedFromAnnotationDecoder {
                 log.error("SliceFrom.startBitIndex() or SliceFrom.endBitIndex() is null, skip @SliceFrom processing on {}", fieldMetadata.getField());
                 return;
             }
-            int sliceValue = Numbers.getBitRangeAsInt(intValue, annotation.startBitIndex(), annotation.endBitIndex());
+            long sliceValue = Numbers.getBitRangeAsLong(intValue, annotation.startBitIndex(), annotation.endBitIndex());
             setValue(instance, fieldMetadata, sliceValue);
         }
     }
 
-    private void setValue(Object instance, JavaBeanFieldMetadata fieldMetadata, int targetValue) throws IllegalAccessException {
+    private void setValue(Object instance, JavaBeanFieldMetadata fieldMetadata, long targetValue) throws IllegalAccessException {
         if (fieldMetadata.isIntType()) {
-            fieldMetadata.setFieldValue(instance, targetValue);
+            fieldMetadata.setFieldValue(instance, (int) targetValue);
         } else if (fieldMetadata.isBooleanType()) {
-            fieldMetadata.setFieldValue(instance, targetValue == 1);
+            fieldMetadata.setFieldValue(instance, targetValue == 1L);
+        } else if (fieldMetadata.isByteType()) {
+            fieldMetadata.setFieldValue(instance, (byte) targetValue);
+        } else if (fieldMetadata.isShortType()) {
+            fieldMetadata.setFieldValue(instance, (short) targetValue);
+        } else if (fieldMetadata.isLongType()) {
+            fieldMetadata.setFieldValue(instance, targetValue);
         }
     }
 }

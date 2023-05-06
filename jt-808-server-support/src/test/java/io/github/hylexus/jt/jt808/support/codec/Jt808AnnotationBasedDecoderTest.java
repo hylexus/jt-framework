@@ -51,6 +51,7 @@ public class Jt808AnnotationBasedDecoderTest {
                 + "4808010400000026030200003001153101002504000000001404000000011504000000FA160400000000170200001803000000E"
                 + "A10FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF02020000EF0400000000F31B017118000000000000000000"
                 + "00000000000000000000000000000056";
+        System.out.println(hexString);
         final Jt808Request request1 = buildJt808Request(hexString);
         final LocationUploadReqMsgV2019Test instance = decoder.decode(request1, LocationUploadReqMsgV2019Test.class);
         request1.release();

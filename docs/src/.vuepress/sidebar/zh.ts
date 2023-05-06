@@ -28,7 +28,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/basic/request-sub-package.md',
                     '/v2/jt-808/guide/basic/response-sub-package.md',
                     '/v2/jt-808/guide/basic/handler-interceptor.md',
-                    '/v2/jt-808/guide/basic/summary.md',
+                    // '/v2/jt-808/guide/basic/summary.md',
                 ],
             },
             {
@@ -49,8 +49,11 @@ export const zhSidebar = sidebar({
                 collapsible: true,
                 children: [
                     '/v2/jt-808/guide/annotation-based-dev/data-type-mapping.md',
+                    '/v2/jt-808/guide/annotation-based-dev/data-type-mapping-via-alias.md',
                     '/v2/jt-808/guide/annotation-based-dev/req-msg-mapping.md',
                     '/v2/jt-808/guide/annotation-based-dev/resp-msg-mapping.md',
+                    '/v2/jt-808/guide/annotation-based-dev/annotation-alias.md',
+                    '/v2/jt-808/guide/annotation-based-dev/custom-annotation.md',
                     '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-upload-msg-parse-demo.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-batch-upload-msg-parse-demo.md',
@@ -66,6 +69,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/customization/session-config.md',
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
+                    '/v2/jt-808/guide/customization/jt-808-request-filter.md',
                 ]
             },
             {
@@ -82,6 +86,16 @@ export const zhSidebar = sidebar({
                 icon: 'merge',
                 children: [
                     '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
+                ]
+            },
+            {
+                text: '发版记录',
+                collapsible: true,
+                icon: 'branch',
+                children: [
+                    '/v2/jt-808/guide/release-notes/latest.md',
+                    '/v2/jt-808/guide/release-notes/2.0.x.md',
+                    '/v2/jt-808/guide/release-notes/1.x.md',
                 ]
             },
         ],
@@ -143,6 +157,7 @@ export const zhSidebar = sidebar({
                     "/protocol-introduction/808/v2019.md",
                     "/protocol-introduction/808/v2013.md",
                     "/protocol-introduction/808/v2011.md",
+                    "/protocol-introduction/808/type-mapping.md",
                 ]
             },
 

@@ -17,7 +17,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.STRING;
 @BuiltinComponent
 public class BuiltinMsg0102V2013 {
 
-    @RequestField(order = 1, startIndex = 0, dataType = STRING, lengthExpression = "#ctx.msgBodyLength()")
+    @RequestField(order = 1, dataType = STRING, lengthExpression = "#ctx.msgBodyLength()")
     private String authCode;
 
 }

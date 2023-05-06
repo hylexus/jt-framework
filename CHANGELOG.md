@@ -1,3 +1,14 @@
+## 2.1.1-RC3
+
+### ⭐ New Features
+
+- 完善 `BitOperator` 辅助类
+- `@SlicedFrom` 支持 `long` 类型
+
+### 🔨 Others
+
+内置示例消息的 `@RequestField` 注解去掉 `startIndex` 属性(**2.1.1** 开始不再需要该属性)。
+
 ## 2.1.1-RC2
 
 ### ⭐ New Features

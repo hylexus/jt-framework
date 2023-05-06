@@ -24,21 +24,21 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.WORD;
 public class BuiltinMsg0005 {
 
     // byte[0,2)  WORD  原始消息流水号(对应要求重传的原始消息第一包的消息流水号)
-    @RequestField(order = 1, startIndex = 0, dataType = WORD)
+    @RequestField(order = 1, dataType = WORD)
     private int firstSubPackageFlowId;
 
     // byte[2,4)  WORD  重传包总数
-    @RequestField(order = 2, startIndex = 2, dataType = WORD)
+    @RequestField(order = 2, dataType = WORD)
     private int totalCount;
 
     // byte[4, 2*N)  Bytes  包序号
-    @RequestField(order = 3, startIndex = 4, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 4")
+    @RequestField(order = 3, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 4")
     private List<PackageId> packageIdList;
 
     @Data
     @NoArgsConstructor
     public static class PackageId {
-        @RequestField(order = 1, startIndex = 0, dataType = WORD)
+        @RequestField(order = 1, dataType = WORD)
         private int value;
     }
 }

@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.deserialize.impl.StringFieldDeserializer;
+import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 
 import java.lang.annotation.*;
 
@@ -21,22 +22,42 @@ public @interface RequestField {
     int order();
 
     /**
+     * 从 2.1.1 开始，所有内置的解码器都不再依赖这个属性。
+     * <p>
+     * <p>
      * 字段偏移量获取顺序：
+     * <p>
+     * 从 2.1.1 开始，下面三个属性都是可选的.
+     * <p>
+     * 从 2.1.1 开始，下面三个属性都是可选的.
+     * <p>
+     * 从 2.1.1 开始，下面三个属性都是可选的.
+     *
      * <ol>
      *     <li>{@code startIndex}</li>
      *     <li>{@link #startIndexExpression()}</li>
      *     <li>{@link #startIndexMethod()}</li>
      * </ol>
+     *
+     * @see io.github.hylexus.jt.jt808.support.data.meta.RequestFieldOffsetExtractor#createFor(JavaBeanFieldMetadata, RequestField)
      */
     int startIndex() default -1;
 
     /**
+     * 从 2.1.1 开始，所有内置的解码器都不再依赖这个属性。
+     * <p>
      * 以 SpEL(Spring Expression Language) 语法指定字段偏移量
      *
+     * @see io.github.hylexus.jt.jt808.support.data.meta.RequestFieldOffsetExtractor#createFor(JavaBeanFieldMetadata, RequestField)
      * @since 2.0.0
      */
     String startIndexExpression() default "";
 
+    /**
+     * 从 2.1.1 开始，所有内置的解码器都不再依赖这个属性。
+     *
+     * @see io.github.hylexus.jt.jt808.support.data.meta.RequestFieldOffsetExtractor#createFor(JavaBeanFieldMetadata, RequestField)
+     */
     String startIndexMethod() default "";
 
     /**

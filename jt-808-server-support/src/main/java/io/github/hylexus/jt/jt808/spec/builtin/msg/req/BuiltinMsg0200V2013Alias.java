@@ -6,14 +6,12 @@ import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestFieldAlias;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
 /**
  * @author hylexus
  */
-@Slf4j
 @Data
 @Accessors(chain = true)
 @Jt808RequestBody
@@ -25,7 +23,7 @@ public class BuiltinMsg0200V2013Alias {
 
     // (2). byte[4,8) DWORD 状态
     @RequestFieldAlias.Dword(order = 2)
-    private int status;
+    private long status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型
     @SlicedFrom(sourceFieldName = "status", bitIndex = 0)

@@ -6,7 +6,7 @@ icon: bit
 
 ::: info 提示
 
-`BitOperator` 是 **2.1.1** 中才引入的辅助类。
+`BitOperator` 是 **2.1.1** 中引入的辅助类。
 
 :::
 
@@ -16,7 +16,7 @@ icon: bit
 
 当然 `BitOperator` 也可以用在被 `@RequestField`、`@ResponseField`、`@RequestFieldAlias`、`@ResponseFieldAlias` 修饰的实体类的成员变量上。
 
-## 用途
+## 场景示例
 
 位操作的场景都可以用到，比如下面这个场景(需要对某个 `bit` 操作)：
 
@@ -24,11 +24,31 @@ icon: bit
     <img :src="$withBase('/img/v2/utilities/bit-operator-case-01.png')">
 </p>
 
-## 简单示例
+以下面这条位置上报报文(**2019**)为例，其中的**报警标志**字段中 第 **21**(进出路线)个 `bit` 和第 **20**(进出区域)个 `bit` 是 **1**。
 
 ```java
-import java.util.function.BinaryOperator;
+class BuiltinMsg0200Test extends BaseReqRespMsgTest {
+    final String hex = "7E0200402D01000000000139123443210000003000000040000101CD41C2072901B00929029A005A23042821314101040000029B0202004303020309300163897E";
 
+    @Test
+    void test2019Alias() {
+        final BuiltinMsg0200V2019Alias msg = decode(hex, BuiltinMsg0200V2019Alias.class);
+        assertMsg(msg);
+    }
+
+    private void assertMsg(BuiltinMsg0200V2019Alias msg) {
+        final BitOperator alarmStatus = BitOperator.mutable(msg.getAlarmFlag());
+        // final BitOperator alarmStatus = msg.getBitOperator();
+        assertEquals(1, alarmStatus.get(20));
+        assertEquals(1, alarmStatus.get(21));
+    }
+    // ...
+}
+```
+
+## 简单使用
+
+```java
 class BitOperatorTest {
 
     @Test
@@ -55,7 +75,6 @@ class BitOperatorTest {
         // z 的第 3 个 bit 是 1
         assertEquals(1, BitOperator.mutable(z).get(3));
 
-        // 第 1 和第 0 个 bit 置为 1 ==> 0b11
         assertEquals(0b11, BitOperator.mutable(x).set(1).set(0).wordValue());
         assertEquals(3, BitOperator.mutable(x).set(1).set(0).wordValue());
     }

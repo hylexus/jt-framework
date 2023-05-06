@@ -12,7 +12,8 @@ icon: wrap
 
 就类似于 `JavaWeb` 开发中的 `Servlet` 一样给你一个 `HttpServletRequest` : 后续所有解析操作都要手动进行，比较繁琐。
 
-所以本项目也提供了几个内置的 `Jt808HandlerMethodArgumentResolver` 来将原始的 `Jt808Request` 转换成可读性较强的自定义类型，这些转换功能都是依赖于参数解析器 `Jt808HandlerMethodArgumentResolver`：
+所以本项目也提供了几个内置的 `Jt808HandlerMethodArgumentResolver` 来将原始的 `Jt808Request`
+转换成可读性较强的自定义类型，这些转换功能都是依赖于参数解析器 `Jt808HandlerMethodArgumentResolver`：
 
 ```java
 public interface Jt808HandlerMethodArgumentResolver {
@@ -151,7 +152,7 @@ public class AnnotationHandler01 {
     @Jt808RequestBody
     public static class DebugTerminalRegisterMsgV2013 {
         // 1. [0-2) WORD 省域ID
-        @RequestField(order = 1, startIndex = 0, dataType = WORD)
+        @RequestField(order = 1, dataType = WORD)
         private int provinceId;
         // ...
     }

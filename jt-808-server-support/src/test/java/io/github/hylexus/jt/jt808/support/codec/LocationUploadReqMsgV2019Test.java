@@ -17,7 +17,7 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Data
 @Accessors(chain = true)
 //@Jt808ReqMsgBody(msgType = 0x0200, version = Jt808ProtocolVersion.VERSION_2019)
-//public class LocationUploadReqMsgV2019Test implements Jt808HeaderSpecAware {
+// public class LocationUploadReqMsgV2019Test implements Jt808HeaderSpecAware {
 public class LocationUploadReqMsgV2019Test {
 
     //    @ToString.Exclude
@@ -28,10 +28,10 @@ public class LocationUploadReqMsgV2019Test {
     //    }
 
     // (1). 报警标志
-    @RequestField(order = 0, startIndex = 0, dataType = DWORD)
+    @RequestField(order = 0, dataType = DWORD)
     private int alarmFlag;
     // (2). 状态
-    @RequestField(order = 1, startIndex = 4, dataType = DWORD)
+    @RequestField(order = 1, dataType = DWORD)
     private int status;
 
     // 将上面的 status 字段的第0位取出转为 int 类型
@@ -45,39 +45,39 @@ public class LocationUploadReqMsgV2019Test {
     @SlicedFrom(sourceFieldName = "status", bitIndex = 2)
     private int latType;
     // (3). 纬度(尚未除以 10^6)
-    @RequestField(order = 2, startIndex = 8, dataType = DWORD)
+    @RequestField(order = 2, dataType = DWORD)
     private Integer intLat;
     // (4). 经度(尚未除以 10^6)
-    @RequestField(order = 3, startIndex = 12, dataType = DWORD)
+    @RequestField(order = 3, dataType = DWORD)
     private Integer intLng;
     // (5). 高度
-    @RequestField(order = 4, startIndex = 16, dataType = WORD)
+    @RequestField(order = 4, dataType = WORD)
     private Integer height;
     // (6). 速度
-    @RequestField(order = 5, startIndex = 18, dataType = WORD)
+    @RequestField(order = 5, dataType = WORD)
     private int speed;
     // (7). 方向
-    @RequestField(order = 6, startIndex = 20, dataType = WORD)
+    @RequestField(order = 6, dataType = WORD)
     private Integer direction;
 
     // (8). 时间
-    @RequestField(order = 7, startIndex = 22, dataType = BCD, length = 6)
+    @RequestField(order = 7, dataType = BCD, length = 6)
     private String time;
 
-    // @BasicField(order = 8, startIndex = 28, dataType = LIST, byteCountMethod = "getExtraInfoLength")
-    // @BasicField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "getExtraInfoLength()")
-    @RequestField(order = 8, startIndex = 28, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 28")
+    // @BasicField(order = 8, dataType = LIST, byteCountMethod = "getExtraInfoLength")
+    // @BasicField(order = 8, dataType = LIST, lengthExpression = "getExtraInfoLength()")
+    @RequestField(order = 8, dataType = LIST, lengthExpression = "#ctx.msgBodyLength() - 28")
     private List<ExtraItem> extraItemList;
 
     @Data
     public static class ExtraItem {
-        @RequestField(order = 0, startIndex = 0, dataType = BYTE)
+        @RequestField(order = 0, dataType = BYTE)
         private byte id;
-        @RequestField(order = 1, startIndex = 1, dataType = BYTE)
+        @RequestField(order = 1, dataType = BYTE)
         private byte contentLength;
 
-        // @BasicField(order = 3, startIndex = 2, lengthMethod = "getContentLengthMethod", dataType = BYTES)
-        @RequestField(order = 3, startIndex = 2, lengthExpression = "#this.contentLength", dataType = BYTES)
+        // @BasicField(order = 3, lengthMethod = "getContentLengthMethod", dataType = BYTES)
+        @RequestField(order = 3, lengthExpression = "#this.contentLength", dataType = BYTES)
         private byte[] content;
 
         public int getContentLengthMethod() {

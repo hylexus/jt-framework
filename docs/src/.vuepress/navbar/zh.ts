@@ -33,6 +33,11 @@ export const zhNavbar = navbar([
             icon: 'merge'
         },
         {
+            text: '发版记录',
+            link: '/v2/jt-808/guide/release-notes/latest.md',
+            icon: 'branch'
+        },
+        {
             text: '历史版本',
             icon: 'list',
             children: [
@@ -54,8 +59,16 @@ export const zhNavbar = navbar([
                 {
                     text: 'Spring', children: [
                         {text: 'Spring Boot', icon: 'leaf', link: 'https://docs.spring.io/spring-boot/docs/2.5.8/reference/html/'},
-                        {text: 'Spring WebFlux', icon: 'leaf', link: 'https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web-reactive.html#spring-webflux'},
-                        {text: 'Spring WebMVC', icon: 'leaf', link: 'https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web.html#spring-web'},
+                        {
+                            text: 'Spring WebFlux',
+                            icon: 'leaf',
+                            link: 'https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web-reactive.html#spring-webflux'
+                        },
+                        {
+                            text: 'Spring WebMVC',
+                            icon: 'leaf',
+                            link: 'https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web.html#spring-web'
+                        },
                     ],
                 },
                 {
@@ -64,7 +77,13 @@ export const zhNavbar = navbar([
                         {text: 'vuepress-theme-hope', icon: 'vue', link: 'https://theme-hope.vuejs.press/zh/'},
                     ],
                 },
-                {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
+                {
+                    text: 'User', children: [
+                        {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
+                        {text: 'pruidong', icon: 'profile', link: 'https://github.com/pruidong'},
+                    ],
+                },
+
             ]
         },
         {

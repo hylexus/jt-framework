@@ -29,15 +29,15 @@ public class BuiltinTerminalCommonReplyMsg {
     public static final int RESULT_ALARM_MSG_ACK = 4;
 
     // 1. 应答流水号 WORD    对应的平台消息的流水号
-    @RequestField(order = 0, startIndex = 0, dataType = WORD)
+    @RequestField(order = 0, dataType = WORD)
     int serverFlowId;
 
     // 2. 应答id WORD     对应的平台消息的 ID
-    @RequestField(order = 1, startIndex = 2, dataType = WORD)
+    @RequestField(order = 1, dataType = WORD)
     int serverMsgId;
 
     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
-    @RequestField(order = 2, startIndex = 4, dataType = BYTE)
+    @RequestField(order = 2, dataType = BYTE)
     int result;
 
     public static BuiltinTerminalCommonReplyMsg success(int serverMsgId, int serverFlowId) {

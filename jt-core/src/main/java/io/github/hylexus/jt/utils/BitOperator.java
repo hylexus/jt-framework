@@ -94,16 +94,20 @@ public interface BitOperator {
         return Numbers.getBitAt(this.value(), offset);
     }
 
-    default BitOperator longValue(int start, int end, Consumer<Long> consumer) {
-        consumer.accept(this.longValue(start, end));
-        return this;
+    default int rangedIntValue(int offset, int length) {
+        Assertions.assertThat(offset >= 0, "offset >= 0");
+        Assertions.assertThat(offset + length <= Integer.SIZE, "offset + length <= Integer.SIZE");
+        final int number = this.intValue();
+        return (number << (Integer.SIZE - (offset + length)))
+                >>> (Integer.SIZE - length);
     }
 
-    default long longValue(int start, int end) {
-        Assertions.assertThat(start >= 0 && start < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-        Assertions.assertThat(end >= 0 && end < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-        Assertions.assertThat(start <= end, "start <= end");
-        return Numbers.getBitRangeAsLong(this.value(), start, end);
+    default long rangedLongValue(int offset, int length) {
+        Assertions.assertThat(offset >= 0, "offset >= 0");
+        Assertions.assertThat(offset + length <= Long.SIZE, "offset + length <= Long.SIZE");
+        final long number = this.longValue();
+        return (number << (Long.SIZE - (offset + length)))
+                >>> (Long.SIZE - length);
     }
 
     default BitOperator longValue(Consumer<Long> consumer) {
@@ -123,18 +127,18 @@ public interface BitOperator {
         return this.intValue();
     }
 
-    default BitOperator intValue(int start, int end, Consumer<Integer> consumer) {
-        consumer.accept(this.intValue(start, end));
-        return this;
-    }
-
-    default int intValue(int start, int end) {
-        // TODO end,len??? ---> len
-        Assertions.assertThat(start >= 0 && start < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-        Assertions.assertThat(end >= 0 && end < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-        Assertions.assertThat(start <= end, "start <= end");
-        return Numbers.getBitRangeAsInt((int) this.value(), start, end);
-    }
+    // default BitOperator intValue(int start, int end, Consumer<Integer> consumer) {
+    //     consumer.accept(this.intValue(start, end));
+    //     return this;
+    // }
+    //
+    // default int intValue(int start, int end) {
+    //     // TODO end,len??? ---> len
+    //     Assertions.assertThat(start >= 0 && start < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
+    //     Assertions.assertThat(end >= 0 && end < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
+    //     Assertions.assertThat(start <= end, "start <= end");
+    //     return Numbers.getBitRangeAsInt((int) this.value(), start, end);
+    // }
 
     default BitOperator intValue(Consumer<Integer> consumer) {
         consumer.accept(this.intValue());
@@ -172,33 +176,10 @@ public interface BitOperator {
         return this.value() == 1L;
     }
 
-    default BitOperator binaryString(Consumer<String> consumer) {
-        consumer.accept(this.binaryString());
+
+    default BitOperator hexString(int minLeadingZeros, Consumer<String> consumer) {
+        consumer.accept(this.hexString(minLeadingZeros));
         return this;
-    }
-
-    static String binaryString(int value, int leadingZeros) {
-        final String string = Integer.toBinaryString(value);
-        if (string.length() < leadingZeros) {
-            return "0".repeat(leadingZeros - string.length()) + string;
-        }
-        return string;
-    }
-
-    static String binaryString(long value, int leadingZeros) {
-        final String string = Long.toBinaryString(value);
-        if (string.length() < leadingZeros) {
-            return "0".repeat(leadingZeros - string.length()) + string;
-        }
-        return string;
-    }
-
-    default String binaryString(int leadingZeros) {
-        return binaryString(this.value(), leadingZeros);
-    }
-
-    default String binaryString() {
-        return Long.toBinaryString(this.value());
     }
 
     default BitOperator hexString(Consumer<String> consumer) {
@@ -206,10 +187,10 @@ public interface BitOperator {
         return this;
     }
 
-    default String hexString(int leadingZeros) {
+    default String hexString(int minLeadingZeros) {
         final String hexString = this.hexString();
-        if (hexString.length() < leadingZeros) {
-            return "0".repeat(leadingZeros - hexString.length()) + hexString;
+        if (hexString.length() < minLeadingZeros) {
+            return "0".repeat(minLeadingZeros - hexString.length()) + hexString;
         }
         return hexString;
     }
@@ -218,4 +199,37 @@ public interface BitOperator {
         return Long.toHexString(this.value());
     }
 
+    default BitOperator binaryString(int minLeadingZeros, Consumer<String> consumer) {
+        consumer.accept(this.binaryString(minLeadingZeros));
+        return this;
+    }
+
+    default BitOperator binaryString(Consumer<String> consumer) {
+        consumer.accept(this.binaryString());
+        return this;
+    }
+
+    default String binaryString(int minLeadingZeros) {
+        return binaryString(minLeadingZeros, this.value());
+    }
+
+    default String binaryString() {
+        return Long.toBinaryString(this.value());
+    }
+
+    static String binaryString(int minLeadingZeros, int value) {
+        final String string = Integer.toBinaryString(value);
+        if (string.length() < minLeadingZeros) {
+            return "0".repeat(minLeadingZeros - string.length()) + string;
+        }
+        return string;
+    }
+
+    static String binaryString(int minLeadingZeros, long value) {
+        final String string = Long.toBinaryString(value);
+        if (string.length() < minLeadingZeros) {
+            return "0".repeat(minLeadingZeros - string.length()) + string;
+        }
+        return string;
+    }
 }
