@@ -57,6 +57,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-upload-msg-parse-demo.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-batch-upload-msg-parse-demo.md',
+                    '/v2/jt-808/guide/annotation-based-dev/notices-for-builtin-msg.md',
                 ]
             },
             {

@@ -1,13 +1,10 @@
-# 类型映射
+---
+icon: notice
+---
 
-这里要介绍的是 **JT/T 808** 协议中定义的 `BYTE`、`WORD`、`DWORD`、`BCD`、`STRING`、`BYTES` 和 `java` 数据类型的映射关系。
+# 内置消息说明
 
-参考下面两个章节：
-
-- [数据类型转换](../../v2/jt-808/guide/annotation-based-dev/data-type-mapping.md)
-- [数据类型转换(注解别名)](../../v2/jt-808/guide/annotation-based-dev/data-type-mapping-via-alias.md)
-
-::: tip 内置消息说明
+::: info 内置消息说明
 
 - `io.github.hylexus.jt.jt808.spec.builtin.msg.req` 包下内置了一些 **请求消息** 实体类映射示例
 - `io.github.hylexus.jt.jt808.spec.builtin.msg.resp` 包下内置了一些 **响应消息** 实体类映射示例

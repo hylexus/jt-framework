@@ -127,19 +127,6 @@ public interface BitOperator {
         return this.intValue();
     }
 
-    // default BitOperator intValue(int start, int end, Consumer<Integer> consumer) {
-    //     consumer.accept(this.intValue(start, end));
-    //     return this;
-    // }
-    //
-    // default int intValue(int start, int end) {
-    //     // TODO end,len??? ---> len
-    //     Assertions.assertThat(start >= 0 && start < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-    //     Assertions.assertThat(end >= 0 && end < Long.BYTES, "offset >= 0 && offset < Long.BYTES");
-    //     Assertions.assertThat(start <= end, "start <= end");
-    //     return Numbers.getBitRangeAsInt((int) this.value(), start, end);
-    // }
-
     default BitOperator intValue(Consumer<Integer> consumer) {
         consumer.accept(this.intValue());
         return this;
