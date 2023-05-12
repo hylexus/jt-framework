@@ -1,3 +1,13 @@
+## 2.1.1
+
+### ⭐ New Features
+
+参见 **2.1.1-RC1**、**2.1.1-RC2**、**2.1.1-RC3** 中的所有变更。
+
+### 🐞 Bug Fixes
+
+`jt808.features.program-param-printer.enabled = true` 同时 **classpath** 下没有 `Jackson` 依赖时报错的问题。
+
 ## 2.1.1-RC3
 
 ### ⭐ New Features

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.props.feature;
 
-import io.github.hylexus.jt.jt808.boot.props.builtin.Switchable;
 import io.github.hylexus.jt.jt808.boot.props.feature.filter.Jt808RequestFilterProps;
+import io.github.hylexus.jt.jt808.boot.props.feature.printer.Jt808ParamPrinterProps;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -14,6 +14,6 @@ public class Jt808FeatureProps {
     private Jt808RequestFilterProps requestFilter = new Jt808RequestFilterProps();
 
     @NestedConfigurationProperty
-    private Switchable programParamPrinter = new Switchable();
+    private Jt808ParamPrinterProps programParamPrinter = new Jt808ParamPrinterProps();
 
 }

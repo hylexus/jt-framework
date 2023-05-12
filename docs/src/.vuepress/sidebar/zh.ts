@@ -89,18 +89,21 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
                 ]
             },
-            {
-                text: '发版记录',
-                collapsible: true,
-                icon: 'branch',
-                children: [
-                    '/v2/jt-808/guide/release-notes/latest.md',
-                    '/v2/jt-808/guide/release-notes/2.0.x.md',
-                    '/v2/jt-808/guide/release-notes/1.x.md',
-                ]
-            },
         ],
-        '/v2/jt-808/config/': ["/v2/jt-808/config/"],
+        '/v2/release-notes': [
+            '/v2/release-notes/latest.md',
+            '/v2/release-notes/2.0.x.md',
+            '/v2/release-notes/1.x.md',
+        ],
+        '/v2/jt-808/config/': [
+            "/v2/jt-808/config/README.md",
+            "/v2/jt-808/config/features.md",
+            "/v2/jt-808/config/protocol.md",
+            "/v2/jt-808/config/server.md",
+            "/v2/jt-808/config/message-processor.md",
+            "/v2/jt-808/config/sub-package.md",
+            "/v2/jt-808/config/others.md",
+        ],
         '/v1/jt-808/config/': ["/v1/jt-808/config/"],
         '/v1/jt-808/guide/': [
             {

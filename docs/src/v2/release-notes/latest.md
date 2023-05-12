@@ -4,6 +4,13 @@ icon: branch
 
 # 2.1.x
 
+## 2.1.1-RC3(2023-05-06)
+
+### ⭐ New Features
+
+- 完善 `BitOperator` 辅助类
+- `@SlicedFrom` 支持 `long` 类型
+
 ## 2.1.1-RC2(2023-05-02)
 
 ### ⭐ New Features

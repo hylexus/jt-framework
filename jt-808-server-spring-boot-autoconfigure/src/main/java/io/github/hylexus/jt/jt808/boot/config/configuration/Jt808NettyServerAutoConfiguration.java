@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
@@ -35,6 +36,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 import java.util.Comparator;
 import java.util.List;
@@ -47,6 +49,9 @@ import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_NETTY_HAND
  * @author hylexus
  */
 @Slf4j
+@Import({
+        Jt808NettyServerAutoConfiguration.Jt808ServerParamPrinterConfig.class
+})
 public class Jt808NettyServerAutoConfiguration {
 
     private final Jt808ServerProps serverProps;
@@ -196,12 +201,18 @@ public class Jt808NettyServerAutoConfiguration {
     }
 
 
-    @Bean
-    @ConditionalOnProperty(prefix = "jt808.features.program-param-printer", name = "enabled", havingValue = "true", matchIfMissing = true)
-    public CommandLineRunner jt808ServerParamPrinter(Jt808ServerProps props) {
-        return args -> {
-            final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-            log.info("Jt808 server config ::: {}", objectMapper.writeValueAsString(props));
-        };
+    @ConditionalOnProperty(prefix = "jt808.features.program-param-printer", name = "enabled", havingValue = "true")
+    // @ConditionalOnClass({ObjectMapper.class, JavaTimeModule.class})
+    static class Jt808ServerParamPrinterConfig {
+        @Bean
+        public CommandLineRunner jt808ServerParamPrinter(Jt808ServerProps props) {
+            return args -> {
+                final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+                if (props.getFeatures().getProgramParamPrinter().isPretty()) {
+                    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+                }
+                log.info("Jt808 server config ::: {}", objectMapper.writeValueAsString(props));
+            };
+        }
     }
 }

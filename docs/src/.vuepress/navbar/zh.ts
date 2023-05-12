@@ -12,7 +12,7 @@ export const zhNavbar = navbar([
         },
         {
             text: '配置',
-            icon: 'config',
+            icon: 'setting',
             link: '/v2/jt-808/config/',
             // children: [
             //     {text: "v2.x", link: '/v2/jt-808/config/'},
@@ -34,7 +34,7 @@ export const zhNavbar = navbar([
         },
         {
             text: '发版记录',
-            link: '/v2/jt-808/guide/release-notes/latest.md',
+            link: '/v2/release-notes/latest.md',
             icon: 'branch'
         },
         {

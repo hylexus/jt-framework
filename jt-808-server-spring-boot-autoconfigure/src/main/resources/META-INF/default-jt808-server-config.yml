@@ -1,11 +1,15 @@
-server:
-  port: 8808
 jt808:
   built-components:
     request-handlers:
       enabled: true
     component-statistics:
       enabled: true
+  features:
+    request-filter:
+      enabled: false
+    program-param-printer:
+      enabled: false
+      pretty: true
   protocol:
     max-frame-length: 1024
   server:
@@ -19,11 +23,23 @@ jt808:
       all-idle-time: 0s # disabled
   msg-processor:
     executor-group:
-      thread-count: 128
       pool-name: 808-msg-processor
+      thread-count: 128
       max-pending-tasks: 128
+  request-sub-package-storage:
+    type: caffeine
+    caffeine:
+      maximum-size: 1024
+      ttl: 45s
+  response-sub-package-storage:
+    type: caffeine
+    caffeine:
+      maximum-size: 1024
+      ttl: 45s
+    redis:
+      ttl: 1m
 logging:
-  level.root: info
-  level.io.github.hylexus: info
-  level.jt-808.request.decoder: info
-  level.jt-808.response.encoder: info
+  level:
+    io.github.hylexus: info
+    jt-808.request.decoder: info
+    jt-808.response.encoder: info
