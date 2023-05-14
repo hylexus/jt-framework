@@ -6,7 +6,7 @@
 
 ### 🐞 Bug Fixes
 
-`jt808.features.program-param-printer.enabled = true` 同时 **classpath** 下没有 `Jackson` 依赖时报错的问题。
+- `jt808.features.program-param-printer.enabled = false` 的时候 **classpath** 下没有 `Jackson` 依赖时报错的问题。
 
 ## 2.1.1-RC3
 

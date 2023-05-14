@@ -47,7 +47,7 @@ public class BuiltinMsg0200V2019 {
 你可能会对于上面的代码片段有几个疑问：
 
 1. `order` 是必须要指定的吗？
-    - 这个问题暂且不讨论(**2.1.1** 之前的版本暂且就认为是必须的吧)
+    - 这个问题暂且不讨论(暂且就认为是必须的吧)
     - [参考Stackoverflow](https://stackoverflow.com/questions/5001172/java-reflection-getting-fields-and-methods-in-declaration-order)
 2. `startIndex` 是必须要指定的吗？
     - 其实这个属性是从 **1.x** 继承过来的

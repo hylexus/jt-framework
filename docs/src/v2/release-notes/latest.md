@@ -4,6 +4,16 @@ icon: branch
 
 # 2.1.x
 
+## 2.1.1(2023-05-12)
+
+### ⭐ New Features
+
+参见 **2.1.1-RC1**、**2.1.1-RC2**、**2.1.1-RC3** 中的所有新特性。
+
+### 🐞 Bug Fixes
+
+- `jt808.features.program-param-printer.enabled = false` 的时候 **classpath** 下没有 `Jackson` 依赖时报错的问题。
+
 ## 2.1.1-RC3(2023-05-06)
 
 ### ⭐ New Features
