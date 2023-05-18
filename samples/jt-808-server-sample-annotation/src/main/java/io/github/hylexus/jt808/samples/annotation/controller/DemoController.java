@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer;
 import io.github.hylexus.jt808.samples.annotation.msg.resp.RespTerminalSettings;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
@@ -34,14 +35,15 @@ public class DemoController {
 
     // 7E00010005013912344323007B0000810300837E
     // 7E00010005013912344323007B0001810300827E
+    // 7E0002000001391234432300007C7E
     @RequestMapping("/set-terminal-params")
     public Object sendMsg(
             @RequestParam(name = "terminalId", required = false, defaultValue = "013912344323") String terminalId) throws InterruptedException {
 
         final RespTerminalSettings param = new RespTerminalSettings();
         final List<RespTerminalSettings.ParamItem> paramList = List.of(
-                new RespTerminalSettings.ParamItem(0x0029, ByteBufAllocator.DEFAULT.buffer().writeInt(100)),
-                new RespTerminalSettings.ParamItem(0x0030, ByteBufAllocator.DEFAULT.buffer().writeInt(211))
+                new RespTerminalSettings.ParamItem(0x0029, ByteArrayContainer.ofDword(100)),
+                new RespTerminalSettings.ParamItem(0x0030, ByteArrayContainer.ofDword(211))
         );
         param.setParamList(paramList);
         param.setTotalParamCount(paramList.size());

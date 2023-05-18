@@ -40,18 +40,23 @@ import static io.github.hylexus.jt.jt808.support.data.MsgDataType.*;
 @Jt808RequestBody
 @BuiltinComponent
 public class BuiltinMsg0104 {
-    /** 1. 流水号 WORD */
-    @RequestField(order = 0, startIndex = 0, dataType = WORD)
+    /**
+     * 1. 流水号 WORD
+     */
+    @RequestField(order = 0, dataType = WORD)
     int serverFlowId;
 
-    /** 2. 参数个数 */
-    @RequestField(order = 1, startIndex = 2, dataType = BYTE)
+    /**
+     * 2. 参数个数
+     */
+    @RequestField(order = 1, dataType = BYTE)
     int count;
 
-    /** 3. 参数项列表 */
+    /**
+     * 3. 参数项列表
+     */
     @RequestField(
             order = 2,
-            startIndex = 3,
             dataType = LIST,
             lengthExpression = "#ctx.msgBodyLength() - 3")
     List<TerminalParam> paramList;
@@ -61,17 +66,16 @@ public class BuiltinMsg0104 {
     public static class TerminalParam {
 
         // 参数id DWORD[4]
-        @RequestField(order = 0, startIndex = 0, dataType = DWORD)
+        @RequestField(order = 0, dataType = DWORD)
         private int paramId;
 
         // 参数长度 BYTE[1]
-        @RequestField(order = 1, startIndex = 2, dataType = BYTE)
+        @RequestField(order = 1, dataType = BYTE)
         private int contentLength;
 
         // 参数值
         @RequestField(
                 order = 2,
-                startIndex = 3,
                 dataType = BYTES,
                 lengthExpression = "#this.contentLength")
         private byte[] paramContent;

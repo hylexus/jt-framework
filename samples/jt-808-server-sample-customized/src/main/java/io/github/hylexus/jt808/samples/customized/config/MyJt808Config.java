@@ -5,12 +5,9 @@ import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.session.*;
 import io.github.hylexus.jt.jt808.support.codec.*;
 import io.github.hylexus.jt.jt808.support.codec.impl.*;
-import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
@@ -56,7 +53,7 @@ public class MyJt808Config {
     // [[ 非必须配置 ]] -- 替换流水号生成策略
     @Bean
     public Jt808FlowIdGeneratorFactory jt808FlowIdGeneratorFactory() {
-        return new Jt808FlowIdGeneratorFactory.DefaultJt808FlowIdGeneratorFactory();
+        return DefaultJt808FlowIdGeneratorV2::new;
     }
 
     // [[ 非必须配置 ]] -- Session事件监听器 (可以有多个)

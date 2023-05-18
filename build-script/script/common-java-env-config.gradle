@@ -86,7 +86,7 @@ javadoc {
 
     options {
         version true
-        links "http://docs.oracle.com/javase/8/docs/api"
+        links "https://docs.oracle.com/javase/8/docs/api"
     }
     // Suppress warnings due to cross-module @see and @link references.
     // Note that global 'api' task does display all warnings.

@@ -17,7 +17,6 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.github.hylexus.jt.utils.Assertions;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -52,22 +51,24 @@ public class Jt808AnnotationBasedDecoder {
     }
 
     public Object decode(Class<?> cls, Object instance, ByteBuf byteBuf, Jt808Request request) throws Jt808AnnotationArgumentResolveException {
+
         this.processAwareMethod(instance, request);
-        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
+
         final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
         evaluationContext.setVariable("this", instance);
         evaluationContext.setVariable("request", request);
         evaluationContext.setVariable("header", request.header());
-        evaluationContext.setVariable("ctx", new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf));
-        evaluationContext.setVariable("context", new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf));
-        final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getFieldMetadataList();
-        if (fieldMetadataList.isEmpty()) {
-            return instance;
-        }
+        final AnnotationDecoderContext context = new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf);
+        evaluationContext.setVariable("ctx", context);
+        evaluationContext.setVariable("context", context);
+
+        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(cls);
+        // 仅仅处理被  @RequestField 标记的属性
+        final List<JavaBeanFieldMetadata> fieldMetadataList = beanMetadata.getRequestFieldMetadataList();
         for (JavaBeanFieldMetadata fieldMetadata : fieldMetadataList) {
-            if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
-                this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
-            }
+            // if (fieldMetadata.isAnnotationPresent(RequestField.class)) {
+            this.processBasicField(evaluationContext, cls, instance, fieldMetadata, byteBuf, request);
+            //}
         }
         try {
             this.slicedFromAnnotationDecoder.processAllSlicedFromAnnotatedField(instance);
@@ -85,24 +86,26 @@ public class Jt808AnnotationBasedDecoder {
         final MsgDataType jtDataType = annotation.dataType();
         final Class<?> javaDataType = fieldMetadata.getFieldType();
 
+        // v2.1.1 开始可以不再返回 `startIndex` 这个偏移量(2.x 中是按照 ByteBuf 顺序读取的,用不到1.x中遗留的 `startIndex` 逻辑)
         final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldMetadata);
-        Assertions.assertThat(startIndex >= 0, "field offset < 0 : [ " + fieldMetadata.getField() + " ]");
-        final int length = getBasicFieldLength(evaluationContext, cls, instance, annotation, jtDataType, javaDataType);
-        Assertions.assertThat(length > 0, "field length <= 0 : [ " + fieldMetadata.getField() + " ]");
+        // Assertions.assertThat(startIndex >= 0, "field offset < 0 : [ " + fieldMetadata.getField() + " ]");
+
+        final int length = getBasicFieldLength(evaluationContext, instance, annotation, jtDataType, fieldMetadata);
+        Assertions.assertThat(length >= 0, "field length < 0 : [ " + fieldMetadata.getField() + " ]");
 
         final Class<? extends Jt808FieldDeserializer<?>> converterClass = annotation.customerFieldDeserializerClass();
         // 1. 优先使用用户自定义的属性转换器
         final Field field = fieldMetadata.getField();
         if (converterClass != Jt808FieldDeserializer.PlaceholderFieldDeserializer.class) {
             final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(converterClass);
-            deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length);
+            deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length, fieldMetadata);
             return;
         }
 
         // 2. 内嵌对象 特殊处理
         if (jtDataType == MsgDataType.OBJECT) {
             final Class<?> objectClass = fieldMetadata.getFieldType();
-            //final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            // final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
             final ByteBuf slice = bodyDataBuf.readSlice(length);
             final Object objectInstance = ReflectionUtils.createInstance(objectClass);
             final Object value = decode(objectClass, objectInstance, slice, request);
@@ -114,7 +117,7 @@ public class Jt808AnnotationBasedDecoder {
         if (jtDataType == MsgDataType.LIST) {
             final List<Object> list = new ArrayList<>();
             final Class<?> itemClass = fieldMetadata.getGenericType().get(0);
-            //final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
+            // final ByteBuf slice = bodyDataBuf.slice(startIndex, length);
             final ByteBuf slice = bodyDataBuf.readSlice(length);
             while (slice.isReadable()) {
                 final Object itemInstance = ReflectionUtils.createInstance(itemClass);
@@ -138,20 +141,21 @@ public class Jt808AnnotationBasedDecoder {
                 .orElseThrow(() -> new Jt808AnnotationArgumentResolveException(
                         "No Jt808FieldDeserializer found, Unsupported expectedTargetClassType " + javaDataType + " for field " + field));
 
-        deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length);
+        deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length, fieldMetadata);
     }
 
-    private Object deserialize(
+    private void deserialize(
             ByteBuf byteBuf, Object instance, Field field,
-            Jt808FieldDeserializer<?> deserializer, MsgDataType jtDataType, int offset, int length) {
+            Jt808FieldDeserializer<?> deserializer, MsgDataType jtDataType, int offset, int length, JavaBeanFieldMetadata fieldMetadata) {
 
-        final Object value = deserializer.deserialize(byteBuf, jtDataType, offset, length);
+        final Object value = deserializer.deserialize(byteBuf, jtDataType, offset, length,
+                new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata));
+
         if (log.isDebugEnabled()) {
-            log.debug("Convert field {}({}) by converter : {}, result : {}",
-                    field.getName(), instance.getClass().getSimpleName(), deserializer, value);
+            log.debug("Deserialize field [{}#{}] by {}, result : {}",
+                    instance.getClass().getSimpleName(), field.getName(), deserializer, value);
         }
         ReflectionUtils.setFieldValue(instance, field, value);
-        return value;
     }
 
     @SuppressWarnings("rawtypes")
@@ -179,60 +183,62 @@ public class Jt808AnnotationBasedDecoder {
     }
 
     private int getBasicFieldLength(
-            EvaluationContext evaluationContext, Class<?> cls, Object instance, RequestField annotation,
-            MsgDataType dataType, Class<?> fieldType) throws Jt808AnnotationArgumentResolveException {
+            EvaluationContext evaluationContext, Object instance, RequestField annotation,
+            MsgDataType dataType, JavaBeanFieldMetadata fieldMetadata) throws Jt808AnnotationArgumentResolveException {
 
-        // 1. DataType.byteCount
-        if (dataType.getByteCount() > 0) {
-            return dataType.getByteCount();
-        }
-
-        // 2. length()
-        if (annotation.length() > 0) {
-            return annotation.length();
-        }
-
-        // 3. lengthExpression()
-        if (StringUtils.isNotEmpty(annotation.lengthExpression())) {
-            final Number number = parser.parseExpression(annotation.lengthExpression()).getValue(evaluationContext, Number.class);
-            if (number == null) {
-                throw new Jt808AnnotationArgumentResolveException("Can not determine field length with Expression[" + annotation.lengthExpression() + "]");
-            }
-            return number.intValue();
-        }
-
-        // 4. lengthMethod()
-        if (StringUtils.isEmpty(annotation.lengthMethod())) {
-            throw new Jt808AnnotationArgumentResolveException("Can not determine field length [" + fieldType.getName() + "]");
-        }
-
-        final Method lengthMethod = getLengthMethod(cls, annotation.lengthMethod());
-
-        return getLengthFromByteCountMethod(instance, lengthMethod);
+        return fieldMetadata.getRequestFieldLengthExtractor().extractFieldLength(evaluationContext, instance, annotation, dataType);
+        // // 1. DataType.byteCount
+        // if (dataType.getByteCount() > 0) {
+        //     return dataType.getByteCount();
+        // }
+        //
+        // // 2. length()
+        // if (annotation.length() > 0) {
+        //     return annotation.length();
+        // }
+        //
+        // // 3. lengthExpression()
+        // if (StringUtils.isNotEmpty(annotation.lengthExpression())) {
+        //     final Number number = parser.parseExpression(annotation.lengthExpression()).getValue(evaluationContext, Number.class);
+        //     if (number == null) {
+        //         throw new Jt808AnnotationArgumentResolveException("Can not determine field length with Expression[" + annotation.lengthExpression() + "]");
+        //     }
+        //     return number.intValue();
+        // }
+        //
+        // // 4. lengthMethod()
+        // if (StringUtils.isEmpty(annotation.lengthMethod())) {
+        //     throw new Jt808AnnotationArgumentResolveException("Can not determine field length [" + fieldType.getName() + "]");
+        // }
+        //
+        // final Method lengthMethod = getLengthMethod(cls, annotation.lengthMethod());
+        //
+        // return getLengthFromByteCountMethod(instance, lengthMethod);
     }
 
     private int getBasicFieldStartIndex(
             EvaluationContext evaluationContext, Class<?> cls, Object instance,
             RequestField annotation, JavaBeanFieldMetadata fieldType) throws Jt808AnnotationArgumentResolveException {
 
-        if (annotation.startIndex() >= 0) {
-            return annotation.startIndex();
-        }
-        if (StringUtils.isNotEmpty(annotation.startIndexExpression())) {
-            final Number number = this.parser.parseExpression(annotation.startIndexExpression()).getValue(evaluationContext, Number.class);
-            if (number == null) {
-                throw new Jt808AnnotationArgumentResolveException(
-                        "Can not determine field[" + fieldType.getField().getName() + "] startIndex with Expression["
-                        + annotation.lengthExpression() + "]");
-            }
-            return number.intValue();
-        }
-        if (StringUtils.isEmpty(annotation.startIndexMethod())) {
-            throw new Jt808AnnotationArgumentResolveException("Can not determine startIndex for field[" + fieldType.getField().getName() + "]");
-        }
-
-        final Method method = getLengthMethod(cls, annotation.startIndexMethod());
-        return getLengthFromByteCountMethod(instance, method);
+        return fieldType.getRequestFieldOffsetExtractor().extractFieldOffset(evaluationContext, instance, annotation, fieldType);
+        // if (annotation.startIndex() >= 0) {
+        //     return annotation.startIndex();
+        // }
+        // if (StringUtils.isNotEmpty(annotation.startIndexExpression())) {
+        //     final Number number = this.parser.parseExpression(annotation.startIndexExpression()).getValue(evaluationContext, Number.class);
+        //     if (number == null) {
+        //         throw new Jt808AnnotationArgumentResolveException(
+        //                 "Can not determine field[" + fieldType.getField().getName() + "] startIndex with Expression["
+        //                         + annotation.lengthExpression() + "]");
+        //     }
+        //     return number.intValue();
+        // }
+        // if (StringUtils.isEmpty(annotation.startIndexMethod())) {
+        //     throw new Jt808AnnotationArgumentResolveException("Can not determine startIndex for field[" + fieldType.getField().getName() + "]");
+        // }
+        //
+        // final Method method = getLengthMethod(cls, annotation.startIndexMethod());
+        // return getLengthFromByteCountMethod(instance, method);
     }
 
 

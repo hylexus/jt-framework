@@ -45,6 +45,7 @@ public enum MyMsgType implements MsgType {
     CLIENT_REGISTER(0x0100, "终端注册"),
     CLIENT_AUTH(0x0102, "终端鉴权"),
     // ...
+    // 在这里继续扩你的消息类型就行了(即便是和内置的重复了也会使用你自定义的)
     ;
 
     private final int msgId;
@@ -108,6 +109,7 @@ public class MyJt808Config {
 
     @Bean
     public Jt808MsgTypeParser jt808MsgTypeParser() {
+        // 下面代码中的 `MyMsgType` 指的就是你自定义的类型(你只需要在你自己的 `MyMsgType` 中扩展枚举就行了)
         // 优先使用自定义类型解析
         return msgId -> MyMsgType.CLIENT_AUTH.parseFromInt(msgId)
                 // 使用内置类型解析

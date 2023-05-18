@@ -1,9 +1,8 @@
 package io.github.hylexus.jt.jt808.support.data.serializer.impl;
 
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
-import io.github.hylexus.jt.jt808.support.data.ResponseMsgConvertibleMetadata;
-import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializer;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
@@ -13,28 +12,34 @@ import java.util.Set;
 /**
  * @author hylexus
  */
-public class StringFieldSerializer implements Jt808FieldSerializer<String> {
+public class StringFieldSerializer extends AbstractJt808FieldSerializer<String> {
 
-    private static final Set<ResponseMsgConvertibleMetadata> SUPPORTED_RESPONSE_MSG_CONVERTIBLE_METADATA = Set.of(
-            ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.BCD),
-            ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.STRING)
-    );
-
-    @Override
-    public Set<ResponseMsgConvertibleMetadata> getSupportedTypes() {
-        return SUPPORTED_RESPONSE_MSG_CONVERTIBLE_METADATA;
+    public StringFieldSerializer() {
+        super(Set.of(
+                ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.BCD),
+                ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.STRING),
+                ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.BYTES))
+        );
     }
 
     @Override
-    public void serialize(String object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
-        // TODO NPE
+    public void serialize(String object, MsgDataType msgDataType, ByteBuf byteBuf, Context context) throws Jt808FieldSerializerException {
+        if (object == null) {
+            return;
+        }
+
         switch (msgDataType) {
             case STRING:
-                JtProtocolUtils.writeString(byteBuf, object);
+            case BYTES: {
+                final ResponseField annotation = context.fieldMetadata().getAnnotation(ResponseField.class);
+                final byte[] bytes = object.getBytes(context.fieldMetadata().getFieldCharset());
+                JtProtocolUtils.writeBytesWithPadding(byteBuf, bytes, annotation);
                 break;
-            case BCD:
+            }
+            case BCD: {
                 JtProtocolUtils.writeBcd(byteBuf, object);
                 break;
+            }
             default: {
                 throw new Jt808FieldSerializerException("Can not serialize String as " + msgDataType);
             }

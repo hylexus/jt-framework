@@ -1,3 +1,75 @@
+## 2.1.1
+
+### ⭐ New Features
+
+参见 **2.1.1-RC1**、**2.1.1-RC2**、**2.1.1-RC3** 中的所有变更。
+
+### 🐞 Bug Fixes
+
+- `jt808.features.program-param-printer.enabled = false` 的时候 **classpath** 下没有 `Jackson` 依赖时报错的问题。
+
+## 2.1.1-RC3
+
+### ⭐ New Features
+
+- 完善 `BitOperator` 辅助类
+- `@SlicedFrom` 支持 `long` 类型
+
+### 🔨 Others
+
+内置示例消息的 `@RequestField` 注解去掉 `startIndex` 属性(**2.1.1** 开始不再需要该属性)。
+
+## 2.1.1-RC2
+
+### ⭐ New Features
+
+对 **2.1.1-RC1** 中新增特性的简化。
+
+## 2.1.1-RC1
+
+### ⭐ New Features
+
+- 支持通过 **注解别名** 来扩展`@RequestField` 和 `@ResponseField`
+    - 并内置了 `@RequestFieldAlias` 和 `@ResponseFieldAlias` 别名
+    - 现在你可以自定义注解来扩展自定义的数据类型，比如可以自定义一种 `LWord`(`LongWord`,`64bit`) 类型
+- 扩展注解别名: `@RequestFieldAlias` 和 `@ResponseFieldAlias`
+    - 支持 `MsgDataType#BYTES` 和 `java.lang.String` 互转
+    - `Geo` 类型(经纬度)支持转换为 `long/Long`、`double/Double`、`BigDecimal`
+    - 表达时间语义的 `BCD` 可以转换为 `java.lang.String`、`java.util.Date`、`java.time.LocalDateTime`
+    - `java.util.Date` 和 `java.time.LocalDateTime` 可以转为 `BCD`
+- `Jt808FieldDeserializer` 扩展 `Context` 参数，方便自定义注解
+- `Jt808FieldSerializer` 扩展 `Context` 参数，方便自定义注解
+- 新增 `Jt808RequestFilter`(需要配置 `jt808.features.request-filter.enabled=true`) 支持
+- 新增 `BitOperator`, 支持将 `WORD`, `DWORD`, `BYTE` 反序列化为 `BitOperator`
+- 废弃 `BytesValueWrapper`
+    - 使用 `ByteBufContainer` 或 `ByteArrayContainer` 代替
+    - 内置 `ByteBufContainer` 或 `ByteArrayContainer` 的类型转换器
+- 新增如下示例消息(按需修改)
+    - `BuiltinMsg8103`
+    - `BuiltinMsg8103Alias`
+    - `BuiltinMsg8100Alias`
+    - `BuiltinMsg8300`
+    - `BuiltinMsg8300Alias`
+    - `BuiltinMsg8600V2011Alias`
+    - `BuiltinMsg8600V2013Alias`
+    - `BuiltinMsg8600V2019Alias`
+    - `BuiltinMsg8602V2011Alias`
+    - `BuiltinMsg8602V2013Alias`
+    - `BuiltinMsg8602V2019Alias`
+    - `BuiltinMsg8604V2011Alias`
+    - `BuiltinMsg8604V2013Alias`
+    - `BuiltinMsg8604V2019Alias`
+
+### 🐞 Bug Fixes
+
+- `@RequestField#length()` 支持返回 `0`
+- 内置的空的心跳消息 `BuiltinMsg0200` 改名为 `BuiltinMsg0002`(之前命名错误)
+
+### 🔨 Others
+
+- `jt808.msg-processor.executor-group.thread-count` 默认值改为 `128`
+- 新增配置项 `jt808.features.program-param-printer.enabled`
+
 ## 2.1.0
 
 ### ⭐ New Features
@@ -167,7 +239,8 @@ jt808:
 
 新增配置项：
 
-- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。 默认值都是 `20m`;
+- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。
+  默认值都是 `20m`;
 - `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
 
 # 1.0.11-RELEASE

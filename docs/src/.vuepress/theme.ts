@@ -23,7 +23,6 @@ export default hopeTheme({
     iconAssets: "iconfont",
 
     logo: "/logo.png",
-    logoDark: "/logo-dark.png",
     repo: "https://github.com/hylexus/jt-framework",
     repoDisplay: true,
 
@@ -33,7 +32,7 @@ export default hopeTheme({
 
     copyright: false,
 
-    footer: 'TODO',
+    footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">备案号: 沪ICP备2022029946号-2</a >',
     displayFooter: true,
 
     locales: {
@@ -100,6 +99,6 @@ export default hopeTheme({
             vPre: true,
             vuePlayground: true,
         },
-        copyCode: {pure: true,},
+        copyCode: {fancy: false,},
     },
 });

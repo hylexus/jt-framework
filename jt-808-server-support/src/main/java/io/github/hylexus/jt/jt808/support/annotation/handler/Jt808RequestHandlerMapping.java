@@ -18,8 +18,6 @@ import java.lang.annotation.*;
 public @interface Jt808RequestHandlerMapping {
 
     /**
-     * Java半屁不屁的注解(顺带连泛型一起骂了吧……)……(写不了其他类型,这里只能写int了……)
-     *
      * @return 当前处理器方法能处理的消息类型
      * @see Jt808Request#msgType()
      */

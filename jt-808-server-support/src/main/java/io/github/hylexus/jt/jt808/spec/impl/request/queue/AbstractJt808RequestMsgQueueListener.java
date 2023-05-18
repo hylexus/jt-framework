@@ -50,12 +50,16 @@ public class AbstractJt808RequestMsgQueueListener implements Jt808RequestMsgQueu
 
             originalResponse = DefaultJt808Response.init(originalRequest.version(), originalRequest.terminalId());
             exchange = new DefaultJt808ServerExchange(originalRequest, originalResponse, session);
-            this.dispatcherHandler.handleRequest(exchange);
+            this.handleRequest(exchange);
         } finally {
             if (exchange != null && exchange.response() != originalResponse) {
                 originalResponse.release();
             }
         }
+    }
+
+    protected void handleRequest(Jt808ServerExchange exchange) {
+        this.dispatcherHandler.handleRequest(exchange);
     }
 
 }

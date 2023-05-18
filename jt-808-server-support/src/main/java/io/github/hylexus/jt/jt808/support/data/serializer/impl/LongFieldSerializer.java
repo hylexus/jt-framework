@@ -31,8 +31,6 @@ public class LongFieldSerializer implements Jt808FieldSerializer<Long> {
 
     @Override
     public void serialize(Long object, MsgDataType msgDataType, ByteBuf byteBuf) throws Jt808FieldSerializerException {
-        // TODO overflow --> mask
-        // TODO NPE
         switch (msgDataType) {
             case DWORD:
                 JtProtocolUtils.writeDword(byteBuf, object.intValue());

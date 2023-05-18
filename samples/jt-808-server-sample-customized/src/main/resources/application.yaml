@@ -24,12 +24,10 @@ jt808:
       writer-idle-time: 20m
       all-idle-time: 20m
   msg-processor:
-    thread-pool:
-      # core-pool-size: Runtime.getRuntime().availableProcessors() + 1
-      # maximum-pool-size: 2 * corePoolSize
-      keep-alive-time: 60s
-      blocking-queue-size: 100
-      thread-name-format: '808-msg-processor-%d'
+    executor-group:
+      thread-count: 128
+      pool-name: 808-msg-processor
+      max-pending-tasks: 128
   request-sub-package-storage:
     type: caffeine # caffeine || none
     ## 当且仅当 jt808.request-sub-package-storage.type = caffeine 时生效

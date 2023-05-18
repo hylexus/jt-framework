@@ -4,8 +4,7 @@ icon: home
 title: 主页
 heroText: JT-framework
 heroImage: /logo.png
-heroImageDark: /logo-dark.png
-tagline: 基于 spring-boot-2.x 的 JT/T-808 服务端
+tagline: 基于 spring-boot 的 JT/T-808 服务端
 actions:
   - text: 接入指南
     link: /v2/jt-808/guide/
@@ -24,7 +23,7 @@ features:
 - title: 简洁至上
   details: 注解驱动开发，省时省力。
   icon: semantic
-footer: XXX Licensed | Copyright © 2020-present TODO
+footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">备案号: 沪ICP备2022029946号-2</a >'
 ---
 
 ## 项目结构
@@ -40,30 +39,21 @@ footer: XXX Licensed | Copyright © 2020-present TODO
 ├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
 ├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
 └── samples         # 示例项目
-    ├── jt-808-server-sample-bare           # 几乎零配置的示例
-    ├── jt-808-server-sample-annotation     # 注解相关的示例
-    ├── jt-808-server-sample-customized     # 定制化示例
+    ├── jt-808-server-sample-bare           # 几乎零配置的示例(spring-boot-2.x)
+    ├── jt-808-server-sample-bare-boot3     # 几乎零配置的示例(spring-boot-3.x)
+    ├── jt-808-server-sample-annotation     # 注解相关的示例(spring-boot-2.x)
+    ├── jt-808-server-sample-customized     # 定制化示例(spring-boot-2.x)
+    ├── jt-808-client-sample-debug          # 开发时用来Debug的项目,请忽略
     └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
 ```
-
-## 致谢
-
-- [JTTools](https://jttools.smallchi.cn/jt808)
-- [Netty](https://github.com/netty/netty)
-- [Spring Boot](https://docs.spring.io/spring-boot/docs/2.5.8/reference/html/)
-- [Spring WebFlux](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web-reactive.html#spring-webflux)
-- [Spring WebMvc](https://docs.spring.io/spring-framework/docs/5.2.19.RELEASE/spring-framework-reference/web.html#spring-web)
-- 本文档基于 [VuePress](https://www.vuepress.cn/) 编写
-- 感谢 [vuepress-theme-hope](https://theme-hope.vuejs.press/zh/)
-- `@ExtraMsgBody` 这块的逻辑，感谢这位仁兄 [qianhongtang](https://github.com/qianhongtang) 的启发
 
 ## 软件版本
 
 ::: tip
 
-- JDK : 11+
-- Netty : 4.x
-- VuePress : 2.0.0-beta.59
-- Gradle : 7.5.1
+- JDK : 17+
+- Netty : 4.7.x
+- VuePress : 2.0.0-beta.61
+- Gradle : 7.6
 
 :::

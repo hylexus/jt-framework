@@ -2,11 +2,14 @@ package io.github.hylexus.jt.jt808.support.utils;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.support.annotation.msg.Padding;
+import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField;
 import io.github.hylexus.oaks.utils.BcdOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCounted;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
@@ -37,6 +40,11 @@ public abstract class JtProtocolUtils {
 
     public static ByteBuf writeByte(ByteBuf byteBuf, int value) {
         byteBuf.writeByte(value);
+        return byteBuf;
+    }
+
+    public static ByteBuf writeBytes(ByteBuf byteBuf, byte[] bytes) {
+        byteBuf.writeBytes(bytes);
         return byteBuf;
     }
 
@@ -75,6 +83,10 @@ public abstract class JtProtocolUtils {
         return byteBuf.getInt(start);
     }
 
+    public static long getUnsignedDword(ByteBuf byteBuf, int start) {
+        return byteBuf.getUnsignedInt(start);
+    }
+
     public static int readDword(ByteBuf byteBuf) {
         return byteBuf.readInt();
     }
@@ -85,6 +97,10 @@ public abstract class JtProtocolUtils {
 
     public static ByteBuf writeDword(ByteBuf byteBuf, int value) {
         return byteBuf.writeInt(value);
+    }
+
+    public static ByteBuf writeDword(ByteBuf byteBuf, long value) {
+        return byteBuf.writeInt((int) value);
     }
 
     public static String getBcd(ByteBuf byteBuf, int startIndex, int length) {
@@ -121,6 +137,15 @@ public abstract class JtProtocolUtils {
         return new String(bytes, charset);
     }
 
+    public static ByteBuf writeString(ByteBuf byteBuf, String value, String charset) {
+        try {
+            byteBuf.writeBytes(value.getBytes(charset));
+            return byteBuf;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static ByteBuf writeString(ByteBuf byteBuf, String value, Charset charset) {
         byteBuf.writeBytes(value.getBytes(charset));
         return byteBuf;
@@ -146,21 +171,21 @@ public abstract class JtProtocolUtils {
     public static int generateMsgBodyPropsForJt808(int msgBodySize, int encryptionType, boolean isSubPackage, Jt808ProtocolVersion version, int reversedBit15) {
         // [ 0-9 ] 0000,0011,1111,1111(3FF)(消息体长度)
         int props = (msgBodySize & 0x3FF)
-                    // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
-                    | ((encryptionType << 10) & 0x1C00)
-                    // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
-                    | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
-                    // [14_ ]  0100,0000,0000,0000(4000)(保留位)
-                    | ((version.getVersionBit() << 14) & 0x4000)
-                    // [15_ ]  1000,0000,0000,0000(8000)(保留位)
-                    | ((reversedBit15 << 15) & 0x8000);
+                // [10-12] 0001,1100,0000,0000(1C00)(加密类型)
+                | ((encryptionType << 10) & 0x1C00)
+                // [ 13_ ] 0010,0000,0000,0000(2000)(是否有子包)
+                | (((isSubPackage ? 1 : 0) << 13) & 0x2000)
+                // [14_ ]  0100,0000,0000,0000(4000)(保留位)
+                | ((version.getVersionBit() << 14) & 0x4000)
+                // [15_ ]  1000,0000,0000,0000(8000)(保留位)
+                | ((reversedBit15 << 15) & 0x8000);
         return props & 0xFFFF;
     }
 
     public static int setBitRange(int from, int length, int target, int offset) {
         return ((~(((1 << length) - 1) << offset)) & target)
-               |
-               (from << offset);
+                |
+                (from << offset);
     }
 
     public static String toBinaryString(int value, int width) {
@@ -194,4 +219,31 @@ public abstract class JtProtocolUtils {
             }
         }
     }
+
+    public static void paddingLeft(ByteBuf source, byte[] data, Padding padding) {
+        final int delta = padding.minLength() - data.length;
+        for (int i = 0; i < delta; i++) {
+            source.writeByte(padding.paddingElement());
+        }
+        source.writeBytes(data);
+    }
+
+    public static void paddingRight(ByteBuf source, byte[] data, Padding padding) {
+        source.writeBytes(data);
+        final int delta = padding.minLength() - data.length;
+        for (int i = 0; i < delta; i++) {
+            source.writeByte(padding.paddingElement());
+        }
+    }
+
+    public static void writeBytesWithPadding(ByteBuf source, byte[] data, ResponseField annotation) {
+        if (data.length < annotation.paddingRight().minLength()) {
+            paddingRight(source, data, annotation.paddingRight());
+        } else if (data.length < annotation.paddingLeft().minLength()) {
+            paddingLeft(source, data, annotation.paddingLeft());
+        } else {
+            source.writeBytes(data);
+        }
+    }
+
 }

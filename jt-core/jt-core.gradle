@@ -11,8 +11,12 @@ dependencies {
     api("com.google.guava:guava") {
         exclude(group: "org.checkerframework", module: "checker-qual")
     }
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 test {
     exclude '**/CommandWaitingPoolTest.class'
+
+    useJUnitPlatform()
 }

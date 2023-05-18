@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
  * createdAt 2019/1/24
  **/
 public interface JtProtocolConstant {
+    String DEFAULT_DATE_TIME_FORMAT = "yyMMddHHmmss";
+
     Charset JT_808_STRING_ENCODING = Charset.forName("GBK");
     int PACKAGE_DELIMITER = 0x7E;
     int MAX_PACKAGE_LENGTH = 1024;

@@ -12,7 +12,7 @@ import lombok.Data;
 public class DemoAuthMsgV2013 implements Jt808RequestHeaderAware {
     private Jt808RequestHeader header;
 
-    @RequestField(order = 0, startIndex = 0, dataType = MsgDataType.STRING, lengthMethod = "getAuthCodeByteCount")
+    @RequestField(order = 0, dataType = MsgDataType.STRING, lengthMethod = "getAuthCodeByteCount")
     private String authCode;
 
     public int getAuthCodeByteCount() {

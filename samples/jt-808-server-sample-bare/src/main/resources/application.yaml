@@ -6,6 +6,11 @@ jt808:
       enabled: true
     request-handlers:
       enabled: true
+  features:
+    program-param-printer:
+      # 如果要启用该配置,必须直接或间接引入{@literal com.fasterxml.jackson.core:jackson-databind} 和 {@literal com.fasterxml.jackson.datatype:jackson-datatype-jsr310}
+      enabled: false
+      pretty: true
 logging:
   level:
     root: info

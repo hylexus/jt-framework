@@ -17,9 +17,21 @@ import java.util.Optional;
 public class JavaBeanMetadata {
     private Class<?> originalClass;
     /**
-     * fieldMetadata
+     * All fieldMetadata
      */
     private List<JavaBeanFieldMetadata> fieldMetadataList;
+    /**
+     * Marked by {@link io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField}
+     *
+     * @since 2.1.1
+     */
+    private List<JavaBeanFieldMetadata> requestFieldMetadataList;
+    /**
+     * Marked by {@link io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseField}
+     *
+     * @since 2.1.1
+     */
+    private List<JavaBeanFieldMetadata> responseFieldMetadataList;
     /**
      * fieldName --> fieldMetadata
      */

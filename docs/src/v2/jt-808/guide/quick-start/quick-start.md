@@ -37,18 +37,14 @@ icon: launch
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-dependencies {
-    // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.0"
-    // ...
-}
+implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter-boot2:2.1.1'
 ```
 
 :::
@@ -66,18 +62,14 @@ dependencies {
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-dependencies {
-    // ...
-    implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter', version: "2.1.0"
-    // ...
-}
+implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter:2.1.1'
 ```
 
 :::
@@ -133,14 +125,13 @@ logging:
 注意：
 
 - 无论以什么发包工具发包，都请记得以 `十六进制格式` 发送！可以参考 [推荐发包工具](../../../../frequently-asked-questions/debug.md) 。
-- 如果你是直接点击的下面代码块的「复制按钮」复制的测试报文，最后可能有一个 ~~换行符~~，有些发包工具可能不认识(或者出现一些诡异的现象)，手动删掉这个换行符即可 😂😂😂
 
 :::
 
 - 报文
 
 ```
-7E010040560100000000013912344321007B000B0000313233353931323335393131323334353637383930313233343536373839303132333435363738393069643132333435363738393031323334353637383930313233343536373801B8CA4A2D3635343332313C7E
+[7E010040560100000000013912344321007B000B0000313233353931323335393131323334353637383930313233343536373839303132333435363738393069643132333435363738393031323334353637383930313233343536373801B8CA4A2D3635343332313C7E]
 ```
 
 - 客户端

@@ -23,10 +23,10 @@ public class MsgProcessorExecutorGroupProps {
     private String poolName = "808-msg-processor";
 
     /**
-     * 默认: {@link Runtime#availableProcessors()} * 2。
+     * 默认: 128。
      */
-    @Min(value = 1, message = "threadCount >= 1, defaultValue = Runtime.getRuntime().availableProcessors() * 2")
-    private int threadCount = Runtime.getRuntime().availableProcessors() * 2;
+    @Min(value = 1, message = "threadCount >= 1, defaultValue = 128")
+    private int threadCount = 128;
 
     @Min(value = 16, message = "maxPendingTasks >= 16, defaultValue = 128")
     private int maxPendingTasks = 128;

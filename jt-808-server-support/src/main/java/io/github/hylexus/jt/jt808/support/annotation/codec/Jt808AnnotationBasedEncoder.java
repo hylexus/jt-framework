@@ -20,6 +20,7 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.expression.EvaluationContext;
@@ -34,6 +35,11 @@ import java.util.Map;
 import static io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata.forJt808ResponseMsgDataType;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * @author pruidong
+ * @author hylexus
+ */
+@Slf4j
 public class Jt808AnnotationBasedEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
@@ -97,7 +103,7 @@ public class Jt808AnnotationBasedEncoder {
     }
 
     private void doEncode(Object instance, Class<?> entityClass, ByteBuf byteBuf, Jt808Request request, Jt808Session session) {
-        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
+
         final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
         evaluationContext.setVariable("this", instance);
         if (request != null) {
@@ -107,10 +113,11 @@ public class Jt808AnnotationBasedEncoder {
         if (session != null) {
             evaluationContext.setVariable("session", session);
         }
-        for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getFieldMetadataList()) {
-            if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
-                this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
-            }
+        final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
+        for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getResponseFieldMetadataList()) {
+            //if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
+            this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
+            //}
         }
     }
 
@@ -130,7 +137,7 @@ public class Jt808AnnotationBasedEncoder {
         final Class<? extends Jt808FieldSerializer<?>> customerFieldSerializerClass = fieldAnnotation.customerFieldSerializerClass();
         if (customerFieldSerializerClass != Jt808FieldSerializer.PlaceholderFiledSerializer.class) {
             final Jt808FieldSerializer<Object> fieldSerializer = this.getFieldSerializer(customerFieldSerializerClass);
-            fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
+            this.serialize(fieldMetadata, byteBuf, jtDataType, fieldValue, fieldSerializer);
             return;
         }
         // 2. LIST
@@ -163,7 +170,20 @@ public class Jt808AnnotationBasedEncoder {
         final Jt808FieldSerializer<Object> fieldSerializer = fieldSerializerRegistry.getConverter(forJt808ResponseMsgDataType(fieldType, jtDataType))
                 .orElseThrow(() -> new Jt808FieldSerializerException("Can not serialize [" + fieldMetadata.getField() + "]"));
 
-        fieldSerializer.serialize(fieldValue, jtDataType, byteBuf);
+        this.serialize(fieldMetadata, byteBuf, jtDataType, fieldValue, fieldSerializer);
+    }
+
+    private void serialize(
+            JavaBeanFieldMetadata fieldMetadata, ByteBuf byteBuf,
+            MsgDataType jtDataType, Object fieldValue, Jt808FieldSerializer<Object> fieldSerializer) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Serialize field [{}#{}] by {}",
+                    fieldMetadata.getRawBeanMetadata().getOriginalClass().getSimpleName(),
+                    fieldMetadata.getField().getName(), fieldSerializer);
+        }
+
+        fieldSerializer.serialize(fieldValue, jtDataType, byteBuf, new Jt808FieldSerializer.DefaultInternalEncoderContext(fieldMetadata));
     }
 
     private boolean isConditionNotMatch(String expression, EvaluationContext evaluationContext) {

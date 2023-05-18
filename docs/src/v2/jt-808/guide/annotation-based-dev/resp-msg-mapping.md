@@ -1,5 +1,5 @@
 ---
-icon: return
+icon: at
 ---
 
 # 响应消息映射
@@ -36,7 +36,7 @@ public class RespTerminalSettings {
 
 | 属性                             | 说明                                  | 默认值  | 示例                      |
 |--------------------------------|-------------------------------------|------|-------------------------|
-| `order`                        | 赋值顺序，值越小优先级越高                       | --   | `0`、`1`、`2`             |
+| `order`                        | 赋值顺序，值越小优先级越高(不要求连续，只比较大小)          | --   | `0`、`1`、`2`             |
 | `dataType`                     | 数据类型                                | --   | `WORD`、`BYTE`           |
 | `conditionalOn`                | 支持 `SpEL` , 当且仅当计算结果为 `true` 时才会序列化 | `""` | `"#this.result == 0"`   |
 | `customerFieldSerializerClass` | 自定义反序列化器                            | --   | `"XxxSerializer.class"` |

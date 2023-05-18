@@ -32,7 +32,19 @@ public enum BuiltinJt808MsgType implements MsgType {
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "定位数据上报"),
     CLIENT_LOCATION_INFO_BATCH_UPLOAD(0x0704, "定位数据批量上报"),
 
-    CLIENT_PARAM_QUERY_RESULT(0x0104,"终端参数查询结果")
+    CLIENT_PARAM_QUERY_RESULT(0x0104, "终端参数查询结果"),
+
+    SERVER_SET_CIRCLE_AREA(0x8600, "设置圆形区域"),
+    SERVER_DELETE_CIRCLE_AREA(0x8601, "删除圆形区域"),
+
+    SERVER_SET_RECTANGLE_AREA(0x8602, "设置矩形区域"),
+    SERVER_DELETE_RECTANGLE_AREA(0x8603, "删除矩形区域"),
+
+    SERVER_SET_POLYGON_AREA(0x8604, "设置多边形区域"),
+    SERVER_DELETE_POLYGON_AREA(0x8605, "删除多边形区域"),
+
+    SERVER_TEXT_MESSAGE_DISTRIBUTION(0x8300, "文本信息下发"),
+    SERVER_SET_TERMINAL_PARAM(0x8103, "设置终端参数"),
     ;
 
     private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);
@@ -59,8 +71,8 @@ public enum BuiltinJt808MsgType implements MsgType {
     @Override
     public String toString() {
         return "BuiltInMsgType{"
-               + "msgId=" + msgId
-               + "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\''
-               + '}';
+                + "msgId=" + msgId
+                + "(" + HexStringUtils.int2HexString(msgId, 4, true) + "), desc='" + desc + '\''
+                + '}';
     }
 }

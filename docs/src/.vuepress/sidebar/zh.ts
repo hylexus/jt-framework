@@ -28,7 +28,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/basic/request-sub-package.md',
                     '/v2/jt-808/guide/basic/response-sub-package.md',
                     '/v2/jt-808/guide/basic/handler-interceptor.md',
-                    '/v2/jt-808/guide/basic/summary.md',
+                    // '/v2/jt-808/guide/basic/summary.md',
                 ],
             },
             {
@@ -38,6 +38,9 @@ export const zhSidebar = sidebar({
                 children: [
                     '/v2/jt-808/guide/utilities/jt808-data-type-ops.md',
                     '/v2/jt-808/guide/utilities/msg-builder.md',
+                    '/v2/jt-808/guide/utilities/bit-operator.md',
+                    '/v2/jt-808/guide/utilities/byte-buf-container.md',
+                    '/v2/jt-808/guide/utilities/byte-array-container.md',
                 ]
             },
             {
@@ -45,11 +48,16 @@ export const zhSidebar = sidebar({
                 icon: 'semantic',
                 collapsible: true,
                 children: [
+                    '/v2/jt-808/guide/annotation-based-dev/data-type-mapping.md',
+                    '/v2/jt-808/guide/annotation-based-dev/data-type-mapping-via-alias.md',
                     '/v2/jt-808/guide/annotation-based-dev/req-msg-mapping.md',
                     '/v2/jt-808/guide/annotation-based-dev/resp-msg-mapping.md',
+                    '/v2/jt-808/guide/annotation-based-dev/annotation-alias.md',
+                    '/v2/jt-808/guide/annotation-based-dev/custom-annotation.md',
                     '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-upload-msg-parse-demo.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-batch-upload-msg-parse-demo.md',
+                    '/v2/jt-808/guide/annotation-based-dev/notices-for-builtin-msg.md',
                 ]
             },
             {
@@ -62,6 +70,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/customization/session-config.md',
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
+                    '/v2/jt-808/guide/customization/jt-808-request-filter.md',
                 ]
             },
             {
@@ -81,7 +90,20 @@ export const zhSidebar = sidebar({
                 ]
             },
         ],
-        '/v2/jt-808/config/': ["/v2/jt-808/config/"],
+        '/v2/release-notes': [
+            '/v2/release-notes/latest.md',
+            '/v2/release-notes/2.0.x.md',
+            '/v2/release-notes/1.x.md',
+        ],
+        '/v2/jt-808/config/': [
+            "/v2/jt-808/config/README.md",
+            "/v2/jt-808/config/features.md",
+            "/v2/jt-808/config/protocol.md",
+            "/v2/jt-808/config/server.md",
+            "/v2/jt-808/config/message-processor.md",
+            "/v2/jt-808/config/sub-package.md",
+            "/v2/jt-808/config/others.md",
+        ],
         '/v1/jt-808/config/': ["/v1/jt-808/config/"],
         '/v1/jt-808/guide/': [
             {
@@ -139,6 +161,7 @@ export const zhSidebar = sidebar({
                     "/protocol-introduction/808/v2019.md",
                     "/protocol-introduction/808/v2013.md",
                     "/protocol-introduction/808/v2011.md",
+                    "/protocol-introduction/808/type-mapping.md",
                 ]
             },
 

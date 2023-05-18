@@ -12,4 +12,3 @@ icon: async
 
 具体流程可以结合 [请求生命周期监听器](../customization/request-lifecycle-listener.md) 来了解。
 
-TODO ... 这里补充流程图……………………

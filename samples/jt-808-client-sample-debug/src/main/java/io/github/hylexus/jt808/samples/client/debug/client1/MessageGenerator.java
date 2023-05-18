@@ -22,7 +22,7 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 public class MessageGenerator {
     private static final int[] mileages = {100, 0x7d, 0x7e};
 
-    //public static void main(String[] args) {
+    // public static void main(String[] args) {
     //    final MessageGenerator generator = new MessageGenerator();
     //    //final ByteBuf byteBuf = new MessageGenerator()
     //    .randomClientRegisterV2013(new DefaultJt808FlowIdGenerator(), formatTerminalId("666", Jt808ProtocolVersion.VERSION_2013));
@@ -121,6 +121,8 @@ public class MessageGenerator {
                 .setHeight(22)
                 .setSpeed(80)
                 .setDirection(111)
+                .setLng(121480540 + ThreadLocalRandom.current().nextInt(100000))
+                .setLat(31235930 + ThreadLocalRandom.current().nextInt(100000))
                 .setTime("220322001214")
                 .setExtraItemList(List.of(
                         new ClientLocationUploadMsgV2019.ExtraItem().setId(0x01).setContentLength(4).setContent(IntBitOps.intTo4Bytes(mileage))
@@ -146,8 +148,8 @@ public class MessageGenerator {
                 .body(writer -> writer
                         .writeDWord(0)
                         .writeDWord(0)
-                        .writeDWord(0)
-                        .writeDWord(0)
+                        .writeDWord(31235930 + ThreadLocalRandom.current().nextInt(100000))
+                        .writeDWord(121480540 + ThreadLocalRandom.current().nextInt(100000))
                         // 16 height
                         .writeWord(22)
                         .writeWord(100)
