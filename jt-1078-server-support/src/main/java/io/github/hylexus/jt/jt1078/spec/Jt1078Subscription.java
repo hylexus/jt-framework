@@ -1,12 +1,13 @@
 package io.github.hylexus.jt.jt1078.spec;
 
-/**
- * @author hylexus
- */
-public interface Jt1078Subscription<T> {
+public class Jt1078Subscription {
+    private final Jt1078Request request;
 
-    Jt1078SubscriptionType type();
+    public Jt1078Subscription(Jt1078Request request) {
+        this.request = request;
+    }
 
-    byte[] payload();
-
+    public Jt1078Request getRequest() {
+        return request;
+    }
 }

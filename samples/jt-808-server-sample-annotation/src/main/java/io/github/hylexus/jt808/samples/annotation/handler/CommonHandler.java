@@ -5,7 +5,9 @@ import io.github.hylexus.jt.jt808.spec.CommandWaitingPool;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2019;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0800Alias;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinTerminalCommonReplyMsg;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
@@ -17,6 +19,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.AUTO_DETECTION;
 import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
@@ -26,6 +29,13 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 @Component
 @Jt808RequestHandler
 public class CommonHandler {
+
+    @Jt808RequestHandlerMapping(msgType = 0x0800, versions = AUTO_DETECTION)
+    public BuiltinServerCommonReplyMsg processMsg0800(Jt808RequestEntity<BuiltinMsg0800Alias> request) {
+        final BuiltinMsg0800Alias body = request.body();
+        log.info("多媒体事件信息上传: {}", body);
+        return BuiltinServerCommonReplyMsg.success(request.msgId(), request.flowId());
+    }
 
     @Jt808RequestHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
     public void processMsg0001(Jt808RequestEntity<BuiltinTerminalCommonReplyMsg> request) {

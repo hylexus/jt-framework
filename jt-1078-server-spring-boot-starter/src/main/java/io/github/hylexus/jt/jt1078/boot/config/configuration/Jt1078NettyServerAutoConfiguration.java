@@ -1,16 +1,15 @@
 package io.github.hylexus.jt.jt1078.boot.config.configuration;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriptionManager;
 import io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionManager;
-import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriptionManager;
-import io.github.hylexus.jt.jt1078.support.codec.Jt1078CollectorFactory;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherInternal;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078MsgDecoder;
-import io.github.hylexus.jt.jt1078.support.codec.impl.DefaultJt1078CollectorFactory;
 import io.github.hylexus.jt.jt1078.support.codec.impl.DefaultJt1078MsgDecoder;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultPublisherBasedJt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyChildHandlerInitializer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyTcpServer;
@@ -39,6 +38,16 @@ public class Jt1078NettyServerAutoConfiguration {
     }
 
     @Bean
+    public Jt1078PublisherInternal internalJt1078Publisher() {
+        return new DefaultJt1078Publisher();
+    }
+
+    @Bean
+    public Jt1078RequestHandler defaultSubscriberBasedJt1078RequestHandler(Jt1078PublisherInternal jt1078PublisherManager) {
+        return new DefaultPublisherBasedJt1078RequestHandler(jt1078PublisherManager);
+    }
+
+    @Bean
     @ConditionalOnMissingBean
     public Jt1078RequestMsgDispatcher jt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager, List<Jt1078RequestHandler> handlers) {
         return new DefaultJt1078RequestMsgDispatcher(sessionManager, handlers);
@@ -59,7 +68,7 @@ public class Jt1078NettyServerAutoConfiguration {
         return new Jt1078ServerNettyConfigure.DefaultJt1078ServerNettyConfigure(jt1078DispatcherChannelHandler);
     }
 
-    @Bean
+    @Bean(initMethod = "doStart", destroyMethod = "doStop")
     @ConditionalOnMissingBean
     public Jt1078NettyTcpServer jt808NettyTcpServer(Jt1078ServerNettyConfigure configure) {
         final Jt1078NettyTcpServer server = new Jt1078NettyTcpServer(
@@ -74,15 +83,4 @@ public class Jt1078NettyServerAutoConfiguration {
         return server;
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public Jt1078CollectorFactory jt1078CollectorFactory() {
-        return new DefaultJt1078CollectorFactory();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public Jt1078SubscriptionManager jt1078PublisherManager(Jt1078SessionManager sessionManager, Jt1078CollectorFactory collectorFactory) {
-        return new DefaultJt1078SubscriptionManager(sessionManager, collectorFactory);
-    }
 }

@@ -34,6 +34,8 @@ public enum BuiltinJt808MsgType implements MsgType {
 
     CLIENT_PARAM_QUERY_RESULT(0x0104, "终端参数查询结果"),
 
+    CLIENT_MULTI_MEDIA_MSG_UPLOAD(0x0800, "多媒体事件信息上传"),
+
     SERVER_SET_CIRCLE_AREA(0x8600, "设置圆形区域"),
     SERVER_DELETE_CIRCLE_AREA(0x8601, "删除圆形区域"),
 
@@ -45,6 +47,10 @@ public enum BuiltinJt808MsgType implements MsgType {
 
     SERVER_TEXT_MESSAGE_DISTRIBUTION(0x8300, "文本信息下发"),
     SERVER_SET_TERMINAL_PARAM(0x8103, "设置终端参数"),
+
+    // 1078
+    SERVER_RTM_REQUEST(0x9101, "实时音视频传输请求"),
+    SERVER_RTM_CONTROL(0x9102, "实时音视频传输控制"),
     ;
 
     private static final Map<Integer, BuiltinJt808MsgType> mapping = new HashMap<>(BuiltinJt808MsgType.values().length);

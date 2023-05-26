@@ -4,3 +4,6 @@ spring:
   profiles:
     active: local
 
+jt1078:
+  dump:
+    path: ~/tmp/jtt/temp.data

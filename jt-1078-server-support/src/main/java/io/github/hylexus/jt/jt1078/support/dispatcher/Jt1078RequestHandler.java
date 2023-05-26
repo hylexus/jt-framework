@@ -1,9 +1,9 @@
 package io.github.hylexus.jt.jt1078.support.dispatcher;
 
 import io.github.hylexus.jt.core.OrderedComponent;
-import io.github.hylexus.jt.jt1078.spec.*;
+import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.Jt1078RequestHeader;
 import io.github.hylexus.jt.utils.HexStringUtils;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 public interface Jt1078RequestHandler extends OrderedComponent {
@@ -30,19 +30,4 @@ public interface Jt1078RequestHandler extends OrderedComponent {
         }
     }
 
-    @Getter
-    class ConvertiblePair {
-        private final Jt1078PayloadType sourceType;
-        private final Jt1078SubscriptionType targetType;
-
-        public ConvertiblePair(Jt1078PayloadType sourceType, Jt1078SubscriptionType targetType) {
-            this.sourceType = sourceType;
-            this.targetType = targetType;
-        }
-
-        public boolean support(Jt1078SubscriptionSelector selector) {
-            return this.sourceType.equals(selector.sourceType())
-                    && this.targetType.equals(selector.targetType());
-        }
-    }
 }

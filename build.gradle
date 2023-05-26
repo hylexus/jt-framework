@@ -12,6 +12,7 @@ ext {
     springBoot3Modules = [
             "jt-808-server-sample-bare-boot3",
             "jt-808-server-spring-boot-starter",
+            "jt-1078-server-sample-debug",
     ]
 }
 

@@ -38,7 +38,7 @@ public interface Jt1078ServerNettyConfigure extends JtServerNettyConfigure {
             pipeline.addLast(
                     "handler",
                     new DelimiterBasedFrameDecoder(
-                            1024,
+                            2048,
                             Unpooled.copiedBuffer(new byte[]{0x30, 0x31, 0x63, 0x64})
                     )
             );

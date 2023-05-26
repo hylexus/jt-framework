@@ -17,9 +17,85 @@
 <body>
 
 <div id="app" class="container">
+    <div class="well">
+        <h3>0x9101</h3>
+        <form class="form-inline" style="margin: 10px 0;">
+            <div class="form-group">
+                <label for="terminalId9101">TerminalId</label>
+                <input id="terminalId9101" type="text" v-model="payload9101.terminalId"/>
+            </div>
+            <div class="form-group">
+                <label for="serverIp9101">serverIp</label>
+                <input id="serverIp9101" type="text" v-model="payload9101.serverIp"/>
+            </div>
+            <div class="form-group">
+                <label for="serverPortTcp9101">serverPortTcp</label>
+                <input id="serverPortTcp9101" type="number" v-model="payload9101.serverPortTcp"/>
+            </div>
+            <div class="form-group">
+                <label for="serverPortUdp9101">serverPortUdp</label>
+                <input id="serverPortUdp9101" type="number" v-model="payload9101.serverPortUdp"/>
+            </div>
+            <div class="form-group">
+                <label for="channelNumber9101">channelNumber</label>
+                <input id="channelNumber9101" type="number" v-model="payload9101.channelNumber"/>
+            </div>
+            <div class="form-group">
+                <label for="dataType9101">dataType</label>
+                <input id="dataType9101" type="number" v-model="payload9101.dataType"/>
+            </div>
+            <div class="form-group">
+                <label for="streamType9101">streamType</label>
+                <input id="streamType9101" type="number" v-model="payload9101.streamType"/>
+            </div>
+        </form>
+        <div class="form-group">
+            <button class="btn btn-success btn-sm" @click="sendMsg9101">Send</button>
+        </div>
+
+        <div>
+            {{ response9101 }}
+        </div>
+    </div>
+
+    <div class="well">
+        <h3>0x9102</h3>
+        <form class="form-inline" style="margin: 10px 0;">
+            <div class="form-group">
+                <label for="terminalId9102">TerminalId</label>
+                <input id="terminalId9102" type="text" v-model="payload9102.terminalId"/>
+            </div>
+
+            <div class="form-group">
+                <label for="channelNumberTcp9102">channelNumber</label>
+                <input id="channelNumberTcp9102" type="number" v-model="payload9102.channelNumber"/>
+            </div>
+            <div class="form-group">
+                <label for="command9102">command</label>
+                <input id="command9102" type="number" v-model="payload9102.command"/>
+            </div>
+            <div class="form-group">
+                <label for="mediaTypeToClose9102">streamType</label>
+                <input id="mediaTypeToClose9102" type="number" v-model="payload9102.mediaTypeToClose"/>
+            </div>
+            <div class="form-group">
+                <label for="streamType9102">streamType</label>
+                <input id="streamType9102" type="number" v-model="payload9102.streamType"/>
+            </div>
+
+        </form>
+        <div class="form-group">
+            <button class="btn btn-success btn-sm" @click="sendMsg9102">Send</button>
+        </div>
+
+        <div>
+            {{ response9102 }}
+        </div>
+    </div>
+
     <form class="form-inline" style="margin: 10px 0;">
         <div class="form-group">
-            <button class="btn btn-success btn-sm" @click="loadTerminals()">Refresh</button>
+            <button class="btn btn-success btn-sm" @click="loadTerminals()">RefreshTerminalList</button>
         </div>
     </form>
 
@@ -49,7 +125,25 @@
     new Vue({
         el: '#app',
         data: {
-            terminalList: []
+            terminalList: [],
+            payload9101: {
+                terminalId: "011122233344",
+                serverIp: "128.88.99.22",
+                serverPortTcp: 61078,
+                serverPortUdp: 61078,
+                channelNumber: 3,
+                dataType: 0,
+                streamType: 1,
+            },
+            response9101: "",
+            payload9102: {
+                terminalId: "011122233344",
+                channelNumber: 3,
+                command: 0,
+                mediaTypeToClose: 0,
+                streamType: 1,
+            },
+            response9102: "",
         },
         created: function () {
             this.loadTerminals()
@@ -59,12 +153,34 @@
                 const context = this
                 axios.get('/debug/terminals')
                     .then(function (response) {
-                        context.terminalList = response.data
+                        context.terminalList = response.data.data
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-            }
+            },
+            sendMsg9101: function () {
+                const context = this
+                axios.post('/debug/send-msg/9101', context.payload9101)
+                    .then(function (response) {
+                        console.log(response)
+                        context.response9101 = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            sendMsg9102: function () {
+                const context = this
+                axios.post('/debug/send-msg/9102', context.payload9102)
+                    .then(function (response) {
+                        console.log(response)
+                        context.response9102 = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
 
         },
         watch: {}

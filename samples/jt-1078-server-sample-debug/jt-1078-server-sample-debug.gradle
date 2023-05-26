@@ -1,5 +1,5 @@
 plugins {
-    id "org.springframework.boot" version "${defaultSpringBootBomVersion}"
+    id "org.springframework.boot" version "${maximumSpringBootBomVersion}"
 }
 apply plugin: 'org.springframework.boot'
 
@@ -18,4 +18,8 @@ dependencies {
     api "org.springframework.boot:spring-boot-starter-webflux"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+test {
+    useJUnitPlatform()
 }
