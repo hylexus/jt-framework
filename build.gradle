@@ -13,6 +13,7 @@ ext {
             "jt-808-server-sample-bare-boot3",
             "jt-808-server-spring-boot-starter",
             "jt-1078-server-sample-debug",
+            "jt-1078-server-spring-boot-starter",
     ]
 }
 
@@ -33,7 +34,11 @@ configure(rootProject) {
 
 configure(allprojects) { project ->
     group = projectGroup
-    version = projectVersion
+    if (project.name.contains("jt-1078")) {
+        version = projectVersion + "-RC"
+    } else {
+        version = projectVersion
+    }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile) {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
@@ -56,7 +61,9 @@ def modulesToPublishToMavenRepo = [
         "jt-core", "jt-spring", "jt-808-server-support",
         "jt-808-server-spring-boot-autoconfigure",
         "jt-808-server-spring-boot-starter-boot2",
-        "jt-808-server-spring-boot-starter"
+        "jt-808-server-spring-boot-starter",
+        "jt-1078-server-support",
+        "jt-1078-server-spring-boot-starter",
 ]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)

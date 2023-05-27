@@ -14,7 +14,6 @@ import io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyChildHandlerInitializer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyTcpServer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078ServerNettyConfigure;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
@@ -24,7 +23,6 @@ import java.util.List;
  * @author hylexus
  */
 // TODO configurable
-@AutoConfiguration
 public class Jt1078NettyServerAutoConfiguration {
 
     @Bean

@@ -18,21 +18,33 @@ public interface Jt1078RequestHeader {
      */
     short offset4();
 
+    /**
+     * V: 固定为 2
+     */
     @SuppressWarnings("checkstyle:methodname")
     default byte v() {
         return (byte) ((this.offset4() >> 6) & 0b11);
     }
 
+    /**
+     * P: 固定为 2
+     */
     @SuppressWarnings("checkstyle:methodname")
     default byte p() {
         return (byte) ((this.offset4() >> 5) & 0b01);
     }
 
+    /**
+     * X: RTP头是否需要扩展位，固定为 0
+     */
     @SuppressWarnings("checkstyle:methodname")
     default byte x() {
         return (byte) ((this.offset4() >> 4) & 0b01);
     }
 
+    /**
+     * V: 固定为 1
+     */
     @SuppressWarnings("checkstyle:methodname")
     default byte cc() {
         return (byte) (this.offset4() & 0x0f);
@@ -43,15 +55,24 @@ public interface Jt1078RequestHeader {
      */
     short offset5();
 
+    /**
+     * M: 标志位，确定是否是完整数据帧的边界
+     */
     @SuppressWarnings("checkstyle:methodname")
     default byte m() {
         return (byte) ((this.offset5() >> 7) & 0b01);
     }
 
+    /**
+     * PT: 负载类型
+     */
     default byte pt() {
         return (byte) (this.offset5() & 0b0111_1111);
     }
 
+    /**
+     * PT: 负载类型
+     */
     Jt1078PayloadType payloadType();
 
     int offset6();
@@ -63,6 +84,9 @@ public interface Jt1078RequestHeader {
         return offset6();
     }
 
+    /**
+     * @return SIM 卡号
+     */
     String offset8();
 
     /**
@@ -72,6 +96,9 @@ public interface Jt1078RequestHeader {
         return offset8();
     }
 
+    /**
+     * bytes[14,15)    逻辑通道号
+     */
     short offset14();
 
     /**
@@ -89,17 +116,23 @@ public interface Jt1078RequestHeader {
     /**
      * 数据类型
      *
-     * @param offset15 消息头中第15个字节
+     * @param offset15 消息头中第15个字节的高四位
      * @return 高四位
      */
     static byte dataTypeValue(short offset15) {
         return (byte) ((offset15 >> 4) & 0x0f);
     }
 
+    /**
+     * 数据类型
+     */
     default byte dataTypeValue() {
         return dataTypeValue(this.offset15());
     }
 
+    /**
+     * 数据类型
+     */
     Jt1078DataType dataType();
 
     /**
@@ -112,10 +145,18 @@ public interface Jt1078RequestHeader {
         return (byte) (offset15 & 0x0f);
     }
 
+    /**
+     * 分包处理标记
+     *
+     * @return 分包处理标记
+     */
     default byte subPackageIdentifierValue() {
         return subPackageIdentifierValue(this.offset15());
     }
 
+    /**
+     * @return 分包处理标记
+     */
     Jt1078SubPackageIdentifier subPackageIdentifier();
 
     static boolean hasFrameIntervalFields(byte dataType) {

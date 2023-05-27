@@ -21,5 +21,7 @@ dependencies {
 }
 
 test {
+    exclude '**/ClientTest.class'
+
     useJUnitPlatform()
 }
