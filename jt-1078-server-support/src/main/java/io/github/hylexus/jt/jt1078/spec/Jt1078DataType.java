@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.spec;
 
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078DataType;
+import io.github.hylexus.jt.jt1078.support.exception.Jt1078DecodeException;
 
 import java.util.Optional;
 
@@ -8,6 +9,12 @@ import java.util.Optional;
  * @author hylexus
  */
 public interface Jt1078DataType {
+    Jt1078DataType VIDEO_I = DefaultJt1078DataType.VIDEO_I;
+    Jt1078DataType VIDEO_P = DefaultJt1078DataType.VIDEO_P;
+    Jt1078DataType VIDEO_B = DefaultJt1078DataType.VIDEO_B;
+    Jt1078DataType AUDIO = DefaultJt1078DataType.AUDIO;
+    Jt1078DataType TRANSPARENT_TRANSMISSION = DefaultJt1078DataType.TRANSPARENT_TRANSMISSION;
+
     byte value();
 
     String desc();
@@ -36,47 +43,8 @@ public interface Jt1078DataType {
     }
 
     static Jt1078DataType createOrDefault(byte value) {
-        return DefaultJt1078DataType.VIDEO_I.fromByte(value)
-                .orElseGet(() -> new Jt1078DataType.UnknownJt1078DataType(value));
-    }
-
-    class UnknownJt1078DataType implements Jt1078DataType {
-        private byte value;
-        private String desc;
-
-        public UnknownJt1078DataType(byte value) {
-            this(value, "UnknownJt1078DataType(" + value + ")");
-        }
-
-        public UnknownJt1078DataType(byte value, String desc) {
-            this.value = value;
-            this.desc = desc;
-        }
-
-        @Override
-        public byte value() {
-            return value;
-        }
-
-        public UnknownJt1078DataType value(byte value) {
-            this.value = value;
-            return this;
-        }
-
-        @Override
-        public String desc() {
-            return desc;
-        }
-
-        public UnknownJt1078DataType desc(String desc) {
-            this.desc = desc;
-            return this;
-        }
-
-        @Override
-        public Optional<Jt1078DataType> fromByte(byte value) {
-            return Optional.of(new UnknownJt1078DataType(value));
-        }
+        return Jt1078DataType.VIDEO_I.fromByte(value)
+                .orElseThrow(() -> new Jt1078DecodeException("Unknown dataType " + value));
     }
 
 }

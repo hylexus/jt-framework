@@ -39,6 +39,8 @@ include 'jt-808-server-spring-boot-autoconfigure'
 include 'jt-808-server-spring-boot-starter-boot2'
 include 'jt-808-server-spring-boot-starter'
 include 'jt-1078-server-support'
+include 'jt-1078-server-spring-boot-autoconfigure'
+include 'jt-1078-server-spring-boot-starter-boot2'
 include 'jt-1078-server-spring-boot-starter'
 
 // samples
