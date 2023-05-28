@@ -9,10 +9,23 @@ import java.time.Duration;
  */
 public interface Jt1078Publisher {
 
-    // TODO 这个方法写成通用的订阅(hdfs, nginx, ...)
-    Flux<Jt1078Subscription> subscribeForEver();
+    default Flux<Jt1078Subscription> subscribe() {
+        return this.doSubscribe().dataStream();
+    }
 
-    Flux<Jt1078Subscription> subscribe(Duration timeout);
+    default Flux<Jt1078Subscription> subscribe(Duration timeout) {
+        return this.doSubscribe(timeout).dataStream();
+    }
 
-    Flux<Jt1078Subscription> subscribe(String sim, short channelNumber, Duration timeout);
+    default Flux<Jt1078Subscription> subscribe(String sim, short channelNumber, Duration timeout) {
+        return this.doSubscribe(sim, channelNumber, timeout).dataStream();
+    }
+
+    Jt1078Subscriber doSubscribe();
+
+    Jt1078Subscriber doSubscribe(Duration timeout);
+
+    Jt1078Subscriber doSubscribe(String sim, short channelNumber, Duration timeout);
+
+    void unsubscribe(String id);
 }

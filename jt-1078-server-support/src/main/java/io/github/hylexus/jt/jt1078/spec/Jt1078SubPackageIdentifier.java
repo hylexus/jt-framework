@@ -9,7 +9,7 @@ import java.util.Optional;
  * @author hylexus
  */
 public interface Jt1078SubPackageIdentifier {
-    Jt1078SubPackageIdentifier ATOMIC = Jt1078SubPackageIdentifier.ATOMIC;
+    Jt1078SubPackageIdentifier ATOMIC = DefaultJt1078SubPackageIdentifier.ATOMIC;
     Jt1078SubPackageIdentifier FIRST_SUB_PACKAGE = DefaultJt1078SubPackageIdentifier.FIRST_SUB_PACKAGE;
     Jt1078SubPackageIdentifier LAST_SUB_PACKAGE = DefaultJt1078SubPackageIdentifier.LAST_SUB_PACKAGE;
     Jt1078SubPackageIdentifier MIDDLE_SUB_PACKAGE = DefaultJt1078SubPackageIdentifier.MIDDLE_SUB_PACKAGE;
