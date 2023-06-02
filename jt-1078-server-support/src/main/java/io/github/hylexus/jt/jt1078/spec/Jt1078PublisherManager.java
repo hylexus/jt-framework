@@ -7,11 +7,11 @@ public interface Jt1078PublisherManager {
     Stream<Jt1078SubscriberDescriptor> list();
 
     default Stream<Jt1078SubscriberDescriptor> list(String sim) {
-        return list().filter(it -> it.sim().equals(sim));
+        return list().filter(it -> it.getSim().equals(sim));
     }
 
     default Stream<Jt1078SubscriberDescriptor> list(String sim, short channel) {
-        return this.list(sim).filter(it -> it.channel() == channel);
+        return this.list(sim).filter(it -> it.getChannel() == channel);
     }
 
     void closeSubscriber(String id);

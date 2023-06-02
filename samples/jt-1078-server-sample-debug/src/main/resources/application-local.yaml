@@ -1,7 +1,0 @@
-server:
-  port: 8989
-logging:
-  level:
-    root: info
-    io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler: debug
-    io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler: debug

@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt1078.spec;
 
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
+import org.springframework.lang.Nullable;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
@@ -28,4 +30,10 @@ public interface Jt1078Publisher {
     Jt1078Subscriber doSubscribe(String sim, short channelNumber, Duration timeout);
 
     void unsubscribe(String id);
+
+    default void unsubscribeWithSim(String sim) {
+        this.unsubscribeWithSim(sim, null);
+    }
+
+    void unsubscribeWithSim(String sim, @Nullable Jt1078SubscriberCloseException reason);
 }

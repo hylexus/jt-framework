@@ -1,0 +1,26 @@
+plugins {
+    id "org.springframework.boot" version "${maximumSpringBootBomVersion}"
+}
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    getMainClass().set('io.github.hylexus.jt.jt1078.samples.webmvc.boot3.Jt1078ServerSampleWebMvcBoot3Application')
+}
+
+bootJar {
+    getArchiveFileName().set("${project.name}.jar")
+}
+
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    api(project(":jt-1078-server-spring-boot-starter"))
+    api "org.springframework.boot:spring-boot-starter-web"
+    api "org.springframework.boot:spring-boot-starter-websocket"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 
+import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE;
+import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
+
 /**
  * @author hylexus
  */
@@ -32,7 +35,7 @@ public class Jt1078DispatcherChannelHandler extends ChannelInboundHandlerAdapter
     }
 
     @Override
-    public void channelRead(@Nonnull ChannelHandlerContext ctx, @Nonnull Object msg) throws Exception {
+    public void channelRead(@Nonnull ChannelHandlerContext ctx, @Nonnull Object msg) {
         if (msg instanceof ByteBuf) {
             final ByteBuf buf = (ByteBuf) msg;
             try {
@@ -68,5 +71,16 @@ public class Jt1078DispatcherChannelHandler extends ChannelInboundHandlerAdapter
         } else {
             ctx.fireChannelRead(msg);
         }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), SERVER_EXCEPTION_OCCURRED);
+        log.error("[exceptionCaught]", cause);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
     }
 }

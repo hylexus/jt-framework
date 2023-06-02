@@ -51,6 +51,9 @@ public class Jt1078Controller {
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, 5L, TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
+        if (resp == null) {
+            return Resp.empty("未收到终端回复");
+        }
         return Resp.success(resp);
     }
 
@@ -70,6 +73,10 @@ public class Jt1078Controller {
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, 30L, TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
+
+        if (resp == null) {
+            return Resp.empty("未收到终端回复");
+        }
 
         return Resp.success(resp);
     }

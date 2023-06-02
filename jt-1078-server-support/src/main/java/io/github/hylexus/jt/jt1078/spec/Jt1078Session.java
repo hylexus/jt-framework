@@ -12,6 +12,8 @@ public interface Jt1078Session {
 
     Channel channel();
 
+    Jt1078Session channel(Channel channel);
+
     long lastCommunicateTimestamp();
 
     Jt1078Session lastCommunicateTimestamp(long time);

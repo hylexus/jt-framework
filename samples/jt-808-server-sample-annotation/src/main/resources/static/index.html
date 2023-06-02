@@ -1,125 +1,122 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.js"></script>
-
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vue/2.6.14/vue.js"></script>
-
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css"
-          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 </head>
 <body>
+<div id="app">
+    <el-row :gutter="10">
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>0x9101</span>
+                </div>
+                <el-form size="mini" :inline="true" label-width="180px">
+                    <el-form-item label="TerminalId">
+                        <el-input id="terminalId9101" type="text" v-model="payload9101.terminalId"/>
+                    </el-form-item>
+                    <el-form-item label="serverIp">
+                        <el-input id="serverIp9101" type="text" v-model="payload9101.serverIp"/>
+                    </el-form-item>
+                    <el-form-item label="serverPortTcp">
+                        <el-input-number :controls="false" v-model="payload9101.serverPortTcp"/>
+                    </el-form-item>
+                    <el-form-item label="serverPortUdp">
+                        <el-input-number :controls="false" v-model="payload9101.serverPortUdp"/>
+                    </el-form-item>
+                    <el-form-item label="channelNumber">
+                        <el-input-number :controls="false" v-model="payload9101.channelNumber"/>
+                    </el-form-item>
+                    <el-form-item label="dataType">
+                        <el-input-number :controls="false" id="dataType9101" type="number" v-model="payload9101.dataType"/>
+                    </el-form-item>
+                    <el-form-item label="streamType">
+                        <el-input-number :controls="false" id="streamType9101" type="number" v-model="payload9101.streamType"/>
+                    </el-form-item>
+                    <div>
+                        {{ response9101 }}
+                    </div>
+                    <el-form-item>
+                        <el-button type="primary" @click="sendMsg9101">Send</el-button>
+                    </el-form-item>
 
-<div id="app" class="container">
-    <div class="well">
-        <h3>0x9101</h3>
-        <form class="form-inline" style="margin: 10px 0;">
-            <div class="form-group">
-                <label for="terminalId9101">TerminalId</label>
-                <input id="terminalId9101" type="text" v-model="payload9101.terminalId"/>
-            </div>
-            <div class="form-group">
-                <label for="serverIp9101">serverIp</label>
-                <input id="serverIp9101" type="text" v-model="payload9101.serverIp"/>
-            </div>
-            <div class="form-group">
-                <label for="serverPortTcp9101">serverPortTcp</label>
-                <input id="serverPortTcp9101" type="number" v-model="payload9101.serverPortTcp"/>
-            </div>
-            <div class="form-group">
-                <label for="serverPortUdp9101">serverPortUdp</label>
-                <input id="serverPortUdp9101" type="number" v-model="payload9101.serverPortUdp"/>
-            </div>
-            <div class="form-group">
-                <label for="channelNumber9101">channelNumber</label>
-                <input id="channelNumber9101" type="number" v-model="payload9101.channelNumber"/>
-            </div>
-            <div class="form-group">
-                <label for="dataType9101">dataType</label>
-                <input id="dataType9101" type="number" v-model="payload9101.dataType"/>
-            </div>
-            <div class="form-group">
-                <label for="streamType9101">streamType</label>
-                <input id="streamType9101" type="number" v-model="payload9101.streamType"/>
-            </div>
-        </form>
-        <div class="form-group">
-            <button class="btn btn-success btn-sm" @click="sendMsg9101">Send</button>
-        </div>
+                </el-form>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>0x9102</span>
+                </div>
+                <el-form size="mini" :inline="true" label-width="180px">
+                    <el-form-item label="terminalId9102">
+                        <el-input v-model="payload9102.terminalId"/>
+                    </el-form-item>
+                    <el-form-item label="channelNumberTcp9102">
+                        <el-input-number :controls="false" v-model="payload9102.channelNumber"/>
+                    </el-form-item>
+                    <el-form-item label="command9102">
+                        <el-input-number :controls="false" v-model="payload9102.command"/>
+                    </el-form-item>
+                    <el-form-item label="mediaTypeToClose9102">
+                        <el-input-number :controls="false" type="number" v-model="payload9102.mediaTypeToClose"/>
+                    </el-form-item>
+                    <el-form-item label="streamType9102">
+                        <el-input-number :controls="false" type="number" v-model="payload9102.streamType"/>
+                    </el-form-item>
+                    <div>
+                        {{ response9102 }}
+                    </div>
+                    <el-form-item>
+                        <el-button type="primary" @click="sendMsg9102">Send</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-col>
+    </el-row>
 
-        <div>
-            {{ response9101 }}
-        </div>
-    </div>
-
-    <div class="well">
-        <h3>0x9102</h3>
-        <form class="form-inline" style="margin: 10px 0;">
-            <div class="form-group">
-                <label for="terminalId9102">TerminalId</label>
-                <input id="terminalId9102" type="text" v-model="payload9102.terminalId"/>
+    <el-row>
+        <el-card class="box-card my-box">
+            <div slot="header" class="clearfix">
+                <span>Terminal List</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="loadTerminals">RefreshTerminalList</el-button>
             </div>
+            <el-table
+                    :data="terminalList"
+                    style="width: 100%">
+                <el-table-column
+                        prop="terminalId"
+                        label="terminalId"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="version"
+                        label="version"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="lastCommunicationTime"
+                        label="lastCommunicationTime"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="latestGeo"
+                        label="latestGeo"
+                >
+                </el-table-column>
+            </el-table>
+        </el-card>
 
-            <div class="form-group">
-                <label for="channelNumberTcp9102">channelNumber</label>
-                <input id="channelNumberTcp9102" type="number" v-model="payload9102.channelNumber"/>
-            </div>
-            <div class="form-group">
-                <label for="command9102">command</label>
-                <input id="command9102" type="number" v-model="payload9102.command"/>
-            </div>
-            <div class="form-group">
-                <label for="mediaTypeToClose9102">streamType</label>
-                <input id="mediaTypeToClose9102" type="number" v-model="payload9102.mediaTypeToClose"/>
-            </div>
-            <div class="form-group">
-                <label for="streamType9102">streamType</label>
-                <input id="streamType9102" type="number" v-model="payload9102.streamType"/>
-            </div>
+    </el-row>
 
-        </form>
-        <div class="form-group">
-            <button class="btn btn-success btn-sm" @click="sendMsg9102">Send</button>
-        </div>
-
-        <div>
-            {{ response9102 }}
-        </div>
-    </div>
-
-    <form class="form-inline" style="margin: 10px 0;">
-        <div class="form-group">
-            <button class="btn btn-success btn-sm" @click="loadTerminals()">RefreshTerminalList</button>
-        </div>
-    </form>
-
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th scope="col">TerminalId</th>
-            <th scope="col">Version</th>
-            <th scope="col">LastCommunicationTime</th>
-            <th scope="col">LatestGeo</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <tr v-for="it in terminalList">
-            <td>{{ it.terminalId }}</td>
-            <td>{{ it.version }}</td>
-            <td>{{ it.lastCommunicationTime }}</td>
-            <td>{{ it.latestGeo }}</td>
-        </tr>
-
-        </tbody>
-    </table>
 </div>
+
+</body>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.js"></script>
 
 <script type="text/javascript">
     new Vue({
@@ -127,8 +124,8 @@
         data: {
             terminalList: [],
             payload9101: {
-                terminalId: "011122233344",
-                serverIp: "128.88.99.22",
+                terminalId: "018008501119",
+                serverIp: "1.1.1.1",
                 serverPortTcp: 61078,
                 serverPortUdp: 61078,
                 channelNumber: 3,
@@ -137,7 +134,7 @@
             },
             response9101: "",
             payload9102: {
-                terminalId: "011122233344",
+                terminalId: "018008501119",
                 channelNumber: 3,
                 command: 0,
                 mediaTypeToClose: 0,
@@ -186,5 +183,9 @@
         watch: {}
     })
 </script>
-</body>
+<style type="text/css">
+    .my-box {
+        margin-bottom: 10px;
+    }
+</style>
 </html>

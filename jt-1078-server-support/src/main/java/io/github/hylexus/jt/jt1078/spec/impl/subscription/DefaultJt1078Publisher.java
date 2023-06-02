@@ -1,15 +1,19 @@
 package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 
 import io.github.hylexus.jt.jt1078.spec.*;
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
 import java.time.Duration;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -27,6 +31,14 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
             return of("placeholder", (short) -1);
         }
 
+        static String ofGlobalUuid() {
+            return ofUuid("placeholder", (short) -1);
+        }
+
+        static String ofUuid(String sim, short channel) {
+            return sim + "_" + channel + "_" + UUID.randomUUID();
+        }
+
         private Key(String sim, short channel) {
             this.sim = sim;
             this.channel = channel;
@@ -34,8 +46,12 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             final Key key = (Key) o;
             return channel == key.channel && Objects.equals(sim, key.sim);
         }
@@ -54,11 +70,21 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
         }
     }
 
+    private static class InternalSubscriber {
+        private final FluxSink<Jt1078Subscription> sink;
+        private final LocalDateTime createdAt;
+
+        private InternalSubscriber(FluxSink<Jt1078Subscription> sink, LocalDateTime createdAt) {
+            this.sink = sink;
+            this.createdAt = createdAt;
+        }
+    }
+
     // <uuid, Subscriber>
-    private final Map<String, FluxSink<Jt1078Subscription>> staticSinks = new HashMap<>();
+    private final ConcurrentMap<String, InternalSubscriber> staticSinks = new ConcurrentHashMap<>();
 
     // <sim_channel, <uuid, Subscriber>>
-    private final Map<Key, Map<String, FluxSink<Jt1078Subscription>>> dynamicSinks = new HashMap<>();
+    private final Map<Key, ConcurrentMap<String, InternalSubscriber>> dynamicSinks = new ConcurrentHashMap<>();
 
     public DefaultJt1078Publisher() {
         this.dynamicSinks.put(Key.ofGlobal(), this.staticSinks);
@@ -66,25 +92,34 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
     @Override
     public Jt1078Subscriber doSubscribe() {
-        final String uuid = randomKey();
+        final String uuid = Key.ofGlobalUuid();
         final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("staticSinks add");
-            this.staticSinks.put(uuid, fluxSink);
+            synchronized (this.staticSinks) {
+                this.staticSinks.put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+            }
         }).doFinally(signalType -> {
-            this.staticSinks.remove(uuid);
+            log.info("Subscriber {} removed", uuid);
+            synchronized (this.staticSinks) {
+                this.staticSinks.remove(uuid);
+            }
         });
         return new DefaultJt1078Subscriber(uuid, dataStream);
     }
 
     @Override
     public Jt1078Subscriber doSubscribe(Duration timeout) {
-        final String id = randomKey();
+        final String id = Key.ofGlobalUuid();
         final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("Subscribe ... {}", id);
-            this.staticSinks.put(id, fluxSink);
+            synchronized (this.staticSinks) {
+                this.staticSinks.put(id, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+            }
         }).timeout(timeout).doFinally(sig -> {
             log.info("Subscriber {} removed", id);
-            this.staticSinks.remove(id);
+            synchronized (this.staticSinks) {
+                this.staticSinks.remove(id);
+            }
         });
 
         return new DefaultJt1078Subscriber(id, dataStream);
@@ -93,17 +128,21 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     @Override
     public Jt1078Subscriber doSubscribe(String sim, short channelNumber, Duration timeout) {
         final Key key = Key.of(sim, channelNumber);
-        final String uuid = randomKey();
+        final String uuid = Key.ofUuid(sim, channelNumber);
 
         final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("Subscribe ... {}", key);
-            dynamicSinks.computeIfAbsent(key, k -> new HashMap<>())
-                    .put(uuid, fluxSink);
+            synchronized (this.dynamicSinks) {
+                this.dynamicSinks.computeIfAbsent(key, k -> new ConcurrentHashMap<>())
+                        .put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+            }
         }).timeout(timeout).doFinally(signalType -> {
             log.info("Subscriber {} removed", uuid);
-            final Map<String, FluxSink<Jt1078Subscription>> map = this.dynamicSinks.get(key);
-            if (map != null) {
-                map.remove(uuid);
+            synchronized (this.dynamicSinks) {
+                final Map<String, InternalSubscriber> map = this.dynamicSinks.get(key);
+                if (map != null) {
+                    map.remove(uuid);
+                }
             }
         });
 
@@ -112,46 +151,66 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
     @Override
     public void unsubscribe(String id) {
-        final FluxSink<Jt1078Subscription> subscriber = this.staticSinks.remove(id);
+        final InternalSubscriber subscriber = this.staticSinks.get(id);
         if (subscriber != null) {
-            subscriber.complete();
+            subscriber.sink.complete();
         }
 
-        for (final Map<String, FluxSink<Jt1078Subscription>> map : this.dynamicSinks.values()) {
-            final FluxSink<Jt1078Subscription> sink = map.remove(id);
-            if (sink != null) {
-                sink.complete();
+        for (final Map<String, InternalSubscriber> map : this.dynamicSinks.values()) {
+            final InternalSubscriber internalSubscriber = map.get(id);
+            if (internalSubscriber != null) {
+                internalSubscriber.sink.complete();
             }
         }
     }
 
     @Override
+    public void unsubscribeWithSim(String sim, @Nullable Jt1078SubscriberCloseException reason) {
+        this.dynamicSinks.forEach(((key, stringInternalSubscriberMap) -> {
+            if (key.sim.equals(sim)) {
+                stringInternalSubscriberMap.values().forEach((internalSubscriber -> {
+                    try {
+                        if (reason == null) {
+                            internalSubscriber.sink.complete();
+                        } else {
+                            internalSubscriber.sink.error(reason);
+                        }
+                    } catch (Throwable e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }));
+            }
+        }));
+
+    }
+
+    @Override
     public void publish(Jt1078Subscription subscription) {
 
-        for (final FluxSink<Jt1078Subscription> sink : this.staticSinks.values()) {
-            sink.next(subscription);
+        for (final InternalSubscriber internalSubscriber : this.staticSinks.values()) {
+            internalSubscriber.sink.next(subscription);
         }
 
         final Jt1078Request request = subscription.getRequest();
         final Key key = Key.of(request.sim(), request.channelNumber());
-        final Map<String, FluxSink<Jt1078Subscription>> sinkMap = this.dynamicSinks.get(key);
+        final Map<String, InternalSubscriber> sinkMap = this.dynamicSinks.get(key);
         if (sinkMap != null) {
-            for (final FluxSink<Jt1078Subscription> sink : sinkMap.values()) {
-                sink.next(subscription);
+            for (final InternalSubscriber subscriber : sinkMap.values()) {
+                subscriber.sink.next(subscription);
             }
         }
     }
 
     @Override
     public void close() {
-        for (final FluxSink<Jt1078Subscription> sink : this.staticSinks.values()) {
-            sink.complete();
+        for (final InternalSubscriber internalSubscriber : this.staticSinks.values()) {
+            internalSubscriber.sink.complete();
         }
         this.staticSinks.clear();
 
-        for (final Map<String, FluxSink<Jt1078Subscription>> map : this.dynamicSinks.values()) {
-            for (final FluxSink<Jt1078Subscription> sink : map.values()) {
-                sink.complete();
+        for (final Map<String, InternalSubscriber> map : this.dynamicSinks.values()) {
+            for (final InternalSubscriber subscriber : map.values()) {
+                subscriber.sink.complete();
             }
         }
         this.dynamicSinks.clear();
@@ -162,9 +221,9 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
         return this.dynamicSinks.entrySet().stream().flatMap(it -> {
             final Key key = it.getKey();
-            final Map<String, FluxSink<Jt1078Subscription>> map = it.getValue();
-            return map.keySet().stream()
-                    .map(id -> new DefaultJt1078SubscriberDescriptor(id, key.sim, key.channel, null));
+            final Map<String, InternalSubscriber> map = it.getValue();
+            return map.entrySet().stream()
+                    .map(id -> new DefaultJt1078SubscriberDescriptor(id.getKey(), key.sim, key.channel, id.getValue().createdAt, null));
         });
     }
 
@@ -173,7 +232,4 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
         this.unsubscribe(id);
     }
 
-    private String randomKey() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
-    }
 }

@@ -2,6 +2,7 @@ dependencies {
     api(project(":jt-core"))
 
     api "io.netty:netty-all"
+    api "io.projectreactor:reactor-core"
     api 'org.springframework:spring-context'
     api 'org.apache.commons:commons-lang3'
 

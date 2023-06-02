@@ -1,13 +1,17 @@
 package io.github.hylexus.jt.jt1078.spec;
 
+import java.time.LocalDateTime;
+
 public interface Jt1078SubscriberDescriptor {
-    String id();
+    String getId();
 
-    String sim();
+    String getSim();
 
-    short channel();
+    short getChannel();
 
-    default String desc() {
+    LocalDateTime getCreatedAt();
+
+    default String getDesc() {
         return "Jt1078Subscriber";
     }
 }

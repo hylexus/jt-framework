@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: jt-1078-server-sample-debug
-  profiles:
-    active: local
-
-jt1078:
-  dump:
-    path: ~/tmp/jtt/temp.data
