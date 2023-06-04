@@ -39,10 +39,9 @@ public class WebSocketSubscriberDemo01 implements WebSocketHandler {
 
         log.info("New publisher: {}", params);
         return this.jt1078Publisher.subscribe(params.sim(), params.channel(), Duration.ofSeconds(params.timeoutInSeconds()))
-                .filter(it -> it.getRequest().payloadType() == DefaultJt1078PayloadType.H264)
+                .filter(it -> it.getHeader().payloadType() == DefaultJt1078PayloadType.H264)
                 .flatMap(subscription -> {
-                    final byte[] data = new byte[subscription.getRequest().body().readableBytes()];
-                    subscription.getRequest().body().getBytes(0, data);
+                    final byte[] data = subscription.getData();
 
                     log.info("WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
                     final WebSocketMessage webSocketMessage = session.binaryMessage(factory -> factory.wrap(data));

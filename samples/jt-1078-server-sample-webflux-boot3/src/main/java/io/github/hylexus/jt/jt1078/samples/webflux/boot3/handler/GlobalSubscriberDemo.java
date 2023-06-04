@@ -1,9 +1,6 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.handler;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @Component
-public class DemoSubscriber {
+public class GlobalSubscriberDemo {
     private final Jt1078Publisher publisher;
     private final Jt1078SessionManager sessionManager;
     private final String basePath;
@@ -29,7 +26,7 @@ public class DemoSubscriber {
 
     private final Map<String, OutputStream> outputStreamMap = new HashMap<>();
 
-    public DemoSubscriber(Jt1078Publisher publisher, Jt1078SessionManager sessionManager, @Value("${jt1078.dump.collector-path}") String path) {
+    public GlobalSubscriberDemo(Jt1078Publisher publisher, Jt1078SessionManager sessionManager, @Value("${jt1078.dump.collector-path}") String path) {
         this.publisher = publisher;
         this.sessionManager = sessionManager;
         this.basePath = path;
@@ -41,24 +38,24 @@ public class DemoSubscriber {
     }
 
     public void doSubscribe() {
-        this.publisher.subscribe()
+        this.publisher.subscribe(Jt1078SubscriptionCollector.PASS_THROUGH)
                 .doOnNext(it -> {
-                    final Jt1078Request request = it.getRequest();
-                    request.rawByteBuf();
-                    final Optional<Jt1078Session> bySim = sessionManager.findBySim(request.sim());
-                    if (bySim.isEmpty()) {
+                    final Jt1078RequestHeader header = it.getHeader();
+                    final Optional<Jt1078Session> sessionOptional = sessionManager.findBySim(header.sim());
+                    if (sessionOptional.isEmpty()) {
                         return;
                     }
-                    final String sim = bySim.get().sim();
+                    final String sim = sessionOptional.get().sim();
                     final OutputStream stream = getOutputStream(sim);
                     log.info("----------------------------------------");
                     try {
                         stream.write(new byte[]{0x30, 0x31, 0x63, 0x64});
-                        request.rawByteBuf().readBytes(stream, request.rawByteBuf().readableBytes());
+                        stream.write(it.getData());
                     } catch (IOException e) {
                         log.error(e.getMessage(), e);
                     }
-                }).subscribe();
+                })
+                .subscribe();
     }
 
     private synchronized OutputStream getOutputStream(String sim) {

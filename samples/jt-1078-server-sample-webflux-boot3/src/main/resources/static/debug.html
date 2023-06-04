@@ -203,7 +203,7 @@
         methods: {
             doSubscribe: function () {
                 const context = this
-                axios.get('/jt1078/subscribe/ffmpeg?sim=' + this.subscribeForm.sim + '&timeout=' + this.subscribeForm.timeout + '&channel=' + this.subscribeForm.channel + '')
+                axios.get('/jt1078/subscriber/ffmpeg?sim=' + this.subscribeForm.sim + '&timeout=' + this.subscribeForm.timeout + '&channel=' + this.subscribeForm.channel + '')
                     .then(function (response) {
                         console.log(response)
                         context.reloadProcessList()
@@ -222,7 +222,7 @@
                 }
 
                 this.tmp.currentProcessInfo = row
-                this.tmp.eventSource = new EventSource('/ffmpeg/processes/' + row.id + '/std-error');
+                this.tmp.eventSource = new EventSource('/jt1078/subscriber/ffmpeg/processes/' + row.id + '/std-error');
 
                 const context = this
                 this.tmp.eventSource.onopen = function () {
@@ -249,7 +249,7 @@
                 this.tmp.eventSourceTips = '已断开到 ' + this.tmp.currentProcessInfo.id + ' 控制台的连接'
             },
             destroyProcess(row) {
-                const url = "/ffmpeg/processes/" + row.id + "/destroy";
+                const url = "/jt1078/subscriber/ffmpeg/processes/" + row.id + "/destroy";
                 const context = this
                 axios.get(url)
                     .then(function (response) {
@@ -263,7 +263,7 @@
 
             reloadProcessList: function () {
                 const context = this
-                axios.get('ffmpeg/processes/list')
+                axios.get('/jt1078/subscriber/ffmpeg/processes/list')
                     .then(function (response) {
                         console.log(response)
                         context.tableData = response.data
@@ -274,7 +274,7 @@
             },
             reloadSubscriberList: function () {
                 const context = this
-                axios.get('subscriber/list')
+                axios.get('/jt1078/subscriber/list')
                     .then(function (response) {
                         console.log(response)
                         context.subscriberList = response.data

@@ -73,10 +73,14 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     private static class InternalSubscriber {
         private final FluxSink<Jt1078Subscription> sink;
         private final LocalDateTime createdAt;
+        private final Jt1078SubscriptionCollector<Jt1078Subscription> collector;
+        private final String desc;
 
-        private InternalSubscriber(FluxSink<Jt1078Subscription> sink, LocalDateTime createdAt) {
+        private InternalSubscriber(FluxSink<Jt1078Subscription> sink, LocalDateTime createdAt, Jt1078SubscriptionCollector<Jt1078Subscription> collector, String desc) {
             this.sink = sink;
             this.createdAt = createdAt;
+            this.collector = collector;
+            this.desc = desc;
         }
     }
 
@@ -91,30 +95,38 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     }
 
     @Override
-    public Jt1078Subscriber doSubscribe() {
+    public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Jt1078SubscriptionCollector<S> converter) {
         final String uuid = Key.ofGlobalUuid();
-        final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
+        final Flux<S> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("staticSinks add");
             synchronized (this.staticSinks) {
-                this.staticSinks.put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+                @SuppressWarnings("unchecked") final Jt1078SubscriptionCollector<Jt1078Subscription> c = (Jt1078SubscriptionCollector<Jt1078Subscription>) converter;
+                this.staticSinks.put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now(), c, "GlobalSubscriber"));
             }
+        }).map(it -> {
+            @SuppressWarnings("unchecked") S r = (S) it;
+            return r;
         }).doFinally(signalType -> {
             log.info("Subscriber {} removed", uuid);
             synchronized (this.staticSinks) {
                 this.staticSinks.remove(uuid);
             }
         });
-        return new DefaultJt1078Subscriber(uuid, dataStream);
+        return new DefaultJt1078Subscriber<>(uuid, dataStream);
     }
 
     @Override
-    public Jt1078Subscriber doSubscribe(Duration timeout) {
+    public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Jt1078SubscriptionCollector<S> converter, Duration timeout) {
         final String id = Key.ofGlobalUuid();
-        final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
+        final Flux<S> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("Subscribe ... {}", id);
             synchronized (this.staticSinks) {
-                this.staticSinks.put(id, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+                @SuppressWarnings("unchecked") final Jt1078SubscriptionCollector<Jt1078Subscription> c = (Jt1078SubscriptionCollector<Jt1078Subscription>) converter;
+                this.staticSinks.put(id, new InternalSubscriber(fluxSink, LocalDateTime.now(), c, "GlobalSubscriber"));
             }
+        }).map(it -> {
+            @SuppressWarnings("unchecked") S r = (S) it;
+            return r;
         }).timeout(timeout).doFinally(sig -> {
             log.info("Subscriber {} removed", id);
             synchronized (this.staticSinks) {
@@ -122,31 +134,35 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
             }
         });
 
-        return new DefaultJt1078Subscriber(id, dataStream);
+        return new DefaultJt1078Subscriber<>(id, dataStream);
     }
 
     @Override
-    public Jt1078Subscriber doSubscribe(String sim, short channelNumber, Duration timeout) {
+    public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Jt1078SubscriptionCollector<S> converter, String sim, short channelNumber, Duration timeout) {
         final Key key = Key.of(sim, channelNumber);
         final String uuid = Key.ofUuid(sim, channelNumber);
 
-        final Flux<Jt1078Subscription> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
+        final Flux<S> dataStream = Flux.<Jt1078Subscription>create(fluxSink -> {
             log.info("Subscribe ... {}", key);
             synchronized (this.dynamicSinks) {
+                @SuppressWarnings("unchecked") final Jt1078SubscriptionCollector<Jt1078Subscription> c = (Jt1078SubscriptionCollector<Jt1078Subscription>) converter;
                 this.dynamicSinks.computeIfAbsent(key, k -> new ConcurrentHashMap<>())
-                        .put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now()));
+                        .put(uuid, new InternalSubscriber(fluxSink, LocalDateTime.now(), c, "DynamicSubscriber(sim=" + sim + ",channel=" + channelNumber + ")"));
             }
+        }).map(it -> {
+            @SuppressWarnings("unchecked") S r = (S) it;
+            return r;
         }).timeout(timeout).doFinally(signalType -> {
             log.info("Subscriber {} removed", uuid);
             synchronized (this.dynamicSinks) {
-                final Map<String, InternalSubscriber> map = this.dynamicSinks.get(key);
+                final ConcurrentMap<String, InternalSubscriber> map = this.dynamicSinks.get(key);
                 if (map != null) {
                     map.remove(uuid);
                 }
             }
         });
 
-        return new DefaultJt1078Subscriber(uuid, dataStream);
+        return new DefaultJt1078Subscriber<>(uuid, dataStream);
     }
 
     @Override
@@ -156,7 +172,7 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
             subscriber.sink.complete();
         }
 
-        for (final Map<String, InternalSubscriber> map : this.dynamicSinks.values()) {
+        for (final ConcurrentMap<String, InternalSubscriber> map : this.dynamicSinks.values()) {
             final InternalSubscriber internalSubscriber = map.get(id);
             if (internalSubscriber != null) {
                 internalSubscriber.sink.complete();
@@ -185,18 +201,16 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     }
 
     @Override
-    public void publish(Jt1078Subscription subscription) {
-
+    public void publish(Jt1078Request request) {
         for (final InternalSubscriber internalSubscriber : this.staticSinks.values()) {
-            internalSubscriber.sink.next(subscription);
+            internalSubscriber.collector.collect(request).ifPresent(internalSubscriber.sink::next);
         }
 
-        final Jt1078Request request = subscription.getRequest();
         final Key key = Key.of(request.sim(), request.channelNumber());
-        final Map<String, InternalSubscriber> sinkMap = this.dynamicSinks.get(key);
+        final ConcurrentMap<String, InternalSubscriber> sinkMap = this.dynamicSinks.get(key);
         if (sinkMap != null) {
             for (final InternalSubscriber subscriber : sinkMap.values()) {
-                subscriber.sink.next(subscription);
+                subscriber.collector.collect(request).ifPresent(subscriber.sink::next);
             }
         }
     }
@@ -208,7 +222,7 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
         }
         this.staticSinks.clear();
 
-        for (final Map<String, InternalSubscriber> map : this.dynamicSinks.values()) {
+        for (final ConcurrentMap<String, InternalSubscriber> map : this.dynamicSinks.values()) {
             for (final InternalSubscriber subscriber : map.values()) {
                 subscriber.sink.complete();
             }
@@ -223,7 +237,10 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
             final Key key = it.getKey();
             final Map<String, InternalSubscriber> map = it.getValue();
             return map.entrySet().stream()
-                    .map(id -> new DefaultJt1078SubscriberDescriptor(id.getKey(), key.sim, key.channel, id.getValue().createdAt, null));
+                    .map(id -> {
+                        final InternalSubscriber value = id.getValue();
+                        return new DefaultJt1078SubscriberDescriptor(id.getKey(), key.sim, key.channel, value.createdAt, value.desc);
+                    });
         });
     }
 

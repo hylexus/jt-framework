@@ -8,5 +8,4 @@ spring:
 
 jt1078:
   dump:
-    path: /Users/hylexus/tmp/jtt/temp.data
     collector-path: /Users/hylexus/tmp/jtt/collector

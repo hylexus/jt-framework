@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.dispatcher.impl;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherInternal;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
 
@@ -20,6 +19,6 @@ public class DefaultPublisherBasedJt1078RequestHandler implements Jt1078RequestH
 
     @Override
     public void handle(Jt1078Request request) {
-        jt1078PublisherManager.publish(new Jt1078Subscription(request));
+        jt1078PublisherManager.publish(request);
     }
 }

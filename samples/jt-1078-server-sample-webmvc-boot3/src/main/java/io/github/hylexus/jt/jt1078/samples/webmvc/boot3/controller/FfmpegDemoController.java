@@ -51,11 +51,10 @@ public class FfmpegDemoController {
         this.publisher.subscribe(sim, channel, timeout)
                 .publishOn(Schedulers.newBoundedElastic(2, 128, "demo"))
                 // 仅仅过滤出 h264 数据
-                .filter(it -> it.getRequest().payloadType() == DefaultJt1078PayloadType.H264)
+                .filter(it -> it.getHeader().payloadType() == DefaultJt1078PayloadType.H264)
                 // 当有数据到来时发送给 ffmpeg
                 .doOnNext(subscription -> {
-                    final byte[] data = new byte[subscription.getRequest().body().readableBytes()];
-                    subscription.getRequest().body().getBytes(0, data);
+                    final byte[] data = subscription.getData();
                     log.info("Ffmpeg outbound: {}", HexStringUtils.bytes2HexString(data));
                     platformProcess.writeDataToStdIn(data, 0, data.length);
                 })
