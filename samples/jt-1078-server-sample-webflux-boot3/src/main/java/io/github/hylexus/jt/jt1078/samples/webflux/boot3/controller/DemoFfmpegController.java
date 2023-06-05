@@ -45,13 +45,8 @@ public class DemoFfmpegController {
         final String command = "ffmpeg -i - -vcodec libx264 -acodec copy -f flv " + rtmpEndpoint;
 
         final PlatformProcess platformProcess = this.platformProcessManager.createProcess(command);
-        // final BuiltinFfmpegTransfer platformProcess = new BuiltinFfmpegTransfer(command);
 
-        // 另起一个线程来启动 ffmpeg 的进程
-        // 你也可以提交到你自定义的线程池中
         platformProcess.start();
-
-        // new Thread(() -> this.logFfmpegProcessOutput(platformProcess)).start();
 
         final Duration timeout = Duration.ofSeconds(timeoutInSeconds);
         this.publisher.subscribe(sim, channel, timeout)

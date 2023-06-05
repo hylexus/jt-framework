@@ -18,11 +18,12 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
     public static final String PATH_PATTERN = "/jt1078/subscription/{sim}/{channel}";
-    private final Map<String, WebSocketSession> sessionMap = new HashMap<>();
+    private final Map<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
     private final UriTemplate uriTemplate;
     private final Jt1078Publisher publisher;
 
@@ -35,7 +36,9 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         final Params params = this.parseParams(session);
         log.info("{}", params);
-        sessionMap.put(session.getId(), session);
+        synchronized (this.sessionMap) {
+            sessionMap.put(session.getId(), session);
+        }
         log.info("session add : {}", session);
 
         this.publisher.subscribe(params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
@@ -50,12 +53,14 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
                     }
                 })
                 .doFinally(signalType -> {
-                    final WebSocketSession remove = sessionMap.remove(session.getId());
-                    if (remove != null) {
-                        try {
-                            remove.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                    synchronized (this.sessionMap) {
+                        final WebSocketSession remove = sessionMap.remove(session.getId());
+                        if (remove != null) {
+                            try {
+                                remove.close();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
                 })
@@ -65,7 +70,9 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus closeStatus) throws Exception {
-        this.sessionMap.remove(session.getId());
+        synchronized (this.sessionMap) {
+            this.sessionMap.remove(session.getId());
+        }
         log.info("session {} closed with status  {}", session, closeStatus);
     }
 

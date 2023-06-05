@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.config;
 
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.web.WebSocketSubscriberDemo01;
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.web.WebSocketSubscriberDemo02;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class WebSocketConfig {
         SimpleUrlHandlerMapping simpleUrlHandlerMapping = new SimpleUrlHandlerMapping();
         Map<String, WebSocketHandler> handlerMap = new LinkedHashMap<>();
         handlerMap.put(WebSocketSubscriberDemo01.PATH_PATTERN, new WebSocketSubscriberDemo01(h264Jt1078Publisher1));
+        handlerMap.put(WebSocketSubscriberDemo02.PATH_PATTERN, new WebSocketSubscriberDemo02(h264Jt1078Publisher1));
         simpleUrlHandlerMapping.setUrlMap(handlerMap);
         simpleUrlHandlerMapping.setOrder(-1);
         return simpleUrlHandlerMapping;
