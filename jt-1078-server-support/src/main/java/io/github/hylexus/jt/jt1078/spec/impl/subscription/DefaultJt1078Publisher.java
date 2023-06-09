@@ -202,16 +202,20 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
     @Override
     public void publish(Jt1078Request request) {
-        for (final InternalSubscriber internalSubscriber : this.staticSinks.values()) {
-            internalSubscriber.collector.collect(request).ifPresent(internalSubscriber.sink::next);
-        }
-
-        final Key key = Key.of(request.sim(), request.channelNumber());
-        final ConcurrentMap<String, InternalSubscriber> sinkMap = this.dynamicSinks.get(key);
-        if (sinkMap != null) {
-            for (final InternalSubscriber subscriber : sinkMap.values()) {
-                subscriber.collector.collect(request).ifPresent(subscriber.sink::next);
+        try {
+            for (final InternalSubscriber internalSubscriber : this.staticSinks.values()) {
+                internalSubscriber.collector.collect(request).ifPresent(internalSubscriber.sink::next);
             }
+
+            final Key key = Key.of(request.sim(), request.channelNumber());
+            final ConcurrentMap<String, InternalSubscriber> sinkMap = this.dynamicSinks.get(key);
+            if (sinkMap != null) {
+                for (final InternalSubscriber subscriber : sinkMap.values()) {
+                    subscriber.collector.collect(request).ifPresent(subscriber.sink::next);
+                }
+            }
+        } finally {
+            request.release();
         }
     }
 

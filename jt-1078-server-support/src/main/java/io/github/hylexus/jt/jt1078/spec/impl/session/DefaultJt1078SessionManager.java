@@ -101,7 +101,11 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         final Jt1078Session session = this.removeBySessionId(sessionId);
         if (session != null) {
             invokeListeners(listener -> listener.onSessionClose(session, reason));
-            session.channel().close();
+            try {
+                session.channel().close().sync();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

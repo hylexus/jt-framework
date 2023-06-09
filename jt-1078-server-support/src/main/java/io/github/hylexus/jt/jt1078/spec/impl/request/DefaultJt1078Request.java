@@ -6,6 +6,9 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestHeader;
 import io.netty.buffer.ByteBuf;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author hylexus
  */
@@ -15,6 +18,7 @@ public class DefaultJt1078Request implements Jt1078Request, Jt1078Request.Jt1078
     private Jt1078RequestHeader header;
     private ByteBuf rawByteBuf;
     private ByteBuf body;
+    private Map<String, Object> attr = new HashMap<>();
 
     protected DefaultJt1078Request(Jt1078RequestHeader header, ByteBuf rawByteBuf, ByteBuf body) {
         this.header = header;
@@ -76,6 +80,11 @@ public class DefaultJt1078Request implements Jt1078Request, Jt1078Request.Jt1078
                 JtCommonUtils.release(oldBuf);
             }
         }
+    }
+
+    @Override
+    public Map<String, Object> attributes() {
+        return this.attr;
     }
 
     @Override

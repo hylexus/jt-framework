@@ -5,6 +5,9 @@ import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078Request;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nullable;
+import java.util.Map;
+
 /**
  * @author hylexus
  */
@@ -17,6 +20,7 @@ public interface Jt1078Request {
 
     Jt1078RequestHeader header();
 
+    @Nullable
     ByteBuf rawByteBuf();
 
     /**
@@ -26,6 +30,14 @@ public interface Jt1078Request {
 
     default void release() {
         JtCommonUtils.release(this.rawByteBuf(), this.body());
+    }
+
+    default void retain() {
+        final ByteBuf byteBuf = rawByteBuf();
+        if (byteBuf != null) {
+            byteBuf.retain();
+        }
+        body().retain();
     }
 
     default Jt1078RequestBuilder mutate() {
@@ -55,6 +67,13 @@ public interface Jt1078Request {
 
     default byte dataTypeValue() {
         return header().dataTypeValue();
+    }
+
+    Map<String, Object> attributes();
+
+    default Jt1078Request attribute(String key, Object value) {
+        attributes().put(key, value);
+        return this;
     }
 
     interface Jt1078RequestBuilder {

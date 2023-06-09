@@ -79,6 +79,11 @@ export const zhNavbar = navbar([
                 },
                 {
                     text: 'User', children: [
+                        {
+                            text: '小蒲的大门牙',
+                            icon: 'profile',
+                            link: 'https://www.douyin.com/search/%E5%B0%8F%E8%92%B2%E7%9A%84%E5%A4%A7%E9%97%A8%E7%89%99?source=search_sug&aid=abd4e6d3-b10f-4374-a311-aaf7d5229e59&enter_from=recommend&gid=7218499611265191180&aweme_id=7218499611265191180'
+                        },
                         {text: 'qianhongtang', icon: 'profile', link: 'https://github.com/qianhongtang'},
                         {text: 'pruidong', icon: 'profile', link: 'https://github.com/pruidong'},
                     ],

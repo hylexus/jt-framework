@@ -26,6 +26,8 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
     private Integer offset26;
     private int offset28;
 
+    private boolean combined = false;
+
     public DefaultJt1078RequestHeader() {
     }
 
@@ -34,7 +36,8 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
             int offset6, String offset8,
             short offset14, short offset15,
             Long offset16, Integer offset24,
-            Integer offset26, int offset28) {
+            Integer offset26, int offset28,
+            boolean isCombined) {
 
         this.offset4 = offset4;
         this.offset5(offset5);
@@ -46,6 +49,7 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
         this.offset24 = offset24;
         this.offset26 = offset26;
         this.offset28 = offset28;
+        this.combined = isCombined;
     }
 
     public DefaultJt1078RequestHeader(Jt1078RequestHeader another) {
@@ -53,10 +57,13 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
                 .offset5(another.offset5())
                 .offset6(another.offset6())
                 .offset8(another.offset8())
+                .offset14(another.offset14())
+                .offset15(another.offset15())
                 .offset16(another.offset16().orElse(null))
                 .offset24(another.offset24().orElse(null))
                 .offset26(another.offset26().orElse(null))
-                .offset28(another.offset28());
+                .offset28(another.offset28())
+                .isCombined(another.isCombined());
     }
 
     @Override
@@ -135,8 +142,20 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
     }
 
     @Override
+    public Jt1078RequestHeaderBuilder dataType(short value) {
+        this.offset15 = (short) (this.offset15 | ((value & 0xf) << 4));
+        return this;
+    }
+
+    @Override
     public Jt1078DataType dataType() {
         return dataType;
+    }
+
+    @Override
+    public Jt1078RequestHeaderBuilder subPackageIdentifier(short value) {
+        this.offset15 = (short) (this.offset15 | (value & 0xf));
+        return this;
     }
 
     @Override
@@ -189,17 +208,30 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
     }
 
     @Override
+    public boolean isCombined() {
+        return this.combined;
+    }
+
+    @Override
+    public Jt1078RequestHeaderBuilder isCombined(boolean isCombined) {
+        this.combined = isCombined;
+        return this;
+    }
+
+    @Override
     public Jt1078RequestHeader build() {
         return new DefaultJt1078RequestHeader(
                 this.offset4, this.offset5, this.offset6, this.offset8, this.offset14,
-                this.offset15, this.offset16, this.offset24, this.offset26, this.offset28
+                this.offset15, this.offset16, this.offset24, this.offset26, this.offset28,
+                this.combined
         );
     }
 
     @Override
     public String toString() {
         return "DefaultJt1078RequestHeader{"
-                + "offset4=" + offset4
+                + "isCombined=" + isCombined()
+                + ", offset4=" + offset4
                 + ", P=" + p()
                 + ", X=" + x()
                 + ", CC=" + cc()

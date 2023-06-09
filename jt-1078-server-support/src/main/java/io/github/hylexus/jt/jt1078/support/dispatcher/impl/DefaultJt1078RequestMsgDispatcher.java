@@ -2,9 +2,12 @@ package io.github.hylexus.jt.jt1078.support.dispatcher.impl;
 
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListener;
+import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListenerAware;
+import io.github.hylexus.jt.jt1078.support.codec.Jt1078RequestSubPackageCombiner;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Comparator;
@@ -15,29 +18,41 @@ import java.util.stream.Collectors;
  * @author hylexus
  */
 @Slf4j
-public class DefaultJt1078RequestMsgDispatcher implements Jt1078RequestMsgDispatcher {
+public class DefaultJt1078RequestMsgDispatcher implements Jt1078RequestMsgDispatcher, Jt1078RequestLifecycleListenerAware {
 
-    private final Jt1078SessionManager sessionManager;
     private final List<Jt1078RequestHandler> handlers;
-    private final Jt1078RequestHandler loggingHandler = new Jt1078RequestHandler.LoggingJt1078RequestHandler();
 
-    public DefaultJt1078RequestMsgDispatcher(Jt1078SessionManager sessionManager, List<Jt1078RequestHandler> handlers) {
-        this.sessionManager = sessionManager;
+    private Jt1078RequestLifecycleListener lifecycleListener;
+
+    private final Jt1078RequestSubPackageCombiner subPackageCombiner;
+
+    private final Jt1078RequestHandler loggingOnlyHandler = new Jt1078RequestHandler.LoggingJt1078RequestHandler();
+
+    public DefaultJt1078RequestMsgDispatcher(List<Jt1078RequestHandler> handlers, Jt1078RequestSubPackageCombiner subPackageCombiner) {
         this.handlers = handlers.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).collect(Collectors.toList());
+        this.subPackageCombiner = subPackageCombiner;
     }
 
     @Override
-    public void doDispatch(Jt1078Request request) throws Throwable {
+    public void doDispatch(Jt1078Request request) {
         try {
-            this.doDispatchInternal(request);
+            this.subPackageCombiner.tryCombine(request).ifPresent(combinedRequest -> {
+                if (log.isDebugEnabled()) {
+                    log.debug("combinedRequest: {}", HexStringUtils.byteBufToHexString(combinedRequest.body()));
+                    log.debug("combinedRequest: {}", combinedRequest);
+                }
+                this.doDispatchInternal(combinedRequest);
+            });
         } finally {
             request.release();
         }
     }
 
-    private void doDispatchInternal(Jt1078Request request) throws Throwable {
-
-        // TODO mapping, adapter, result
+    private void doDispatchInternal(Jt1078Request request) {
+        final boolean continueProcess = this.lifecycleListener.beforeHandle(request);
+        if (!continueProcess) {
+            return;
+        }
         this.getHandler(request).handle(request);
     }
 
@@ -47,7 +62,11 @@ public class DefaultJt1078RequestMsgDispatcher implements Jt1078RequestMsgDispat
                 return handler;
             }
         }
-        return loggingHandler;
+        return loggingOnlyHandler;
     }
 
+    @Override
+    public void setRequestLifecycleListener(Jt1078RequestLifecycleListener listener) {
+        this.lifecycleListener = listener;
+    }
 }

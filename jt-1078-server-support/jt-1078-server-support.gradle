@@ -13,7 +13,9 @@ dependencies {
         exclude(group: "org.projectlombok", module: "lombok")
     }
     api("org.apache.commons:commons-collections4")
-
+    api("com.github.ben-manes.caffeine:caffeine") {
+        exclude(group: "com.google.errorprone", module: "error_prone_annotations")
+    }
 
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
     compileOnly("com.google.code.findbugs:jsr305")

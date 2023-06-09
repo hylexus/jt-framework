@@ -83,12 +83,13 @@ public class Jt1078NettyAutoConfiguration {
                 final long readerIdleTime = idleStateHandlerProps.getReaderIdleTime().toMillis();
                 final long writerIdleTime = idleStateHandlerProps.getWriterIdleTime().toMillis();
                 final long allIdleTime = idleStateHandlerProps.getAllIdleTime().toMillis();
-                ch.pipeline().addLast(
+                pipeline.addLast(
                         NETTY_HANDLER_NAME_1078_IDLE_STATE,
                         new IdleStateHandler(readerIdleTime, writerIdleTime, allIdleTime, TimeUnit.MILLISECONDS)
                 );
             }
-            ch.pipeline().addLast(NETTY_HANDLER_NAME_1078_HEARTBEAT, heatBeatHandler);
+            pipeline.addLast(NETTY_HANDLER_NAME_1078_HEARTBEAT, heatBeatHandler);
+            // TODO 自定义分包器
             pipeline.addLast(
                     NETTY_HANDLER_NAME_1078_FRAME,
                     new DelimiterBasedFrameDecoder(

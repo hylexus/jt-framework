@@ -232,12 +232,18 @@ public interface Jt1078RequestHeader {
         return offset28();
     }
 
+    boolean isCombined();
+
     default Jt1078RequestHeaderBuilder mutate() {
-        return new DefaultJt1078RequestHeader(this);
+        return newBuilder(this);
     }
 
     static Jt1078RequestHeaderBuilder newBuilder() {
         return new DefaultJt1078RequestHeader();
+    }
+
+    static Jt1078RequestHeaderBuilder newBuilder(Jt1078RequestHeader another) {
+        return new DefaultJt1078RequestHeader(another);
     }
 
     interface Jt1078RequestHeaderBuilder {
@@ -253,6 +259,18 @@ public interface Jt1078RequestHeader {
 
         Jt1078RequestHeaderBuilder offset15(short value);
 
+        Jt1078RequestHeaderBuilder dataType(short value);
+
+        default Jt1078RequestHeaderBuilder dataType(Jt1078DataType dataType) {
+            return this.dataType(dataType.value());
+        }
+
+        Jt1078RequestHeaderBuilder subPackageIdentifier(short value);
+
+        default Jt1078RequestHeaderBuilder subPackageIdentifier(Jt1078SubPackageIdentifier identifier) {
+            return this.subPackageIdentifier(identifier.value());
+        }
+
         Jt1078RequestHeaderBuilder offset16(Long value);
 
         Jt1078RequestHeaderBuilder offset24(Integer value);
@@ -260,6 +278,12 @@ public interface Jt1078RequestHeader {
         Jt1078RequestHeaderBuilder offset26(Integer value);
 
         Jt1078RequestHeaderBuilder offset28(int value);
+
+        default Jt1078RequestHeaderBuilder msgBodyLength(int newLength) {
+            return this.offset28(newLength);
+        }
+
+        Jt1078RequestHeaderBuilder isCombined(boolean isCombined);
 
         Jt1078RequestHeader build();
     }

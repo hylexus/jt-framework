@@ -63,7 +63,7 @@ public class DefaultJt1078MsgDecoder implements Jt1078MsgDecoder {
                     .body(body)
                     .rawByteBuf(rawByteBuf)
                     .build();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             JtCommonUtils.release(readable, rawByteBuf);
             throw new RuntimeException(e);
         }
