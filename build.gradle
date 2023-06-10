@@ -59,12 +59,15 @@ configure(subprojects.findAll {
 apply from: getBuildScriptPath("repo-credentials.gradle")
 
 def modulesToPublishToMavenRepo = [
-        "jt-core", "jt-spring", "jt-808-server-support",
+        "jt-core", "jt-spring",
+        "jt-808-server-support",
         "jt-808-server-spring-boot-autoconfigure",
         "jt-808-server-spring-boot-starter-boot2",
         "jt-808-server-spring-boot-starter",
         "jt-1078-server-support",
+        "jt-1078-server-spring-boot-autoconfigure",
         "jt-1078-server-spring-boot-starter",
+        "jt-1078-server-spring-boot-starter-boot2",
 ]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)

@@ -77,7 +77,6 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
     }
 
 
-    @SuppressWarnings("checkstyle:methodname")
     record Params(String sim, short channel, long timeout) {
     }
 

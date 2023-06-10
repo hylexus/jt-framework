@@ -86,7 +86,7 @@ javadoc {
 
     options {
         version true
-        links "https://docs.oracle.com/javase/8/docs/api"
+        links "https://docs.oracle.com/en/java/javase/11/docs/api"
     }
     // Suppress warnings due to cross-module @see and @link references.
     // Note that global 'api' task does display all warnings.
@@ -96,7 +96,7 @@ javadoc {
 
 apply plugin: "checkstyle"
 checkstyle {
-    toolVersion = "8.23"
+    toolVersion = "10.9.1"
     getConfigDirectory().set(project(":build-script").file("checkstyle/"))
 }
 

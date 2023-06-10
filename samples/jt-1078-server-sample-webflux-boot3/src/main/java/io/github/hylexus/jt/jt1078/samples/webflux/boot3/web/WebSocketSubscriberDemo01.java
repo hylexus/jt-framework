@@ -51,7 +51,6 @@ public class WebSocketSubscriberDemo01 implements WebSocketHandler {
                 .then(session.close());
     }
 
-    @SuppressWarnings("checkstyle:methodname")
     record Params(String sim, short channel, long timeoutInSeconds) {
     }
 

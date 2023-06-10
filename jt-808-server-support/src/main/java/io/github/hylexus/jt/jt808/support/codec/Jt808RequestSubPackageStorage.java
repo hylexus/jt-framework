@@ -9,7 +9,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
  * 实现类至少应该实现下面几个功能:
  *
  * <ol>
- *     <li>当所有子包都到达后，实现类应该负责将消息合并 && 将合并后的完整消息使用 {@link Jt808RequestMsgDispatcher#doDispatch(Jt808Request)} 投递出去</li>
+ *     <li>当所有子包都到达后，实现类应该负责将消息合并 &amp;&amp; 将合并后的完整消息使用 {@link Jt808RequestMsgDispatcher#doDispatch(Jt808Request)} 投递出去</li>
  *     <li>某些子包丢失未到达时应该自动发送 `0x8003` 消息给终端，要求终端重传某些子包</li>
  *     <li>长时间未到达服务端的子包应该及时回收掉, 最长暂存多久由具体实现类自行决定</li>
  * </ol>
