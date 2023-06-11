@@ -1,6 +1,8 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.web;
 
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.MyJt1078SessionCloseReason;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.oaks.utils.Numbers;
@@ -26,8 +28,11 @@ public class WebSocketSubscriberDemo01 implements WebSocketHandler {
     private final Jt1078Publisher jt1078Publisher;
     private final UriTemplate uriTemplate;
 
-    public WebSocketSubscriberDemo01(Jt1078Publisher jt1078Publisher) {
+    private final Jt1078SessionManager sessionManager;
+
+    public WebSocketSubscriberDemo01(Jt1078Publisher jt1078Publisher, Jt1078SessionManager sessionManager) {
         this.jt1078Publisher = jt1078Publisher;
+        this.sessionManager = sessionManager;
         this.uriTemplate = new UriTemplate(PATH_PATTERN);
     }
 
@@ -36,9 +41,15 @@ public class WebSocketSubscriberDemo01 implements WebSocketHandler {
     public Mono<Void> handle(@NonNull WebSocketSession session) {
 
         final Params params = this.parseParams(session);
-
         log.info("New publisher: {}", params);
-        return this.jt1078Publisher.subscribe(params.sim(), params.channel(), Duration.ofSeconds(params.timeoutInSeconds()))
+
+        final Mono<Void> input = session.receive()
+                .doOnNext(message -> {
+                    log.info("Receive webSocket msg, webSocketSessionId={}, payload={}", session.getId(), message.getPayloadAsText());
+                })
+                .then();
+
+        final Mono<Void> output = this.jt1078Publisher.subscribe(params.sim(), params.channel(), Duration.ofSeconds(params.timeoutInSeconds()))
                 .filter(it -> it.getHeader().payloadType() == DefaultJt1078PayloadType.H264)
                 .flatMap(subscription -> {
                     final byte[] data = subscription.getData();
@@ -48,7 +59,13 @@ public class WebSocketSubscriberDemo01 implements WebSocketHandler {
                     return Mono.just(webSocketMessage);
                 })
                 .flatMap(it -> session.send(Mono.just(it)))
-                .then(session.close());
+                .then();
+
+        return Mono.zip(input, output).doFinally(signalType -> {
+            this.sessionManager.removeBySimAndClose(params.sim(), MyJt1078SessionCloseReason.CLOSED_BY_WEB_SOCKET);
+            log.info("Jt1078SessionClosed By WebSocket: {}", params);
+        }).then();
+
     }
 
     record Params(String sim, short channel, long timeoutInSeconds) {

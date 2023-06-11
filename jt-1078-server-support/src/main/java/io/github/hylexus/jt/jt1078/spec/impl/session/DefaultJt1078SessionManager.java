@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @author hylexus
@@ -80,33 +81,34 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     }
 
     @Override
-    public Jt1078Session removeBySessionId(String sessionId) {
+    public Optional<Jt1078Session> removeBySessionId(String sessionId) {
         lock.writeLock().lock();
         try {
             final String sim = sessionIdSimMapping.remove(sessionId);
             if (sim != null) {
                 final Jt1078Session session = sessionMap.remove(sim);
                 this.invokeListeners(listener -> listener.onSessionRemove(session));
-                return session;
+                return Optional.of(session);
             }
         } finally {
             lock.writeLock().unlock();
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public void removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason) {
-        final Jt1078Session session = this.removeBySessionId(sessionId);
-        if (session != null) {
+    public Optional<Jt1078Session> removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason) {
+        final Optional<Jt1078Session> optionalSession = this.removeBySessionId(sessionId);
+        optionalSession.ifPresent(session -> {
             invokeListeners(listener -> listener.onSessionClose(session, reason));
             try {
                 session.channel().close().sync();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }
+        });
+        return optionalSession;
     }
 
     @Override
@@ -130,4 +132,13 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         }
     }
 
+    @Override
+    public Stream<Jt1078Session> list() {
+        this.lock.readLock().lock();
+        try {
+            return sessionMap.values().stream();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 
 public interface PlatformProcess extends Runnable {
 
@@ -13,7 +14,12 @@ public interface PlatformProcess extends Runnable {
 
     String command();
 
-    void destroy();
+    void destroy(Consumer<PlatformProcess> action);
+
+    default void destroy() {
+        this.destroy(platformProcess -> {
+        });
+    }
 
     void start();
 

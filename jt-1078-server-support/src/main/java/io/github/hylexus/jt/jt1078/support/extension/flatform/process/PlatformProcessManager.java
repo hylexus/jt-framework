@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt1078.support.extension.flatform.process.impl.Defau
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public interface PlatformProcessManager {
@@ -15,7 +16,12 @@ public interface PlatformProcessManager {
 
     Stream<DefaultPlatformProcessDescriber> list();
 
-    void destroyProcess(String id) throws ProcessNotFoundException;
+    default void destroyProcess(String id) throws ProcessNotFoundException {
+        this.destroyProcess(id, platformProcess -> {
+        });
+    }
+
+    void destroyProcess(String id, Consumer<PlatformProcess> action) throws ProcessNotFoundException;
 
     ExecutorService executor();
 }

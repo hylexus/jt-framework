@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * @author hylexus
@@ -28,7 +29,7 @@ public interface Jt1078SessionManager {
     Optional<Jt1078Session> findBySim(String sim, boolean updateLastCommunicateTime);
 
     default String generateSessionId(Channel channel) {
-        return channel.id().asLongText();
+        return channel.id().asLongText().replaceAll("-", "");
     }
 
     default Jt1078Session generateSession(String sim, Channel channel) {
@@ -64,11 +65,23 @@ public interface Jt1078SessionManager {
 
     void persistence(Jt1078Session session);
 
-    Jt1078Session removeBySessionId(String sessionId);
+    Optional<Jt1078Session> removeBySessionId(String sessionId);
 
-    void removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason);
+    Optional<Jt1078Session> removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason);
+
+    default Optional<Jt1078Session> removeBySimAndClose(String sim, Jt1078SessionCloseReason closeReason) {
+        final Optional<Jt1078Session> optionalSession = this.findBySim(sim, false);
+        optionalSession.ifPresent(session -> {
+            //
+            this.removeBySessionIdAndClose(session.sessionId(), closeReason);
+        });
+        return optionalSession;
+    }
 
     Jt1078SessionManager addListener(Jt1078SessionEventListener listener);
 
     List<Jt1078SessionEventListener> getListeners();
+
+    Stream<Jt1078Session> list();
+
 }

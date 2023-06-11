@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -41,13 +42,17 @@ public class DefaultPlatformProcessManager implements PlatformProcessManager {
     }
 
     @Override
-    public void destroyProcess(String id) throws ProcessNotFoundException {
+    public void destroyProcess(String id, Consumer<PlatformProcess> action) throws ProcessNotFoundException {
         final DefaultPlatformProcess process = this.instances.remove(id);
         if (process == null) {
             throw new ProcessNotFoundException("No DefaultPlatformProcess found with id " + id);
         }
 
-        process.destroy();
+        try {
+            process.destroy();
+        } finally {
+            action.accept(process);
+        }
     }
 
     @Override

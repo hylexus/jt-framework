@@ -36,7 +36,7 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
         }
 
         static String ofUuid(String sim, short channel) {
-            return sim + "_" + channel + "_" + UUID.randomUUID();
+            return sim + "_" + channel + "_" + UUID.randomUUID().toString().replaceAll("-", "");
         }
 
         private Key(String sim, short channel) {

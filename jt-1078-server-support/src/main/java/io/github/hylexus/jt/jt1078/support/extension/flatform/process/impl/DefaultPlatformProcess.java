@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
@@ -33,13 +34,17 @@ public class DefaultPlatformProcess implements PlatformProcess, Runnable {
 
 
     @Override
-    public void destroy() {
+    public void destroy(Consumer<PlatformProcess> action) {
         if (!this.running.compareAndSet(true, false)) {
             return;
         }
-        if (this.process != null) {
-            this.process.destroy();
-            log.info("{} closed. Description: {}", this.getClass().getSimpleName(), this);
+        try {
+            if (this.process != null) {
+                this.process.destroy();
+                log.info("{} closed. Description: {}", this.getClass().getSimpleName(), this);
+            }
+        } finally {
+            action.accept(this);
         }
     }
 
