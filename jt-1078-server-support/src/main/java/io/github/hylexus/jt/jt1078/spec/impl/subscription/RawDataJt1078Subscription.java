@@ -1,9 +1,7 @@
 package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 
-import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestHeader;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.utils.ByteBufUtils;
 
 /**
@@ -13,21 +11,16 @@ import io.github.hylexus.jt.utils.ByteBufUtils;
  *
  * @see Jt1078Request#body()
  */
-@BuiltinComponent
-public class RawJt1078Subscription implements Jt1078Subscription {
+public class RawDataJt1078Subscription extends ByteArrayJt1078Subscription {
     private final Jt1078RequestHeader header;
-    private final byte[] data;
 
-    public RawJt1078Subscription(Jt1078Request request) {
+    public RawDataJt1078Subscription(Jt1078Request request) {
+        super(DefaultJt1078SubscriptionType.RAW_DATA, ByteBufUtils.getBytes(request.body()));
         this.header = request.header();
-        this.data = ByteBufUtils.getBytes(request.body(), 0, header.msgBodyLength());
     }
 
-    public Jt1078RequestHeader getHeader() {
+    public Jt1078RequestHeader header() {
         return header;
     }
 
-    public byte[] getData() {
-        return data;
-    }
 }

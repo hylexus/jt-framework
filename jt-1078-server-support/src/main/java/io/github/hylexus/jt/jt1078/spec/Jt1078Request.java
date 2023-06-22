@@ -32,12 +32,17 @@ public interface Jt1078Request {
         JtCommonUtils.release(this.rawByteBuf(), this.body());
     }
 
-    default void retain() {
+    default Jt1078Request retain() {
         final ByteBuf byteBuf = rawByteBuf();
         if (byteBuf != null) {
             byteBuf.retain();
         }
         body().retain();
+        return this;
+    }
+
+    default Jt1078Request copy() {
+        return this.mutate().header(this.header()).body(this.body().copy()).rawByteBuf(null).build();
     }
 
     default Jt1078RequestBuilder mutate() {

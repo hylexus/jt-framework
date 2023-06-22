@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
+import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.oaks.utils.Numbers;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +42,10 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
         }
         log.info("session add : {}", session);
 
-        this.publisher.subscribe(params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
-                .filter(it -> it.getHeader().payloadType() == DefaultJt1078PayloadType.H264)
+        this.publisher.subscribe(Jt1078ChannelCollector.RAW_DATA_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
+                .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
                 .doOnNext(subscription -> {
-                    final byte[] data = subscription.getData();
+                    final byte[] data = subscription.payload();
                     log.info("WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
                     try {
                         session.sendMessage(new BinaryMessage(data));

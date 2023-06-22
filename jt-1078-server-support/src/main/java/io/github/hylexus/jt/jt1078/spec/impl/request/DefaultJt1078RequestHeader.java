@@ -231,23 +231,17 @@ public class DefaultJt1078RequestHeader implements Jt1078RequestHeader, Jt1078Re
     public String toString() {
         return "DefaultJt1078RequestHeader{"
                 + "isCombined=" + isCombined()
-                + ", offset4=" + offset4
-                + ", P=" + p()
-                + ", X=" + x()
-                + ", CC=" + cc()
-                + ", offset5=" + offset5
                 + ", M=" + m()
                 + ", PT=" + payloadType()
                 + ", offset6(sequenceNumber)=" + offset6
-                + ", offset8(sim)='" + sim() + '\''
-                + ", offset14(channelNumber)=" + channelNumber()
-                + ", offset15=" + offset15
+                + ", sim='" + sim() + '\''
+                + ", channelNumber=" + channelNumber()
                 + ", dataType=" + dataType
                 + ", subPackageIdentifier=" + subPackageIdentifier
-                + ", offset16(timestamp)=" + offset16
-                + ", offset24(lastIFrameInterval)=" + offset24
-                + ", offset26(lastFrameInterval)=" + offset26
-                + ", offset28(msgBodyLength)=" + offset28
+                + ", timestamp=" + offset16
+                + ", lastIFrameInterval=" + offset24
+                + ", lastFrameInterval=" + offset26
+                + ", msgBodyLength=" + offset28
                 + '}';
     }
 }

@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nonnull;
 
 import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE;
-import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.SERVER_EXCEPTION_OCCURRED;
 
 /**
  * @author hylexus

@@ -3,8 +3,8 @@ package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestHeader;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.utils.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 
 /**
  * 用来调试的默认实现。
@@ -14,20 +14,25 @@ import io.github.hylexus.jt.utils.ByteBufUtils;
  * @see Jt1078Request#rawByteBuf()
  */
 @BuiltinComponent
-public class PassThroughJt1078Subscription implements Jt1078Subscription {
+public class PassThroughJt1078Subscription extends ByteArrayJt1078Subscription {
+    private static final byte[] EMPTY = new byte[0];
     private final Jt1078RequestHeader header;
-    private final byte[] data;
 
     public PassThroughJt1078Subscription(Jt1078Request request) {
+        super(DefaultJt1078SubscriptionType.PASS_THROUGH_RAW_DATA, getBytes(request));
         this.header = request.header();
-        this.data = ByteBufUtils.getBytes(request.rawByteBuf(), 0, request.rawByteBuf().readableBytes());
     }
 
-    public byte[] getData() {
-        return data;
-    }
-
-    public Jt1078RequestHeader getHeader() {
+    public Jt1078RequestHeader header() {
         return header;
     }
+
+    private static byte[] getBytes(Jt1078Request request) {
+        final ByteBuf byteBuf = request.rawByteBuf();
+        if (byteBuf == null) {
+            return EMPTY;
+        }
+        return ByteBufUtils.getBytes(byteBuf);
+    }
+
 }

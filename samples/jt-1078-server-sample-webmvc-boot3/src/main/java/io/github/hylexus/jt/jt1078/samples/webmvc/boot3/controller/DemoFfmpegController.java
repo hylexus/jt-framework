@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.controller;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
+import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.jt1078.support.extension.flatform.process.PlatformProcess;
 import io.github.hylexus.jt.jt1078.support.extension.flatform.process.PlatformProcessManager;
 import io.github.hylexus.jt.jt1078.support.extension.flatform.process.impl.DefaultPlatformProcessDescriber;
@@ -55,13 +56,13 @@ public class DemoFfmpegController {
         platformProcess.start();
 
         final Duration timeout = Duration.ofSeconds(timeoutInSeconds);
-        this.publisher.subscribe(sim, channel, timeout)
+        this.publisher.subscribe(Jt1078ChannelCollector.RAW_DATA_COLLECTOR, sim, channel, timeout)
                 .publishOn(Schedulers.newBoundedElastic(2, 128, "demo"))
                 // 仅仅过滤出 h264 数据
-                .filter(it -> it.getHeader().payloadType() == DefaultJt1078PayloadType.H264)
+                .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
                 // 当有数据到来时发送给 ffmpeg
                 .doOnNext(subscription -> {
-                    final byte[] data = subscription.getData();
+                    final byte[] data = subscription.payload();
                     log.info("Ffmpeg outbound: {}", HexStringUtils.bytes2HexString(data));
                     platformProcess.writeDataToStdIn(data, 0, data.length);
                 })

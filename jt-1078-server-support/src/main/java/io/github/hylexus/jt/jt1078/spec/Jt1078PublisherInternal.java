@@ -5,4 +5,9 @@ public interface Jt1078PublisherInternal extends Jt1078Publisher, Jt1078Publishe
     void publish(Jt1078Request request);
 
     void close();
+
+    @Override
+    default void closeSubscriber(String id) {
+        this.unsubscribe(id);
+    }
 }
