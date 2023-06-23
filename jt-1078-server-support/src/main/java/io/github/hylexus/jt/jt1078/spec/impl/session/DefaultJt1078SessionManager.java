@@ -25,7 +25,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     private final Map<String, String> sessionIdSimMapping = new HashMap<>();
     private final List<Jt1078SessionEventListener> listeners = new ArrayList<>();
 
-    private DefaultJt1078SessionManager() {
+    public DefaultJt1078SessionManager() {
     }
 
     public DefaultJt1078SessionManager(Consumer<DefaultJt1078SessionManager> afterPropertySet) {
@@ -78,6 +78,8 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         } finally {
             lock.writeLock().unlock();
         }
+
+        invokeListeners(listener -> listener.onSessionAdd(session));
     }
 
     @Override

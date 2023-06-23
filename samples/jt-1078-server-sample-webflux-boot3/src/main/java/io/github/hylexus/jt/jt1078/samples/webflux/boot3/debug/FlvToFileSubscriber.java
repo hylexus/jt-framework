@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt1078.support.codec.impl.collector.H264ToFlvJt1078C
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -22,11 +23,11 @@ public class FlvToFileSubscriber implements InitializingBean {
     private final OutputStream outputStream1;
     private final OutputStream outputStream2;
 
-    public FlvToFileSubscriber(Jt1078Publisher publisher) {
+    public FlvToFileSubscriber(Jt1078Publisher publisher, @Value("${sample.flv-to-file.parent-dir}") String baseDir) {
         this.publisher = publisher;
         try {
-            this.outputStream1 = new FileOutputStream("/Users/hylexus/tmp/jtt/flv/1.flv");
-            this.outputStream2 = new FileOutputStream("/Users/hylexus/tmp/jtt/flv/2.flv");
+            this.outputStream1 = new FileOutputStream(baseDir + "/1.flv");
+            this.outputStream2 = new FileOutputStream(baseDir + "/2.flv");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -47,7 +48,7 @@ public class FlvToFileSubscriber implements InitializingBean {
                         log.info("FlvToFileSubscriber1 ... {} --> ::: {}", it.type(), hex);
                     })
                     .subscribe();
-        }).start();
+        }, "flv-to-file-01").start();
 
         new Thread(() -> {
             this.publisher
@@ -62,7 +63,7 @@ public class FlvToFileSubscriber implements InitializingBean {
                         log.info("FlvToFileSubscriber2 ... {} --> ::: {}", it.type(), hex);
                     })
                     .subscribe();
-        }).start();
+        }, "flv-to-file-02").start();
     }
 
     private void writeInternal(OutputStream outputStream, byte[] bytes) {

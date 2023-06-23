@@ -1,3 +1,7 @@
+sample:
+  flv-to-file:
+    parent-dir: /Users/hylexus/tmp/jtt/flv/
+
 server:
   port: 8989
 jt1078:

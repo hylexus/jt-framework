@@ -5,7 +5,3 @@ spring:
     active: local
   jackson:
     time-zone: GMT+8
-
-jt1078:
-  dump:
-    collector-path: /Users/hylexus/tmp/jtt/collector

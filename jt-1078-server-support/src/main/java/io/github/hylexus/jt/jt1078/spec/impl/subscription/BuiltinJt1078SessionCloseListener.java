@@ -28,4 +28,9 @@ public class BuiltinJt1078SessionCloseListener implements Jt1078SessionEventList
             publisher.unsubscribeWithSim(session.sim(), new Jt1078SessionDestroyException("session closed"));
         }
     }
+
+    @Override
+    public int getOrder() {
+        return 10000;
+    }
 }
