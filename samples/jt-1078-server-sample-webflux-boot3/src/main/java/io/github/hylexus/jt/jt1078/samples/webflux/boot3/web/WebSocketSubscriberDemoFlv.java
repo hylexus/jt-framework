@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.MyJt1078SessionC
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.model.vo.WebSocketSubscriberVo;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +48,10 @@ public class WebSocketSubscriberDemoFlv implements WebSocketHandler {
 
         final Mono<Void> output = this.jt1078Publisher
                 .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("Session Destroy... subscribe complete");
+                })
+                .onErrorComplete(Jt1078SessionDestroyException.class)
                 .flatMap(subscription -> {
                     final byte[] data = subscription.payload();
 

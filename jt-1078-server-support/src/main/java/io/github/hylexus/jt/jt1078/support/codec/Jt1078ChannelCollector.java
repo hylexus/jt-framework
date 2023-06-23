@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.support.codec;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscriber;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
 import io.github.hylexus.jt.jt1078.support.codec.impl.collector.H264ToFlvJt1078ChannelCollector;
@@ -10,6 +11,7 @@ import io.github.hylexus.jt.jt1078.support.codec.impl.collector.RawDataJt1078Cha
 import org.springframework.lang.Nullable;
 
 import java.time.Duration;
+import java.util.stream.Stream;
 
 public interface Jt1078ChannelCollector<S extends Jt1078Subscription> {
 
@@ -21,8 +23,13 @@ public interface Jt1078ChannelCollector<S extends Jt1078Subscription> {
 
     Jt1078Subscriber<S> doSubscribe(String sim, short channelNumber, Duration timeout);
 
+    default void unsubscribe(String id) {
+        this.unsubscribe(id, null);
+    }
+
     void unsubscribe(String id, @Nullable Jt1078SubscriberCloseException reason);
 
     void unsubscribe(@Nullable Jt1078SubscriberCloseException reason);
 
+    Stream<Jt1078SubscriberDescriptor> list();
 }

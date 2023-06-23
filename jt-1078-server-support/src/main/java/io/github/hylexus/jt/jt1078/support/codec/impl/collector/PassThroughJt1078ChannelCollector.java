@@ -4,6 +4,8 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.PassThroughJt1078Subscription;
 import reactor.core.publisher.FluxSink;
 
+import java.time.LocalDateTime;
+
 public class PassThroughJt1078ChannelCollector
         extends AbstractChannelCollector<PassThroughJt1078Subscription, PassThroughSubscriber> {
 
@@ -15,7 +17,7 @@ public class PassThroughJt1078ChannelCollector
     }
 
     @Override
-    protected PassThroughSubscriber createSubscribe(String uuid, FluxSink<PassThroughJt1078Subscription> fluxSink) {
-        return new PassThroughSubscriber(uuid, "request.rawByteBuf()", fluxSink);
+    protected PassThroughSubscriber createSubscribe(String uuid, String sim, short channelNumber, FluxSink<PassThroughJt1078Subscription> fluxSink) {
+        return new PassThroughSubscriber(uuid, sim, channelNumber, "request.rawByteBuf()", LocalDateTime.now(), fluxSink);
     }
 }

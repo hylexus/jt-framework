@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt1078.boot.props.Jt1078ServerProps;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListener;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListenerAware;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Import;
 @EnableConfigurationProperties({
         Jt1078ServerProps.class,
 })
+@ConditionalOnProperty(prefix = "jt1078", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Jt1078AutoConfiguration {
 
     @Slf4j

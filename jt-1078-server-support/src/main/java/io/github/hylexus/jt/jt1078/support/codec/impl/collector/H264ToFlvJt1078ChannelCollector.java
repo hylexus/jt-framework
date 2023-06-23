@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.FluxSink;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -64,8 +65,8 @@ public class H264ToFlvJt1078ChannelCollector
 
 
     @Override
-    protected H264ToFlvSubscriber createSubscribe(String uuid, FluxSink<ByteArrayJt1078Subscription> fluxSink) {
-        return new H264ToFlvSubscriber(uuid, "H.264 --> FLV", fluxSink);
+    protected H264ToFlvSubscriber createSubscribe(String uuid, String sim, short channelNumber, FluxSink<ByteArrayJt1078Subscription> fluxSink) {
+        return new H264ToFlvSubscriber(uuid, sim, channelNumber, "H.264 --> FLV", LocalDateTime.now(), fluxSink);
     }
 
 }

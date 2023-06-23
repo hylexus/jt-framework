@@ -22,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class Jt1078ServerProps {
 
+    private boolean enabled = true;
 
     @NestedConfigurationProperty
     private ProtocolConfig protocol = new ProtocolConfig();

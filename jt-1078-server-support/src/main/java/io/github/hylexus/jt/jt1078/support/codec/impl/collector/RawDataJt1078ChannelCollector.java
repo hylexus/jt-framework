@@ -4,6 +4,8 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.RawDataJt1078Subscription;
 import reactor.core.publisher.FluxSink;
 
+import java.time.LocalDateTime;
+
 public class RawDataJt1078ChannelCollector
         extends AbstractChannelCollector<RawDataJt1078Subscription, RawDataSubscriber> {
     @Override
@@ -15,7 +17,7 @@ public class RawDataJt1078ChannelCollector
     }
 
     @Override
-    protected RawDataSubscriber createSubscribe(String uuid, FluxSink<RawDataJt1078Subscription> fluxSink) {
-        return new RawDataSubscriber(uuid, "request.body()", fluxSink);
+    protected RawDataSubscriber createSubscribe(String uuid, String sim, short channelNumber, FluxSink<RawDataJt1078Subscription> fluxSink) {
+        return new RawDataSubscriber(uuid, sim, channelNumber, "request.body()", LocalDateTime.now(), fluxSink);
     }
 }

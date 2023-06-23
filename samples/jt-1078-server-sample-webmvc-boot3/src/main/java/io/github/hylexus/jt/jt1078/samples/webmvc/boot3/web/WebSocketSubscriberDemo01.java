@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -43,6 +44,10 @@ public class WebSocketSubscriberDemo01 extends AbstractWebSocketHandler {
         log.info("session add : {}", session);
 
         this.publisher.subscribe(Jt1078ChannelCollector.RAW_DATA_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("Session Destroy... subscribe complete");
+                })
+                .onErrorComplete(Jt1078SessionDestroyException.class)
                 .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
                 .doOnNext(subscription -> {
                     final byte[] data = subscription.payload();

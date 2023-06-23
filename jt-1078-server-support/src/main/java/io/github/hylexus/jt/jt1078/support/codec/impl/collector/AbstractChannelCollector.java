@@ -2,9 +2,11 @@ package io.github.hylexus.jt.jt1078.support.codec.impl.collector;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscriber;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Subscriber;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriberDescriptor;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
@@ -15,6 +17,7 @@ import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * @param <PT>  PayloadType
@@ -43,7 +46,7 @@ public abstract class AbstractChannelCollector<PT extends Jt1078Subscription, IS
         }
     }
 
-    protected abstract IST createSubscribe(String uuid, FluxSink<PT> fluxSink);
+    protected abstract IST createSubscribe(String uuid, String sim, short channelNumber, FluxSink<PT> fluxSink);
 
     @Override
     public Jt1078Subscriber<PT> doSubscribe(String sim, short channelNumber, Duration timeout) {
@@ -51,7 +54,7 @@ public abstract class AbstractChannelCollector<PT extends Jt1078Subscription, IS
 
         final Flux<PT> dataStream = Flux.<PT>create(fluxSink -> {
             log.info("new subscriber created with id: {}", uuid);
-            final IST subscriber = createSubscribe(uuid, fluxSink);
+            final IST subscriber = createSubscribe(uuid, sim, channelNumber, fluxSink);
             synchronized (this.subscriberMapping) {
                 this.subscriberMapping.put(uuid, subscriber);
             }
@@ -90,4 +93,11 @@ public abstract class AbstractChannelCollector<PT extends Jt1078Subscription, IS
             }
         });
     }
+
+    @Override
+    public Stream<Jt1078SubscriberDescriptor> list() {
+        return this.subscriberMapping.values().stream()
+                .map(it -> new DefaultJt1078SubscriberDescriptor(it.id(), it.sim(), it.channel(), it.createdAt(), it.desc()));
+    }
+
 }

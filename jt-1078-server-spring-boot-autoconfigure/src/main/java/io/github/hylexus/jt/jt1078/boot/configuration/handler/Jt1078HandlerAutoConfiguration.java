@@ -5,7 +5,9 @@ import io.github.hylexus.jt.jt1078.boot.props.Jt1078ServerProps;
 import io.github.hylexus.jt.jt1078.boot.props.subpackage.RequestSubPackageCombinerProps;
 import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherInternal;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultCollectorFactory;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.impl.subscription.Jt1078ChannelCollectorFactory;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078MsgDecoder;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078RequestSubPackageCombiner;
 import io.github.hylexus.jt.jt1078.support.codec.impl.CaffeineJt1078RequestSubPackageCombiner;
@@ -22,8 +24,14 @@ import java.util.List;
 public class Jt1078HandlerAutoConfiguration {
 
     @Bean
-    public Jt1078PublisherInternal internalJt1078Publisher() {
-        return new DefaultJt1078Publisher();
+    @ConditionalOnMissingBean
+    public Jt1078ChannelCollectorFactory jt1078ChannelCollectorFactory() {
+        return new DefaultCollectorFactory();
+    }
+
+    @Bean(destroyMethod = "close")
+    public Jt1078PublisherInternal internalJt1078Publisher(Jt1078ChannelCollectorFactory collectorFactory) {
+        return new DefaultJt1078Publisher(collectorFactory);
     }
 
     @Bean

@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.debug;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.jt1078.support.codec.impl.collector.H264ToFlvJt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -36,6 +37,10 @@ public class FlvToFileSubscriber implements InitializingBean {
         new Thread(() -> {
             this.publisher
                     .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, "018930946552", (short) 3, Duration.ofSeconds(100))
+                    .doOnError(Jt1078SessionDestroyException.class, e -> {
+                        log.error("Session Destroy... subscribe complete");
+                    })
+                    .onErrorComplete(Jt1078SessionDestroyException.class)
                     .doOnNext((it) -> {
                         final String hex = HexStringUtils.bytes2HexString(it.payload());
                         this.writeInternal(this.outputStream1, it.payload());
@@ -47,6 +52,10 @@ public class FlvToFileSubscriber implements InitializingBean {
         new Thread(() -> {
             this.publisher
                     .subscribe(H264ToFlvJt1078ChannelCollector.class, "018930946552", (short) 3, Duration.ofSeconds(100))
+                    .doOnError(Jt1078SessionDestroyException.class, e -> {
+                        log.error("Session Destroy... subscribe complete");
+                    })
+                    .onErrorComplete(Jt1078SessionDestroyException.class)
                     .doOnNext((it) -> {
                         final String hex = HexStringUtils.bytes2HexString(it.payload());
                         this.writeInternal(this.outputStream2, it.payload());

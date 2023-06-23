@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.controller;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
+import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.jt1078.support.extension.flatform.process.PlatformProcess;
@@ -57,6 +58,10 @@ public class DemoFfmpegController {
 
         final Duration timeout = Duration.ofSeconds(timeoutInSeconds);
         this.publisher.subscribe(Jt1078ChannelCollector.RAW_DATA_COLLECTOR, sim, channel, timeout)
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("Session Destroy... subscribe complete");
+                })
+                .onErrorComplete(Jt1078SessionDestroyException.class)
                 .publishOn(Schedulers.newBoundedElastic(2, 128, "demo"))
                 // 仅仅过滤出 h264 数据
                 .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
