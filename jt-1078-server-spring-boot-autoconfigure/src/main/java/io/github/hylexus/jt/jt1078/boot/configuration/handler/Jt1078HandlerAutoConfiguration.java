@@ -13,6 +13,7 @@ import io.github.hylexus.jt.jt1078.support.codec.Jt1078RequestSubPackageCombiner
 import io.github.hylexus.jt.jt1078.support.codec.impl.CaffeineJt1078RequestSubPackageCombiner;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestMsgDispatcher;
+import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestPreprocessor;
 import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher;
 import io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultPublisherBasedJt1078RequestHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler;
@@ -59,13 +60,20 @@ public class Jt1078HandlerAutoConfiguration {
         return new DefaultJt1078RequestMsgDispatcher(handlers, combiner);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt1078RequestPreprocessor jt1078RequestPreprocessor(
+            Jt1078SessionManager jt1078SessionManager,
+            Jt1078MsgDecoder jt1078MsgDecoder,
+            Jt1078RequestMsgDispatcher jt1078RequestMsgDispatcher) {
+        return new Jt1078RequestPreprocessor(jt1078SessionManager, jt1078MsgDecoder, jt1078RequestMsgDispatcher);
+    }
 
     @Bean
     @ConditionalOnMissingBean(Jt1078DispatcherChannelHandler.class)
     public Jt1078DispatcherChannelHandler jt1078DispatcherChannelHandler(
-            Jt1078MsgDecoder jt1078MsgDecoder,
             Jt1078SessionManager jt1078SessionManager,
-            Jt1078RequestMsgDispatcher jt1078RequestMsgDispatcher) {
-        return new Jt1078DispatcherChannelHandler(jt1078MsgDecoder, jt1078SessionManager, jt1078RequestMsgDispatcher);
+            Jt1078RequestPreprocessor preprocessor) {
+        return new Jt1078DispatcherChannelHandler(jt1078SessionManager, preprocessor);
     }
 }

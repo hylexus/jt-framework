@@ -37,11 +37,15 @@ public class DefaultJt1078RequestMsgDispatcher implements Jt1078RequestMsgDispat
     public void doDispatch(Jt1078Request request) {
         try {
             this.subPackageCombiner.tryCombine(request).ifPresent(combinedRequest -> {
-                if (log.isDebugEnabled()) {
-                    log.debug("combinedRequest: {}", HexStringUtils.byteBufToHexString(combinedRequest.body()));
-                    log.debug("combinedRequest: {}", combinedRequest);
+                try {
+                    if (log.isDebugEnabled()) {
+                        log.debug("combinedRequest: {}", HexStringUtils.byteBufToHexString(combinedRequest.body()));
+                        log.debug("combinedRequest: {}", combinedRequest);
+                    }
+                    this.doDispatchInternal(combinedRequest);
+                } finally {
+                    combinedRequest.release();
                 }
-                this.doDispatchInternal(combinedRequest);
             });
         } finally {
             request.release();

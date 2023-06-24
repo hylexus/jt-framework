@@ -89,12 +89,17 @@ public class CaffeineJt1078RequestSubPackageCombiner implements Jt1078RequestSub
                 }
                 int len = 0;
                 final CompositeByteBuf newBody = allocator.compositeBuffer();
-                for (final ByteBuf buf : list) {
-                    len += buf.readableBytes();
-                    newBody.addComponent(true, buf);
+                try {
+                    for (final ByteBuf buf : list) {
+                        len += buf.readableBytes();
+                        newBody.addComponent(true, buf);
+                    }
+                    newBody.addComponent(true, originalRequest.body().copy());
+                    len += originalRequest.msgBodyLength();
+                } catch (Throwable e) {
+                    JtCommonUtils.release(newBody);
+                    throw e;
                 }
-                newBody.addComponent(true, originalRequest.body().copy());
-                len += originalRequest.msgBodyLength();
 
                 final Jt1078Request newRequest = originalRequest.mutate()
                         .rawByteBuf(null, false)
