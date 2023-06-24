@@ -76,6 +76,6 @@ configure(subprojects.findAll {
 }
 
 def getBuildScriptPath(String path) {
-    return "${project(":build-script").projectDir}/script/${path}"
+    return "${rootProject.file("build-script/script").path}/${path}"
 }
 

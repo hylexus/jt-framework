@@ -130,10 +130,6 @@ publishing {
     }
 }
 
-project(":build-script") {
-    configurations.archives.artifacts.clear()
-}
-
 signing {
     if (!isSnapshot()) {
         sign publishing.publications.mavenJava

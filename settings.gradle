@@ -28,9 +28,6 @@ pluginManagement {
 //    }
 }
 
-// build-script
-include 'build-script'
-
 // modules
 include 'jt-core'
 include 'jt-spring'
