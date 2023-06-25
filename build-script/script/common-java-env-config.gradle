@@ -44,13 +44,17 @@ tasks.withType(JavaCompile) {
 repositories {
     mavenLocal()
     [
-            'https://maven.aliyun.com/repository/google',
+            'https://maven.aliyun.com/repository/central',
             'https://maven.aliyun.com/repository/public',
+            'https://maven.aliyun.com/repository/google',
+            'https://maven.aliyun.com/repository/spring',
+            'https://maven.aliyun.com/repository/spring-plugin',
             'https://maven.aliyun.com/repository/gradle-plugin',
-            'https://maven.aliyun.com/nexus/content/repositories/jcenter',
-            'https://maven.aliyun.com/nexus/content/groups/public/',
+            'https://maven.aliyun.com/repository/grails-core',
+            'https://maven.aliyun.com/repository/apache-snapshots',
             "https://plugins.gradle.org/m2/",
-            "https://repo.spring.io/plugins-release",
+            "https://repo.spring.io/release",
+            "https://repo.spring.io/snapshot",
     ].each { repoUrl ->
         maven { url repoUrl }
     }
