@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.extension.flv.impl;
 
+import io.github.hylexus.jt.jt1078.support.extension.h264.Sps;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -43,16 +44,16 @@ public class AvcDecoderConfigurationRecord {
     public AvcDecoderConfigurationRecord() {
     }
 
-    public static int writeTo(ByteBuf byteBuf, ByteBuf spsData, ByteBuf ppsData) {
+    public static int writeTo(ByteBuf byteBuf, ByteBuf spsData, ByteBuf ppsData, Sps sps) {
         final int start = byteBuf.writerIndex();
         // configurationVersion=1
         byteBuf.writeByte(1);
         // avcProfileIndication
-        byteBuf.writeByte(spsData.getByte(0));
+        byteBuf.writeByte(sps.getProfileIdc());
         // profileCompatibility
-        byteBuf.writeByte(spsData.getByte(1));
+        byteBuf.writeByte(sps.getProfileCompat());
         // avcLevelIndication
-        byteBuf.writeByte(spsData.getByte(2));
+        byteBuf.writeByte(sps.getLevelIdc());
         // 6bits(reserved) + 2bits(lengthSizeMinusOne)
         // 3 <-- (4 - 1) bytes 的 NALU 头长度
         // (0b111111<<2) | (3) == 0xff

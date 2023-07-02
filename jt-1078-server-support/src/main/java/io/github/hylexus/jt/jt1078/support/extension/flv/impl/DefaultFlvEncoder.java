@@ -3,11 +3,12 @@ package io.github.hylexus.jt.jt1078.support.extension.flv.impl;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvEncoder;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvTagHeader;
+import io.github.hylexus.jt.jt1078.support.extension.flv.tag.Amf;
+import io.github.hylexus.jt.jt1078.support.extension.flv.tag.ScriptFlvTag;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.VideoFlvTag;
-import io.github.hylexus.jt.jt1078.support.extension.h264.H264Decoder;
-import io.github.hylexus.jt.jt1078.support.extension.h264.H264Nalu;
-import io.github.hylexus.jt.jt1078.support.extension.h264.H264NaluHeader;
+import io.github.hylexus.jt.jt1078.support.extension.h264.*;
 import io.github.hylexus.jt.jt1078.support.extension.h264.impl.DefaultH264Decoder;
+import io.github.hylexus.jt.jt1078.support.extension.h264.impl.DefaultSpsDecoder;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -20,11 +21,13 @@ import java.util.Optional;
 
 /**
  * @author hylexus
+ * @see <a href="https://rtmp.veriskope.com/pdf/video_file_format_spec_v10.pdf">video_file_format_spec_v10.pdf</a>
  * @see <a href="https://www.jianshu.com/p/916899d4833b">30分钟学会FLV</a>
  * @see <a href="https://www.cnblogs.com/chyingp/p/flv-getting-started.html">FLV协议5分钟入门浅析</a>
  * @see <a href="https://www.cnblogs.com/CoderTian/p/8278369.html">FLV文件格式解析</a>
  * @see <a href="https://gitee.com/ldming/JT1078">https://gitee.com/ldming/JT1078</a>
  * @see <a href="https://gitee.com/matrixy/jtt1078-video-server">https://gitee.com/matrixy/jtt1078-video-server</a>
+ * @see <a href="https://sample-videos.com/index.php#sample-flv-video">https://sample-videos.com/index.php#sample-flv-video</a>
  */
 @Slf4j
 public class DefaultFlvEncoder implements FlvEncoder {
@@ -33,6 +36,9 @@ public class DefaultFlvEncoder implements FlvEncoder {
 
     private final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
 
+    private final SpsDecoder spsDecoder = new DefaultSpsDecoder();
+
+    @Getter
     private ByteBuf flvBasicFrame;
     private ByteBuf spsFrame;
     private ByteBuf ppsFrame;
@@ -48,10 +54,6 @@ public class DefaultFlvEncoder implements FlvEncoder {
             data.ifPresent(list::add);
         }
         return list;
-    }
-
-    public ByteBuf getFlvBasicFrame() {
-        return flvBasicFrame;
     }
 
     private Optional<ByteBuf> doEncode(H264Nalu nalu) {
@@ -130,20 +132,51 @@ public class DefaultFlvEncoder implements FlvEncoder {
     }
 
     private ByteBuf createFlvBasicFrame() {
+        final Sps sps = this.spsDecoder.decodeSps(this.spsFrame);
         final ByteBuf buffer = this.allocator.buffer();
         this.flvBasicFrame = buffer;
+        this.writeScriptTag(buffer, sps);
+        this.writeFirstVideoTag(buffer, sps);
+        return buffer;
+    }
+
+    private void writeScriptTag(ByteBuf buffer, Sps sps) {
+        final int writerIndex = buffer.writerIndex();
+        // 1. tagHeader: 11 bytes
+        final int outerHeaderSize = FlvTagHeader.newScriptTagHeader(0, 0).writeTo(buffer);
+        // 2.1 tagData: scriptTag 没有 header 直接就是数据
+        final int tagDataSize = ScriptFlvTag.of(this.generateMetadata(sps)).writeTo(buffer);
+
+        // 2.2 给 3 字节的 dataSize 赋值(之前的 0 只是个占位符)
+        buffer.setBytes(writerIndex + 1, IntBitOps.intTo3Bytes(tagDataSize));
+        // 3. previous tag size: 11 + tagDataSize
+        buffer.writeInt(outerHeaderSize + tagDataSize);
+    }
+
+    private List<Amf> generateMetadata(Sps sps) {
+        return List.of(
+                Amf.ofString("onMetaData"),
+                Amf.ofEcmaArray(List.of(
+                        Amf.ofPair("videocodecid", Amf.ofNumber(VideoFlvTag.VideoCodecId.AVC.getValue() * 1.0)),
+                        Amf.ofPair("width", Amf.ofNumber(sps.getWidth() * 1.0D)),
+                        Amf.ofPair("height", Amf.ofNumber(sps.getHeight() * 1.0D))
+                ))
+        );
+    }
+
+    private void writeFirstVideoTag(ByteBuf buffer, Sps sps) {
+        final int writerIndex = buffer.writerIndex();
         // 1. tagHeader: 11 bytes
         final int outerHeaderSize = FlvTagHeader.newVideoTagHeader(0, 0).writeTo(buffer);
         // 2.1 tagData[videoTagHeader] : 5 bytes
         // 4bits(frameType) + 4bits(codecId) + 8bits(avcPacketType) + compositionTime(24bits) = 5 bytes
         final int videoHeaderSize = VideoFlvTag.VideoFlvTagHeader.createAvcSequenceHeader().writeTo(buffer);
         // 2.2 tagData[videoTagData]
-        final int videoBodySize = AvcDecoderConfigurationRecord.writeTo(buffer, this.spsFrame, this.ppsFrame);
+        final int videoBodySize = AvcDecoderConfigurationRecord.writeTo(buffer, this.spsFrame, this.ppsFrame, sps);
         // 2.3 给 3 字节的 dataSize 赋值(之前的 0 只是个占位符)
         final int tagDataSize = videoHeaderSize + videoBodySize;
-        buffer.setBytes(1, IntBitOps.intTo3Bytes(tagDataSize));
+        buffer.setBytes(writerIndex + 1, IntBitOps.intTo3Bytes(tagDataSize));
         // 3. previous tag size: 11 + tagDataSize
         buffer.writeInt(outerHeaderSize + tagDataSize);
-        return buffer;
     }
 }

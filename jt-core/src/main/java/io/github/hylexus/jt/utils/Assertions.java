@@ -28,4 +28,15 @@ public abstract class Assertions {
         }
         return obj;
     }
+
+    public static int range(int n, int left, int right, String msg) {
+        if (n < left || n >= right) {
+            throw new IllegalArgumentException(msg);
+        }
+        return n;
+    }
+
+    public static int rangeClosed(int n, int left, int right, String msg) {
+        return range(n, left, right + 1, msg);
+    }
 }
