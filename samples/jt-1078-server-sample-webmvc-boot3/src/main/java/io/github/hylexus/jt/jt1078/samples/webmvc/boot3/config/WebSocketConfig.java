@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.config;
 
-import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web.WebSocketSubscriberDemo01;
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web.WebSocketSubscriberDemoFlv;
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web.WebSocketSubscriberDemoH264;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +21,19 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler(), WebSocketSubscriberDemo01.PATH_PATTERN)
+        registry.addHandler(webSocketSubscriberDemoH264(), WebSocketSubscriberDemoH264.PATH_PATTERN)
+                .addHandler(webSocketSubscriberDemoFlv(), WebSocketSubscriberDemoFlv.PATH_PATTERN)
                 .setAllowedOrigins("*");
     }
 
     @Bean
-    public WebSocketHandler webSocketHandler() {
-        return new WebSocketSubscriberDemo01(this.jt1078Publisher);
+    public WebSocketHandler webSocketSubscriberDemoH264() {
+        return new WebSocketSubscriberDemoH264(this.jt1078Publisher);
+    }
+
+    @Bean
+    public WebSocketHandler webSocketSubscriberDemoFlv() {
+        return new WebSocketSubscriberDemoFlv(this.jt1078Publisher);
     }
 
 }
