@@ -1,5 +1,5 @@
 ---
-sidebarDepth: 3
+headerDepth: 3
 ---
 
 # 调试相关

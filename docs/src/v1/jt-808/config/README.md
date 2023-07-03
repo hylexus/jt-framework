@@ -1,5 +1,5 @@
 ---
-sidebarDepth: 3
+headerDepth: 3
 ---
 
 # 808服务配置(v1)

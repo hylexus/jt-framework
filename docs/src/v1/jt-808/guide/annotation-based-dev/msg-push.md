@@ -1,5 +1,5 @@
 ---
-sidebarDepth: 3
+headerDepth: 3
 ---
 
 # 消息下发

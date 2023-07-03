@@ -19,11 +19,12 @@
   "license": "",
   "author": "hylexus",
   "devDependencies": {
-    "@vuepress/client": "2.0.0-beta.61",
-    "vue": "^3.2.47",
-    "vuepress": "2.0.0-beta.61",
-    "vuepress-plugin-search-pro": "^2.0.0-beta.208",
-    "vuepress-theme-hope": "2.0.0-beta.208"
+    "@vuepress/client": "2.0.0-beta.63",
+    "vue": "^3.3.4",
+    "vuepress": "2.0.0-beta.63",
+    "vuepress-plugin-search-pro": "^2.0.0-beta.228",
+    "vuepress-theme-hope": "2.0.0-beta.228",
+    "@vuepress/utils": "2.0.0-beta.63"
   },
   "scripts": {
     "docs:dev": "vuepress dev src",

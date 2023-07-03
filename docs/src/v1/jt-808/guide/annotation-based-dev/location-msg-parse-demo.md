@@ -1,5 +1,5 @@
 ---
-sidebarDepth: 3
+headerDepth: 3
 ---
 
 # 位置上传报文解析示例
