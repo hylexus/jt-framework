@@ -1,6 +1,6 @@
 sample:
   flv-to-file:
-    parent-dir: /Users/hylexus/tmp/jtt/flv/
+    parent-dir: /Users/ericqu/tmp/jtt/flv/
 
 server:
   port: 8989
