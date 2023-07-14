@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.config;
 
-import io.github.hylexus.jt.jt1078.samples.webflux.boot3.web.WebSocketSubscriberDemoH264;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.web.WebSocketSubscriberDemoFlv;
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.web.WebSocketSubscriberDemoH264;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,4 +33,6 @@ public class WebSocketConfig {
     // public WebSocketHandlerAdapter handlerAdapter() {
     //     return new WebSocketHandlerAdapter();
     // }
+
+    public static final Scheduler SCHEDULER = Schedulers.newBoundedElastic(10, 1024, "customSubScriber");
 }

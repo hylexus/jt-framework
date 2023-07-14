@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.web;
 
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.MyJt1078SessionCloseReason;
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.model.vo.WebSocketSubscriberVo;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
@@ -17,6 +18,7 @@ import org.springframework.web.util.UriTemplate;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Component
@@ -48,13 +50,25 @@ public class WebSocketSubscriberDemoFlv implements WebSocketHandler {
 
         final Mono<Void> output = this.jt1078Publisher
                 .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
-                .doOnError(Jt1078SessionDestroyException.class, e -> {
-                    log.error("Session Destroy... subscribe complete");
-                })
+                .publishOn(WebSocketConfig.SCHEDULER)
                 .onErrorComplete(Jt1078SessionDestroyException.class)
+                .onErrorComplete(TimeoutException.class)
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("取消订阅(Session销毁)");
+                })
+                .doOnError(TimeoutException.class, e -> {
+                    log.error("取消订阅(超时, {} 秒)", params.timeout());
+                })
+                .doOnError(Throwable.class, e -> {
+                    log.error(e.getMessage(), e);
+                })
                 .flatMap(subscription -> {
                     final byte[] data = subscription.payload();
-
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        log.error(e.getMessage(), e);
+                    }
                     log.info("FLV WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
 
                     final WebSocketMessage webSocketMessage = session.binaryMessage(factory -> factory.wrap(data));

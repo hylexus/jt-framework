@@ -8,22 +8,22 @@ import io.github.hylexus.jt.jt1078.support.extension.flv.FlvHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.impl.DefaultFlvEncoder;
 import io.github.hylexus.jt.utils.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.FluxSink;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * H.264 --> FLV
  */
-@Slf4j
 public class H264ToFlvJt1078ChannelCollector
-        extends AbstractChannelCollector<ByteArrayJt1078Subscription, H264ToFlvSubscriber> {
+        extends AbstractAsyncChannelCollector<ByteArrayJt1078Subscription, H264ToFlvSubscriber> {
 
     private final DefaultFlvEncoder flvEncoder;
 
-    public H264ToFlvJt1078ChannelCollector() {
+    public H264ToFlvJt1078ChannelCollector(ThreadFactory threadFactory) {
+        super(threadFactory);
         this.flvEncoder = new DefaultFlvEncoder();
     }
 

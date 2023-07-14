@@ -1,6 +1,6 @@
-package io.github.hylexus.jt.jt1078.samples.webflux.boot3.debug;
+package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.debug;
 
-import io.github.hylexus.jt.jt1078.samples.webflux.boot3.config.WebSocketConfig;
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;

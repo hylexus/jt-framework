@@ -52,7 +52,7 @@ public abstract class AbstractRunner {
     }
 
     public String getName() {
-        return "[RUNNER : " + name + "]";
+        return "[RUNNER-" + name + "]";
     }
 
 }

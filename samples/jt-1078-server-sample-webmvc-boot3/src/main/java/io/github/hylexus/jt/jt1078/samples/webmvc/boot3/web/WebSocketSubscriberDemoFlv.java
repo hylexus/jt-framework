@@ -1,9 +1,9 @@
 package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web;
 
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.model.vo.WebSocketSubscriberVo;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
-import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 public class WebSocketSubscriberDemoFlv extends AbstractWebSocketHandler {
@@ -38,19 +39,26 @@ public class WebSocketSubscriberDemoFlv extends AbstractWebSocketHandler {
         synchronized (this.sessionMap) {
             sessionMap.put(session.getId(), session);
         }
-        log.info("session add : {}", session);
 
         this.publisher.subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
-                .doOnError(Jt1078SessionDestroyException.class, e -> {
-                    log.error("Session Destroy... subscribe complete");
-                })
+                .publishOn(WebSocketConfig.SCHEDULER)
                 .onErrorComplete(Jt1078SessionDestroyException.class)
+                .onErrorComplete(TimeoutException.class)
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("取消订阅(Session销毁)");
+                })
+                .doOnError(TimeoutException.class, e -> {
+                    log.error("取消订阅(超时, {} 秒)", params.timeout());
+                })
+                .doOnError(Throwable.class, e -> {
+                    log.error(e.getMessage(), e);
+                })
                 .doOnNext(subscription -> {
                     final byte[] data = subscription.payload();
                     log.info("WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
                     try {
                         session.sendMessage(new BinaryMessage(data));
-                    } catch (IOException e) {
+                    } catch (Throwable e) {
                         throw new RuntimeException(e);
                     }
                 })

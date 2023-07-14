@@ -19,4 +19,8 @@ public final class FormatUtils {
     public static String toHexString(ByteBuf byteBuf) {
         return HexStringUtils.byteBufToHexString(byteBuf);
     }
+
+    public static String toHexString(byte[] bytes) {
+        return HexStringUtils.bytes2HexString(bytes);
+    }
 }

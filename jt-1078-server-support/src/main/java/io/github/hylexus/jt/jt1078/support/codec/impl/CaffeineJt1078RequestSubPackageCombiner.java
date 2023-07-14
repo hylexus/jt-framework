@@ -42,9 +42,7 @@ public class CaffeineJt1078RequestSubPackageCombiner implements Jt1078RequestSub
                     if (isExpired) {
                         value.forEach(byteBuf -> {
                             JtCommonUtils.release(byteBuf);
-                            if (log.isDebugEnabled()) {
-                                log.debug("{} {} has been released. reason = {}", LOG_PREFIX, key, cause);
-                            }
+                            log.warn("{} {} has been released. reason = {}", LOG_PREFIX, key, cause);
                         });
                     }
 

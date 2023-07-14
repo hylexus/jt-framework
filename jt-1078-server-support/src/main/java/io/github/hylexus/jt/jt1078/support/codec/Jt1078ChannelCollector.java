@@ -32,4 +32,7 @@ public interface Jt1078ChannelCollector<S extends Jt1078Subscription> {
     void unsubscribe(@Nullable Jt1078SubscriberCloseException reason);
 
     Stream<Jt1078SubscriberDescriptor> list();
+
+    default void close() {
+    }
 }

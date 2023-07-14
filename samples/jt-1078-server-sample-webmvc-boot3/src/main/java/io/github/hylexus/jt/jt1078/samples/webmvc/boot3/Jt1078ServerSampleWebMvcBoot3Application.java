@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Jt1078ServerSampleWebMvcBoot3Application {
 
     public static void main(String[] args) {
-        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+        // ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
         SpringApplication.run(Jt1078ServerSampleWebMvcBoot3Application.class, args);
     }
 }

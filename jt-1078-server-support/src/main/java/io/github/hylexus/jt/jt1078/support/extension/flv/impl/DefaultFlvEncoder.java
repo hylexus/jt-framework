@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +46,17 @@ public class DefaultFlvEncoder implements FlvEncoder {
     @Getter
     private ByteBuf lastIFrame;
 
+    private long baseTimestamp = -1;
+
     @Override
     public List<ByteBuf> encode(Jt1078Request request) {
-        final List<H264Nalu> h264NaluList = this.h264Decoder.decode(request);
+        final List<H264Nalu> h264NaluList;
+        try {
+            h264NaluList = this.h264Decoder.decode(request);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return Collections.emptyList();
+        }
         final List<ByteBuf> list = new ArrayList<>(h264NaluList.size());
         for (final H264Nalu nalu : h264NaluList) {
             final Optional<ByteBuf> data = this.doEncode(nalu);
@@ -97,7 +106,9 @@ public class DefaultFlvEncoder implements FlvEncoder {
         final ByteBuf buffer = this.allocator.buffer();
         try {
             // 1. tagHeader : 11 bytes
-            final int outerHeaderSize = FlvTagHeader.newVideoTagHeader(0, nalu.timestamp().orElse(0L).intValue()).writeTo(buffer);
+            // final int pts = nalu.timestamp().orElse(0L).intValue();
+            final int pts = this.calculateTimestamp(nalu);
+            final int outerHeaderSize = FlvTagHeader.newVideoTagHeader(0, pts).writeTo(buffer);
 
             // 2.1 tagData[videoTagHeader] : 5 bytes
             final VideoFlvTag.VideoFrameType frameType = naluType == H264NaluHeader.NaluType.IDR
@@ -129,6 +140,15 @@ public class DefaultFlvEncoder implements FlvEncoder {
             buffer.release();
             throw throwable;
         }
+    }
+
+    private int calculateTimestamp(H264Nalu nalu) {
+        final long ts = nalu.timestamp().orElse(0L);
+        if (this.baseTimestamp < 0) {
+            this.baseTimestamp = ts;
+        }
+
+        return (int) (ts - this.baseTimestamp);
     }
 
     private ByteBuf createFlvBasicFrame() {

@@ -54,6 +54,11 @@ public interface Jt1078SessionManager {
             final Jt1078Session oldSession = session.get();
             if (oldSession.channel() != channel) {
                 LOGGER.warn("replace channel for sim({}), new:{}, old:{}", sim, channel.remoteAddress(), oldSession.channel().remoteAddress());
+                try {
+                    oldSession.channel().close().sync();
+                } catch (InterruptedException e) {
+                    LOGGER.error(e.getMessage(), e);
+                }
                 oldSession.channel(channel);
             }
             return oldSession;
