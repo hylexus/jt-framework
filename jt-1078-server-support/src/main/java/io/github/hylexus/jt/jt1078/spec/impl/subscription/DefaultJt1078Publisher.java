@@ -21,9 +21,16 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     private final Map<Jt1078Subscriber.SubscriberKey, Map<Class<? extends Jt1078ChannelCollector<? extends Jt1078Subscription>>, Jt1078ChannelCollector<? extends Jt1078Subscription>>> collectors = new ConcurrentHashMap<>();
 
     private final Jt1078ChannelCollectorFactory collectorFactory;
+    private final Jt1078TerminalIdConverter jt1078TerminalIdConverter;
 
-    public DefaultJt1078Publisher(Jt1078ChannelCollectorFactory collectorFactory) {
+    public DefaultJt1078Publisher(Jt1078ChannelCollectorFactory collectorFactory, Jt1078TerminalIdConverter jt1078TerminalIdConverter) {
         this.collectorFactory = collectorFactory;
+        this.jt1078TerminalIdConverter = jt1078TerminalIdConverter;
+    }
+
+    @Override
+    public Jt1078TerminalIdConverter terminalIdConverter() {
+        return this.jt1078TerminalIdConverter;
     }
 
     @Override

@@ -5,6 +5,8 @@ import io.github.hylexus.jt.jt1078.boot.props.Jt1078ServerProps;
 import io.github.hylexus.jt.jt1078.boot.props.subpackage.RequestSubPackageCombinerProps;
 import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherInternal;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078TerminalIdConverter;
+import io.github.hylexus.jt.jt1078.spec.impl.DefaultJt1078TerminalIdConverter;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultCollectorFactory;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.Jt1078ChannelCollectorFactory;
@@ -30,9 +32,15 @@ public class Jt1078HandlerAutoConfiguration {
         return new DefaultCollectorFactory();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt1078TerminalIdConverter jt1078TerminalIdConverter() {
+        return new DefaultJt1078TerminalIdConverter();
+    }
+
     @Bean(destroyMethod = "close")
-    public Jt1078PublisherInternal internalJt1078Publisher(Jt1078ChannelCollectorFactory collectorFactory) {
-        return new DefaultJt1078Publisher(collectorFactory);
+    public Jt1078PublisherInternal internalJt1078Publisher(Jt1078ChannelCollectorFactory collectorFactory, Jt1078TerminalIdConverter jt1078TerminalIdConverter) {
+        return new DefaultJt1078Publisher(collectorFactory, jt1078TerminalIdConverter);
     }
 
     @Bean

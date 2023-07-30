@@ -14,13 +14,15 @@ import java.time.Duration;
  */
 public interface Jt1078Publisher {
 
+    Jt1078TerminalIdConverter terminalIdConverter();
+
     /**
      * 当客户端断开时会给下游发送 {@link Jt1078SessionDestroyException} 异常信号, 订阅者应该处理这个异常
      *
      * @see io.github.hylexus.jt.jt1078.spec.impl.subscription.BuiltinJt1078SessionCloseListener#onSessionClose(Jt1078Session, Jt1078SessionCloseReason)
      */
     default <S extends Jt1078Subscription> Flux<S> subscribe(Class<? extends Jt1078ChannelCollector<S>> cls, String sim, short channelNumber, Duration timeout) {
-        return this.doSubscribe(cls, sim, channelNumber, timeout).dataStream();
+        return this.doSubscribe(cls, terminalIdConverter().convert(sim), channelNumber, timeout).dataStream();
     }
 
     /**
@@ -50,7 +52,7 @@ public interface Jt1078Publisher {
      * @param sim {@link Jt1078Request#sim()}
      */
     default void unsubscribeWithSim(String sim) {
-        this.unsubscribeWithSim(sim, null);
+        this.unsubscribeWithSim(terminalIdConverter().convert(sim), null);
     }
 
     /**
