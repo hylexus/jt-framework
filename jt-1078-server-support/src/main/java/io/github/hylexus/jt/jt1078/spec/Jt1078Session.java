@@ -8,6 +8,10 @@ import io.netty.channel.Channel;
 public interface Jt1078Session {
     String sim();
 
+    default String terminalId() {
+        return this.sim();
+    }
+
     String sessionId();
 
     Channel channel();

@@ -20,7 +20,7 @@ public abstract class AbstractAsyncChannelCollector<PT extends Jt1078Subscriptio
 
     public AbstractAsyncChannelCollector(ThreadFactory threadFactory) {
         this.threadFactory = threadFactory;
-        this.queue = new LinkedBlockingQueue<>(128);
+        this.queue = new LinkedBlockingQueue<>(1024);
         this.startConsumer();
     }
 

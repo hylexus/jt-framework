@@ -29,6 +29,11 @@ public class H264ToFlvJt1078ChannelCollector
 
     @Override
     protected void doCollect(Jt1078Request request) {
+        // TODO 统一处理不支持的类型
+        // final Jt1078PayloadType payloadType = request.header().payloadType();
+        // if (payloadType == DefaultJt1078PayloadType.H264) {
+        //
+        // }
         final List<ByteBuf> bufList = flvEncoder.encode(request);
         for (final ByteBuf byteBuf : bufList) {
             try {

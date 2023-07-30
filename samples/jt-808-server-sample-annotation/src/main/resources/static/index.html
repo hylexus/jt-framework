@@ -15,16 +15,16 @@
                 </div>
                 <el-form size="mini" :inline="true" label-width="180px">
                     <el-form-item label="SIM">
-                        <el-input id="terminalId9101" type="text" v-model="payload9101.terminalId"/>
+                        <el-input id="terminalId9101" type="text" v-model="payload9101.sim"/>
                     </el-form-item>
                     <el-form-item label="服务器IP">
-                        <el-input id="serverIp9101" type="text" v-model="payload9101.serverIp"/>
+                        <el-input id="serverIp9101" type="text" v-model="payload9101.jt1078ServerIp"/>
                     </el-form-item>
                     <el-form-item label="服务器端口(TCP)">
-                        <el-input-number :controls="false" v-model="payload9101.serverPortTcp"/>
+                        <el-input-number :controls="false" v-model="payload9101.jt1078ServerPortTcp"/>
                     </el-form-item>
                     <el-form-item label="服务器端口(UDP)">
-                        <el-input-number :controls="false" v-model="payload9101.serverPortUdp"/>
+                        <el-input-number :controls="false" v-model="payload9101.jt1078ServerPortUdp"/>
                     </el-form-item>
                     <el-form-item label="逻辑通道号">
                         <el-select v-model="payload9101.channelNumber"
@@ -77,7 +77,7 @@
                 </div>
                 <el-form size="mini" :inline="true" label-width="180px" label-position="right">
                     <el-form-item label="SIM">
-                        <el-input v-model="payload9102.terminalId"/>
+                        <el-input v-model="payload9102.sim"/>
                     </el-form-item>
                     <el-form-item label="逻辑通道号">
                         <el-select v-model="payload9102.channelNumber"
@@ -185,17 +185,17 @@
         data: {
             terminalList: [],
             payload9101: {
-                terminalId: "018008501119",
-                serverIp: "1.1.1.1",
-                serverPortTcp: 61078,
-                serverPortUdp: 61078,
+                sim: "018008501119",
+                jt1078ServerIp: "1.1.1.1",
+                jt1078ServerPortTcp: 61078,
+                jt1078ServerPortUdp: 61078,
                 channelNumber: 3,
                 dataType: 0,
                 streamType: 1,
             },
             response9101: "",
             payload9102: {
-                terminalId: "018008501119",
+                sim: "018008501119",
                 channelNumber: 3,
                 command: 0,
                 mediaTypeToClose: 0,
@@ -249,9 +249,13 @@
         methods: {
             loadTerminals: function () {
                 const context = this
-                axios.get('/debug/terminals')
+                axios.get('/808/terminal/list')
                     .then(function (response) {
-                        context.terminalList = response.data.data
+                        if (response.data && response.data.code === 0) {
+                            context.terminalList = response.data.data
+                        } else {
+                            console.log(response)
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -259,7 +263,8 @@
             },
             sendMsg9101: function () {
                 const context = this
-                axios.post('/debug/send-msg/9101', context.payload9101)
+                context.response9101 = "..."
+                axios.post('/1078/send-msg/9101', context.payload9101)
                     .then(function (response) {
                         console.log(response)
                         context.response9101 = response.data
@@ -270,7 +275,8 @@
             },
             sendMsg9102: function () {
                 const context = this
-                axios.post('/debug/send-msg/9102', context.payload9102)
+                context.response9102 = "..."
+                axios.post('/1078/send-msg/9102', context.payload9102)
                     .then(function (response) {
                         console.log(response)
                         context.response9102 = response.data

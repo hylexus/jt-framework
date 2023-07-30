@@ -9,9 +9,9 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg9102Alias;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
-import io.github.hylexus.jt808.samples.annotation.model.dto.Dto9101;
-import io.github.hylexus.jt808.samples.annotation.model.dto.Dto9102;
-import io.github.hylexus.jt808.samples.annotation.model.vo.Resp;
+import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
+import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
+import io.github.hylexus.jt808.samples.common.vo.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RestController
+@RequestMapping("/1078")
 public class Jt1078Controller {
     private final Jt808CommandSender commandSender;
     private final Jt808SessionManager sessionManager;
@@ -32,50 +33,50 @@ public class Jt1078Controller {
     }
 
 
-    @RequestMapping("/debug/send-msg/9101")
-    public Object realtimeTransmissionRequest(@Validated @RequestBody Dto9101 dto) throws InterruptedException {
+    @RequestMapping("/send-msg/9101")
+    public Object realtimeTransmissionRequest(@Validated @RequestBody Command9101Dto dto) throws InterruptedException {
         final BuiltinMsg9101Alias msg = new BuiltinMsg9101Alias()
-                .setServerIp(dto.getServerIp())
-                .setServerPortTcp(dto.getServerPortTcp())
-                .setServerPortUdp(dto.getServerPortUdp())
+                .setServerIp(dto.getJt1078ServerIp())
+                .setServerPortTcp(dto.getJt1078ServerPortTcp())
+                .setServerPortUdp(dto.getJt1078ServerPortUdp())
                 .setChannelNumber(dto.getChannelNumber().byteValue())
                 .setDataType(dto.getDataType().byteValue())
                 .setStreamType(dto.getStreamType().byteValue());
 
         msg.setServerIpLength((byte) msg.getServerIp().getBytes(JtProtocolConstant.JT_808_STRING_ENCODING).length);
 
-        final String terminalId = dto.getTerminalId();
+        final String terminalId = dto.getSim();
 
         final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
         final int nextFlowId = session.nextFlowId();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
-        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, 5L, TimeUnit.SECONDS);
+        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().toSeconds(), TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
         if (resp == null) {
-            return Resp.empty("未收到终端回复");
+            return Resp.sendCommandFailure("未收到终端回复(" + dto.getTimeout() + ")");
         }
         return Resp.success(resp);
     }
 
 
-    @RequestMapping("/debug/send-msg/9102")
-    public Object realtimeTransmissionControl(@Validated @RequestBody Dto9102 dto) throws InterruptedException {
+    @RequestMapping("/send-msg/9102")
+    public Object realtimeTransmissionControl(@Validated @RequestBody Command9102Dto dto) throws InterruptedException {
         final BuiltinMsg9102Alias msg = new BuiltinMsg9102Alias()
                 .setChannelNumber(dto.getChannelNumber().byteValue())
                 .setCommand(dto.getCommand().byteValue())
                 .setMediaTypeToClose(dto.getMediaTypeToClose().byteValue())
                 .setStreamType(dto.getStreamType().byteValue());
 
-        final String terminalId = dto.getTerminalId();
+        final String terminalId = dto.getSim();
 
         final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
         final int nextFlowId = session.nextFlowId();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
-        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, 30L, TimeUnit.SECONDS);
+        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().toSeconds(), TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
 
         if (resp == null) {
-            return Resp.empty("未收到终端回复");
+            return Resp.sendCommandFailure("未收到终端回复(" + dto.getTimeout() + ")");
         }
 
         return Resp.success(resp);

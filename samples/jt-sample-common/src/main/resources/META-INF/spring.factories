@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.hylexus.jt808.samples.common.configuration.SamplesCommonAutoConfiguration

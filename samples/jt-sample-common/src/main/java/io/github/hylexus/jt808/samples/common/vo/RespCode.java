@@ -1,4 +1,4 @@
-package io.github.hylexus.jt808.samples.annotation.model.vo;
+package io.github.hylexus.jt808.samples.common.vo;
 
 public interface RespCode {
     int code();

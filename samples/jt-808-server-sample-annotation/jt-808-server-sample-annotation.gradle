@@ -15,6 +15,7 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     api(project(":jt-808-server-spring-boot-starter-boot2"))
+    api(project(":samples:jt-sample-common"))
 
     api("org.springframework.boot:spring-boot-starter-webflux")
     api("org.springframework.boot:spring-boot-starter-data-redis")

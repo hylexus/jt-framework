@@ -1,21 +1,24 @@
-package io.github.hylexus.jt808.samples.annotation.configuration;
+package io.github.hylexus.jt808.samples.common.configuration;
 
-import io.github.hylexus.jt808.samples.annotation.configuration.web.ResponseWrapperResultHandler;
+import io.github.hylexus.jt808.samples.common.web.reactive.SamplesResponseWrapperResultHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.web.reactive.accept.RequestedContentTypeResolver;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityResultHandler;
 
-@Configuration
-public class WebFluxConfiguration {
+import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.REACTIVE;
+
+@ConditionalOnWebApplication(type = REACTIVE)
+public class SamplesReactiveAutoConfiguration {
+
     @Bean
-    public ResponseWrapperResultHandler responseWrapperResultHandler(
+    public SamplesResponseWrapperResultHandler responseWrapperResultHandler(
             ServerCodecConfigurer serverCodecConfigurer,
             RequestedContentTypeResolver requestedContentTypeResolver,
             ResponseEntityResultHandler responseEntityResultHandler) {
 
-        return new ResponseWrapperResultHandler(
+        return new SamplesResponseWrapperResultHandler(
                 serverCodecConfigurer.getWriters(),
                 requestedContentTypeResolver,
                 responseEntityResultHandler

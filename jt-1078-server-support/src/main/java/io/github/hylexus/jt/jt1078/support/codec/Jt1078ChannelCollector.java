@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public interface Jt1078ChannelCollector<S extends Jt1078Subscription> {
 
     Class<H264ToFlvJt1078ChannelCollector> H264_TO_FLV_COLLECTOR = H264ToFlvJt1078ChannelCollector.class;
-    Class<PassThroughJt1078ChannelCollector> PASS_THROUGH_COLLECTOR = PassThroughJt1078ChannelCollector.class;
+    // Class<PassThroughJt1078ChannelCollector> PASS_THROUGH_COLLECTOR = PassThroughJt1078ChannelCollector.class;
     Class<RawDataJt1078ChannelCollector> RAW_DATA_COLLECTOR = RawDataJt1078ChannelCollector.class;
 
     void collect(Jt1078Request request);

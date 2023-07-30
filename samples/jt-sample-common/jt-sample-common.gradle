@@ -1,0 +1,10 @@
+dependencies {
+    compileOnly("com.fasterxml.jackson.core:jackson-annotations")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind")
+    compileOnly("org.springframework:spring-webflux")
+    compileOnly("org.springframework.boot:spring-boot-starter")
+    compileOnly("jakarta.validation:jakarta.validation-api")
+    compileOnly("io.github.hylexus.oaks:oaks-common-utils") {
+        exclude(group: "org.projectlombok", module: "lombok")
+    }
+}

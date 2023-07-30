@@ -3,8 +3,8 @@ import java.nio.charset.StandardCharsets
 plugins {
     id 'java-library'
     // A Gradle plugin that provides Maven-like dependency management and exclusions
-    // @see https://docs.spring.io/dependency-management-plugin/docs/1.1.0/reference/html/#getting-started
-    id "io.spring.dependency-management" version "1.1.0"
+    // @see https://docs.spring.io/dependency-management-plugin/docs/1.1.1/reference/html/#getting-started
+    id "io.spring.dependency-management" version "1.1.1"
 }
 
 ext {
@@ -36,7 +36,7 @@ configure(rootProject) {
 configure(allprojects) { project ->
     group = projectGroup
     if (project.name.contains("jt-1078")) {
-        version = projectVersion + "-beta1"
+        version = projectVersion + "-M1"
     } else {
         version = projectVersion
     }
