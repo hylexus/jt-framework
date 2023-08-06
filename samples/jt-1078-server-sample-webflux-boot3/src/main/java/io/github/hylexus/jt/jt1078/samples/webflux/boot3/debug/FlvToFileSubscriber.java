@@ -62,6 +62,7 @@ public class FlvToFileSubscriber implements InitializingBean {
                     .subscribe(H264ToFlvJt1078ChannelCollector.class, "018930946552", (short) 3, Duration.ofSeconds(100))
                     .publishOn(WebSocketConfig.SCHEDULER)
                     .onErrorComplete(Jt1078SessionDestroyException.class)
+                    .onErrorComplete(TimeoutException.class)
                     .doOnError(TimeoutException.class, e -> {
                         log.error("取消订阅(超时)");
                     })

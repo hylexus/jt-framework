@@ -62,43 +62,8 @@
                         <el-button type="primary" size="mini" @click="play">播放 / 重新初始化播放器</el-button>
                     </el-form>
                     <video id="videoElement" width="640" height="480" controls autoplay
-                           style="border: 3px solid red"></video>
+                           style="border: 3px solid #26cfee"></video>
                 </div>
-            </el-card>
-            <el-card class="box-card my-box">
-                <div slot="header" class="clearfix">
-                    <span>Terminal List（808Session）</span>
-                    <el-form inline size="mini" style="float: right;">
-                        <el-form-item label="">
-                            <el-input v-model="terminalListUrl" size="mini" style="width: 300px" disabled/>
-                        </el-form-item>
-                        <el-button type="primary" size="mini" @click="loadTerminals">刷新</el-button>
-                    </el-form>
-                </div>
-                <el-table
-                        :data="terminalList"
-                        style="width: 100%">
-                    <el-table-column
-                            prop="terminalId"
-                            label="terminalId"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="version"
-                            label="version"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="lastCommunicationTime"
-                            label="lastCommunicationTime"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="latestGeo"
-                            label="latestGeo"
-                    >
-                    </el-table-column>
-                </el-table>
             </el-card>
         </el-col>
         <el-col :span="8">
@@ -231,6 +196,99 @@
             </el-card>
         </el-col>
     </el-row>
+    <el-row>
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Terminal List（808Session）</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt808TerminalListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt808Terminals">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt808TerminalList" border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="terminalId"
+                            label="terminalId"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="version"
+                            label="version"
+                            width="100px"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="lastCommunicationTime"
+                            label="lastCommunicationTime"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="latestGeo"
+                            label="latestGeo"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Terminal List（1078Session）</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt1078TerminalListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt1078Terminals">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt1078TerminalList" border
+                        style="width: 100%">
+                    </el-table-column>
+                    <el-table-column
+                            prop="sim"
+                            label="sim"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="lastCommunicateTime"
+                            label="lastCommunicateTime"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="24">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Subscriber List (1078)</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt1078SubscriberListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt1078Subscribers">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt1078SubscriberList" border
+                        style="width: 100%">
+                    <el-table-column prop="id" label="id" width="410px"></el-table-column>
+                    <el-table-column prop="sim" label="sim"></el-table-column>
+                    <el-table-column prop="channel" label="channel"></el-table-column>
+                    <el-table-column prop="createdAt" label="createdAt"></el-table-column>
+                    <el-table-column prop="desc" label="desc"></el-table-column>
+
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
 
 </div>
 
@@ -256,21 +314,23 @@
             jt808ServerIp: "1.1.1.1",
             jt808ServerPortHttp: 8808,
             jt1078ServerPortHttp: 8989,
-            terminalList: [],
+            jt808TerminalList: [],
+            jt1078TerminalList: [],
+            jt1078SubscriberList: [],
             payload9101: {
                 // sim: this.sim
                 // streamType: this.videoStreamType
                 jt1078ServerIp: "1.1.1.1",
                 jt1078ServerPortTcp: 61078,
                 jt1078ServerPortUdp: 0,
-                channelNumber: 3,
+                channelNumber: 2,
                 dataType: 0,
             },
             response9101: "",
             payload9102: {
                 // sim: this.sim
                 // streamType: this.videoStreamType
-                channelNumber: 3,
+                channelNumber: 2,
                 command: 0,
                 mediaTypeToClose: 0,
             },
@@ -318,13 +378,22 @@
         },
         created: function () {
             this.jt1078ServerPortHttp = window.location.port
+            this.loadJt1078Terminals()
+            this.loadJt808Terminals()
+            this.loadJt1078Subscribers()
         },
         computed: {
             videoUrl: function () {
                 return this.constructUrl()
             },
-            terminalListUrl: function () {
+            jt808TerminalListUrl: function () {
                 return "http://" + this.jt808ServerIp + ":" + this.jt808ServerPortHttp + "/808/terminal/list"
+            },
+            jt1078TerminalListUrl: function () {
+                return "http://" + this.payload9101.jt1078ServerIp + ":" + this.jt1078ServerPortHttp + "/jt1078/session/list"
+            },
+            jt1078SubscriberListUrl: function () {
+                return "http://" + this.payload9101.jt1078ServerIp + ":" + this.jt1078ServerPortHttp + "/jt1078/subscriber/list"
             },
         },
         methods: {
@@ -404,12 +473,40 @@
                         console.log(error);
                     });
             },
-            loadTerminals: function () {
+            loadJt808Terminals: function () {
                 const context = this
                 axios.get('/proxy/808/terminal/list?host=' + this.jt808ServerIp + '&port=' + this.jt808ServerPortHttp)
                     .then(response => {
                         if (response.data && response.data.code === 0) {
-                            context.terminalList = response.data.data
+                            context.jt808TerminalList = response.data.data
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            loadJt1078Terminals: function () {
+                const context = this
+                axios.get('/jt1078/session/list?pageSize=10')
+                    .then(response => {
+                        if (response.data && response.data.code === 0) {
+                            context.jt1078TerminalList = response.data.data
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            loadJt1078Subscribers: function () {
+                const context = this
+                axios.get('/jt1078/subscriber/list?pageSize=10')
+                    .then(response => {
+                        if (response.data && response.data.code === 0) {
+                            context.jt1078SubscriberList = response.data.data
                         } else {
                             console.log(response)
                         }

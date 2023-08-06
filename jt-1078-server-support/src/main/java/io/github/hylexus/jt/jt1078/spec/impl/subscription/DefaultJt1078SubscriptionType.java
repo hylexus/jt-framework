@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public enum DefaultJt1078SubscriptionType implements Jt1078Subscription.Jt1078SubscriptionType {
     FLV(1),
-    // todo 兼容 1078 类型
     PASS_THROUGH_RAW_DATA(2),
     RAW_DATA(3),
     ;
