@@ -21,6 +21,10 @@ public class DefaultJt1078Session implements Jt1078Session {
 
     @Getter
     @Setter
+    private short channelNumber;
+
+    @Getter
+    @Setter
     private String sessionId;
 
     @Getter
@@ -31,5 +35,9 @@ public class DefaultJt1078Session implements Jt1078Session {
     @Setter
     @Builder.Default
     private long lastCommunicateTimestamp = 0L;
+
+    @Getter
+    @Builder.Default
+    private long createdAt = System.currentTimeMillis();
 
 }

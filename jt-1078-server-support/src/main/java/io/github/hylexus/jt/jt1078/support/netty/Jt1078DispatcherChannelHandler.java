@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.support.netty;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
+import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestPreprocessor;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
 
+import static io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager.ATTR_KEY_SESSION;
 import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE;
 
 /**
@@ -52,7 +54,16 @@ public class Jt1078DispatcherChannelHandler extends ChannelInboundHandlerAdapter
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
+        final Jt1078Session session = ctx.channel().attr(ATTR_KEY_SESSION).get();
+        if (session != null) {
+            sessionManager.removeBySessionIdAndThenClose(session.sessionId(), CHANNEL_INACTIVE);
+        }
+
+        try {
+            ctx.channel().close().sync();
+        } catch (InterruptedException ignored) {
+            // ignored
+        }
     }
 
 }

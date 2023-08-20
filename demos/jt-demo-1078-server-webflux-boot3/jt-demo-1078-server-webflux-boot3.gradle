@@ -1,0 +1,23 @@
+plugins {
+    id "org.springframework.boot" version "${maximumSpringBootBomVersion}"
+}
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    getMainClass().set('io.github.hylexus.jt.demos.jt1078.JtDemo1078ServerWebfluxBoot3')
+}
+
+bootJar {
+    getArchiveFileName().set("${project.name}.jar")
+}
+
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    api(project(":demos:jt-demo-common-boot3"))
+    api(project(":jt-1078-server-spring-boot-starter"))
+
+    api("org.springframework.boot:spring-boot-starter-webflux")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}

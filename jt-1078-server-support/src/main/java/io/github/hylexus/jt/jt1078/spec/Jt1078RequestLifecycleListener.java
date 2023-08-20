@@ -20,7 +20,7 @@ public interface Jt1078RequestLifecycleListener extends OrderedComponent {
     }
 
     /**
-     * @param request 初步解码后的请求(请求体尚未解码)
+     * @param request 初步解码后的请求(分包合并之前)
      * @see io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler#channelRead(ChannelHandlerContext, Object)
      */
     default boolean beforeDispatch(Jt1078Request request, Channel channel) {

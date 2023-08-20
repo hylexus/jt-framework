@@ -4,7 +4,6 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionCloseReason;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionEventListener;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -18,11 +17,9 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    // <sim, session>
+    // <sim_channelNumber, session>
     private final Map<String, Jt1078Session> sessionMap = new HashMap<>();
 
-    // <sessionId, sim>
-    private final Map<String, String> sessionIdSimMapping = new HashMap<>();
     private final List<Jt1078SessionEventListener> listeners = new ArrayList<>();
 
     public DefaultJt1078SessionManager() {
@@ -35,17 +32,12 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
 
     @Override
     public Optional<Jt1078Session> findBySessionId(String sessionId) {
-        String terminalId = sessionIdSimMapping.get(sessionId);
-        if (StringUtils.isEmpty(terminalId)) {
-            return Optional.empty();
-        }
-
-        return findBySim(terminalId, false);
+        return Optional.ofNullable(sessionMap.get(sessionId));
     }
 
     @Override
-    public Optional<Jt1078Session> findBySim(String sim, boolean updateLastCommunicateTime) {
-        final Jt1078Session session = this.sessionMap.get(sim);
+    public Optional<Jt1078Session> findBySimAndChannel(String sim, short channelNumber, boolean updateLastCommunicateTime) {
+        final Jt1078Session session = this.sessionMap.get(generateSessionId(sim, channelNumber));
         if (session == null) {
             return Optional.empty();
         }
@@ -63,7 +55,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     private boolean checkStatus(Jt1078Session session) {
         // if (!session.getChannel().isOpen()) {
         if (!session.channel().isActive()) {
-            this.removeBySessionIdAndClose(session.sessionId(), DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE);
+            this.removeBySessionIdAndThenClose(session.sessionId(), DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE);
             return false;
         }
         return true;
@@ -73,8 +65,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     public void persistence(Jt1078Session session) {
         lock.writeLock().lock();
         try {
-            sessionMap.put(session.sim(), session);
-            sessionIdSimMapping.put(session.sessionId(), session.sim());
+            sessionMap.put(session.sessionId(), session);
         } finally {
             lock.writeLock().unlock();
         }
@@ -86,9 +77,8 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     public Optional<Jt1078Session> removeBySessionId(String sessionId) {
         lock.writeLock().lock();
         try {
-            final String sim = sessionIdSimMapping.remove(sessionId);
-            if (sim != null) {
-                final Jt1078Session session = sessionMap.remove(sim);
+            final Jt1078Session session = sessionMap.remove(sessionId);
+            if (session != null) {
                 this.invokeListeners(listener -> listener.onSessionRemove(session));
                 return Optional.of(session);
             }
@@ -100,7 +90,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     }
 
     @Override
-    public Optional<Jt1078Session> removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason) {
+    public Optional<Jt1078Session> removeBySessionIdAndThenClose(String sessionId, Jt1078SessionCloseReason reason) {
         final Optional<Jt1078Session> optionalSession = this.removeBySessionId(sessionId);
         optionalSession.ifPresent(session -> {
             invokeListeners(listener -> listener.onSessionClose(session, reason));

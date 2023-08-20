@@ -249,16 +249,11 @@
                 <el-table
                         :data="jt1078TerminalList" border
                         style="width: 100%">
-                    </el-table-column>
-                    <el-table-column
-                            prop="sim"
-                            label="sim"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="lastCommunicateTime"
-                            label="lastCommunicateTime"
-                    >
+                    <el-table-column prop="id" label="id"></el-table-column>
+                    <el-table-column prop="sim" label="sim"></el-table-column>
+                    <el-table-column prop="channelNumber" label="channelNumber"></el-table-column>
+                    <el-table-column prop="createdAt" label="createdAt"></el-table-column>
+                    <el-table-column prop="lastCommunicateTime" label="lastCommunicateTime">
                     </el-table-column>
                 </el-table>
             </el-card>
@@ -312,8 +307,8 @@
             // 码流类型
             videoStreamType: 0,
             jt808ServerIp: "1.1.1.1",
-            jt808ServerPortHttp: 8808,
-            jt1078ServerPortHttp: 8989,
+            jt808ServerPortHttp: 808,
+            jt1078ServerPortHttp: 1078,
             jt808TerminalList: [],
             jt1078TerminalList: [],
             jt1078SubscriberList: [],
@@ -478,7 +473,7 @@
                 axios.get('/proxy/808/terminal/list?host=' + this.jt808ServerIp + '&port=' + this.jt808ServerPortHttp)
                     .then(response => {
                         if (response.data && response.data.code === 0) {
-                            context.jt808TerminalList = response.data.data
+                            context.jt808TerminalList = response.data.data.records
                         } else {
                             console.log(response)
                         }

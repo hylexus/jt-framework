@@ -42,7 +42,7 @@ public class Jt1078RequestLifecycleListeners implements Jt1078RequestLifecycleLi
                     continueProcess = false;
                 }
             } catch (Throwable e) {
-                log.error("An error occurred while invoke [{}]", listener.getClass());
+                log.error("An error occurred while invoke [" + listener.getClass() + "]", e);
             }
         }
         return continueProcess;

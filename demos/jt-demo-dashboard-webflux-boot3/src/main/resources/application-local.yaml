@@ -1,0 +1,57 @@
+server:
+  port: 9090
+
+jt-dashboard:
+  jt808-server-metadata:
+    - instanceId: "2664822674f4425d88e60df21d70130b"
+      host: localhost
+      http-port: 808
+      notes: "test1"
+    - instanceId: "da699e019e09451ba236b0df50ec63e6"
+      host: localhost
+      http-port: 808
+      notes: "test2"
+  jt1078-server-metadata:
+    - instanceId: "43d4e37f848545448d8ef28f7a66fae9"
+      host: localhost
+      tcp-port: 61078
+      http-port: 1078
+      notes: "test1"
+    - instanceId: "37cff365ffee41479d621fdcf030c886"
+      host: localhost
+      tcp-port: 61078
+      http-port: 1078
+      notes: "test2"
+
+spring:
+  cloud:
+    gateway:
+      enabled: true
+      httpclient:
+        pool:
+          type: elastic
+          max-idle-time: 45s
+          eviction-interval: 1m
+        response-timeout: 30s
+        connect-timeout: 200
+      routes:
+        - id: jt-808-server
+          #uri: http://localhost:808
+          uri: http://node2:808
+          predicates:
+            - Path=/api/jt808/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*), $\{segment}
+          metadata:
+            connect-timeout: 200
+            response-timeout: 30000
+        - id: jt-1078-server
+          uri: http://localhost:1078
+          #uri: http://node2:1078
+          predicates:
+            - Path=/api/jt1078/**
+          filters:
+            - RewritePath=/api(?<segment>/?.*), $\{segment}
+          metadata:
+            connect-timeout: 200
+            response-timeout: 30000

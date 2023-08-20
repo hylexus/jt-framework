@@ -44,7 +44,7 @@ public class Jt1078RequestPreprocessor implements Jt1078RequestLifecycleListener
             request = this.msgDecoder.decode(msg);
 
             // update session
-            this.sessionManager.persistenceIfNecessary(request.sim(), channel);
+            this.sessionManager.persistenceIfNecessary(request, channel);
 
             final boolean continueProcessing = this.lifecycleListener.beforeDispatch(request, channel);
             if (!continueProcessing) {

@@ -12,6 +12,11 @@ public interface Jt1078RequestHandler extends OrderedComponent {
 
     void handle(Jt1078Request request);
 
+    @Override
+    default int getOrder() {
+        return BUILTIN_COMPONENT_ORDER;
+    }
+
     @Slf4j
     class LoggingJt1078RequestHandler implements Jt1078RequestHandler {
 

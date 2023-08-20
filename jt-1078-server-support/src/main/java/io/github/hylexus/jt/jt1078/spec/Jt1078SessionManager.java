@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.jt1078.spec;
 
 import io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078Session;
-import io.github.hylexus.jt.jt1078.support.exception.Jt1078SessionNotFoundException;
 import io.netty.channel.Channel;
+import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,46 +14,44 @@ import java.util.stream.Stream;
  * @author hylexus
  */
 public interface Jt1078SessionManager {
+    AttributeKey<Jt1078Session> ATTR_KEY_SESSION = AttributeKey.newInstance("jt1078.session");
     Logger LOGGER = LoggerFactory.getLogger(Jt1078SessionManager.class);
-
-    default Jt1078Session findBySimOrThrow(String sim) {
-        return this.findBySim(sim, false).orElseThrow(() -> new Jt1078SessionNotFoundException(sim));
-    }
 
     Optional<Jt1078Session> findBySessionId(String sessionId);
 
-    default Optional<Jt1078Session> findBySim(String sim) {
-        return this.findBySim(sim, false);
+    default Optional<Jt1078Session> findBySimAndChannel(String sim, short channelNumber) {
+        return this.findBySimAndChannel(sim, channelNumber, false);
     }
 
-    Optional<Jt1078Session> findBySim(String sim, boolean updateLastCommunicateTime);
+    Optional<Jt1078Session> findBySimAndChannel(String sim, short channelNumber, boolean updateLastCommunicateTime);
 
-    default String generateSessionId(Channel channel) {
-        return channel.id().asLongText().replaceAll("-", "");
+    default String generateSessionId(String sim, short channelNumber) {
+        return sim + "_" + channelNumber;
     }
 
-    default Jt1078Session generateSession(String sim, Channel channel) {
+    default Jt1078Session generateSession(Jt1078Request request, Channel channel) {
 
-        final String sessionId = this.generateSessionId(channel);
+        final String sessionId = this.generateSessionId(request.sim(), request.channelNumber());
 
         return DefaultJt1078Session.builder()
                 .sessionId(sessionId)
-                .sim(sim)
+                .sim(request.sim())
+                .channelNumber(request.channelNumber())
                 .channel(channel)
                 .lastCommunicateTimestamp(System.currentTimeMillis())
                 .build();
     }
 
-    default Jt1078Session persistenceIfNecessary(String sim, Channel channel) {
-        return this.persistenceIfNecessary(sim, channel, true);
+    default Jt1078Session persistenceIfNecessary(Jt1078Request request, Channel channel) {
+        return this.persistenceIfNecessary(request, channel, true);
     }
 
-    default Jt1078Session persistenceIfNecessary(String sim, Channel channel, boolean updateLastCommunicateTime) {
-        final Optional<Jt1078Session> session = this.findBySim(sim, updateLastCommunicateTime);
+    default Jt1078Session persistenceIfNecessary(Jt1078Request request, Channel channel, boolean updateLastCommunicateTime) {
+        final Optional<Jt1078Session> session = this.findBySimAndChannel(request.sim(), request.channelNumber(), updateLastCommunicateTime);
         if (session.isPresent()) {
             final Jt1078Session oldSession = session.get();
             if (oldSession.channel() != channel) {
-                LOGGER.warn("replace channel for sim({}), new:{}, old:{}", sim, channel.remoteAddress(), oldSession.channel().remoteAddress());
+                LOGGER.warn("replace channel for sim({}), channelNumber:{}, new:{}, old:{}", request.sim(), request.channelNumber(), channel.remoteAddress(), oldSession.channel().remoteAddress());
                 try {
                     oldSession.channel().close().sync();
                 } catch (InterruptedException e) {
@@ -63,7 +61,10 @@ public interface Jt1078SessionManager {
             }
             return oldSession;
         }
-        final Jt1078Session newSession = generateSession(sim, channel);
+        final Jt1078Session newSession = generateSession(request, channel);
+        if (!channel.hasAttr(ATTR_KEY_SESSION)) {
+            channel.attr(ATTR_KEY_SESSION).set(newSession);
+        }
         this.persistence(newSession);
         return newSession;
     }
@@ -72,13 +73,13 @@ public interface Jt1078SessionManager {
 
     Optional<Jt1078Session> removeBySessionId(String sessionId);
 
-    Optional<Jt1078Session> removeBySessionIdAndClose(String sessionId, Jt1078SessionCloseReason reason);
+    Optional<Jt1078Session> removeBySessionIdAndThenClose(String sessionId, Jt1078SessionCloseReason reason);
 
-    default Optional<Jt1078Session> removeBySimAndClose(String sim, Jt1078SessionCloseReason closeReason) {
-        final Optional<Jt1078Session> optionalSession = this.findBySim(sim, false);
+    default Optional<Jt1078Session> removeBySimAndChannelAndThenClose(String sim, short channelNumber, Jt1078SessionCloseReason closeReason) {
+        final Optional<Jt1078Session> optionalSession = this.findBySimAndChannel(sim, channelNumber, false);
         optionalSession.ifPresent(session -> {
             //
-            this.removeBySessionIdAndClose(session.sessionId(), closeReason);
+            this.removeBySessionIdAndThenClose(session.sessionId(), closeReason);
         });
         return optionalSession;
     }

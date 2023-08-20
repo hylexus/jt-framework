@@ -1,0 +1,32 @@
+server:
+  port: 1078
+
+jt1078:
+  protocol:
+    max-frame-length: 4096
+  server:
+    port: 61078
+    worker-thread-count: 0
+    boss-thread-count: 0
+    idle-state-handler:
+      enabled: true
+      reader-idle-time: 20m
+      writer-idle-time: 0
+      all-idle-time: 0
+  request-sub-package-combiner:
+    type: caffeine
+    # 当且仅当 jt1078.request-sub-package-combiner.type = Caffeine 时候有效
+    caffeine:
+      maximum-size: 1024
+      ttl: 30s
+  msg-processor:
+    executor-group:
+      pool-name: 1078-msg-processor
+      thread-count: 16
+      max-pending-tasks: 128
+logging:
+  level:
+    root: info
+    io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler: debug
+#    io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler: debug
+#    io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher: debug

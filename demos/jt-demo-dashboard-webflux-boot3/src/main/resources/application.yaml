@@ -1,0 +1,6 @@
+spring:
+  profiles:
+#    active: debug
+    active: local
+  application:
+    name: jt-demo-dashboard-webflux-boot3

@@ -101,7 +101,7 @@ public class FlvStreamSubscriberDemoHttp {
                 .doFinally(signalType -> {
                     log.info("Http outbound complete with signal: {}", signalType);
                     if (params.isAutoCloseJt1078SessionOnClientClosed()) {
-                        this.sessionManager.removeBySimAndClose(params.getSim(), MyJt1078SessionCloseReason.CLOSED_BY_WEB_SOCKET);
+                        this.sessionManager.removeBySimAndChannelAndThenClose(params.getSim(), params.getChannel(), MyJt1078SessionCloseReason.CLOSED_BY_WEB_SOCKET);
                         log.info("Jt1078SessionClosed By HttpStream: {}", params);
                     }
                 });

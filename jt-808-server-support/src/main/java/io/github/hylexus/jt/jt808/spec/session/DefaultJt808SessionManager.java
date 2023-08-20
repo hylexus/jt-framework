@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -60,6 +61,11 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     public long count() {
         return sessionMap.size();
+    }
+
+    @Override
+    public long count(Predicate<Jt808Session> filter) {
+        return this.sessionMap.values().stream().filter(filter).count();
     }
 
     @Override
@@ -177,7 +183,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
     }
 
     private boolean checkStatus(Jt808Session session) {
-        //if (!session.getChannel().isOpen()) {
+        // if (!session.getChannel().isOpen()) {
         if (!session.channel().isActive()) {
             this.removeBySessionIdAndClose(session.id(), DefaultSessionCloseReason.CHANNEL_INACTIVE);
             return false;

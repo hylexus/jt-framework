@@ -8,6 +8,8 @@ import io.netty.channel.Channel;
 public interface Jt1078Session {
     String sim();
 
+    short channelNumber();
+
     default String terminalId() {
         return this.sim();
     }
@@ -22,5 +24,6 @@ public interface Jt1078Session {
 
     Jt1078Session lastCommunicateTimestamp(long time);
 
+    long createdAt();
 
 }

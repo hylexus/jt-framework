@@ -3,7 +3,7 @@ sample:
     parent-dir: /Users/hylexus/tmp/jtt/flv/
 
 server:
-  port: 8989
+  port: 1078
 jt1078:
   protocol:
     max-frame-length: 4096

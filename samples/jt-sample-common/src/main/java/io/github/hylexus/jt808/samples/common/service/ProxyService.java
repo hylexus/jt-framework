@@ -25,7 +25,7 @@ public class ProxyService {
 
         return webClient
                 .get()
-                .uri("/808/terminal/list")
+                .uri("/jt808/terminal/list")
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Resp<Object>>() {
                 })
@@ -33,11 +33,11 @@ public class ProxyService {
     }
 
     public Mono<Resp<Object>> proxy0x9101Msg(WebClient webClient, Command9101Dto command9101Dto) {
-        return proxyJsonRequest(webClient, command9101Dto, "/1078/send-msg/9101");
+        return proxyJsonRequest(webClient, command9101Dto, "/jt808/send-msg/9101");
     }
 
     public Mono<Resp<Object>> proxy0x9102Msg(WebClient webClient, Command9102Dto command9102Dto) {
-        return proxyJsonRequest(webClient, command9102Dto, "/1078/send-msg/9102");
+        return proxyJsonRequest(webClient, command9102Dto, "/jt808/send-msg/9102");
     }
 
     private Mono<Resp<Object>> proxyJsonRequest(WebClient webClient, Object body, String uri) {

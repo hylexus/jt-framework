@@ -28,6 +28,10 @@ public interface Jt808SessionManager {
      */
     Stream<Jt808Session> list();
 
+    default Stream<Jt808Session> list(int page, int pageSize, Predicate<Jt808Session> filter, Comparator<Jt808Session> sorter) {
+        return list().filter(filter).sorted(sorter).skip((long) (page - 1) * pageSize).limit(pageSize);
+    }
+
     /**
      * 以分页的形式获取 {@link Jt808SessionManager} 中的 {@link Jt808Session}
      *
@@ -69,13 +73,17 @@ public interface Jt808SessionManager {
      * @see #list(int, int)
      */
     default <T> List<T> list(int page, int pageSize, Predicate<Jt808Session> filter, Comparator<Jt808Session> sorter, Function<Jt808Session, T> converter) {
-        return list().filter(filter).sorted(sorter).skip((long) (page - 1) * pageSize).limit(pageSize).map(converter).collect(Collectors.toList());
+        return list(page, pageSize, filter, sorter).map(converter).collect(Collectors.toList());
     }
 
     /**
      * @return 当前活跃的 {@link Jt808Session} 总数。
      */
-    long count();
+    default long count() {
+        return this.count(session -> true);
+    }
+
+    long count(Predicate<Jt808Session> filter);
 
     /**
      * @param channel Channel

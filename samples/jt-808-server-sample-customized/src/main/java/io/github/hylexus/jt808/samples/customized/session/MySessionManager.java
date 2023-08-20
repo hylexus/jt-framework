@@ -78,8 +78,8 @@ public class MySessionManager implements Jt808SessionManager {
     }
 
     @Override
-    public long count() {
-        return delegate.count();
+    public long count(Predicate<Jt808Session> filter) {
+        return delegate.count(filter);
     }
 
     @Override

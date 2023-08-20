@@ -4,6 +4,8 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt808.samples.annotation.handler.LocationMsgHandler;
 import io.github.hylexus.jt808.samples.annotation.model.vo.TerminalVo;
+import io.github.hylexus.jt808.samples.common.dto.SimplePageableDto;
+import io.github.hylexus.jt808.samples.common.vo.PageableVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/808/terminal")
+@RequestMapping("/jt808/terminal")
 public class TerminalManagerController {
 
     private final Jt808SessionManager sessionManager;
@@ -25,8 +27,10 @@ public class TerminalManagerController {
 
     @GetMapping("/list")
     @ResponseBody
-    public List<TerminalVo> terminalList() {
-        return this.sessionManager.list().map(this::toTerminalVo).collect(Collectors.toList());
+    public PageableVo<TerminalVo> terminalList(SimplePageableDto dto) {
+        final long count = this.sessionManager.count();
+        final List<TerminalVo> list = this.sessionManager.list(dto.getPage(), dto.getPageSize()).stream().map(this::toTerminalVo).collect(Collectors.toList());
+        return PageableVo.of(count, list);
     }
 
     private TerminalVo toTerminalVo(Jt808Session session) {

@@ -8,6 +8,10 @@ def obtainSpringBootBomVersion() {
     springBoot3Modules.contains(project.name) ? maximumSpringBootBomVersion : defaultSpringBootBomVersion
 }
 
+def obtainSpringCloudBomVersion() {
+    springBoot3Modules.contains(project.name) ? maximumSpringCloudBomVersion : defaultSpringCloudBomVersion
+}
+
 dependencyManagement {
     resolutionStrategy {
         cacheChangingModulesFor 0, "seconds"
@@ -18,6 +22,7 @@ dependencyManagement {
     }
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion()}"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${obtainSpringCloudBomVersion()}"
     }
     dependencies {
         dependency "org.hibernate:hibernate-validator:8.0.0.Final"

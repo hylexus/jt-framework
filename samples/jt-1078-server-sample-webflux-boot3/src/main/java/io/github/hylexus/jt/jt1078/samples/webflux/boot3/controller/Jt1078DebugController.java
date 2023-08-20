@@ -41,10 +41,13 @@ public class Jt1078DebugController {
                 .sorted(Comparator.comparing(Jt1078Session::sim))
                 .skip((long) (pageable.getPage() - 1) * pageable.getPageSize())
                 .limit(pageable.getPageSize())
-                .map(it -> new Jt1078SessionVo(it.sessionId(), it.sim(), new Date(it.lastCommunicateTimestamp())))
+                .map(it -> new Jt1078SessionVo(it.sessionId(), it.sim(), it.channelNumber(), new Date(it.createdAt()), new Date(it.lastCommunicateTimestamp())))
                 .collect(Collectors.toList());
     }
 
-    public record Jt1078SessionVo(String id, String sim, @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date lastCommunicateTime) {
+    public record Jt1078SessionVo(
+            String id, String sim, short channelNumber,
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date createdAt,
+            @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date lastCommunicateTime) {
     }
 }

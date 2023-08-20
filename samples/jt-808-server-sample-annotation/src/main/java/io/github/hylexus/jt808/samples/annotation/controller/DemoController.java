@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-@RequestMapping("/808/demo01")
+@RequestMapping("/jt808/demo01")
 public class DemoController {
 
     private final Jt808CommandSender commandSender;

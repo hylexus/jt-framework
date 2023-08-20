@@ -55,6 +55,13 @@ include 'samples:jt-808-client-sample-debug'
 include 'samples:jt-1078-server-sample-webflux-boot3'
 include 'samples:jt-1078-server-sample-webmvc-boot3'
 
+// demos
+include 'demos'
+include 'demos:jt-demo-common-boot3'
+include 'demos:jt-demo-dashboard-webflux-boot3'
+include 'demos:jt-demo-808-server-webflux-boot3'
+include 'demos:jt-demo-1078-server-webflux-boot3'
+
 rootProject.name = "jt-framework"
 // Change default "build.gradle" file to "${project.name}.gradle" recursively
 setBuildFileName(rootProject)

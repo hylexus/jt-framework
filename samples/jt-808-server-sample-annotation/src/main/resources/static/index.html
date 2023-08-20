@@ -186,7 +186,7 @@
             terminalList: [],
             payload9101: {
                 sim: "018008501119",
-                jt1078ServerIp: "1.1.1.1",
+                jt1078ServerIp: "127.0.0.1",
                 jt1078ServerPortTcp: 61078,
                 jt1078ServerPortUdp: 61078,
                 channelNumber: 3,
@@ -249,10 +249,10 @@
         methods: {
             loadTerminals: function () {
                 const context = this
-                axios.get('/808/terminal/list')
+                axios.get('/jt808/terminal/list')
                     .then(function (response) {
                         if (response.data && response.data.code === 0) {
-                            context.terminalList = response.data.data
+                            context.terminalList = response.data.data.records
                         } else {
                             console.log(response)
                         }
@@ -264,7 +264,7 @@
             sendMsg9101: function () {
                 const context = this
                 context.response9101 = "..."
-                axios.post('/1078/send-msg/9101', context.payload9101)
+                axios.post('/jt808/send-msg/9101', context.payload9101)
                     .then(function (response) {
                         console.log(response)
                         context.response9101 = response.data
@@ -276,7 +276,7 @@
             sendMsg9102: function () {
                 const context = this
                 context.response9102 = "..."
-                axios.post('/1078/send-msg/9102', context.payload9102)
+                axios.post('/jt808/send-msg/9102', context.payload9102)
                     .then(function (response) {
                         console.log(response)
                         context.response9102 = response.data

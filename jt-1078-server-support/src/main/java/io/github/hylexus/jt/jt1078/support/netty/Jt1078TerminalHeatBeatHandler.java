@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.support.netty;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -8,7 +9,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
-import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.IDLE_TIMEOUT;
+import static io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager.ATTR_KEY_SESSION;
+import static io.github.hylexus.jt.jt1078.spec.impl.session.DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE;
 
 
 @Slf4j
@@ -34,7 +36,10 @@ public class Jt1078TerminalHeatBeatHandler extends ChannelInboundHandlerAdapter 
 
         try {
             log.debug("disconnected idle connection, reason: {}", ((IdleStateEvent) evt).state());
-            sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), IDLE_TIMEOUT);
+            final Jt1078Session session = ctx.channel().attr(ATTR_KEY_SESSION).get();
+            if (session != null) {
+                sessionManager.removeBySessionIdAndThenClose(session.sessionId(), CHANNEL_INACTIVE);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -44,7 +49,7 @@ public class Jt1078TerminalHeatBeatHandler extends ChannelInboundHandlerAdapter 
         // 所以通过 session.channel().close() 是关不掉的
         // @see https://github.com/hylexus/jt-framework/issues/66
         try {
-            ctx.channel().close();
+            ctx.channel().close().sync();
         } catch (Exception ignored) {
             // ignored
         }
