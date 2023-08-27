@@ -1,9 +1,9 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.controller;
 
+import io.github.hylexus.jt.model.value.Resp;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
 import io.github.hylexus.jt808.samples.common.service.ProxyService;
-import io.github.hylexus.jt808.samples.common.vo.Resp;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;

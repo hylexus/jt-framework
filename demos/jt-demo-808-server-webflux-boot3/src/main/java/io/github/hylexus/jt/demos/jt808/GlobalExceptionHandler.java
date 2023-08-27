@@ -1,8 +1,8 @@
 package io.github.hylexus.jt.demos.jt808;
 
-import io.github.hylexus.jt.demos.common.model.DefaultRespCode;
-import io.github.hylexus.jt.demos.common.model.Resp;
 import io.github.hylexus.jt.exception.JtSessionNotFoundException;
+import io.github.hylexus.jt.model.value.DefaultRespCode;
+import io.github.hylexus.jt.model.value.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.util.stream.Collectors;
 
-import static io.github.hylexus.jt.demos.common.model.DefaultRespCode.SESSION_NOT_FOUND;
+import static io.github.hylexus.jt.model.value.DefaultRespCode.SESSION_NOT_FOUND;
 
 
 @Slf4j
@@ -38,6 +38,6 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("; "));
 
-        return Resp.paramError(errorMsg);
+        return Resp.parameterError(errorMsg);
     }
 }

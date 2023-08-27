@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'org.springframework.boot'
 
 springBoot {
-    getMainClass().set('io.github.hylexus.jt.demos.dashboard.boot3.JtDemoDashboardWebfluxBoot3')
+    getMainClass().set('io.github.hylexus.jt.demos.dashboard.webflux.boot3.JtDemoDashboardWebfluxBoot3')
 }
 
 bootJar {
@@ -15,9 +15,11 @@ bootJar {
 dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    api(project(":demos:jt-demo-common-boot3"))
 
-    api("org.springframework.cloud:spring-cloud-starter-gateway")
+//    api(project(":dashboard:jt-dashboard-common"))
+    api(project(":dashboard:jt-dashboard-server-spring-boot-starter"))
+
+    api("org.springframework.boot:spring-boot-starter-webflux")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

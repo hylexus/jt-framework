@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.samples.common.service;
 
+import io.github.hylexus.jt.model.value.Resp;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
-import io.github.hylexus.jt808.samples.common.vo.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -1,0 +1,21 @@
+server:
+  port: 9090
+
+jt-dashboard:
+  server:
+    static-application-registrator:
+      enabled: true
+      jt1078-applications:
+        - name: ${spring.application.name}
+          base-url: http://node2:1078
+          host: node2
+          http-port: 1078
+          tcp-port: 61078
+          udp-port: 0
+          metadata:
+            role: 1078-server(static)
+      jt808-applications:
+        - name: ${spring.application.name}
+          base-url: http://node2:808
+          metadata:
+            notes: 808-server(static)

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3;
 
-import io.github.hylexus.jt808.samples.common.vo.DefaultRespCode;
-import io.github.hylexus.jt808.samples.common.vo.Resp;
+import io.github.hylexus.jt.model.value.DefaultRespCode;
+import io.github.hylexus.jt.model.value.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining("; "));
 
-        return Resp.failure(DefaultRespCode.PARAM_ERROR, errorMsg);
+        return Resp.failure(DefaultRespCode.PARAMETER_ERROR, errorMsg);
     }
 
 

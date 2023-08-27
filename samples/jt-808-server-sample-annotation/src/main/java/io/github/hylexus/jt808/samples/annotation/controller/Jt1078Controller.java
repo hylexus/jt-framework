@@ -9,9 +9,10 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg9102Alias;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.model.value.DefaultRespCode;
+import io.github.hylexus.jt.model.value.Resp;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
-import io.github.hylexus.jt808.samples.common.vo.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +54,7 @@ public class Jt1078Controller {
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().toSeconds(), TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
         if (resp == null) {
-            return Resp.sendCommandFailure("未收到终端回复(" + dto.getTimeout() + ")");
+            return Resp.failure(DefaultRespCode.SEND_COMMAND_FAILURE, "未收到终端回复(" + dto.getTimeout() + ")");
         }
         return Resp.success(resp);
     }
@@ -76,7 +77,7 @@ public class Jt1078Controller {
         log.info("RESP::::::: {}", resp);
 
         if (resp == null) {
-            return Resp.sendCommandFailure("未收到终端回复(" + dto.getTimeout() + ")");
+            return Resp.failure(DefaultRespCode.SEND_COMMAND_FAILURE, "未收到终端回复(" + dto.getTimeout() + ")");
         }
 
         return Resp.success(resp);

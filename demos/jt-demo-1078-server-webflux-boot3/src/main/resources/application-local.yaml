@@ -1,6 +1,19 @@
 server:
   port: 1078
 
+jt-dashboard:
+  client:
+    jt1078:
+      enabled: true
+      name: ${spring.application.name}
+      server-url: http://localhost:9090
+      base-url: http://localhost:1078
+      host: node2
+      http-port: 1078
+      tcp-port: 61078
+      udp-port: 0
+      metadata:
+        role: 1078-server
 jt1078:
   protocol:
     max-frame-length: 4096

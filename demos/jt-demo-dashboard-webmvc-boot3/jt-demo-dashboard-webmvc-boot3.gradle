@@ -1,0 +1,23 @@
+plugins {
+    id "org.springframework.boot" version "${maximumSpringBootBomVersion}"
+}
+
+apply plugin: 'org.springframework.boot'
+
+springBoot {
+    getMainClass().set('io.github.hylexus.jt.demos.dashboard.mvc.boot3.JtDemoDashboardWebmvcBoot3')
+}
+
+bootJar {
+    getArchiveFileName().set("${project.name}.jar")
+}
+
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    api(project(":dashboard:jt-dashboard-server-spring-boot-starter"))
+
+    api("org.springframework.boot:spring-boot-starter-web")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}

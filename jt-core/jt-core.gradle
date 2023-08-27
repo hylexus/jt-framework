@@ -1,6 +1,10 @@
 dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-starter-logging")
+    compileOnly("org.springframework:spring-webflux")
+    compileOnly("org.springframework:spring-webmvc")
+    compileOnly("com.fasterxml.jackson.core:jackson-annotations")
+    compileOnly("com.fasterxml.jackson.core:jackson-databind")
 
     api("io.netty:netty-buffer")
     api("io.netty:netty-transport")

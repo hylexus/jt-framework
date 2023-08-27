@@ -122,6 +122,6 @@ docs/src/.vuepress/dist/
 .cache
 .temp/
 
-/demos/jt-demo-dashboard-webflux-boot3/src/main/resources/static/client/
+/dashboard/jt-dashboard-server/src/main/resources/static/client/
 
 application-debug.yaml

@@ -15,9 +15,13 @@ ext {
             "jt-1078-server-spring-boot-starter",
             "jt-1078-server-sample-webflux-boot3",
             "jt-1078-server-sample-webmvc-boot3",
-            "jt-demo-dashboard-webflux-boot3",
+            "jt-dashboard-server",
+            "jt-dashboard-server-spring-boot-starter",
+            "jt-dashboard-client-spring-boot-starter",
             "jt-demo-808-server-webflux-boot3",
             "jt-demo-1078-server-webflux-boot3",
+            "jt-demo-dashboard-webflux-boot3",
+            "jt-demo-dashboard-webmvc-boot3",
     ]
 }
 
@@ -67,6 +71,11 @@ def modulesToPublishToMavenRepo = [
         "jt-1078-server-spring-boot-autoconfigure",
         "jt-1078-server-spring-boot-starter",
         "jt-1078-server-spring-boot-starter-boot2",
+        "jt-dashboard-client",
+        "jt-dashboard-common",
+        "jt-dashboard-client-spring-boot-starter",
+        "jt-dashboard-server",
+        "jt-dashboard-server-spring-boot-starter",
 ]
 configure(subprojects.findAll {
     modulesToPublishToMavenRepo.contains(it.name)

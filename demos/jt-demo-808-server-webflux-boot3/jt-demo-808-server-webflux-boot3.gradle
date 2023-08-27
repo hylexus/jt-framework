@@ -14,10 +14,11 @@ bootJar {
 dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-    api(project(":demos:jt-demo-common-boot3"))
     api(project(":jt-808-server-spring-boot-starter"))
+    api(project(":dashboard:jt-dashboard-client-spring-boot-starter"))
 
     api("org.springframework.boot:spring-boot-starter-webflux")
+    api ("org.springframework.boot:spring-boot-starter-actuator")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
