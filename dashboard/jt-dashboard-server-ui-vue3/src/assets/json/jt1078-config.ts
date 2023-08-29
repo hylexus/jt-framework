@@ -41,4 +41,5 @@ const mediaTypeToClose = [
   { value: 2, label: '2--只关闭该通道有关的视频,保留该通道有关的音频' }
 ]
 
-export { channelConfig, dataType, commandType, mediaTypeToClose }
+const Config = { channelConfig, dataType, commandType, mediaTypeToClose }
+export default Config

@@ -1,10 +1,83 @@
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue'
+import Config from '@/assets/json/jt1078-config'
+import { sendMsg9101, sendMsg9102 } from '@/api/jt808-api'
+import { ElMessage } from 'element-plus'
+
+const props = defineProps<{
+  sim: string
+}>()
+
+const terminalId = computed({
+  get: () => props.sim,
+  set: () => {}
+})
+const mediaTypeToClose = ref(Config.mediaTypeToClose)
+const dataType = ref(Config.dataType)
+const commandType = ref(Config.commandType)
+const channelConfig = ref(Config.channelConfig)
+const videoStreamType = ref(0)
+const payload9101 = reactive({
+  jt1078ServerIp: '1.1.1.1',
+  jt1078ServerPortTcp: 61078,
+  timeout: 3,
+  jt1078ServerPortUdp: 0,
+  channelNumber: 2,
+  dataType: 0
+})
+const payload9102 = reactive({
+  channelNumber: 2,
+  command: 0,
+  mediaTypeToClose: 0,
+  timeout: 3
+})
+const tmp = reactive({
+  response9101: null,
+  response9102: null,
+  command9101Loading: false,
+  command9102Loading: false
+})
+
+const doSendMsg9101 = async () => {
+  tmp.command9101Loading = true
+  try {
+    const resp = await sendMsg9101({
+      ...payload9101,
+      sim: terminalId.value,
+      streamType: videoStreamType.value
+    })
+    tmp.response9101 = resp.data
+    tmp.command9101Loading = false
+  } catch (e: any) {
+    tmp.command9101Loading = false
+    tmp.response9101 = e
+    ElMessage.error(e)
+  }
+}
+const doSendMsg9102 = async () => {
+  tmp.command9102Loading = true
+  try {
+    const resp = await sendMsg9102({
+      ...payload9102,
+      sim: terminalId.value,
+      streamType: videoStreamType.value
+    })
+    tmp.response9102 = resp.data
+    tmp.command9102Loading = false
+  } catch (e: any) {
+    tmp.command9102Loading = false
+    tmp.response9102 = e
+    ElMessage.error(e)
+  }
+}
+</script>
 <template>
   <el-row :gutter="10">
     <el-col :span="12">
       <el-card class="box-card my-box">
-        <div slot="header" class="clearfix">
+        <template #header>
           <span>0x9101(音视频实时传输请求)</span>
-        </div>
+        </template>
         <el-form size="small" inline label-width="140px">
           <el-form-item label="SIM">
             <el-input type="text" v-model="terminalId" />
@@ -27,7 +100,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in channelConfig()"
+                v-for="item in channelConfig"
                 :key="item.channel"
                 :label="item.title"
                 :value="item.channel"
@@ -44,7 +117,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in dataType()"
+                v-for="item in dataType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -65,8 +138,7 @@
             <el-button
               type="primary"
               plain
-              :disabled="autoSend9101Command === true"
-              :loading="tmp.command9101Loading === true"
+              :loading="tmp.command9101Loading"
               @click="doSendMsg9101"
             >
               下发指令
@@ -80,9 +152,9 @@
     </el-col>
     <el-col :span="12">
       <el-card class="box-card my-box">
-        <div slot="header" class="clearfix">
+        <template>
           <span>0x9102(音视频实时传输控制)</span>
-        </div>
+        </template>
         <el-form size="small" inline label-width="120px">
           <el-form-item label="SIM">
             <el-input v-model="terminalId" />
@@ -96,7 +168,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in channelConfig()"
+                v-for="item in channelConfig"
                 :key="item.channel"
                 :label="item.title"
                 :value="item.channel"
@@ -113,7 +185,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in commandType()"
+                v-for="item in commandType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -130,7 +202,7 @@
               placeholder="请选择"
             >
               <el-option
-                v-for="item in mediaTypeToClose()"
+                v-for="item in mediaTypeToClose"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -164,102 +236,3 @@
     </el-col>
   </el-row>
 </template>
-
-<script>
-import { channelConfig, commandType, dataType, mediaTypeToClose } from '@/assets/json/jt1078-config'
-import { sendMsg9101, sendMsg9102 } from '@/api/jt808-api'
-
-export default {
-  name: 'CommandSender',
-  props: {
-    sim: { type: String, required: true }
-  },
-  watch: {
-    sim: function (val, oldVal) {
-      this.terminalId = val
-    }
-  },
-  data() {
-    return {
-      terminalId: this.sim,
-      player: undefined,
-      videoStreamType: 0,
-      autoSend9101Command: false,
-      payload9101: {
-        // sim: this.sim
-        // streamType: this.videoStreamType
-        jt1078ServerIp: '1.1.1.1',
-        jt1078ServerPortTcp: 61078,
-        timeout: 3,
-        jt1078ServerPortUdp: 0,
-        channelNumber: 2,
-        dataType: 0
-      },
-      payload9102: {
-        // sim: this.sim
-        // streamType: this.videoStreamType
-        channelNumber: 2,
-        command: 0,
-        mediaTypeToClose: 0,
-        timeout: 3
-      },
-      tmp: {
-        response9101: undefined,
-        response9102: undefined,
-        command9101Loading: false,
-        command9102Loading: false
-      }
-    }
-  },
-  methods: {
-    doSendMsg9101() {
-      this.tmp.command9101Loading = true
-      sendMsg9101({
-        ...this.payload9101,
-        sim: this.terminalId,
-        streamType: this.videoStreamType
-      })
-        .then((resp) => {
-          this.tmp.response9101 = resp.data
-          this.tmp.command9101Loading = false
-        })
-        .catch((e) => {
-          this.tmp.command9101Loading = false
-          console.log(e)
-          this.tmp.response9101 = e
-          this.$message.error(e)
-        })
-    },
-    doSendMsg9102() {
-      this.tmp.command9102Loading = true
-      sendMsg9102({
-        ...this.payload9102,
-        sim: this.terminalId,
-        streamType: this.videoStreamType
-      })
-        .then((resp) => {
-          this.tmp.response9102 = resp.data
-          this.tmp.command9102Loading = false
-        })
-        .catch((e) => {
-          this.tmp.command9102Loading = false
-          console.log(e)
-          this.tmp.response9102 = e
-          this.$message.error(e)
-        })
-    },
-    mediaTypeToClose() {
-      return mediaTypeToClose
-    },
-    dataType() {
-      return dataType
-    },
-    commandType() {
-      return commandType
-    },
-    channelConfig() {
-      return channelConfig
-    }
-  }
-}
-</script>

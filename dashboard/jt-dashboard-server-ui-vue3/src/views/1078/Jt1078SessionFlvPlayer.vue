@@ -1,15 +1,46 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import FlvPlayer from '@/components/FlvPlayer.vue'
+import Config from '@/assets/json/jt1078-config'
+import * as CommonUtils from '@/utils/common-utils'
+import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const instanceId = ref(route.params.instanceId)
+const terminalId = ref(route.params.sim)
+const playerConfigs = ref([])
+const players = ref([])
+const playAll = () => {
+  players.value.forEach((player) => {
+    player?.play()
+  })
+}
+const initConfigs = () => {
+  if (CommonUtils.isEmpty(terminalId.value)) {
+    ElMessage.error('terminalId is null or empty')
+    return
+  }
+  playerConfigs.value = Config.channelConfig.map((it) => ({
+    ...it,
+    sim: terminalId,
+    refId: 'ref-' + it.channel,
+    dataType: 0,
+    jt808ServerInstanceId: instanceId
+  }))
+}
+initConfigs()
+</script>
 <template>
   <nav>
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">Dashboard</el-breadcrumb-item>
+      <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
-      <el-breadcrumb-item
-        :to="{ name: 'Jt808SessionList', params: { instanceId: this.instanceId } }"
-      >
-        {{ this.instanceId }}</el-breadcrumb-item
+      <el-breadcrumb-item :to="{ name: 'Jt808SessionList', params: { instanceId: instanceId } }">
+        {{ instanceId }}</el-breadcrumb-item
       >
       <el-breadcrumb-item>VideoPlayer</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ this.terminalId }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ terminalId }}</el-breadcrumb-item>
     </el-breadcrumb>
   </nav>
   <div>
@@ -17,52 +48,7 @@
   </div>
   <el-row :gutter="10">
     <el-col :span="6" v-for="(it, index) in playerConfigs" :key="index">
-      <flv-player :config="it" :ref="it.refId"></flv-player>
+      <FlvPlayer :config="it" ref="players" />
     </el-col>
   </el-row>
 </template>
-
-<script>
-import FlvPlayer from '@/components/FlvPlayer.vue'
-import { channelConfig } from '@/assets/json/jt1078-config'
-import * as CommonUtils from '@/utils/common-utils'
-
-export default {
-  name: 'HomeView',
-  components: { FlvPlayer },
-  data() {
-    return {
-      instanceId: undefined,
-      terminalId: undefined,
-      playerConfigs: []
-    }
-  },
-  created() {
-    this.initConfigs()
-  },
-  methods: {
-    playAll() {
-      this.playerConfigs.forEach((it) => {
-        this.$refs[it.refId][0].play()
-      })
-    },
-    initConfigs() {
-      this.terminalId = this.$route.params.sim
-      this.instanceId = this.$route.params.instanceId
-      if (CommonUtils.isEmpty(this.terminalId)) {
-        this.$message.error('terminalId is null or empty')
-        return
-      }
-      this.playerConfigs = channelConfig.map((it) => {
-        return {
-          ...it,
-          sim: this.terminalId,
-          refId: 'ref-' + it.channel,
-          dataType: 0,
-          jt808ServerInstanceId: this.instanceId
-        }
-      })
-    }
-  }
-}
-</script>

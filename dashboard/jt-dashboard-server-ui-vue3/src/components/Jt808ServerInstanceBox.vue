@@ -1,13 +1,20 @@
+<script setup lang="ts">
+import { Config } from '@/components/props'
+
+defineProps<{
+  config: Config
+}>()
+</script>
 <template>
   <el-card class="box-card">
-    <div slot="header" class="clearfix">
+    <template #header>
       <span
         >808服务实例:
         <router-link type="primary" :to="'/808-instance/' + config.instanceId + '/session-list/'">{{
           config.instanceId
         }}</router-link></span
       >
-    </div>
+    </template>
     <el-descriptions :column="2" border>
       <el-descriptions-item label="InstanceId">
         <router-link type="primary" :to="'/808-instance/' + config.instanceId + '/session-list/'">{{
@@ -23,17 +30,3 @@
     </el-descriptions>
   </el-card>
 </template>
-<script>
-export default {
-  name: 'Jt808ServerInstanceBox',
-  props: {
-    config: {
-      instanceId: undefined
-      //   ...
-    }
-  },
-  data() {
-    return {}
-  }
-}
-</script>

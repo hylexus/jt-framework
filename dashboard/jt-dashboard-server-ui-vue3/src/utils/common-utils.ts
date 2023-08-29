@@ -1,7 +1,9 @@
-export function isSuccess(resp) {
+const isSuccess = (resp) => {
   return resp !== null && resp !== undefined && resp.code === 0
 }
 
-export function isEmpty(obj) {
+const isEmpty = (obj) => {
   return obj === null || obj === undefined || obj === ''
 }
+
+export { isSuccess, isEmpty }
