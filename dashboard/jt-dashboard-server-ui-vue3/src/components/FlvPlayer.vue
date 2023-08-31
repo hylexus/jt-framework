@@ -12,11 +12,13 @@ enum STATUS {
   PAUSE = 'Pause'
 }
 interface Config {
-  title: string
-  sim: string
-  channel: string
+  title?: string
+  sim?: string
+  channel?: string
   dataType: number
-  jt808ServerInstanceId: string
+  jt808ServerInstanceId?: string
+  location?: string
+  type: number
 }
 const props = defineProps<{
   config: Config
@@ -88,8 +90,10 @@ const play = async () => {
     status.value = STATUS.CONNECTING
     player.value
       ?.play()
-      ?.then((r: string) => {
-        errorTips.value = r
+      ?.then((r: string | void) => {
+        if (typeof r === 'string') {
+          errorTips.value = r
+        }
       })
       .catch((e: string) => {
         errorTips.value = e
@@ -102,15 +106,17 @@ const play = async () => {
   } else if (status.value === STATUS.PAUSE) {
     player.value
       ?.play()
-      ?.then((r: string) => {
-        errorTips.value = r
+      ?.then((r: string | void) => {
+        if (typeof r === 'string') {
+          errorTips.value = r
+        }
       })
       .catch((e: string) => {
         errorTips.value = e
       })
     status.value = STATUS.RUNNING
   } else {
-    errorTips.value = '未知状态: ' + status.value.toString()
+    errorTips.value = '未知状态: ' + status.value
   }
 }
 const initPlayer = async () => {
@@ -133,7 +139,10 @@ const initPlayer = async () => {
       enableWorker: true
     }
   )
-  player.value.attachMediaElement(video.value)
+  if (video.value !== undefined) {
+    player.value.attachMediaElement(video.value)
+  }
+
   player.value.load()
 
   player.value.on(mpegts.Events.LOADING_COMPLETE, () => {

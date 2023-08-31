@@ -1,8 +1,8 @@
-const isSuccess = (resp) => {
+const isSuccess = (resp: any) => {
   return resp !== null && resp !== undefined && resp.code === 0
 }
 
-const isEmpty = (obj) => {
+const isEmpty = (obj: any) => {
   return obj === null || obj === undefined || obj === ''
 }
 

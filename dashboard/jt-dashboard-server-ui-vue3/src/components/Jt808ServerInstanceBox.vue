@@ -21,11 +21,11 @@ defineProps<{
           config.instanceId
         }}</router-link>
       </el-descriptions-item>
-      <el-descriptions-item label="Name">{{ config.registration.name }}</el-descriptions-item>
-      <el-descriptions-item label="BaseUrl">{{ config.registration.baseUrl }}</el-descriptions-item>
-      <el-descriptions-item label="Source">{{ config.registration.source }}</el-descriptions-item>
+      <el-descriptions-item label="Name">{{ config.registration?.name }}</el-descriptions-item>
+      <el-descriptions-item label="BaseUrl">{{ config.registration?.baseUrl }}</el-descriptions-item>
+      <el-descriptions-item label="Source">{{ config.registration?.source }}</el-descriptions-item>
       <el-descriptions-item label="Metadata">{{
-        config.registration.metadata
+        config.registration?.metadata
       }}</el-descriptions-item>
     </el-descriptions>
   </el-card>

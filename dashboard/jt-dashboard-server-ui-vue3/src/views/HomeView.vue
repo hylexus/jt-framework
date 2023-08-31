@@ -14,7 +14,7 @@ onMounted(() => {
   loadServerMetadata()
 })
 const loadServerMetadata = async () => {
-  const resp = await requestServerInstances()
+  const resp:any = await requestServerInstances()
   if (isSuccess(resp)) {
     serverMetadata.jt808ServerMetadata = resp.data.jt808ServerMetadata || []
     serverMetadata.jt1078ServerMetadata = resp.data.jt1078ServerMetadata || []

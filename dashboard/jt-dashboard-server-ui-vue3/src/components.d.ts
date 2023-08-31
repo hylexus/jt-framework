@@ -36,7 +36,6 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     FlvPlayer: typeof import('./components/FlvPlayer.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     Jt1078ServerInstanceBox: typeof import('./components/Jt1078ServerInstanceBox.vue')['default']
     Jt808ServerInstanceBox: typeof import('./components/Jt808ServerInstanceBox.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

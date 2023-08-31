@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {reactive, ref} from 'vue'
 import FlvPlayer from '@/components/FlvPlayer.vue'
 import Config from '@/assets/json/jt1078-config'
 import * as CommonUtils from '@/utils/common-utils'
@@ -9,10 +9,10 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const instanceId = ref(route.params.instanceId)
 const terminalId = ref(route.params.sim)
-const playerConfigs = ref([])
-const players = ref([])
+let playerConfigs = reactive<any>([])
+const players = ref<InstanceType<typeof FlvPlayer>[]>([])
 const playAll = () => {
-  players.value.forEach((player) => {
+  players.value.forEach(player => {
     player?.play()
   })
 }
@@ -21,7 +21,7 @@ const initConfigs = () => {
     ElMessage.error('terminalId is null or empty')
     return
   }
-  playerConfigs.value = Config.channelConfig.map((it) => ({
+  playerConfigs = Config.channelConfig.map((it) => ({
     ...it,
     sim: terminalId,
     refId: 'ref-' + it.channel,

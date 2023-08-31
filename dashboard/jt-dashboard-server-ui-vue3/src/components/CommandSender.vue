@@ -4,9 +4,14 @@ import Config from '@/assets/json/jt1078-config'
 import { sendMsg9101, sendMsg9102 } from '@/api/jt808-api'
 import { ElMessage } from 'element-plus'
 
-const props = defineProps<{
-  sim: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    sim: string
+  }>(),
+  {
+    sim: ''
+  }
+)
 
 const terminalId = computed({
   get: () => props.sim,
