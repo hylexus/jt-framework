@@ -5,9 +5,11 @@ import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestRouteExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestProcessor;
+import io.github.hylexus.jt.jt808.support.exception.Jt808UnknownMsgException;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +23,19 @@ public class SimpleJt808RequestProcessor implements Jt808RequestProcessor {
     private final Jt808RequestMsgDispatcher msgDispatcher;
     private final Jt808SessionManager sessionManager;
     private final Jt808ExceptionHandler commonExceptionHandler;
+    private final Jt808RequestRouteExceptionHandler routeExceptionHandler;
 
     public SimpleJt808RequestProcessor(
             Jt808MsgDecoder decoder,
             Jt808RequestMsgDispatcher msgDispatcher,
             Jt808SessionManager sessionManager,
-            Jt808ExceptionHandler commonExceptionHandler) {
+            Jt808ExceptionHandler commonExceptionHandler, Jt808RequestRouteExceptionHandler routeExceptionHandler) {
 
         this.decoder = decoder;
         this.msgDispatcher = msgDispatcher;
         this.sessionManager = sessionManager;
         this.commonExceptionHandler = commonExceptionHandler;
+        this.routeExceptionHandler = routeExceptionHandler;
     }
 
     @Override
@@ -48,6 +52,9 @@ public class SimpleJt808RequestProcessor implements Jt808RequestProcessor {
                 if (log.isDebugEnabled()) {
                     log.debug("[decode] : {}, terminalId={}, msg = {}", request.msgType(), terminalId, request);
                 }
+            } catch (Jt808UnknownMsgException unknownMsgException) {
+                this.routeExceptionHandler.onReceiveUnknownMsg(unknownMsgException.getMsgId(), unknownMsgException.getPayload());
+                return;
             } catch (Exception e) {
                 if (request != null) {
                     request.release();

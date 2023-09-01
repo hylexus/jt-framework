@@ -16,8 +16,10 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808RequestRouteExceptionHandler;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageEventListener;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestSubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808RequestRouteExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
@@ -108,11 +110,18 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public Jt808RequestRouteExceptionHandler jt808RequestRouteExceptionHandler() {
+        return new DefaultJt808RequestRouteExceptionHandler();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public Jt808RequestProcessor jt808RequestProcessor(
             Jt808SessionManager jt808SessionManager, Jt808MsgDecoder decoder,
             Jt808RequestMsgDispatcher dispatcher,
-            Jt808ExceptionHandler exceptionHandler) {
-        return new SimpleJt808RequestProcessor(decoder, dispatcher, jt808SessionManager, exceptionHandler);
+            Jt808ExceptionHandler exceptionHandler,
+            Jt808RequestRouteExceptionHandler routeExceptionHandler) {
+        return new SimpleJt808RequestProcessor(decoder, dispatcher, jt808SessionManager, exceptionHandler, routeExceptionHandler);
     }
 
     @Bean

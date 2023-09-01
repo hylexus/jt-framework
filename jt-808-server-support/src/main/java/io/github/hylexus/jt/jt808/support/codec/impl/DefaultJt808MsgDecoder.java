@@ -10,6 +10,7 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808SubPackageProps;
 import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.exception.Jt808UnknownMsgException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
@@ -49,7 +50,14 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
         final Jt808RequestHeader header = this.parseMsgHeaderSpec(escaped);
         final int msgBodyStartIndex = Jt808RequestHeader.msgBodyStartIndex(header.version(), header.msgBodyProps().hasSubPackage());
-        final MsgType msgType = this.parseMsgType(header);
+
+        // @see https://github.com/hylexus/jt-framework/issues/78
+        final MsgType msgType = this.msgTypeParser.parseMsgType(header.msgId())
+                .orElseThrow(() -> {
+                    JtProtocolUtils.release(escaped);
+                    return new Jt808UnknownMsgException(header.msgId(), byteBuf);
+                });
+
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
         final DefaultJt808Request request = new DefaultJt808Request(
@@ -81,15 +89,6 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
                 );
             }
         }
-    }
-
-    private MsgType parseMsgType(Jt808RequestHeader header) {
-        final int msgId = header.msgId();
-        return this.msgTypeParser.parseMsgType(msgId)
-                .orElseThrow(() -> {
-                    log.error("Received unknown msg, msgId = {}({}). ignore.", msgId, HexStringUtils.int2HexString(msgId, 4));
-                    return new JtIllegalStateException("Received unknown msg, msgId=" + msgId);
-                });
     }
 
     private Jt808RequestHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
