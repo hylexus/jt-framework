@@ -2,10 +2,10 @@ package io.github.hylexus.jt808.samples.annotation.controller;
 
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.core.model.dto.SimplePageableDto;
+import io.github.hylexus.jt.core.model.vo.PageableVo;
 import io.github.hylexus.jt808.samples.annotation.handler.LocationMsgHandler;
 import io.github.hylexus.jt808.samples.annotation.model.vo.TerminalVo;
-import io.github.hylexus.jt808.samples.common.dto.SimplePageableDto;
-import io.github.hylexus.jt808.samples.common.vo.PageableVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

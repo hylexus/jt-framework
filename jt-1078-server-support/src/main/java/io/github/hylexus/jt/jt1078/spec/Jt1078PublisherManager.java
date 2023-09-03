@@ -1,8 +1,11 @@
 package io.github.hylexus.jt.jt1078.spec;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface Jt1078PublisherManager {
+
+    long count(Predicate<Jt1078SubscriberDescriptor> predicate);
 
     Stream<Jt1078SubscriberDescriptor> list();
 

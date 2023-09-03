@@ -90,4 +90,6 @@ public interface Jt1078SessionManager {
 
     Stream<Jt1078Session> list();
 
+    long count();
+
 }

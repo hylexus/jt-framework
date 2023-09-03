@@ -7,9 +7,13 @@ import io.github.hylexus.jt.dashboard.client.registration.impl.client.Jt1078Bloc
 import io.github.hylexus.jt.dashboard.client.registration.impl.registrator.DefaultJtApplicationRegistrator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.client.RestTemplate;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@Import({
+        BuiltinVideoStreamSubscriberConfiguration.class,
+})
 public class BlockingJtDashboard1078Configuration {
 
     @Bean
@@ -17,7 +21,8 @@ public class BlockingJtDashboard1078Configuration {
         return new DefaultJtApplicationRegistrator(
                 new Jt1078ApplicationFactory(jtApplicationProps),
                 new Jt1078BlockingJtApplicationClient(new RestTemplate()),
-                jtApplicationProps.getJt1078().getServerUrl()
+                jtApplicationProps.getJt1078().getServerUrl(),
+                jtApplicationProps.getJt1078().isRegisterOnce()
         );
     }
 }

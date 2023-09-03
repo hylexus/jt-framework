@@ -11,7 +11,8 @@ import java.util.Map;
 @Setter
 public abstract class BaseJtApplicationProps {
     protected boolean enabled = true;
-    protected String serverUrl;
+    protected String[] serverUrl;
+    protected boolean registerOnce = true;
     @Value("${spring.application.name}")
     protected String name;
     protected String baseUrl;

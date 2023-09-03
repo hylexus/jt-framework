@@ -25,11 +25,6 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     public DefaultJt1078SessionManager() {
     }
 
-    public DefaultJt1078SessionManager(Consumer<DefaultJt1078SessionManager> afterPropertySet) {
-        this();
-        afterPropertySet.accept(this);
-    }
-
     @Override
     public Optional<Jt1078Session> findBySessionId(String sessionId) {
         return Optional.ofNullable(sessionMap.get(sessionId));
@@ -94,11 +89,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         final Optional<Jt1078Session> optionalSession = this.removeBySessionId(sessionId);
         optionalSession.ifPresent(session -> {
             invokeListeners(listener -> listener.onSessionClose(session, reason));
-            try {
-                session.channel().close().sync();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            session.channel().close();
         });
         return optionalSession;
     }
@@ -129,6 +120,16 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         this.lock.readLock().lock();
         try {
             return sessionMap.values().stream();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public long count() {
+        this.lock.readLock().lock();
+        try {
+            return sessionMap.values().size();
         } finally {
             this.lock.readLock().unlock();
         }

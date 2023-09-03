@@ -5,7 +5,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherManager;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
-import io.github.hylexus.jt808.samples.common.dto.SimplePageableDto;
+import io.github.hylexus.jt.core.model.dto.SimplePageableDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

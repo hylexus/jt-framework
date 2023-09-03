@@ -16,7 +16,8 @@ public class ReactiveJtDashboard808Configuration {
         return new DefaultJtApplicationRegistrator(
                 new Jt808ApplicationFactory(applicationProps),
                 new Jt808ReactiveJtApplicationClient(WebClient.builder().build()),
-                applicationProps.getJt808().getServerUrl()
+                applicationProps.getJt808().getServerUrl(),
+                applicationProps.getJt808().isRegisterOnce()
         );
     }
 }

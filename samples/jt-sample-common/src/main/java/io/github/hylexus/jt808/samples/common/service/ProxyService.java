@@ -1,6 +1,6 @@
 package io.github.hylexus.jt808.samples.common.service;
 
-import io.github.hylexus.jt.model.value.Resp;
+import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
 import lombok.extern.slf4j.Slf4j;

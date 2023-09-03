@@ -10,7 +10,7 @@ export function requestServerInstances(params) {
 
 export function requestPlayerUrl(params) {
   return request({
-    url: '/api/dashboard/1078/stream-address',
+    url: '/api/dashboard/1078/video-stream-address',
     method: 'post',
     data: params
   })

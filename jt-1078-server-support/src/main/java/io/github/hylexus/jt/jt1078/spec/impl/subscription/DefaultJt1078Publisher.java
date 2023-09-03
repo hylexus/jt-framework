@@ -133,4 +133,16 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
             this.readLock.unlock();
         }
     }
+
+    @Override
+    public long count(Predicate<Jt1078SubscriberDescriptor> predicate) {
+        this.readLock.lock();
+        try {
+            return this.collectors.values().stream()
+                    .flatMap(map -> map.values().stream().flatMap(Jt1078ChannelCollector::list))
+                    .filter(predicate).count();
+        } finally {
+            this.readLock.unlock();
+        }
+    }
 }

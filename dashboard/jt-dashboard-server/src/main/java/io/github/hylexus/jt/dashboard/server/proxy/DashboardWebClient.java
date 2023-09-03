@@ -41,6 +41,10 @@ public class DashboardWebClient {
         this.webClient = webClient;
     }
 
+    public WebClient mutateForInstance(JtInstance instance) {
+        return this.mutateForInstance(Mono.just(instance));
+    }
+
     public WebClient mutateForInstance(Mono<JtInstance> instanceMono) {
         return this.webClient.mutate()
                 .filters(filters -> filters.add(0, setInstance(instanceMono)))

@@ -4,7 +4,7 @@ import io.github.hylexus.jt.dashboard.client.registration.Jt1078Application;
 import io.github.hylexus.jt.dashboard.client.registration.Jt808Application;
 import io.github.hylexus.jt.dashboard.client.registration.JtApplication;
 import io.github.hylexus.jt.dashboard.client.registration.JtApplicationClient;
-import io.github.hylexus.jt.model.value.Resp;
+import io.github.hylexus.jt.core.model.value.Resp;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 

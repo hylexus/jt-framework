@@ -23,6 +23,16 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Set;
 
+/**
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ *
+ * @see <a href="https://github.com/codecentric/spring-boot-admin">https://github.com/codecentric/spring-boot-admin</a>
+ * @see <a href="https://github.com/codecentric/spring-boot-admin/blob/83db63e82e916357d36b1e6b4d552e1b6506ecc9/spring-boot-admin-server/src/main/java/de/codecentric/boot/admin/server/web/reactive/InstancesProxyController.java#L51">de.codecentric.boot.admin.server.web.reactive.InstancesProxyController</a>
+ */
 @Slf4j
 @Controller
 public class DashboardInstanceProxyController {
@@ -51,8 +61,7 @@ public class DashboardInstanceProxyController {
 
         return this.webProxy.proxy(Mono.just(instance), forwardRequest, clientResponse -> {
             response.setStatusCode(clientResponse.statusCode());
-            response.getHeaders()
-                    .addAll(this.httpHeadersFilter.filterHeaders(clientResponse.headers().asHttpHeaders()));
+            response.getHeaders().addAll(this.httpHeadersFilter.filterHeaders(clientResponse.headers().asHttpHeaders()));
             return response.writeAndFlushWith(clientResponse.body(BodyExtractors.toDataBuffers()).window(1));
         });
     }

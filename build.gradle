@@ -17,6 +17,7 @@ ext {
             "jt-1078-server-sample-webmvc-boot3",
             "jt-dashboard-server",
             "jt-dashboard-server-spring-boot-starter",
+            "jt-dashboard-client",
             "jt-dashboard-client-spring-boot-starter",
             "jt-demo-808-server-webflux-boot3",
             "jt-demo-1078-server-webflux-boot3",
@@ -62,7 +63,7 @@ configure(subprojects.findAll {
 apply from: getBuildScriptPath("repo-credentials.gradle")
 
 def modulesToPublishToMavenRepo = [
-        "jt-core", "jt-spring",
+        "jt-core",
         "jt-808-server-support",
         "jt-808-server-spring-boot-autoconfigure",
         "jt-808-server-spring-boot-starter-boot2",
@@ -71,8 +72,8 @@ def modulesToPublishToMavenRepo = [
         "jt-1078-server-spring-boot-autoconfigure",
         "jt-1078-server-spring-boot-starter",
         "jt-1078-server-spring-boot-starter-boot2",
-        "jt-dashboard-client",
         "jt-dashboard-common",
+        "jt-dashboard-client",
         "jt-dashboard-client-spring-boot-starter",
         "jt-dashboard-server",
         "jt-dashboard-server-spring-boot-starter",

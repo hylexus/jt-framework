@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.web.blocking;
 
-import io.github.hylexus.jt.model.value.Resp;
+import io.github.hylexus.jt.core.model.value.Resp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

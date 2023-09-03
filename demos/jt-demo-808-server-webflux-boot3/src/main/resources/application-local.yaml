@@ -6,8 +6,8 @@ jt-dashboard:
     jt808:
       enabled: true
       name: ${spring.application.name}
-      base-url: http://node2:808
-      server-url: http://node2:9090
+      base-url: http://localhost:808
+      server-url: http://localhost:9090
       metadata:
         role: 808-server
 jt808:

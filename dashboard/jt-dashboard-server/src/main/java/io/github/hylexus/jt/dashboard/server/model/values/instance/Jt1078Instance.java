@@ -14,4 +14,12 @@ public class Jt1078Instance extends JtInstance {
     public Jt1078Registration getRegistration() {
         return (Jt1078Registration) registration;
     }
+
+    @Override
+    public String toString() {
+        return "Jt1078Instance{"
+                + "instanceId='" + instanceId + '\''
+                + ", registration.baseUrl=" + registration.getBaseUrl()
+                + '}';
+    }
 }

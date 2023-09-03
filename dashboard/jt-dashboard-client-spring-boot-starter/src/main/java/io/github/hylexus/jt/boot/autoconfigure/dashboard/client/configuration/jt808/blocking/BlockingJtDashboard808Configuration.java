@@ -17,7 +17,8 @@ public class BlockingJtDashboard808Configuration {
         return new DefaultJtApplicationRegistrator(
                 new Jt808ApplicationFactory(jtApplicationProps),
                 new Jt808BlockingJtApplicationClient(new RestTemplate()),
-                jtApplicationProps.getJt808().getServerUrl()
+                jtApplicationProps.getJt808().getServerUrl(),
+                jtApplicationProps.getJt808().isRegisterOnce()
         );
     }
 }

@@ -7,9 +7,13 @@ import io.github.hylexus.jt.dashboard.client.registration.impl.client.Jt1078Reac
 import io.github.hylexus.jt.dashboard.client.registration.impl.registrator.DefaultJtApplicationRegistrator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+@Import({
+        BuiltinVideoStreamSubscriberConfiguration.class,
+})
 public class ReactiveJtDashboard1078Configuration {
 
     @Bean
@@ -17,7 +21,8 @@ public class ReactiveJtDashboard1078Configuration {
         return new DefaultJtApplicationRegistrator(
                 new Jt1078ApplicationFactory(jtApplicationProps),
                 new Jt1078ReactiveJtApplicationClient(WebClient.builder().build()),
-                jtApplicationProps.getJt1078().getServerUrl()
+                jtApplicationProps.getJt1078().getServerUrl(),
+                jtApplicationProps.getJt1078().isRegisterOnce()
         );
     }
 }

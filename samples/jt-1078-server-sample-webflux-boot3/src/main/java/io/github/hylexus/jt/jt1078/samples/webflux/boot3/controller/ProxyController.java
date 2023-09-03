@@ -1,6 +1,6 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.controller;
 
-import io.github.hylexus.jt.model.value.Resp;
+import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.Command9102Dto;
 import io.github.hylexus.jt808.samples.common.service.ProxyService;

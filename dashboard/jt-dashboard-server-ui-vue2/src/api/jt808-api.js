@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function requestTerminalList(params) {
   return request({
-    url: `/api/dashboard/proxy/${params.instanceId}/jt808/terminal/list`,
+    url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt808/sessions`,
     method: 'get',
     params: params
   })

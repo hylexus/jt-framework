@@ -10,8 +10,10 @@ Jt-808协议服务端。
 
 ## Compatibility
 
-支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
-和 **spring-boot-3.x** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
+支持 **spring-boot-2.x
+** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
+和 **spring-boot-3.x
+** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
 
 更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
 
@@ -19,11 +21,11 @@ Jt-808协议服务端。
 
 更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
 
-两个 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
+`starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
 
 | Module                                    | JDK   | spring-boot      | Desc                              |
 |-------------------------------------------|-------|------------------|-----------------------------------|
-| `jt-808-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.6.x]` | 为 **spring-boot-2.x** 提供的 starter |
+| `jt-808-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter |
 | `jt-808-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter |
 
 ## Modules
@@ -32,15 +34,50 @@ Jt-808协议服务端。
 
 | Module                                  | JDK | CompileLevel | .class      | spring-boot |
 |-----------------------------------------|-----|--------------|-------------|-------------|
-| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.0.2**_ |
-| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
-| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
+| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |
+| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |
+| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |
 | jt-808-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |
 | jt-808-server-core                      | 17  | JDK-11       | 55 (JDK-11) | --          |
 
 - 模块介绍
 
 ```sh
+.
+├── build-script   # gradle 用到的构建脚本和checkstyle配置
+├── docs  # 文档 (vue-press)
+├── jt-1078-server-spring-boot-autoconfigure  # (jdk11+)
+├── jt-1078-server-spring-boot-starter        # spring-boot-v3 自动配置 (jdk17+)
+├── jt-1078-server-spring-boot-starter-boot2  # spring-boot-v2 自动配置 (jdk11+)
+├── jt-1078-server-support                    # jt-1078 的实现 (jdk11+)
+├── jt-808-server-spring-boot-autoconfigure   # (jdk11+)
+├── jt-808-server-spring-boot-starter         # spring-boot-v3 自动配置 (jdk17+)
+├── jt-808-server-spring-boot-starter-boot2   # spring-boot-v2 自动配置 (jdk11+)
+├── jt-808-server-support                     # jt-808 的实现 (jdk11+)
+├── jt-core                                   # 一些公共类 (jdk11+)
+├── dashboard # dashboard 模块 「暂时」 不支持 spring-boot-2.x
+│     ├── jt-dashboard-client                       # dashboard 客户端 (jdk17+)
+│     ├── jt-dashboard-client-spring-boot-starter   # dashboard 客户端的 spring-boot-v3 自动配置 (jdk17+)
+│     ├── jt-dashboard-common                       # dashboard 公共依赖 (jdk17+)
+│     ├── jt-dashboard-server                       # dashboard 服务端 (jdk17+)
+│     ├── jt-dashboard-server-spring-boot-starter   # dashboard 服务端的 spring-boot-v3 自动配置 (jdk17+)
+│     └── jt-dashboard-server-ui-vue3               # dashboard 的 UI(基于 VUE3)
+├── demos # (jdk17+)
+│     ├── jt-demo-1078-server-webflux-boot3
+│     ├── jt-demo-808-server-webflux-boot3
+│     ├── jt-demo-dashboard-webflux-boot3
+│     └── jt-demo-dashboard-webmvc-boot3
+└── samples
+      ├── jt-1078-server-sample-webflux-boot3 # JT/T 1078 的示例(spring-boot-3.x; Webflux) (jdk17+)
+      ├── jt-1078-server-sample-webmvc-boot3  # JT/T 1078 的示例(spring-boot-3.x; SpringMVC) (jdk17+)
+      ├── jt-808-server-sample-annotation     # 注解相关的示例(spring-boot-2.x) (jdk11+)
+      ├── jt-808-server-sample-bare           # 几乎零配置的示例(spring-boot-2.x) (jdk11+)
+      ├── jt-808-server-sample-bare-boot3     # 几乎零配置的示例(spring-boot-3.x) (jdk17+)
+      ├── jt-808-server-sample-customized     # 定制化示例(spring-boot-2.x) (jdk11+)
+      ├── jt-808-client-sample-debug          # 开发时用来Debug的项目,请忽略
+      ├── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
+      └── jt-sample-common                    # samples 项目共同的依赖 (jdk11+)
+
 .
 ├── build-script    # gradle用到的构建脚本和checkstyle配置
 ├── docs            # 文档 (vue-press)

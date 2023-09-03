@@ -35,6 +35,16 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Set;
 
+/**
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ *
+ * @see <a href="https://github.com/codecentric/spring-boot-admin">https://github.com/codecentric/spring-boot-admin</a>
+ * @see <a href="https://github.com/codecentric/spring-boot-admin/blob/83db63e82e916357d36b1e6b4d552e1b6506ecc9/spring-boot-admin-server/src/main/java/de/codecentric/boot/admin/server/web/servlet/InstancesProxyController.java#L58">de.codecentric.boot.admin.server.web.servlet.InstancesProxyController</a>
+ */
 @Slf4j
 @Controller
 public class DashboardInstanceProxyController {
