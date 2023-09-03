@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.hylexus.jt</groupId>
+        <artifactId>jt-framework</artifactId>
+        <version>2.2.0-beta2</version>
+    </parent>
+    <artifactId>jt-samples</artifactId>
+    <packaging>pom</packaging>
+    <name>jt-samples</name>
+
+    <properties>
+    </properties>
+
+    <modules>
+        <module>jt-sample-common</module>
+        <module>jt-808-client-sample-debug</module>
+        <module>jt-808-server-sample-annotation</module>
+        <module>jt-808-server-sample-bare</module>
+        <module>jt-808-server-sample-bare-boot3</module>
+        <module>jt-808-server-sample-customized</module>
+        <module>jt-808-server-sample-debug</module>
+        <module>jt-1078-server-sample-webflux-boot3</module>
+        <module>jt-1078-server-sample-webmvc-boot3</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.hylexus.jt</groupId>
+                <artifactId>jt-sample-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

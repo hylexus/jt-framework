@@ -1,3 +1,9 @@
+## 2.1.2
+
+### ⭐ New Features
+
+- https://github.com/hylexus/jt-framework/issues/78
+
 ## 2.1.1
 
 ### ⭐ New Features
