@@ -12,7 +12,7 @@ defineProps<{
     </template>
     <el-descriptions :column="2" border>
       <el-descriptions-item label="InstanceId">
-        <router-link type="primary" :to="'/808-instance/' + config.instanceId + '/session-list/'"
+        <router-link type="primary" :to="'/1078-instance/' + config.instanceId + '/session-list/'"
           >{{ config.instanceId }}
         </router-link>
       </el-descriptions-item>
@@ -38,10 +38,10 @@ defineProps<{
     border-color: var(--ep-color-success);
   }
   &.DOWN {
-    border-color: var(--ep-color-info);
+    border-color: var(--ep-color-danger);
   }
   &.UNKNOW {
-    border-color: var(--ep-color-danger);
+    border-color: var(--ep-color-warning);
   }
 }
 </style>

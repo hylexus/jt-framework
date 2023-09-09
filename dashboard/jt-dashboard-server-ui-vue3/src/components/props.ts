@@ -12,5 +12,7 @@ export interface Config {
   httpPort?: string
   tcpPort?: string
   notes?: string
+  metrics?: any
+  status?: any
   registration?: Registration
 }

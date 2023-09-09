@@ -15,8 +15,18 @@ const router = createRouter({
       component: () => import('@/views/808/Jt808SessionList.vue')
     },
     {
+      path: '/1078-instance/:instanceId/session-list',
+      name: 'Jt1078SessionList',
+      component: () => import('@/views/1078/Jt1078SessionList.vue')
+    },
+    {
       path: '/808-instance/:instanceId/video-player/:sim',
       name: 'PlayerDemo01',
+      component: () => import('@/views/1078/Jt1078SessionFlvPlayer.vue')
+    },
+    {
+      path: '/1078-instance/:instanceId/video-player',
+      name: 'PlayerDemo02',
       component: () => import('@/views/1078/Jt1078SessionFlvPlayer.vue')
     }
   ]
