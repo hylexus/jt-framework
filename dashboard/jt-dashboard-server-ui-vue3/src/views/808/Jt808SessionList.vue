@@ -129,18 +129,17 @@ const videoButtonClick = (row: any) => {
         </template>
       </el-table-column>
     </el-table>
-    <div style="border: 1px solid #eee; border-top-width: 0; padding: 10px 0">
-      <el-pagination
-        :page-sizes="[5, 10, 20, 30, 50, 100, 200]"
-        :current-page="query.page"
-        :page-size="query.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="table.total"
-        @pagination="table.data"
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
-    </div>
+    <el-pagination
+      class="m-t-2"
+      :page-sizes="[5, 10, 20, 30, 50, 100, 200]"
+      :current-page="query.page"
+      :page-size="query.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="table.total"
+      @pagination="table.data"
+      @size-change="sizeChange"
+      @current-change="currentChange"
+    />
   </el-card>
 </template>
 
