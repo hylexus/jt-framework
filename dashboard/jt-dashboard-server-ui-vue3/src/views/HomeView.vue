@@ -41,13 +41,13 @@ const loadServerMetadata = async () => {
   </nav>
   <div>
     <h3>808 Server Instance</h3>
-    <el-row :gutter="20">
+    <el-row :gutter="20" justify="center">
       <el-col :span="12" v-for="(it, index) in serverMetadata.jt808ServerMetadata" :key="index">
         <Jt808ServerInstanceBox :config="it" />
       </el-col>
     </el-row>
     <h3>1078 Server Instance</h3>
-    <el-row :gutter="20">
+    <el-row :gutter="20" justify="center">
       <el-col :span="12" v-for="(it, index) in serverMetadata.jt1078ServerMetadata" :key="index">
         <Jt1078ServerInstanceBox :config="it" />
       </el-col>
