@@ -125,3 +125,4 @@ docs/src/.vuepress/dist/
 /dashboard/jt-dashboard-server/src/main/resources/static/client/
 
 application-debug.yaml
+/demos/deploy.sh

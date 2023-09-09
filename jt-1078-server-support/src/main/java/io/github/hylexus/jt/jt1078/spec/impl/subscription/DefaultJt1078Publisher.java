@@ -76,6 +76,14 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
         this.doUnsubscribe(reason, entry -> entry.getKey().getSim().equals(sim));
     }
 
+    @Override
+    public void unsubscribeWithSimAndChannelNumber(String sim, short channelNumber, Jt1078SubscriberCloseException reason) {
+        this.doUnsubscribe(reason, entry -> {
+            final Jt1078Subscriber.SubscriberKey subscriberKey = entry.getKey();
+            return subscriberKey.getSim().equals(sim) && subscriberKey.getChannel() == channelNumber;
+        });
+    }
+
     private void doUnsubscribe(Jt1078SubscriberCloseException reason, Predicate<Map.Entry<Jt1078Subscriber.SubscriberKey, Map<Class<? extends Jt1078ChannelCollector<? extends Jt1078Subscription>>, Jt1078ChannelCollector<? extends Jt1078Subscription>>>> predicate) {
         this.writeLock.lock();
         try {

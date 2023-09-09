@@ -16,6 +16,16 @@ public final class FormatUtils {
         return "0".repeat(prefixLen) + binaryString;
     }
 
+    public static String toHexString(int i) {
+        return Integer.toHexString(i);
+    }
+
+    public static String toHexString(int i, int minLen) {
+        final String hexString = Integer.toHexString(i);
+        final int prefixLen = Math.max(minLen - hexString.length(), 0);
+        return "0".repeat(prefixLen) + hexString;
+    }
+
     public static String toHexString(ByteBuf byteBuf) {
         return HexStringUtils.byteBufToHexString(byteBuf);
     }

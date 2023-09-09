@@ -1,6 +1,10 @@
 server:
   port: 9090
 
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+
 jt-dashboard:
   server:
     static-application-registrator:

@@ -25,7 +25,7 @@ public class BuiltinJt1078SessionCloseListener implements Jt1078SessionEventList
     private void unsubscribe(Jt1078Session session, Jt1078SessionCloseReason closeReason) {
         if (session != null) {
             log.info("Unsubscribe for sim [{}], because [{}]", session.sim(), closeReason);
-            publisher.unsubscribeWithSim(session.sim(), new Jt1078SessionDestroyException("session closed"));
+            publisher.unsubscribeWithSimAndChannelNumber(session.sim(), session.channelNumber(), new Jt1078SessionDestroyException("session closed"));
         }
     }
 

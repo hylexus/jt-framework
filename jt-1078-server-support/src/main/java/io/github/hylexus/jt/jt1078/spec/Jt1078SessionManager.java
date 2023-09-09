@@ -73,6 +73,8 @@ public interface Jt1078SessionManager {
 
     Optional<Jt1078Session> removeBySessionId(String sessionId);
 
+    void removeBySimAndThenClose(String sim, Jt1078SessionCloseReason reason);
+
     Optional<Jt1078Session> removeBySessionIdAndThenClose(String sessionId, Jt1078SessionCloseReason reason);
 
     default Optional<Jt1078Session> removeBySimAndChannelAndThenClose(String sim, short channelNumber, Jt1078SessionCloseReason closeReason) {

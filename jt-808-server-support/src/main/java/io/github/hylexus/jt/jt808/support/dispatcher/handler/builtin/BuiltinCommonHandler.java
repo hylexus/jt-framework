@@ -20,8 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 public class BuiltinCommonHandler {
 
     @Jt808RequestHandlerMapping(msgType = 0x0002)
-    public void processTerminalHeartBeatMsg(Jt808RequestEntity<BuiltinMsg0002> request) {
+    public BuiltinServerCommonReplyMsg processTerminalHeartBeatMsg(Jt808RequestEntity<BuiltinMsg0002> request) {
         log.info("TerminalHeartBeatMsg, terminalId={}, flowId={}", request.terminalId(), request.flowId());
+        return BuiltinServerCommonReplyMsg.success(request.msgType().getMsgId(), request.flowId());
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0001)

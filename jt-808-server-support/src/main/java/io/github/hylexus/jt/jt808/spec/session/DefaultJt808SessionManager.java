@@ -185,6 +185,9 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
     private boolean checkStatus(Jt808Session session) {
         // if (!session.getChannel().isOpen()) {
         if (!session.channel().isActive()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Remove session [{}], because channel !isActive() ", session.terminalId());
+            }
             this.removeBySessionIdAndClose(session.id(), DefaultSessionCloseReason.CHANNEL_INACTIVE);
             return false;
         }

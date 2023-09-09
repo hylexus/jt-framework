@@ -50,6 +50,9 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     private boolean checkStatus(Jt1078Session session) {
         // if (!session.getChannel().isOpen()) {
         if (!session.channel().isActive()) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Remove session [{}], because channel !isActive() ", session.terminalId());
+            }
             this.removeBySessionIdAndThenClose(session.sessionId(), DefaultJt1078SessionCloseReason.CHANNEL_INACTIVE);
             return false;
         }
@@ -82,6 +85,31 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void removeBySimAndThenClose(String sim, Jt1078SessionCloseReason reason) {
+        lock.writeLock().lock();
+        try {
+            final String prefix = sim + "_";
+            for (Iterator<Map.Entry<String, Jt1078Session>> iterator = this.sessionMap.entrySet().iterator(); iterator.hasNext(); ) {
+                final Map.Entry<String, Jt1078Session> entry = iterator.next();
+                // <sim_channelNumber, session>
+                final String key = entry.getKey();
+                if (!key.startsWith(prefix)) {
+                    continue;
+                }
+
+                iterator.remove();
+
+                final Jt1078Session session = entry.getValue();
+                this.invokeListeners(listener -> listener.onSessionRemove(session));
+                this.invokeListeners(listener -> listener.onSessionClose(session, reason));
+                session.channel().close();
+            }
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @Override

@@ -62,6 +62,9 @@ public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAda
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.warn("channelInactive, address={} ", ctx.channel().remoteAddress());
+        }
         sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
     }
 

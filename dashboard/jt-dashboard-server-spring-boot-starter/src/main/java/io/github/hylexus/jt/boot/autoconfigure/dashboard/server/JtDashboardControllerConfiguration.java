@@ -8,7 +8,9 @@ import io.github.hylexus.jt.dashboard.server.controller.instance.JtInstanceContr
 import io.github.hylexus.jt.dashboard.server.proxy.DashboardWebClient;
 import io.github.hylexus.jt.dashboard.server.registry.Jt1078InstanceRegistry;
 import io.github.hylexus.jt.dashboard.server.registry.Jt808InstanceRegistry;
+import io.github.hylexus.jt.dashboard.server.service.IntervalCheck;
 import io.github.hylexus.jt.dashboard.server.service.ProxyInstanceProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 
 public class JtDashboardControllerConfiguration {
@@ -19,13 +21,13 @@ public class JtDashboardControllerConfiguration {
     }
 
     @Bean
-    public Jt808InstanceController jt808InstanceController(Jt808InstanceRegistry registry) {
-        return new Jt808InstanceController(registry);
+    public Jt808InstanceController jt808InstanceController(Jt808InstanceRegistry registry, @Qualifier("jt808ServerSimpleMetricsIntervalCheck") IntervalCheck intervalCheck) {
+        return new Jt808InstanceController(registry, intervalCheck);
     }
 
     @Bean
-    public Jt1078InstanceController jt1078InstanceController(Jt1078InstanceRegistry registry) {
-        return new Jt1078InstanceController(registry);
+    public Jt1078InstanceController jt1078InstanceController(Jt1078InstanceRegistry registry, @Qualifier("jt1078ServerSimpleMetricsIntervalCheck") IntervalCheck intervalCheck) {
+        return new Jt1078InstanceController(registry, intervalCheck);
     }
 
     @Bean

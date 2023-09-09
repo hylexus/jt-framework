@@ -61,4 +61,11 @@ public interface Jt1078Publisher {
      *               否则发送 {@link reactor.core.publisher.SignalType#ON_ERROR ON_ERROR} 信号以表示当前订阅终止。
      */
     void unsubscribeWithSim(String sim, @Nullable Jt1078SubscriberCloseException reason);
+
+    default void unsubscribeWithSimAndChannelNumber(String sim, short channelNumber) {
+        this.unsubscribeWithSimAndChannelNumber(terminalIdConverter().convert(sim), channelNumber, null);
+    }
+
+    void unsubscribeWithSimAndChannelNumber(String sim, short channelNumber, @Nullable Jt1078SubscriberCloseException reason);
+
 }
