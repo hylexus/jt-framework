@@ -191,25 +191,22 @@ defineExpose({ play })
   <div class="player-root">
     <el-card class="__card">
       <template #header>
-        <div class="clearfix">
+        <div class="player-header">
           <!--        <span>{{ config.title }}</span>-->
-          <span>通道{{ config.channel }}</span>
-          <el-divider direction="vertical"></el-divider>
-          <span>{{ config.location }}</span>
-          <el-divider direction="vertical"></el-divider>
-          <span>{{ streamDesc(config.type) }}</span>
-          <el-button
-            :icon="buttonCss.reset"
-            style="float: right; margin: 0 5px"
-            circle
-            @click="reset"
-          ></el-button>
-          <el-button style="float: right" circle @click="play" :icon="buttonCss.play"></el-button>
-
-          <span style="margin: 0 10px; float: left"><span :class="buttonCss.status"></span></span>
+          <div>
+            <span class="m-l-2 m-r-2"><span :class="buttonCss.status"></span></span>
+            <span>通道{{ config.channel }}</span>
+            <el-divider direction="vertical"></el-divider>
+            <span>{{ config.location }}</span>
+            <el-divider direction="vertical"></el-divider>
+            <span>{{ streamDesc(config.type) }}</span>
+          </div>
+          <div>
+            <el-button :icon="buttonCss.reset" circle @click="reset"></el-button>
+            <el-button circle @click="play" :icon="buttonCss.play"></el-button>
+          </div>
         </div>
       </template>
-      <!-- https://github.com/xqq/mpegts.js/issues/37 -->
       <video
         ref="video"
         style="width: 100%; height: 100%"
@@ -224,6 +221,11 @@ defineExpose({ play })
 </template>
 <style lang="scss">
 .player-root {
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   .__card {
     height: 100%;
 
@@ -233,8 +235,6 @@ defineExpose({ play })
     }
 
     .ep-card__body {
-      width: 200px;
-      height: 200px;
       padding: 5px;
     }
   }

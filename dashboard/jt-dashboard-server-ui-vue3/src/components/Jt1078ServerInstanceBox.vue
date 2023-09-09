@@ -6,7 +6,7 @@ defineProps<{
 }>()
 </script>
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" :class="config.status.status">
     <template #header>
       <span>1078服务实例: {{ config.instanceId }}</span>
     </template>
@@ -17,13 +17,31 @@ defineProps<{
         </router-link>
       </el-descriptions-item>
       <el-descriptions-item label="Name">{{ config.registration?.name }}</el-descriptions-item>
-      <el-descriptions-item label="BaseUrl">{{ config.registration?.baseUrl }}</el-descriptions-item>
+      <el-descriptions-item label="BaseUrl">{{
+        config.registration?.baseUrl
+      }}</el-descriptions-item>
       <el-descriptions-item label="Source">{{ config.registration?.source }}</el-descriptions-item>
       <el-descriptions-item label="Host">{{ config.registration?.host }}</el-descriptions-item>
-      <el-descriptions-item label="TcpPort">{{ config.registration?.tcpPort }}</el-descriptions-item>
+      <el-descriptions-item label="TcpPort">{{
+        config.registration?.tcpPort
+      }}</el-descriptions-item>
       <el-descriptions-item label="Metadata"
         >{{ config.registration?.metadata }}
       </el-descriptions-item>
     </el-descriptions>
   </el-card>
 </template>
+<style lang="scss">
+.box-card {
+  border-width: 1px;
+  &.UP {
+    border-color: var(--ep-color-success);
+  }
+  &.DOWN {
+    border-color: var(--ep-color-info);
+  }
+  &.UNKNOW {
+    border-color: var(--ep-color-danger);
+  }
+}
+</style>

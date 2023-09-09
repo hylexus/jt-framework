@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
+import { reactive, ref } from 'vue'
 import FlvPlayer from '@/components/FlvPlayer.vue'
 import Config from '@/assets/json/jt1078-config'
 import * as CommonUtils from '@/utils/common-utils'
@@ -12,7 +12,7 @@ const terminalId = ref(route.params.sim)
 let playerConfigs = reactive<any>([])
 const players = ref<InstanceType<typeof FlvPlayer>[]>([])
 const playAll = () => {
-  players.value.forEach(player => {
+  players.value.forEach((player) => {
     player?.play()
   })
 }
@@ -43,11 +43,11 @@ initConfigs()
       <el-breadcrumb-item>{{ terminalId }}</el-breadcrumb-item>
     </el-breadcrumb>
   </nav>
-  <div>
+  <div class="m-t-2 m-b-1">
     <el-button @click="playAll" size="small">播放全部</el-button>
   </div>
-  <el-row :gutter="10">
-    <el-col :span="6" v-for="(it, index) in playerConfigs" :key="index">
+  <el-row :gutter="10" class="p-r-2 p-l-2">
+    <el-col class="m-t-2" :span="6" v-for="(it, index) in playerConfigs" :key="index">
       <FlvPlayer :config="it" ref="players" />
     </el-col>
   </el-row>

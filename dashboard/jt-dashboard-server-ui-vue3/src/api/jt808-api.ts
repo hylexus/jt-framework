@@ -8,7 +8,7 @@ export function requestTerminalList(params: any = {}) {
   })
 }
 
-export function sendMsg9101(params:any = {}) {
+export function sendMsg9101(params: any = {}) {
   return request({
     url: '/api/jt808/send-msg/9101',
     method: 'post',

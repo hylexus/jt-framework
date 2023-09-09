@@ -3,18 +3,28 @@ import { requestServerInstances } from '@/api/dashboard'
 import { isSuccess } from '@/utils/common-utils'
 import Jt808ServerInstanceBox from '@/components/Jt808ServerInstanceBox.vue'
 import Jt1078ServerInstanceBox from '@/components/Jt1078ServerInstanceBox.vue'
-import { onMounted, reactive } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 
+const interval = ref(10)
+let timer: NodeJS.Timeout
 let serverMetadata = reactive({
   jt808ServerMetadata: [],
   jt1078ServerMetadata: []
 })
 onMounted(() => {
   loadServerMetadata()
+  timer = setInterval(() => {
+    loadServerMetadata()
+  }, interval.value * 1000)
+})
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
 })
 const loadServerMetadata = async () => {
-  const resp:any = await requestServerInstances()
+  const resp: any = await requestServerInstances()
   if (isSuccess(resp)) {
     serverMetadata.jt808ServerMetadata = resp.data.jt808ServerMetadata || []
     serverMetadata.jt1078ServerMetadata = resp.data.jt1078ServerMetadata || []
