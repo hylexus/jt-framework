@@ -23,10 +23,10 @@ const initConfigs = () => {
   }
   playerConfigs = Config.channelConfig.map((it) => ({
     ...it,
-    sim: terminalId,
+    sim: terminalId.value,
     refId: 'ref-' + it.channel,
     dataType: 0,
-    jt808ServerInstanceId: instanceId
+    jt808ServerInstanceId: instanceId.value
   }))
 }
 initConfigs()
