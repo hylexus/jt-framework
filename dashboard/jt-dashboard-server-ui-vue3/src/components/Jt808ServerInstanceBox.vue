@@ -10,14 +10,14 @@ defineProps<{
     <template #header>
       <span
         >808服务实例:
-        <router-link type="primary" :to="'/808-instance/' + config.instanceId + '/session-list/'">{{
+        <router-link type="primary" :to="`/808-instance/${config.instanceId}/session-list/`">{{
           config.instanceId
         }}</router-link></span
       >
     </template>
     <el-descriptions :column="2" border>
       <el-descriptions-item label="InstanceId">
-        <router-link type="primary" :to="'/808-instance/' + config.instanceId + '/session-list/'">{{
+        <router-link type="primary" :to="`/808-instance/${config.instanceId}/session-list/`">{{
           config.instanceId
         }}</router-link>
       </el-descriptions-item>

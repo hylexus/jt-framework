@@ -4,7 +4,7 @@ import { requestTerminalList } from '@/api/jt808-api'
 import * as CommonUtils from '@/utils/common-utils'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { Refresh, Search } from '@element-plus/icons-vue'
+import { ArrowRight, Refresh, Search } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -61,15 +61,10 @@ const sizeChange = (pageSize: number) => {
   query.pageSize = pageSize
   reloadData()
 }
-const videoButtonClick = (row: any) => {
-  router.push({
-    path: '/808-instance/' + query.instanceId + '/video-player/' + row.terminalId
-  })
-}
 </script>
 <template>
   <nav p4>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
       <el-breadcrumb-item>{{ query.instanceId }}11</el-breadcrumb-item>
@@ -109,10 +104,13 @@ const videoButtonClick = (row: any) => {
         </template>
       </el-table-column>
       <el-table-column prop="lastCommunicationTime" label="最近一次通信时间"> </el-table-column>
-      <el-table-column prop="latestGeo" label="最近一次地理位置"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
-        <template #default="scope">
-          <el-link type="primary" @click="videoButtonClick(scope.row)">音视频</el-link>
+        <template #default="{ row }">
+          <router-link
+            type="primary"
+            :to="`/808-instance/${query.instanceId}/video-player/${row.terminalId}`"
+            >音视频</router-link
+          >
         </template>
       </el-table-column>
     </el-table>

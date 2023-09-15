@@ -5,6 +5,7 @@ import Config from '@/assets/json/jt1078-config'
 import * as CommonUtils from '@/utils/common-utils'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
+import { ArrowRight } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const instanceId = ref(route.params.instanceId)
@@ -33,7 +34,7 @@ initConfigs()
 </script>
 <template>
   <nav p4>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ name: 'Jt808SessionList', params: { instanceId: instanceId } }">

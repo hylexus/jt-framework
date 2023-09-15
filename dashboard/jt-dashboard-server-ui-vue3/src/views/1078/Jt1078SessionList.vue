@@ -5,7 +5,7 @@ import * as CommonUtils from '@/utils/common-utils'
 import { useRoute } from 'vue-router'
 import { dayjs, ElMessage } from 'element-plus'
 import { channelConfig } from '@/assets/json/jt1078-config'
-import { Search, Refresh } from '@element-plus/icons-vue'
+import { Search, Refresh, ArrowRight } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const query = reactive({
@@ -92,7 +92,7 @@ const tableRowClassName = ({ row }: { row: any }) => {
 </script>
 <template>
   <nav p4>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>1078SessionList</el-breadcrumb-item>
       <el-breadcrumb-item>{{ query.instanceId }}11</el-breadcrumb-item>
@@ -131,7 +131,7 @@ const tableRowClassName = ({ row }: { row: any }) => {
             </el-table-column>
             <el-table-column label="操作">
               <template #default="{ row }">
-                <el-button @click="closeSubscribe(row)" :disabled="row.closed">{{
+                <el-button type="primary" @click="closeSubscribe(row)" :disabled="row.closed">{{
                   row.closed ? '已关闭' : '关闭订阅'
                 }}</el-button>
               </template>
@@ -148,7 +148,7 @@ const tableRowClassName = ({ row }: { row: any }) => {
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <el-button @click="closeSessions(row)" :disabled="row.closed">{{
+          <el-button type="primary" @click="closeSessions(row)" :disabled="row.closed">{{
             row.closed ? '已关闭' : '关闭通道'
           }}</el-button>
         </template>

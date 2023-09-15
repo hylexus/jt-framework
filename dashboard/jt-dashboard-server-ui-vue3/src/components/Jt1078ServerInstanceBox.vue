@@ -12,7 +12,7 @@ defineProps<{
     </template>
     <el-descriptions :column="2" border>
       <el-descriptions-item label="InstanceId">
-        <router-link type="primary" :to="'/1078-instance/' + config.instanceId + '/session-list/'"
+        <router-link type="primary" :to="`/1078-instance/${config.instanceId}/session-list/`"
           >{{ config.instanceId }}
         </router-link>
       </el-descriptions-item>

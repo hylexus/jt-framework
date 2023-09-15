@@ -5,6 +5,7 @@ import Jt808ServerInstanceBox from '@/components/Jt808ServerInstanceBox.vue'
 import Jt1078ServerInstanceBox from '@/components/Jt1078ServerInstanceBox.vue'
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { ArrowRight } from '@element-plus/icons-vue'
 
 const interval = ref(10)
 let timer: NodeJS.Timeout
@@ -35,20 +36,20 @@ const loadServerMetadata = async () => {
 </script>
 <template>
   <nav p4>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item>Dashboard</el-breadcrumb-item>
     </el-breadcrumb>
   </nav>
   <div>
     <h3>808 Server Instance</h3>
     <el-row :gutter="20" justify="center">
-      <el-col :span="12" v-for="(it, index) in serverMetadata.jt808ServerMetadata" :key="index">
+      <el-col :span="8" p4 v-for="(it, index) in serverMetadata.jt808ServerMetadata" :key="index">
         <Jt808ServerInstanceBox :config="it" />
       </el-col>
     </el-row>
     <h3>1078 Server Instance</h3>
     <el-row :gutter="20" justify="center">
-      <el-col :span="12" v-for="(it, index) in serverMetadata.jt1078ServerMetadata" :key="index">
+      <el-col :span="8" p4 v-for="(it, index) in serverMetadata.jt1078ServerMetadata" :key="index">
         <Jt1078ServerInstanceBox :config="it" />
       </el-col>
     </el-row>

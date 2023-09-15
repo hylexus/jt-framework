@@ -192,7 +192,6 @@ defineExpose({ play })
     <el-card class="__card">
       <template #header>
         <div class="player-header">
-          <!--        <span>{{ config.title }}</span>-->
           <div>
             <span ml8 mr8><span :class="buttonCss.status"></span></span>
             <span>通道{{ config.channel }}</span>
@@ -226,6 +225,7 @@ defineExpose({ play })
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: var(--ep-font-size-small);
   }
   .__card {
     height: 100%;
