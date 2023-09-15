@@ -8,14 +8,14 @@ export function requestTerminalList(params: any = {}) {
   })
 }
 
-export function unSubscribe(params = {}) {
+export function unSubscribe(params: any = {}) {
   return request({
     url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt1078/subscribers/${params.subscriberId}`,
     method: 'delete'
   })
 }
 
-export function unSessions(params = {}) {
+export function unSessions(params: any = {}) {
   return request({
     url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt1078/sessions/${params.sessionId}`,
     method: 'delete'

@@ -58,7 +58,7 @@ const currentChange = (currentPage: number) => {
   reloadData()
 }
 const sizeChange = (pageSize: number) => {
-  query.rows = pageSize
+  query.pageSize = pageSize
   reloadData()
 }
 const videoButtonClick = (row: any) => {

@@ -59,11 +59,11 @@ const currentChange = (currentPage: number) => {
   reloadData()
 }
 const sizeChange = (pageSize: number) => {
-  query.rows = pageSize
+  query.pageSize = pageSize
   reloadData()
 }
 const closeSubscribe = async (row: any) => {
-  const res = await unSubscribe({
+  const res: any = await unSubscribe({
     instanceId: route.params.instanceId,
     subscriberId: row.id
   })
@@ -73,7 +73,7 @@ const closeSubscribe = async (row: any) => {
   }
 }
 const closeSessions = async (row: any) => {
-  const res: any = await unSubscribe({
+  const res: any = await unSessions({
     instanceId: route.params.instanceId,
     sessionId: row.id
   })
