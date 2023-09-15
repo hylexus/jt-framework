@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-import { requestTerminalList } from '@/api/jt1078-api'
+import { requestTerminalList, unSessions, unSubscribe } from '@/api/jt1078-api'
 import * as CommonUtils from '@/utils/common-utils'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
+import { dayjs, ElMessage } from 'element-plus'
 import { channelConfig } from '@/assets/json/jt1078-config'
+import { Search, Refresh } from '@element-plus/icons-vue'
+
 const route = useRoute()
-const router = useRouter()
 const query = reactive({
   instanceId: '',
   page: 1,
@@ -61,27 +62,36 @@ const sizeChange = (pageSize: number) => {
   query.rows = pageSize
   reloadData()
 }
-const videoButtonClick = (row: any) => {
-  // const targetUrl = this.$router.resolve({
-  //   path: '/PlayerDemo01',
-  //   query: {
-  //     terminalId: row.terminalId
-  //   }
-  // })
-  // window.open(targetUrl.href, '_blank')
-
-  // this.$router.push({name: 'PlayerDemo01', query: {terminalId: row.terminalId}})
-  router.push({
-    path: '/808-instance/' + query.instanceId + '/video-player/' + row.terminalId
-    // query: {
-    //   terminalId: row.terminalId,
-    //   instanceId: row.instanceId
-    // }
+const closeSubscribe = async (row: any) => {
+  const res = await unSubscribe({
+    instanceId: route.params.instanceId,
+    subscriberId: row.id
   })
+  if (res.code === 0) {
+    row.closed = true
+    ElMessage.success(res.msg)
+  }
+}
+const closeSessions = async (row: any) => {
+  const res: any = await unSubscribe({
+    instanceId: route.params.instanceId,
+    sessionId: row.id
+  })
+  if (res.code === 0) {
+    row.closed = true
+    ElMessage.success(res.msg)
+  }
+}
+
+const tableRowClassName = ({ row }: { row: any }) => {
+  if (row?.createdAt < dayjs().subtract(30, 'm').format('YYYY-MM-DD HH:mm:ss')) {
+    return 'warning-row'
+  }
+  return ''
 }
 </script>
 <template>
-  <nav>
+  <nav p4>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>1078SessionList</el-breadcrumb-item>
@@ -94,54 +104,58 @@ const videoButtonClick = (row: any) => {
         <el-form-item label="sim">
           <el-input v-model="query.sim" placeholder="sim" @keyup.enter="reloadData"></el-input>
         </el-form-item>
-        <!--        <el-form-item label="版本">-->
-        <!--          <el-radio-group v-model="query.version" @change="reloadData">-->
-        <!--            <el-radio-button label="all">All</el-radio-button>-->
-        <!--            <el-radio-button label="2019">V2019</el-radio-button>-->
-        <!--            <el-radio-button label="2013">V2013</el-radio-button>-->
-        <!--          </el-radio-group>-->
-        <!--        </el-form-item>-->
         <el-form-item>
-          <el-button type="primary" @click="reloadData" icon="el-icon-search">查询</el-button>
-          <el-button @click="resetData" icon="el-icon-refresh">重置</el-button>
+          <el-button type="primary" @click="reloadData" :icon="Search">查询</el-button>
+          <el-button @click="resetData" :icon="Refresh">重置</el-button>
         </el-form-item>
       </el-form>
     </template>
-    <el-table :data="table.data" border stripe style="width: 100%">
-      <el-table-column type="index" width="50"> </el-table-column>
+    <el-table :data="table.data" border stripe w-full>
+      <el-table-column type="index" width="50"></el-table-column>
       <el-table-column type="expand">
-        <template #default="props">
-          <el-table :data="props.row.subscribers" border>
-            <el-table-column prop="channel" label="通道">
-              <template #default="scope">
-                {{ channelConfig.find((e) => e.channel === scope.row.channel)?.location }}
-              </template>
-            </el-table-column>
+        <template #default="{ row }">
+          <el-table :data="row.subscribers" border :row-class-name="tableRowClassName">
             <el-table-column label="订阅时间" prop="createdAt" />
             <el-table-column label="sim" prop="sim" />
             <el-table-column label="desc" prop="desc" />
+            <el-table-column
+              label="metadata"
+              :show-overflow-tooltip="{
+                effect: 'light',
+                popperClass: 'tip-content'
+              }"
+            >
+              <template #default="{ row }">
+                {{ JSON.stringify(row.metadata) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template #default="{ row }">
+                <el-button @click="closeSubscribe(row)" :disabled="row.closed">{{
+                  row.closed ? '已关闭' : '关闭订阅'
+                }}</el-button>
+              </template>
+            </el-table-column>
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id" width="180"> </el-table-column>
-      <!--      <el-table-column prop="version" label="协议版本" width="100" filter-placement="bottom-end">-->
-      <!--        <template #default="scope">-->
-      <!--          <el-tag :type="scope.row.version === '2019' ? '' : 'success'" disable-transitions-->
-      <!--            >{{ scope.row.version }}-->
-      <!--          </el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-      <el-table-column prop="lastCommunicateTime" label="最近一次通信时间"> </el-table-column>
-      <!--      <el-table-column prop="latestGeo" label="最近一次地理位置"> </el-table-column>-->
-      <!--      <el-table-column fixed="right" label="操作" width="100">-->
-      <!--        <template #default="scope">-->
-      <!--          <el-link type="primary" @click="videoButtonClick(scope.row)">音视频</el-link>-->
-      <!--          &lt;!&ndash;              <router-link target="_blank" :to="{path:'/player-demo01',query:{terminalId: scope.row.terminalId}}">toxxx</router-link>&ndash;&gt;-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
+      <el-table-column prop="id" label="id" width="180"></el-table-column>
+      <el-table-column prop="lastCommunicateTime" label="最近一次通信时间"></el-table-column>
+      <el-table-column prop="channel" label="通道">
+        <template #default="{ row }">
+          {{ channelConfig.find((e) => e.channel === row.channel)?.location }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template #default="{ row }">
+          <el-button @click="closeSessions(row)" :disabled="row.closed">{{
+            row.closed ? '已关闭' : '关闭通道'
+          }}</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
-      class="m-t-2"
+      mt8
       :page-sizes="[5, 10, 20, 30, 50, 100, 200]"
       :current-page="query.page"
       :page-size="query.pageSize"
@@ -159,5 +173,11 @@ const videoButtonClick = (row: any) => {
   .ep-card__header {
     padding-bottom: 0;
   }
+}
+.tip-content {
+  width: 500px;
+}
+.ep-table .warning-row {
+  --ep-table-tr-bg-color: var(--ep-color-warning-light-9);
 }
 </style>

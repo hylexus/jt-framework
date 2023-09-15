@@ -34,7 +34,7 @@ const loadServerMetadata = async () => {
 }
 </script>
 <template>
-  <nav>
+  <nav p4>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item>Dashboard</el-breadcrumb-item>
     </el-breadcrumb>

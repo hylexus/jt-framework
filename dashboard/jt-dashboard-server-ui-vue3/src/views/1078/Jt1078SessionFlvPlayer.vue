@@ -32,7 +32,7 @@ const initConfigs = () => {
 initConfigs()
 </script>
 <template>
-  <nav>
+  <nav p4>
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
@@ -43,11 +43,11 @@ initConfigs()
       <el-breadcrumb-item>{{ terminalId }}</el-breadcrumb-item>
     </el-breadcrumb>
   </nav>
-  <div class="m-t-2 m-b-1">
+  <div mt mb>
     <el-button @click="playAll" size="small">播放全部</el-button>
   </div>
-  <el-row :gutter="10" class="p-r-2 p-l-2">
-    <el-col class="m-t-2" :span="6" v-for="(it, index) in playerConfigs" :key="index">
+  <el-row :gutter="10" pr8 pl8>
+    <el-col mt8 :span="6" v-for="(it, index) in playerConfigs" :key="index">
       <FlvPlayer :config="it" ref="players" />
     </el-col>
   </el-row>

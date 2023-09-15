@@ -63,6 +63,8 @@ defineProps<{
           </el-col>
         </el-row>
       </el-descriptions-item>
+      <el-descriptions-item label="CreateAt">{{ config.createdAt }}</el-descriptions-item>
+      <el-descriptions-item label="UpdateAt">{{ config.status?.updatedAt }}</el-descriptions-item>
     </el-descriptions>
   </el-card>
 </template>

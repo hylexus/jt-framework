@@ -7,3 +7,17 @@ export function requestTerminalList(params: any = {}) {
     params: params
   })
 }
+
+export function unSubscribe(params = {}) {
+  return request({
+    url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt1078/subscribers/${params.subscriberId}`,
+    method: 'delete'
+  })
+}
+
+export function unSessions(params = {}) {
+  return request({
+    url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt1078/sessions/${params.sessionId}`,
+    method: 'delete'
+  })
+}

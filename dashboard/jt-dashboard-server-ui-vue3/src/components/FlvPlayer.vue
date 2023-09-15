@@ -194,7 +194,7 @@ defineExpose({ play })
         <div class="player-header">
           <!--        <span>{{ config.title }}</span>-->
           <div>
-            <span class="m-l-2 m-r-2"><span :class="buttonCss.status"></span></span>
+            <span ml8 mr8><span :class="buttonCss.status"></span></span>
             <span>通道{{ config.channel }}</span>
             <el-divider direction="vertical"></el-divider>
             <span>{{ config.location }}</span>
@@ -209,7 +209,8 @@ defineExpose({ play })
       </template>
       <video
         ref="video"
-        style="width: 100%; height: 100%"
+        w-full
+        style="height: 100%"
         width="100%"
         height="100%"
         controls

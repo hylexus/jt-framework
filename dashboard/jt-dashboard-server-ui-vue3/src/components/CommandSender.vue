@@ -79,7 +79,7 @@ const doSendMsg9102 = async () => {
 <template>
   <el-row :gutter="10">
     <el-col :span="12">
-      <el-card class="box-card my-box">
+      <el-card class="box-card">
         <template #header>
           <span>0x9101(音视频实时传输请求)</span>
         </template>
@@ -156,7 +156,7 @@ const doSendMsg9102 = async () => {
       </el-card>
     </el-col>
     <el-col :span="12">
-      <el-card class="box-card my-box">
+      <el-card class="box-card">
         <template>
           <span>0x9102(音视频实时传输控制)</span>
         </template>
