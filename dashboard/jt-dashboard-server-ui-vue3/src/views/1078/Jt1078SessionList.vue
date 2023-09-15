@@ -129,11 +129,11 @@ const tableRowClassName = ({ row }: { row: any }) => {
                 {{ JSON.stringify(row.metadata) }}
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="center">
               <template #default="{ row }">
-                <el-button type="primary" @click="closeSubscribe(row)" :disabled="row.closed">{{
+                <el-link type="primary" @click="closeSubscribe(row)" :disabled="row.closed">{{
                   row.closed ? '已关闭' : '关闭订阅'
-                }}</el-button>
+                }}</el-link>
               </template>
             </el-table-column>
           </el-table>
@@ -148,9 +148,9 @@ const tableRowClassName = ({ row }: { row: any }) => {
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <el-button type="primary" @click="closeSessions(row)" :disabled="row.closed">{{
+          <el-link type="primary" @click="closeSessions(row)" :disabled="row.closed">{{
             row.closed ? '已关闭' : '关闭通道'
-          }}</el-button>
+          }}</el-link>
         </template>
       </el-table-column>
     </el-table>
