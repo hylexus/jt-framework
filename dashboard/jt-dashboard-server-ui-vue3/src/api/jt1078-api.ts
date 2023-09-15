@@ -15,7 +15,7 @@ export function unSubscribe(params: any = {}) {
   })
 }
 
-export function unSessions(params: any = {}) {
+export function unSubscribeSessions(params: any = {}) {
   return request({
     url: `/api/dashboard/proxy/${params.instanceId}/api/dashboard-client/jt1078/sessions/${params.sessionId}`,
     method: 'delete'

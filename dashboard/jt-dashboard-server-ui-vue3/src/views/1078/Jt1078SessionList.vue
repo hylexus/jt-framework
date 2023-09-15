@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
-import { requestTerminalList, unSessions, unSubscribe } from '@/api/jt1078-api'
+import { requestTerminalList, unSubscribeSessions, unSubscribe } from '@/api/jt1078-api'
 import * as CommonUtils from '@/utils/common-utils'
 import { useRoute } from 'vue-router'
 import { dayjs, ElMessage } from 'element-plus'
@@ -73,7 +73,7 @@ const closeSubscribe = async (row: any) => {
   }
 }
 const closeSessions = async (row: any) => {
-  const res: any = await unSessions({
+  const res: any = await unSubscribeSessions({
     instanceId: route.params.instanceId,
     sessionId: row.id
   })
