@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import reactor.core.publisher.FluxSink;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class AbstractInternalSubscriber<S extends Jt1078Subscription>
         implements InternalSubscriber<S> {
@@ -19,13 +20,16 @@ public class AbstractInternalSubscriber<S extends Jt1078Subscription>
 
     private final FluxSink<S> sink;
 
-    public AbstractInternalSubscriber(String id, String sim, short channel, String desc, LocalDateTime createdAt, FluxSink<S> sink) {
+    private final Map<String,Object> metadata;
+
+    public AbstractInternalSubscriber(String id, String sim, short channel, String desc, LocalDateTime createdAt, FluxSink<S> sink, Map<String, Object> metadata) {
         this.id = id;
         this.sim = sim;
         this.channel = channel;
         this.desc = desc;
         this.createdAt = createdAt;
         this.sink = sink;
+        this.metadata = metadata;
     }
 
     @Override
@@ -56,5 +60,10 @@ public class AbstractInternalSubscriber<S extends Jt1078Subscription>
     @Override
     public FluxSink<S> sink() {
         return this.sink;
+    }
+
+    @Override
+    public Map<String, Object> metadata() {
+        return this.metadata;
     }
 }

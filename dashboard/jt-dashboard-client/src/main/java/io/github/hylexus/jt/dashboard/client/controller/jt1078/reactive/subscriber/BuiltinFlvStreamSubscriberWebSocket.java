@@ -5,6 +5,8 @@ import io.github.hylexus.jt.dashboard.common.consts.DashboardJt1078SessionCloseR
 import io.github.hylexus.jt.dashboard.common.model.dto.jt1078.DashboardVideoStreamSubscriberDto;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
@@ -16,9 +18,9 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.util.UriTemplate;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -27,15 +29,17 @@ import java.util.concurrent.TimeoutException;
 @Slf4j
 public class BuiltinFlvStreamSubscriberWebSocket implements WebSocketHandler {
     // todo auto-configuration
-    public static final Scheduler SCHEDULER = Schedulers.newBoundedElastic(10, 1024, "subscriber-ws");
     public static final String PATH_PATTERN = "/api/dashboard-client/jt1078/video-stream/websocket/flv/{sim}/{channel}";
     private final Jt1078Publisher jt1078Publisher;
+    private final Jt1078SubscriberManager jt1078SubscriberManager;
     private final UriTemplate uriTemplate;
-
+    private final Scheduler scheduler;
     private final Jt1078SessionManager sessionManager;
 
-    public BuiltinFlvStreamSubscriberWebSocket(Jt1078Publisher jt1078Publisher, Jt1078SessionManager sessionManager) {
+    public BuiltinFlvStreamSubscriberWebSocket(Jt1078Publisher jt1078Publisher, Jt1078SubscriberManager jt1078SubscriberManager, Scheduler scheduler, Jt1078SessionManager sessionManager) {
         this.jt1078Publisher = jt1078Publisher;
+        this.jt1078SubscriberManager = jt1078SubscriberManager;
+        this.scheduler = scheduler;
         this.sessionManager = sessionManager;
         this.uriTemplate = new UriTemplate(PATH_PATTERN);
     }
@@ -61,7 +65,8 @@ public class BuiltinFlvStreamSubscriberWebSocket implements WebSocketHandler {
 
         // websocket outbound
         return Mono.zip(input, flvStream).doFinally(signalType -> {
-            if (params.isAutoCloseJt1078SessionOnClientClosed()) {
+            if (params.isAutoCloseJt1078SessionOnClientClosed()
+                    || this.jt1078SubscriberManager.list(params.getSim(), params.getChannel()).findAny().isEmpty()) {
                 this.sessionManager.removeBySimAndChannelAndThenClose(params.getSim(), params.getChannel(), DashboardJt1078SessionCloseReason.CLOSED_BY_WEB_SOCKET);
                 log.info("Jt1078SessionClosed By WebSocket: {}", params);
             }
@@ -69,9 +74,16 @@ public class BuiltinFlvStreamSubscriberWebSocket implements WebSocketHandler {
     }
 
     private Mono<Void> subscribeFlv(WebSocketSession session, DashboardVideoStreamSubscriberDto params) {
+
+        final Jt1078SubscriberCreator creator = Jt1078SubscriberCreator.builder()
+                .sim(params.getSim())
+                .channelNumber(params.getChannel())
+                .timeout(Duration.ofSeconds(params.getTimeout()))
+                .metadata(Map.of("createdBy", this.getClass().getSimpleName(), "clientUri", session.getHandshakeInfo().getUri().toString()))
+                .build();
         return this.jt1078Publisher
-                .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.getSim(), params.getChannel(), Duration.ofSeconds(params.getTimeout()))
-                .publishOn(SCHEDULER)
+                .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, creator)
+                .publishOn(this.scheduler)
                 .onErrorComplete(Jt1078SessionDestroyException.class)
                 .onErrorComplete(TimeoutException.class)
                 .doOnError(Jt1078SessionDestroyException.class, e -> {

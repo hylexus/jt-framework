@@ -1,9 +1,6 @@
 package io.github.hylexus.jt.jt1078.spec.impl.session;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SessionCloseReason;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SessionEventListener;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.*;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -21,8 +18,15 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     private final Map<String, Jt1078Session> sessionMap = new HashMap<>();
 
     private final List<Jt1078SessionEventListener> listeners = new ArrayList<>();
+    private final Jt1078TerminalIdConverter jt1078TerminalIdConverter;
 
-    public DefaultJt1078SessionManager() {
+    public DefaultJt1078SessionManager(Jt1078TerminalIdConverter jt1078TerminalIdConverter) {
+        this.jt1078TerminalIdConverter = jt1078TerminalIdConverter;
+    }
+
+    @Override
+    public Jt1078TerminalIdConverter terminalIdConverter() {
+        return this.jt1078TerminalIdConverter;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
 
     @Override
     public Optional<Jt1078Session> findBySimAndChannel(String sim, short channelNumber, boolean updateLastCommunicateTime) {
-        final Jt1078Session session = this.sessionMap.get(generateSessionId(sim, channelNumber));
+        final Jt1078Session session = this.sessionMap.get(generateSessionId(this.terminalIdConverter().convert(sim), channelNumber));
         if (session == null) {
             return Optional.empty();
         }
@@ -91,7 +95,7 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
     public void removeBySimAndThenClose(String sim, Jt1078SessionCloseReason reason) {
         lock.writeLock().lock();
         try {
-            final String prefix = sim + "_";
+            final String prefix = this.terminalIdConverter().convert(sim) + "_";
             for (Iterator<Map.Entry<String, Jt1078Session>> iterator = this.sessionMap.entrySet().iterator(); iterator.hasNext(); ) {
                 final Map.Entry<String, Jt1078Session> entry = iterator.next();
                 // <sim_channelNumber, session>

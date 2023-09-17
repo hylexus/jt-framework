@@ -18,6 +18,13 @@ jt-dashboard:
       udp-port: 0
       metadata:
         role: 1078-server
+      builtin-flv-player:
+        scheduler:
+          name: builtin-flv-player
+          thread-capacity: 10
+          queued-task-capacity: 256
+          ttl: 30s
+          daemon: true
 jt1078:
   protocol:
     max-frame-length: 4096

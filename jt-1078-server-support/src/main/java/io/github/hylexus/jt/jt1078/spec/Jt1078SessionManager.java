@@ -14,6 +14,9 @@ import java.util.stream.Stream;
  * @author hylexus
  */
 public interface Jt1078SessionManager {
+
+    Jt1078TerminalIdConverter terminalIdConverter();
+
     AttributeKey<Jt1078Session> ATTR_KEY_SESSION = AttributeKey.newInstance("jt1078.session");
     Logger LOGGER = LoggerFactory.getLogger(Jt1078SessionManager.class);
 

@@ -5,7 +5,6 @@ import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import org.springframework.lang.Nullable;
 
-import java.time.Duration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,10 +44,11 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     }
 
     @Override
-    public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, String sim, short channelNumber, Duration timeout) {
-        final Jt1078Subscriber.SubscriberKey subscriberKey = Jt1078Subscriber.SubscriberKey.of(sim, channelNumber);
+    public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, Jt1078SubscriberCreator creator) {
+        creator.sim(this.terminalIdConverter().convert(creator.sim()));
+        final Jt1078Subscriber.SubscriberKey subscriberKey = Jt1078Subscriber.SubscriberKey.of(creator.sim(), creator.channelNumber());
         final Jt1078ChannelCollector<? extends Jt1078Subscription> channelCollector = this.getOrCreate(subscriberKey, cls);
-        @SuppressWarnings("unchecked") final Jt1078Subscriber<S> subscriber = (Jt1078Subscriber<S>) channelCollector.doSubscribe(sim, channelNumber, timeout);
+        @SuppressWarnings("unchecked") final Jt1078Subscriber<S> subscriber = (Jt1078Subscriber<S>) channelCollector.doSubscribe(creator);
         return subscriber;
     }
 

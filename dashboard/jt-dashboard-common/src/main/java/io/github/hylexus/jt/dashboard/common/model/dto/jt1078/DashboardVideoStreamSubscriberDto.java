@@ -18,7 +18,7 @@ public class DashboardVideoStreamSubscriberDto {
     private int timeout = 10;
 
     // websocket/http 断开时自动关闭 1078 服务端和终端的连接?
-    private boolean autoCloseJt1078SessionOnClientClosed = false;
+    private boolean autoCloseJt1078SessionOnClientClosed = true;
 
     // 自动发送 0x9101 消息给终端(websocket/http 连接建立时)
     // private boolean autoSend9101Command = false;

@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt1078.support.codec.impl.collector;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.RawDataJt1078Subscription;
 import reactor.core.publisher.FluxSink;
 
@@ -17,7 +18,7 @@ public class RawDataJt1078ChannelCollector
     }
 
     @Override
-    protected RawDataSubscriber createSubscribe(String uuid, String sim, short channelNumber, FluxSink<RawDataJt1078Subscription> fluxSink) {
-        return new RawDataSubscriber(uuid, sim, channelNumber, "request.body()", LocalDateTime.now(), fluxSink);
+    protected RawDataSubscriber createSubscribe(String uuid, Jt1078SubscriberCreator creator, FluxSink<RawDataJt1078Subscription> fluxSink) {
+        return new RawDataSubscriber(uuid, creator.sim(), creator.channelNumber(), "request.body()", LocalDateTime.now(), creator.metadata(), fluxSink);
     }
 }

@@ -4,7 +4,7 @@ import { toggleDark } from '@/composables'
 
 <template>
   <el-menu class="el-menu-demo" mode="horizontal">
-    <el-menu-item index="1">JT-Admin</el-menu-item>
+    <el-menu-item index="1">JT-Dashboard</el-menu-item>
     <el-menu-item h="full" @click="toggleDark()">
       <button
         class="border-none w-full bg-transparent cursor-pointer"
