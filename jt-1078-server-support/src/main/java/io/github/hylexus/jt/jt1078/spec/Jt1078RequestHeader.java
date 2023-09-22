@@ -86,11 +86,14 @@ public interface Jt1078RequestHeader {
 
     /**
      * @return SIM 卡号
+     * @see Jt1078TerminalIdConverter
      */
     String offset8();
 
     /**
      * bytes[8,14)    BCD[6]    SIM卡号
+     *
+     * @see Jt1078TerminalIdConverter
      */
     default String sim() {
         return offset8();

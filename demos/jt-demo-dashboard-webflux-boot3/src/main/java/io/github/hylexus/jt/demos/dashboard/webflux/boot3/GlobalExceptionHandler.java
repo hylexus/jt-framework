@@ -2,33 +2,41 @@ package io.github.hylexus.jt.demos.dashboard.webflux.boot3;
 
 import io.github.hylexus.jt.core.model.value.DefaultRespCode;
 import io.github.hylexus.jt.core.model.value.Resp;
-import io.github.hylexus.jt.dashboard.server.controller.BuiltinDashboardExceptionHandler;
 import io.github.hylexus.jt.exception.ReplayCodeException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
+import java.util.stream.Collectors;
+
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler extends BuiltinDashboardExceptionHandler {
+public class GlobalExceptionHandler {
 
-    @Override
     @ExceptionHandler(Throwable.class)
     public Resp<Object> processThrowable(Throwable throwable) {
         log.error(throwable.getMessage(), throwable);
         return Resp.failure(DefaultRespCode.SERVER_ERROR);
     }
 
-    @Override
+    @ResponseBody
     @ExceptionHandler(ReplayCodeException.class)
     public Resp<?> handleReplayCodeException(ReplayCodeException exception) {
-        return super.handleReplayCodeException(exception);
+        return exception.getResp();
     }
 
-    @Override
     @ExceptionHandler(WebExchangeBindException.class)
     public Resp<Object> processWebExchangeBindException(WebExchangeBindException exception) {
-        return super.processWebExchangeBindException(exception);
+
+        final BindingResult bindingResult = exception.getBindingResult();
+        final String errorMsg = bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+
+        return Resp.parameterError(errorMsg);
     }
 }

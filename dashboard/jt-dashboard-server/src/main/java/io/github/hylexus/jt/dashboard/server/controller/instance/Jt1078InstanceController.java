@@ -1,10 +1,12 @@
 package io.github.hylexus.jt.dashboard.server.controller.instance;
 
+import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt.dashboard.server.model.dto.instance.Jt1078Registration;
 import io.github.hylexus.jt.dashboard.server.model.values.instance.Jt1078Instance;
 import io.github.hylexus.jt.dashboard.server.registry.Jt1078InstanceRegistry;
-import io.github.hylexus.jt.core.model.value.Resp;
+import io.github.hylexus.jt.dashboard.server.service.IntervalCheck;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -17,9 +19,11 @@ import java.util.Map;
 public class Jt1078InstanceController {
 
     private final Jt1078InstanceRegistry instanceRegistry;
+    private final IntervalCheck intervalCheck;
 
-    public Jt1078InstanceController(Jt1078InstanceRegistry instanceRegistry) {
+    public Jt1078InstanceController(Jt1078InstanceRegistry instanceRegistry, @Qualifier("jt1078ServerSimpleMetricsIntervalCheck") IntervalCheck intervalCheck) {
         this.instanceRegistry = instanceRegistry;
+        this.intervalCheck = intervalCheck;
     }
 
     @PostMapping("/1078")
@@ -28,6 +32,7 @@ public class Jt1078InstanceController {
         registration.setSource("http-api");
 
         final String id = instanceRegistry.register(registration);
+        intervalCheck.markAsChecked(id);
         return Resp.success(Map.of("id", id));
     }
 

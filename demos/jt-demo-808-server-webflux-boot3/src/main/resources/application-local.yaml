@@ -1,6 +1,10 @@
 server:
   port: 808
 
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+
 jt-dashboard:
   client:
     jt808:
@@ -56,3 +60,17 @@ management:
     web:
       exposure:
         include: '*'
+  endpoint:
+    health:
+      show-components: always
+    sessions:
+      enabled: true
+    jt808-simple-metrics:
+      enabled: true
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+    build:
+      enabled: true

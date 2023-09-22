@@ -4,6 +4,7 @@ import { requestTerminalList } from '@/api/jt808-api'
 import * as CommonUtils from '@/utils/common-utils'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { ArrowRight, Refresh, Search } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -57,31 +58,13 @@ const currentChange = (currentPage: number) => {
   reloadData()
 }
 const sizeChange = (pageSize: number) => {
-  query.rows = pageSize
+  query.pageSize = pageSize
   reloadData()
-}
-const videoButtonClick = (row: any) => {
-  // const targetUrl = this.$router.resolve({
-  //   path: '/PlayerDemo01',
-  //   query: {
-  //     terminalId: row.terminalId
-  //   }
-  // })
-  // window.open(targetUrl.href, '_blank')
-
-  // this.$router.push({name: 'PlayerDemo01', query: {terminalId: row.terminalId}})
-  router.push({
-    path: '/808-instance/' + query.instanceId + '/video-player/' + row.terminalId
-    // query: {
-    //   terminalId: row.terminalId,
-    //   instanceId: row.instanceId
-    // }
-  })
 }
 </script>
 <template>
-  <nav>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+  <nav p4>
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
       <el-breadcrumb-item>{{ query.instanceId }}11</el-breadcrumb-item>
@@ -105,14 +88,14 @@ const videoButtonClick = (row: any) => {
           </el-radio-group>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="reloadData" icon="el-icon-search">查询</el-button>
-          <el-button @click="resetData" icon="el-icon-refresh">重置</el-button>
+          <el-button type="primary" @click="reloadData" :icon="Search">查询</el-button>
+          <el-button @click="resetData" :icon="Refresh">重置</el-button>
         </el-form-item>
       </el-form>
     </template>
-    <el-table :data="table.data" border stripe style="width: 100%">
+    <el-table :data="table.data" border stripe w-full>
       <el-table-column type="index" width="50"> </el-table-column>
-      <el-table-column prop="terminalId" label="终端ID" width="180"> </el-table-column>
+      <el-table-column prop="terminalId" label="终端ID" width="220"> </el-table-column>
       <el-table-column prop="version" label="协议版本" width="100" filter-placement="bottom-end">
         <template #default="scope">
           <el-tag :type="scope.row.version === '2019' ? '' : 'success'" disable-transitions
@@ -121,26 +104,27 @@ const videoButtonClick = (row: any) => {
         </template>
       </el-table-column>
       <el-table-column prop="lastCommunicationTime" label="最近一次通信时间"> </el-table-column>
-      <el-table-column prop="latestGeo" label="最近一次地理位置"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
-        <template #default="scope">
-          <el-link type="primary" @click="videoButtonClick(scope.row)">音视频</el-link>
-          <!--              <router-link target="_blank" :to="{path:'/player-demo01',query:{terminalId: scope.row.terminalId}}">toxxx</router-link>-->
+        <template #default="{ row }">
+          <router-link
+            type="primary"
+            :to="`/808-instance/${query.instanceId}/video-player/${row.terminalId}`"
+            >音视频</router-link
+          >
         </template>
       </el-table-column>
     </el-table>
-    <div style="border: 1px solid #eee; border-top-width: 0; padding: 10px 0">
-      <el-pagination
-        :page-sizes="[5, 10, 20, 30, 50, 100, 200]"
-        :current-page="query.page"
-        :page-size="query.pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="table.total"
-        @pagination="table.data"
-        @size-change="sizeChange"
-        @current-change="currentChange"
-      />
-    </div>
+    <el-pagination
+      mt8
+      :page-sizes="[5, 10, 20, 30, 50, 100, 200]"
+      :current-page="query.page"
+      :page-size="query.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="table.total"
+      @pagination="table.data"
+      @size-change="sizeChange"
+      @current-change="currentChange"
+    />
   </el-card>
 </template>
 

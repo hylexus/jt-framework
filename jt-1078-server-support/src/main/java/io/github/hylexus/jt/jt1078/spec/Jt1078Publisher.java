@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
+import java.util.Collections;
 
 /**
  * @author hylexus
@@ -22,7 +23,11 @@ public interface Jt1078Publisher {
      * @see io.github.hylexus.jt.jt1078.spec.impl.subscription.BuiltinJt1078SessionCloseListener#onSessionClose(Jt1078Session, Jt1078SessionCloseReason)
      */
     default <S extends Jt1078Subscription> Flux<S> subscribe(Class<? extends Jt1078ChannelCollector<S>> cls, String sim, short channelNumber, Duration timeout) {
-        return this.doSubscribe(cls, terminalIdConverter().convert(sim), channelNumber, timeout).dataStream();
+        return this.doSubscribe(cls, sim, channelNumber, timeout).dataStream();
+    }
+
+    default <S extends Jt1078Subscription> Flux<S> subscribe(Class<? extends Jt1078ChannelCollector<S>> cls, Jt1078SubscriberCreator creator) {
+        return this.doSubscribe(cls, creator).dataStream();
     }
 
     /**
@@ -30,7 +35,11 @@ public interface Jt1078Publisher {
      *
      * @see io.github.hylexus.jt.jt1078.spec.impl.subscription.BuiltinJt1078SessionCloseListener#onSessionClose(Jt1078Session, Jt1078SessionCloseReason)
      */
-    <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, String sim, short channelNumber, Duration timeout);
+    default <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, String sim, short channelNumber, Duration timeout) {
+        return this.doSubscribe(cls, Jt1078SubscriberCreator.builder().sim(sim).channelNumber(channelNumber).timeout(timeout).metadata(Collections.emptyMap()).build());
+    }
+
+    <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, Jt1078SubscriberCreator creator);
 
     /**
      * @param id {@link Jt1078Subscriber#id()}
@@ -61,4 +70,11 @@ public interface Jt1078Publisher {
      *               否则发送 {@link reactor.core.publisher.SignalType#ON_ERROR ON_ERROR} 信号以表示当前订阅终止。
      */
     void unsubscribeWithSim(String sim, @Nullable Jt1078SubscriberCloseException reason);
+
+    default void unsubscribeWithSimAndChannelNumber(String sim, short channelNumber) {
+        this.unsubscribeWithSimAndChannelNumber(terminalIdConverter().convert(sim), channelNumber, null);
+    }
+
+    void unsubscribeWithSimAndChannelNumber(String sim, short channelNumber, @Nullable Jt1078SubscriberCloseException reason);
+
 }

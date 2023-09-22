@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.support.codec.impl.collector;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.ByteArrayJt1078Subscription;
@@ -80,8 +81,8 @@ public class H264ToFlvJt1078ChannelCollector
 
 
     @Override
-    protected H264ToFlvSubscriber createSubscribe(String uuid, String sim, short channelNumber, FluxSink<ByteArrayJt1078Subscription> fluxSink) {
-        return new H264ToFlvSubscriber(uuid, sim, channelNumber, "H.264 --> FLV", LocalDateTime.now(), fluxSink);
+    protected H264ToFlvSubscriber createSubscribe(String uuid, Jt1078SubscriberCreator creator, FluxSink<ByteArrayJt1078Subscription> fluxSink) {
+        return new H264ToFlvSubscriber(uuid, creator.sim(), creator.channelNumber(), "H.264 --> FLV", LocalDateTime.now(), creator.metadata(), fluxSink);
     }
 
     private void doErrorLogIfNecessary(Jt1078Request request, Jt1078PayloadType payloadType) {

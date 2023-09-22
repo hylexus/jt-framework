@@ -1,0 +1,125 @@
+/*
+ * Copyright 2014-2023 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.github.hylexus.jt.dashboard.server.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
+import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.logging.Level;
+
+/**
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ * <p>
+ * 这个类是从 spring-boot-admin 中复制过来修改的。
+ *
+ * @see <a href="https://github.com/codecentric/spring-boot-admin">https://github.com/codecentric/spring-boot-admin</a>
+ * @see <a href="https://github.com/codecentric/spring-boot-admin/blob/b744d98a50bb31366ef14cb5017a3f4894100e6a/spring-boot-admin-server/src/main/java/de/codecentric/boot/admin/server/services/IntervalCheck.java#L47">de.codecentric.boot.admin.server.services.IntervalCheck</a>
+ */
+public class IntervalCheck {
+
+    private static final Logger log = LoggerFactory.getLogger(IntervalCheck.class);
+
+    private final String name;
+
+    private final Map<String, Instant> lastChecked = new ConcurrentHashMap<>();
+
+    private final Function<String, Mono<Void>> checkFn;
+
+    private Duration interval;
+
+    // private Duration minRetention;
+
+    @Nullable
+    private Disposable subscription;
+
+    @Nullable
+    private Scheduler scheduler;
+
+    public IntervalCheck(String name, Function<String, Mono<Void>> checkFn, Duration interval) {
+        this.name = name;
+        this.checkFn = checkFn;
+        this.interval = interval;
+        // this.minRetention = minRetention;
+    }
+
+    public void start() {
+        this.scheduler = Schedulers.newSingle(this.name + "-check");
+        this.subscription = Flux.interval(this.interval)
+                .doOnSubscribe((s) -> log.debug("Scheduled {}-check every {}", this.name, this.interval))
+                .log(log.getName(), Level.FINEST)
+                .publishOn(this.scheduler)
+                .concatMap((i) -> this.checkAllInstances())
+                .retryWhen(Retry.backoff(Long.MAX_VALUE, Duration.ofSeconds(1)).doBeforeRetry((s) -> log.warn("Unexpected error in {}-check", this.name, s.failure())))
+                .subscribe();
+    }
+
+    public void markAsChecked(String instanceId) {
+        this.lastChecked.put(instanceId, Instant.now());
+    }
+
+    public void register(String instanceId) {
+        this.markAsChecked(instanceId);
+    }
+
+    public void deregister(String instanceId) {
+        this.lastChecked.remove(instanceId);
+    }
+
+    protected Mono<Void> checkAllInstances() {
+        log.debug("check {} for all instances", this.name);
+        // Instant expiration = Instant.now().minus(this.minRetention);
+        return Flux.fromIterable(this.lastChecked.entrySet())
+                // .filter((e) -> e.getValue().isBefore(expiration))
+                .map(Map.Entry::getKey)
+                .flatMap(this.checkFn)
+                .then();
+    }
+
+    public void stop() {
+        if (this.subscription != null) {
+            this.subscription.dispose();
+            this.subscription = null;
+        }
+        if (this.scheduler != null) {
+            this.scheduler.dispose();
+            this.scheduler = null;
+        }
+    }
+
+    public void setInterval(Duration interval) {
+        this.interval = interval;
+    }
+
+    // public void setMinRetention(Duration minRetention) {
+    //     this.minRetention = minRetention;
+    // }
+
+}

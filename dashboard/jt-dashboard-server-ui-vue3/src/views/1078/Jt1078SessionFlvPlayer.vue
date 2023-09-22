@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {reactive, ref} from 'vue'
+import { reactive, ref } from 'vue'
 import FlvPlayer from '@/components/FlvPlayer.vue'
 import Config from '@/assets/json/jt1078-config'
 import * as CommonUtils from '@/utils/common-utils'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
+import { ArrowRight } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const instanceId = ref(route.params.instanceId)
@@ -12,7 +13,7 @@ const terminalId = ref(route.params.sim)
 let playerConfigs = reactive<any>([])
 const players = ref<InstanceType<typeof FlvPlayer>[]>([])
 const playAll = () => {
-  players.value.forEach(player => {
+  players.value.forEach((player) => {
     player?.play()
   })
 }
@@ -23,17 +24,17 @@ const initConfigs = () => {
   }
   playerConfigs = Config.channelConfig.map((it) => ({
     ...it,
-    sim: terminalId,
+    sim: terminalId.value,
     refId: 'ref-' + it.channel,
     dataType: 0,
-    jt808ServerInstanceId: instanceId
+    jt808ServerInstanceId: instanceId.value
   }))
 }
 initConfigs()
 </script>
 <template>
-  <nav>
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+  <nav p4>
+    <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item to="/">Dashboard</el-breadcrumb-item>
       <el-breadcrumb-item>808ServerInstance</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ name: 'Jt808SessionList', params: { instanceId: instanceId } }">
@@ -43,11 +44,11 @@ initConfigs()
       <el-breadcrumb-item>{{ terminalId }}</el-breadcrumb-item>
     </el-breadcrumb>
   </nav>
-  <div>
+  <div mt mb>
     <el-button @click="playAll" size="small">播放全部</el-button>
   </div>
-  <el-row :gutter="10">
-    <el-col :span="6" v-for="(it, index) in playerConfigs" :key="index">
+  <el-row :gutter="10" pr8 pl8>
+    <el-col mt8 :span="6" v-for="(it, index) in playerConfigs" :key="index">
       <FlvPlayer :config="it" ref="players" />
     </el-col>
   </el-row>

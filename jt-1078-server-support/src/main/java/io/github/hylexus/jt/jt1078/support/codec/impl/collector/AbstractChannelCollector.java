@@ -1,9 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.codec.impl.collector;
 
-import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscriber;
-import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
-import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
+import io.github.hylexus.jt.jt1078.spec.*;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Subscriber;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriberDescriptor;
@@ -13,7 +10,6 @@ import org.springframework.lang.Nullable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 
-import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
@@ -46,19 +42,19 @@ public abstract class AbstractChannelCollector<PT extends Jt1078Subscription, IS
         }
     }
 
-    protected abstract IST createSubscribe(String uuid, String sim, short channelNumber, FluxSink<PT> fluxSink);
+    protected abstract IST createSubscribe(String uuid, Jt1078SubscriberCreator creator, FluxSink<PT> fluxSink);
 
     @Override
-    public Jt1078Subscriber<PT> doSubscribe(String sim, short channelNumber, Duration timeout) {
-        final String uuid = Jt1078Subscriber.SubscriberKey.ofUuid(sim, channelNumber);
+    public Jt1078Subscriber<PT> doSubscribe(Jt1078SubscriberCreator creator) {
+        final String uuid = Jt1078Subscriber.SubscriberKey.ofUuid(creator.sim(), creator.channelNumber());
 
         final Flux<PT> dataStream = Flux.<PT>create(fluxSink -> {
             log.info("new subscriber created with id: {}", uuid);
-            final IST subscriber = createSubscribe(uuid, sim, channelNumber, fluxSink);
+            final IST subscriber = createSubscribe(uuid, creator, fluxSink);
             synchronized (this.subscriberMapping) {
                 this.subscriberMapping.put(uuid, subscriber);
             }
-        }).timeout(timeout).doFinally(signalType -> {
+        }).timeout(creator.timeout()).doFinally(signalType -> {
             log.info("Subscriber {} removed", uuid);
             synchronized (this.subscriberMapping) {
                 this.subscriberMapping.remove(uuid);
@@ -97,7 +93,7 @@ public abstract class AbstractChannelCollector<PT extends Jt1078Subscription, IS
     @Override
     public Stream<Jt1078SubscriberDescriptor> list() {
         return this.subscriberMapping.values().stream()
-                .map(it -> new DefaultJt1078SubscriberDescriptor(it.id(), it.sim(), it.channel(), it.createdAt(), it.desc()));
+                .map(it -> new DefaultJt1078SubscriberDescriptor(it.id(), it.sim(), it.channel(), it.createdAt(), it.desc(), it.metadata()));
     }
 
 }

@@ -9,6 +9,8 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class Jt1078Instance extends JtInstance {
+    public Jt1078Instance() {
+    }
 
     @Override
     public Jt1078Registration getRegistration() {

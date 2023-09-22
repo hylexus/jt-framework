@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import reactor.core.publisher.FluxSink;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Internal
 public interface InternalSubscriber<S extends Jt1078Subscription> {
@@ -17,6 +18,8 @@ public interface InternalSubscriber<S extends Jt1078Subscription> {
     String desc();
 
     LocalDateTime createdAt();
+
+    Map<String, Object> metadata();
 
     FluxSink<S> sink();
 

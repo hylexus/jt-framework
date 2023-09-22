@@ -1,6 +1,10 @@
 server:
   port: 1078
 
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+
 jt-dashboard:
   client:
     jt1078:
@@ -14,6 +18,13 @@ jt-dashboard:
       udp-port: 0
       metadata:
         role: 1078-server
+      builtin-flv-player:
+        scheduler:
+          name: builtin-flv-player
+          thread-capacity: 10
+          queued-task-capacity: 256
+          ttl: 30s
+          daemon: true
 jt1078:
   protocol:
     max-frame-length: 4096
@@ -43,3 +54,23 @@ logging:
     io.github.hylexus.jt.jt1078.support.dispatcher.Jt1078RequestHandler: debug
 #    io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler: debug
 #    io.github.hylexus.jt.jt1078.support.dispatcher.impl.DefaultJt1078RequestMsgDispatcher: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-components: always
+    sessions:
+      enabled: true
+    jt1078-simple-metrics:
+      enabled: true
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+    build:
+      enabled: true

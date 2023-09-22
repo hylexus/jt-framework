@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.controller;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.github.hylexus.jt.jt1078.spec.Jt1078PublisherManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Session;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 public class Jt1078DebugController {
-    private final Jt1078PublisherManager publisherManager;
+    private final Jt1078SubscriberManager publisherManager;
     private final Jt1078SessionManager sessionManager;
 
-    public Jt1078DebugController(Jt1078PublisherManager publisherManager, Jt1078SessionManager sessionManager) {
+    public Jt1078DebugController(Jt1078SubscriberManager publisherManager, Jt1078SessionManager sessionManager) {
         this.publisherManager = publisherManager;
         this.sessionManager = sessionManager;
     }

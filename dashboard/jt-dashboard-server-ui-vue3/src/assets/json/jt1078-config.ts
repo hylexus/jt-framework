@@ -1,6 +1,6 @@
 // type: 1, 音视频/视频
 // type: 2, 音频
-const channelConfig = [
+export const channelConfig = [
   { channel: 1, location: '驾驶员', type: 1, title: '通道1--驾驶员--音视频/视频' },
   { channel: 2, location: '车辆正前方', type: 1, title: '通道2--车辆正前方--音视频/视频' },
   { channel: 3, location: '车前门', type: 1, title: '通道3--车前门--音视频/视频' },

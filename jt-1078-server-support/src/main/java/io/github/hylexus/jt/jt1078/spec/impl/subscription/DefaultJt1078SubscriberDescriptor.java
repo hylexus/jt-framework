@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberDescriptor;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class DefaultJt1078SubscriberDescriptor implements Jt1078SubscriberDescriptor {
     private final String id;
@@ -12,13 +13,15 @@ public class DefaultJt1078SubscriberDescriptor implements Jt1078SubscriberDescri
     private final LocalDateTime createdAt;
 
     private final String desc;
+    private final Map<String, Object> metadata;
 
-    public DefaultJt1078SubscriberDescriptor(String id, String sim, short channel, LocalDateTime createdAt, String desc) {
+    public DefaultJt1078SubscriberDescriptor(String id, String sim, short channel, LocalDateTime createdAt, String desc, Map<String, Object> metadata) {
         this.id = id;
         this.sim = sim;
         this.channel = channel;
         this.createdAt = createdAt;
         this.desc = desc;
+        this.metadata = metadata;
     }
 
 
@@ -48,5 +51,10 @@ public class DefaultJt1078SubscriberDescriptor implements Jt1078SubscriberDescri
             return Jt1078SubscriberDescriptor.super.getDesc();
         }
         return this.desc;
+    }
+
+    @Override
+    public Map<String, Object> getMetadata() {
+        return metadata;
     }
 }

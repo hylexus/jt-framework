@@ -4,6 +4,7 @@ import io.github.hylexus.jt.core.registry.RegistryStore;
 import io.github.hylexus.jt.dashboard.server.model.dto.instance.JtRegistration;
 import io.github.hylexus.jt.dashboard.server.model.values.instance.JtInstance;
 import io.github.hylexus.jt.dashboard.server.proxy.InstanceIdGenerator;
+import io.github.hylexus.jt.dashboard.server.service.JtInstanceStatusConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
@@ -26,23 +27,27 @@ import java.util.stream.Collectors;
 public abstract class InstanceRegistry<E extends JtInstance> {
     private final InstanceIdGenerator generator;
     private final RegistryStore<String, E> store;
+    private final JtInstanceStatusConverter instanceStatusConverter;
 
-    public InstanceRegistry(InstanceIdGenerator generator, RegistryStore<String, E> store) {
+    public InstanceRegistry(InstanceIdGenerator generator, RegistryStore<String, E> store, JtInstanceStatusConverter instanceStatusConverter) {
         this.generator = generator;
         this.store = store;
+        this.instanceStatusConverter = instanceStatusConverter;
     }
 
-    protected abstract E createInstance(String id, JtRegistration jtRegistration);
+    protected abstract E createInstance(String id, JtRegistration jtRegistration, LocalDateTime now);
 
     public String register(JtRegistration registration) {
         Assert.notNull(registration, "'registration' must not be null");
         final String id = generator.generateId(registration);
         Assert.notNull(id, "'id' must not be null");
         return this.store.compute(id, (key, instance) -> {
+            final LocalDateTime now = LocalDateTime.now();
             if (instance == null) {
-                instance = createInstance(id, registration);
+                instance = createInstance(id, registration, now);
             }
-            instance.setLatestCommunicationTime(LocalDateTime.now());
+            instance.setStatus(instanceStatusConverter.convert(instance));
+            instance.getRegistration().setUpdatedAt(now);
             log.debug("Compute instance {} ", instance);
             return instance;
         }).getInstanceId();

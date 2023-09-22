@@ -17,6 +17,7 @@ import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.impl.Jt808RequestLifecycleListeners;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManagerAware;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinCommonHandler;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
         Jt808DispatcherHandlerAutoConfiguration.class,
         Jt808NettyServerAutoConfiguration.class,
         Jt808AutoConfiguration.Jt808RequestLifecycleListenerBinder.class,
+        Jt808AutoConfiguration.Jt808SessionManagerBinder.class,
 })
 @EnableConfigurationProperties({Jt808ServerProps.class})
 public class Jt808AutoConfiguration {
@@ -107,6 +109,20 @@ public class Jt808AutoConfiguration {
             applicationContext.getBeansOfType(Jt808RequestLifecycleListenerAware.class).forEach((name, instance) -> {
                 instance.setRequestLifecycleListener(lifecycleListener);
                 log.info("--> Binding [{}] to [{}]", lifecycleListener.getClass().getName(), instance.getClass().getName());
+            });
+        }
+    }
+
+    @Slf4j
+    static class Jt808SessionManagerBinder {
+        public Jt808SessionManagerBinder(ApplicationContext applicationContext, Jt808SessionManager sessionManager) {
+            this.doBind(applicationContext, sessionManager);
+        }
+
+        private void doBind(ApplicationContext applicationContext, Jt808SessionManager sessionManager) {
+            applicationContext.getBeansOfType(Jt808SessionManagerAware.class).forEach((name, instance) -> {
+                instance.setJt808SessionManager(sessionManager);
+                log.info("--> Binding [{}] to [{}]", sessionManager.getClass().getName(), instance.getClass().getName());
             });
         }
     }

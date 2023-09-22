@@ -1,10 +1,14 @@
 server:
   port: 9090
 
+spring:
+  jackson:
+    time-zone: Asia/Shanghai
+
 jt-dashboard:
   server:
     static-application-registrator:
-      enabled: true
+      enabled: false
       jt1078-applications:
         - name: ${spring.application.name}
           base-url: http://node2:1078

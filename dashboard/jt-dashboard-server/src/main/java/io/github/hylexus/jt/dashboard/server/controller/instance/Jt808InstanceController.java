@@ -4,7 +4,9 @@ import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt.dashboard.server.model.dto.instance.Jt808Registration;
 import io.github.hylexus.jt.dashboard.server.model.values.instance.Jt808Instance;
 import io.github.hylexus.jt.dashboard.server.registry.Jt808InstanceRegistry;
+import io.github.hylexus.jt.dashboard.server.service.IntervalCheck;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -15,9 +17,11 @@ import java.util.Map;
 public class Jt808InstanceController {
 
     private final Jt808InstanceRegistry instanceRegistry;
+    private final IntervalCheck intervalCheck;
 
-    public Jt808InstanceController(Jt808InstanceRegistry instanceRegistry) {
+    public Jt808InstanceController(Jt808InstanceRegistry instanceRegistry, @Qualifier("jt808ServerSimpleMetricsIntervalCheck") IntervalCheck intervalCheck) {
         this.instanceRegistry = instanceRegistry;
+        this.intervalCheck = intervalCheck;
     }
 
     @PostMapping("/808")
@@ -26,6 +30,7 @@ public class Jt808InstanceController {
         registration.setSource("http-api");
 
         final String id = instanceRegistry.register(registration);
+        intervalCheck.markAsChecked(id);
         return Resp.success(Map.of("id", id));
     }
 

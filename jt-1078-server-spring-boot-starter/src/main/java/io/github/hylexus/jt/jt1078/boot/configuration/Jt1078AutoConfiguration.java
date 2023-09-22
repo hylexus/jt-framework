@@ -7,6 +7,8 @@ import io.github.hylexus.jt.jt1078.boot.configuration.netty.Jt1078NettyAutoConfi
 import io.github.hylexus.jt.jt1078.boot.props.Jt1078ServerProps;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListener;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListenerAware;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManagerAware;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -25,6 +27,7 @@ import org.springframework.context.annotation.Import;
         Jt1078NettyAutoConfiguration.class,
         Jt1078FfmpegConfiguration.class,
         Jt1078AutoConfiguration.Jt1078RequestLifecycleListenerBinder.class,
+        Jt1078AutoConfiguration.Jt1078SessionManagerBinder.class,
 })
 @EnableConfigurationProperties({
         Jt1078ServerProps.class,
@@ -42,6 +45,20 @@ public class Jt1078AutoConfiguration {
             applicationContext.getBeansOfType(Jt1078RequestLifecycleListenerAware.class).forEach((name, instance) -> {
                 instance.setRequestLifecycleListener(lifecycleListener);
                 log.info("--> Binding [{}] to [{}]", lifecycleListener.getClass().getName(), instance.getClass().getName());
+            });
+        }
+    }
+
+    @Slf4j
+    static class Jt1078SessionManagerBinder {
+        public Jt1078SessionManagerBinder(ApplicationContext applicationContext, Jt1078SessionManager sessionManager) {
+            this.doBind(applicationContext, sessionManager);
+        }
+
+        private void doBind(ApplicationContext applicationContext, Jt1078SessionManager sessionManager) {
+            applicationContext.getBeansOfType(Jt1078SessionManagerAware.class).forEach((name, instance) -> {
+                instance.setJt1078SessionManager(sessionManager);
+                log.info("--> Binding [{}] to [{}]", sessionManager.getClass().getName(), instance.getClass().getName());
             });
         }
     }
