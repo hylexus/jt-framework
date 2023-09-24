@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'org.springframework.boot'
 
 springBoot {
-    getMainClass().set('io.github.hylexus.jt.demos.dashboard.mvc.boot3.JtDemoDashboardWebmvcBoot3')
+    getMainClass().set('io.github.hylexus.jt.demos.dashboard.webmvc.boot3.JtDemoDashboardWebmvcBoot3')
 }
 
 bootJar {

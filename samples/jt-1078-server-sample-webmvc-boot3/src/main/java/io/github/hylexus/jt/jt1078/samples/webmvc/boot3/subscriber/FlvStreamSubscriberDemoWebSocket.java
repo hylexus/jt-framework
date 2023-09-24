@@ -1,11 +1,12 @@
-package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.web;
+package io.github.hylexus.jt.jt1078.samples.webmvc.boot3.subscriber;
 
-import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.model.vo.WebSocketSubscriberVo;
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.common.WebSocketUtils;
+import io.github.hylexus.jt.jt1078.samples.webmvc.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
-import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt808.samples.common.dto.DemoVideoStreamSubscriberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.web.socket.BinaryMessage;
@@ -18,40 +19,47 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
-public class WebSocketSubscriberDemoH264 extends AbstractWebSocketHandler {
-    public static final String PATH_PATTERN = "/jt1078/subscription/h264/{sim}/{channel}";
+public class FlvStreamSubscriberDemoWebSocket extends AbstractWebSocketHandler {
+    public static final String PATH_PATTERN = "/jt1078/subscription/flv/{sim}/{channel}";
     private final Map<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
     private final UriTemplate uriTemplate;
     private final Jt1078Publisher publisher;
 
-    public WebSocketSubscriberDemoH264(Jt1078Publisher publisher) {
+    public FlvStreamSubscriberDemoWebSocket(Jt1078Publisher publisher) {
         this.publisher = publisher;
         this.uriTemplate = new UriTemplate(PATH_PATTERN);
     }
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
-        final WebSocketSubscriberVo params = WebSocketSubscriberVo.of(session, this.uriTemplate);
-        log.info("New H.264(RAW) publisher created via WebSocket: {}", params);
+        final DemoVideoStreamSubscriberDto params = WebSocketUtils.createForBlockingSession(session, this.uriTemplate);
+        log.info("New FLV publisher created via WebSocket: {}", params);
         synchronized (this.sessionMap) {
             sessionMap.put(session.getId(), session);
         }
-        log.info("session add : {}", session);
 
-        this.publisher.subscribe(Jt1078ChannelCollector.RAW_DATA_COLLECTOR, params.sim(), params.channel(), Duration.ofSeconds(params.timeout()))
-                .doOnError(Jt1078SessionDestroyException.class, e -> {
-                    log.error("Session Destroy... subscribe complete");
-                })
+        this.publisher.subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.getSim(), params.getChannel(), Duration.ofSeconds(params.getTimeout()))
+                .publishOn(WebSocketConfig.SCHEDULER)
                 .onErrorComplete(Jt1078SessionDestroyException.class)
-                .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
+                .onErrorComplete(TimeoutException.class)
+                .doOnError(Jt1078SessionDestroyException.class, e -> {
+                    log.error("取消订阅(Session销毁)");
+                })
+                .doOnError(TimeoutException.class, e -> {
+                    log.error("取消订阅(超时, {} 秒)", params.getTimeout());
+                })
+                .doOnError(Throwable.class, e -> {
+                    log.error(e.getMessage(), e);
+                })
                 .doOnNext(subscription -> {
                     final byte[] data = subscription.payload();
                     log.info("WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
                     try {
                         session.sendMessage(new BinaryMessage(data));
-                    } catch (IOException e) {
+                    } catch (Throwable e) {
                         throw new RuntimeException(e);
                     }
                 })

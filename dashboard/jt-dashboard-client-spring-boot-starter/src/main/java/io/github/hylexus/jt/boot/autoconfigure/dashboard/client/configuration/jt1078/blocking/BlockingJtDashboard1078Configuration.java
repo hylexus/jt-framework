@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @Import({
-        BuiltinVideoStreamSubscriberConfiguration.class,
+        BuiltinBlockingVideoStreamSubscriberConfiguration.class,
 })
 public class BlockingJtDashboard1078Configuration {
 

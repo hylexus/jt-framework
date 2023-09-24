@@ -63,7 +63,9 @@ include 'samples:jt-1078-server-sample-webmvc-boot3'
 // demos
 include 'demos'
 include 'demos:jt-demo-808-server-webflux-boot3'
+include 'demos:jt-demo-808-server-webmvc-boot3'
 include 'demos:jt-demo-1078-server-webflux-boot3'
+include 'demos:jt-demo-1078-server-webmvc-boot3'
 include 'demos:jt-demo-dashboard-webflux-boot3'
 include 'demos:jt-demo-dashboard-webmvc-boot3'
 

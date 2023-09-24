@@ -15,7 +15,6 @@ bootJar {
 dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
-
     api(project(":dashboard:jt-dashboard-server-spring-boot-starter"))
 
     api("org.springframework.boot:spring-boot-starter-webflux")

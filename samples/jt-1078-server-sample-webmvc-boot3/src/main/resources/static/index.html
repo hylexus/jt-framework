@@ -1,0 +1,523 @@
+<!doctype html>
+
+<html lang="zh">
+<head>
+    <title>1078</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-row :gutter="10">
+        <el-col :span="16">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>播放器: 本示例仅仅支持 `WebSocket/Http` 协议</span>
+                </div>
+                <div>
+                    <el-form size="mini" inline>
+                        <el-form-item label="SIM" size="mini">
+                            <el-input v-model="sim"/>
+                        </el-form-item>
+                        <el-form-item label="自动下发0x9101消息">
+                            <el-checkbox v-model="autoSend9101Command">是</el-checkbox>
+                        </el-form-item>
+                        <el-form-item label="自动关闭Jt1078Session">
+                            <el-checkbox v-model="autoCloseJt1078SessionOnClientClosed">是</el-checkbox>
+                        </el-form-item>
+                        <br/>
+                        <el-form-item label="视频流协议类型">
+                            <el-radio-group v-model="videoProtocolType" size="mini">
+                                <el-radio-button :label="'ws'">WebSocket</el-radio-button>
+                                <el-radio-button :label="'http'">Http</el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="码流类型">
+                            <el-radio-group v-model="videoStreamType" size="mini">
+                                <el-radio-button :label="0">主码流</el-radio-button>
+                                <el-radio-button :label="1">子码流</el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+                        <br/>
+                        <el-form-item label="808服务IP">
+                            <el-input v-model="jt808ServerIp" size="mini" style="width: 140px"/>
+                        </el-form-item>
+                        <el-form-item label="808服务端口(HTTP)">
+                            <el-input-number v-model="jt808ServerPortHttp" :controls="false" size="mini"
+                                             style="width: 80px"/>
+                        </el-form-item>
+                        <el-form-item label="1078服务IP">
+                            <el-input type="text" v-model="payload9101.jt1078ServerIp" size="mini" style="width: 140px"/>
+                        </el-form-item>
+                        <el-form-item label="1078服务端口(HTTP)">
+                            <el-input-number v-model="jt1078ServerPortHttp" :controls="false" size="mini"
+                                             style="width: 80px"/>
+                        </el-form-item>
+                        <br/>
+                        <el-form-item label="VideoUrl" size="mini">
+                            <el-input v-model="videoUrl" type="textarea" autosize disabled
+                                      style="width: 860px;font-size: 16px"/>
+                        </el-form-item>
+                        <br/>
+                        <el-button type="primary" size="mini" @click="play">播放 / 重新初始化播放器</el-button>
+                    </el-form>
+                    <video id="videoElement" width="640" height="480" controls autoplay
+                           style="border: 3px solid #26cfee"></video>
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="8">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>0x9101(音视频实时传输请求)</span>
+                </div>
+                <el-form size="mini" :inline="true" label-width="180px">
+                    <el-form-item label="SIM">
+                        <el-input type="text" v-model="sim" disabled/>
+                    </el-form-item>
+                    <el-form-item label="1078服务IP">
+                        <el-input type="text" v-model="payload9101.jt1078ServerIp" disabled/>
+                    </el-form-item>
+                    <el-form-item label="1078服务端口(TCP)">
+                        <el-input-number :controls="false" v-model="payload9101.jt1078ServerPortTcp"/>
+                    </el-form-item>
+                    <el-form-item label="1078服务端口(UDP)">
+                        <el-input-number :controls="false" v-model="payload9101.jt1078ServerPortUdp"/>
+                    </el-form-item>
+                    <el-form-item label="逻辑通道号">
+                        <el-select v-model="payload9101.channelNumber"
+                                   clearable
+                                   allow-create
+                                   filterable
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in formConfig.channelTypes"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="数据类型">
+                        <el-select v-model="payload9101.dataType"
+                                   clearable
+                                   allow-create
+                                   filterable
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in formConfig.dataType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="码流类型">
+                        <el-radio-group v-model="videoStreamType" size="mini" disabled>
+                            <el-radio-button :label="0">主码流</el-radio-button>
+                            <el-radio-button :label="1">子码流</el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                    <div>
+                        {{ response9101 }}
+                    </div>
+                    <el-form-item>
+                        <el-button type="primary" :disabled="autoSend9101Command === true" @click="sendMsg9101">
+                            下发指令
+                        </el-button>
+                    </el-form-item>
+
+                </el-form>
+            </el-card>
+
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>0x9102(音视频实时传输控制)</span>
+                </div>
+                <el-form size="mini" :inline="true" label-width="180px" label-position="right">
+                    <el-form-item label="SIM">
+                        <el-input v-model="sim" disabled/>
+                    </el-form-item>
+                    <el-form-item label="逻辑通道号">
+                        <el-select v-model="payload9102.channelNumber"
+                                   clearable
+                                   allow-create
+                                   filterable
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in formConfig.channelTypes"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="控制指令">
+                        <el-select v-model="payload9102.command"
+                                   clearable
+                                   allow-create
+                                   filterable
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in formConfig.commandType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="关闭音视频类型">
+                        <el-select v-model="payload9102.mediaTypeToClose"
+                                   clearable
+                                   allow-create
+                                   filterable
+                                   placeholder="请选择">
+                            <el-option
+                                    v-for="item in formConfig.mediaTypeToClose"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="切换码流类型">
+                        <el-radio-group v-model="videoStreamType" size="mini" disabled>
+                            <el-radio-button :label="0">主码流</el-radio-button>
+                            <el-radio-button :label="1">子码流</el-radio-button>
+                        </el-radio-group>
+                    </el-form-item>
+                    <div>
+                        {{ response9102 }}
+                    </div>
+                    <el-form-item>
+                        <el-button type="primary" @click="sendMsg9102">下发指令</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Terminal List（808Session）</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt808TerminalListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt808Terminals">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt808TerminalList" border
+                        style="width: 100%">
+                    <el-table-column
+                            prop="terminalId"
+                            label="terminalId"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="version"
+                            label="version"
+                            width="100px"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="lastCommunicationTime"
+                            label="lastCommunicationTime"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="latestGeo"
+                            label="latestGeo"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Terminal List（1078Session）</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt1078TerminalListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt1078Terminals">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt1078TerminalList" border
+                        style="width: 100%">
+                    <el-table-column prop="id" label="id"></el-table-column>
+                    <el-table-column prop="sim" label="sim"></el-table-column>
+                    <el-table-column prop="channelNumber" label="channelNumber"></el-table-column>
+                    <el-table-column prop="createdAt" label="createdAt"></el-table-column>
+                    <el-table-column prop="lastCommunicateTime" label="lastCommunicateTime">
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="24">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Subscriber List (1078)</span>
+                    <el-form inline size="mini" style="float: right;">
+                        <el-form-item label="">
+                            <el-input v-model="jt1078SubscriberListUrl" size="mini" style="width: 300px" disabled/>
+                        </el-form-item>
+                        <el-button type="primary" size="mini" @click="loadJt1078Subscribers">刷新</el-button>
+                    </el-form>
+                </div>
+                <el-table
+                        :data="jt1078SubscriberList" border
+                        style="width: 100%">
+                    <el-table-column prop="id" label="id" width="410px"></el-table-column>
+                    <el-table-column prop="sim" label="sim"></el-table-column>
+                    <el-table-column prop="channel" label="channel"></el-table-column>
+                    <el-table-column prop="createdAt" label="createdAt"></el-table-column>
+                    <el-table-column prop="desc" label="desc"></el-table-column>
+
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+
+</div>
+
+</body>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.js"></script>
+<script src="./js/mpegts.js"></script>
+
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            player: undefined,
+            playing: false,
+            //
+            sim: "018300440002",
+            autoSend9101Command: true,
+            autoCloseJt1078SessionOnClientClosed: true,
+            videoProtocolType: "ws",
+            // 码流类型
+            videoStreamType: 0,
+            jt808ServerIp: "1.1.1.1",
+            jt808ServerPortHttp: 808,
+            jt1078ServerPortHttp: 1078,
+            jt808TerminalList: [],
+            jt1078TerminalList: [],
+            jt1078SubscriberList: [],
+            payload9101: {
+                // sim: this.sim
+                // streamType: this.videoStreamType
+                jt1078ServerIp: "1.1.1.1",
+                jt1078ServerPortTcp: 61078,
+                jt1078ServerPortUdp: 0,
+                channelNumber: 2,
+                dataType: 0,
+            },
+            response9101: "",
+            payload9102: {
+                // sim: this.sim
+                // streamType: this.videoStreamType
+                channelNumber: 3,
+                command: 0,
+                mediaTypeToClose: 0,
+            },
+            response9102: "",
+            formConfig: {
+                dataType: [
+                    {value: 0, label: "0--音视频"},
+                    {value: 1, label: "1--视频"},
+                    {value: 2, label: "2--双向对讲"},
+                    {value: 3, label: "3--监听"},
+                    {value: 4, label: "4--中心广播"},
+                    {value: 5, label: "5--透传"},
+                ],
+                commandType: [
+                    {value: 0, label: "0--关闭音视频传输指令"},
+                    {value: 1, label: "1--切换码流"},
+                    {value: 2, label: "2--暂停该通道所有流的发送"},
+                    {value: 3, label: "3--回复暂停前流的发送,与暂停前的流类型一致"},
+                    {value: 4, label: "4--关闭双向对讲"},
+                ],
+                mediaTypeToClose: [
+                    {value: 0, label: "0--关闭该通道有关的音视频数据"},
+                    {value: 1, label: "1--只关闭该通道有关的音频,保留该通道有关的视频"},
+                    {value: 2, label: "2--只关闭该通道有关的视频,保留该通道有关的音频"},
+                ],
+                channelTypes: [
+                    {value: 1, label: "通道1--驾驶员--音视频/视频"},
+                    {value: 2, label: "通道2--车辆正前方--音视频/视频"},
+                    {value: 3, label: "通道3--车前门--音视频/视频"},
+                    {value: 4, label: "通道4--车厢前部--音视频/视频"},
+                    {value: 5, label: "通道5--车厢后部--音视频/视频"},
+                    {value: 6, label: "通道6--车后门--音视频/视频"},
+                    {value: 7, label: "通道7--行李舱--音视频/视频"},
+                    {value: 8, label: "通道8--车辆左侧--音视频/视频"},
+                    {value: 9, label: "通道9--车辆右侧--音视频/视频"},
+                    {value: 10, label: "通道10--车辆正后方--音视频/视频"},
+                    {value: 11, label: "通道11--车厢中部--音视频/视频"},
+                    {value: 12, label: "通道12--车中部--音视频/视频"},
+                    {value: 13, label: "通道13--驾驶席车门--音视频/视频"},
+                    {value: 33, label: "通道33--驾驶员--音频"},
+                    {value: 36, label: "通道36--车厢前部--音频"},
+                    {value: 37, label: "通道37--车厢后部--音频"},
+                ],
+            },
+        },
+        created: function () {
+            this.jt1078ServerPortHttp = window.location.port
+            this.loadJt1078Terminals()
+            this.loadJt808Terminals()
+            this.loadJt1078Subscribers()
+        },
+        computed: {
+            videoUrl: function () {
+                return this.constructUrl()
+            },
+            jt808TerminalListUrl: function () {
+                return "http://" + this.jt808ServerIp + ":" + this.jt808ServerPortHttp + "/808/terminal/list"
+            },
+            jt1078TerminalListUrl: function () {
+                return "http://" + this.payload9101.jt1078ServerIp + ":" + this.jt1078ServerPortHttp + "/jt1078/session/list"
+            },
+            jt1078SubscriberListUrl: function () {
+                return "http://" + this.payload9101.jt1078ServerIp + ":" + this.jt1078ServerPortHttp + "/jt1078/subscriber/list"
+            },
+        },
+        methods: {
+            play: function () {
+                this.recreatePlayer()
+                this.player.play();
+                this.playing = true
+            },
+            constructUrl: function () {
+                const url = this.videoProtocolType
+                    + "://"
+                    + this.payload9101.jt1078ServerIp
+                    + ":"
+                    + this.jt1078ServerPortHttp
+                    + "/jt1078/subscription/"
+                    + (this.videoProtocolType === 'ws' ? 'websocket' : 'http')
+                    + "/flv/"
+                    + this.sim
+                    + "/" + this.payload9101.channelNumber
+                    + "?timeout=10000&autoSend9101Command=" + this.autoSend9101Command
+                    + "&autoCloseJt1078SessionOnClientClosed=" + this.autoCloseJt1078SessionOnClientClosed
+
+                if (this.autoSend9101Command === true) {
+                    return url
+                        + "&jt808ServerIp=" + this.jt808ServerIp
+                        + "&jt808ServerPortHttp=" + this.jt808ServerPortHttp
+                        + "&jt1078ServerIp=" + this.payload9101.jt1078ServerIp
+                        + "&jt1078ServerPortTcp=" + this.payload9101.jt1078ServerPortTcp
+                        + "&jt1078ServerPortUdp=" + this.payload9101.jt1078ServerPortUdp
+                        + "&dataType=" + this.payload9101.dataType
+                        + "&streamType=" + this.videoStreamType
+                }
+                return url
+            },
+            recreatePlayer: function () {
+                const element = document.getElementById('videoElement');
+                if (this.player != null) {
+                    this.player.unload();
+                    this.player.detachMediaElement();
+                    this.player.destroy();
+                }
+                const url = this.constructUrl()
+                this.player = mpegts.createPlayer({
+                    isLive: true,
+                    type: 'flv',
+                    url: url,
+                    enableWorker: true,
+                    enableStashBuffer: false,
+                    stashInitialSize: 128    // 减少首桢显示等待时长
+                });
+                this.player.attachMediaElement(element);
+                this.player.load();
+            },
+            sendMsg9101: function () {
+                const context = this
+                context.response9101 = "..."
+                const url = '/proxy/1078/send-msg/9101?host=' + this.jt808ServerIp + '&port=' + this.jt808ServerPortHttp;
+                axios.post(url, {sim: this.sim, streamType: this.videoStreamType, ...context.payload9101})
+                    .then(response => {
+                        console.log(response)
+                        context.response9101 = response.data
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            sendMsg9102: function () {
+                const context = this
+                context.response9102 = "..."
+                const url = '/proxy/1078/send-msg/9102?host=' + this.jt808ServerIp + '&port=' + this.jt808ServerPortHttp;
+                axios.post(url, {sim: this.sim, streamType: this.videoStreamType, ...context.payload9102})
+                    .then(response => {
+                        console.log(response)
+                        context.response9102 = response.data
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            loadJt808Terminals: function () {
+                const context = this
+                axios.get('/proxy/808/terminal/list?host=' + this.jt808ServerIp + '&port=' + this.jt808ServerPortHttp)
+                    .then(response => {
+                        if (response.data && response.data.code === 0) {
+                            context.jt808TerminalList = response.data.data.records
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            loadJt1078Terminals: function () {
+                const context = this
+                axios.get('/jt1078/session/list?pageSize=10')
+                    .then(response => {
+                        if (response.data && response.data.code === 0) {
+                            context.jt1078TerminalList = response.data.data
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+            loadJt1078Subscribers: function () {
+                const context = this
+                axios.get('/jt1078/subscriber/list?pageSize=10')
+                    .then(response => {
+                        if (response.data && response.data.code === 0) {
+                            context.jt1078SubscriberList = response.data.data
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            },
+
+        },
+        watch: {}
+    })
+</script>
+<style type="text/css">
+    .my-box {
+        margin-bottom: 10px;
+    }
+</style>
+</html>

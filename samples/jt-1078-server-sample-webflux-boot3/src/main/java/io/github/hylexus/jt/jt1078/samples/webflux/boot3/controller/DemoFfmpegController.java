@@ -11,6 +11,7 @@ import io.github.hylexus.jt.utils.HexStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class DemoFfmpegController {
                     log.error("Session Destroy... subscribe complete");
                 })
                 .onErrorComplete(Jt1078SessionDestroyException.class)
+                .publishOn(Schedulers.newBoundedElastic(2, 128, "demo"))
                 // 仅仅过滤出 h264 数据
                 .filter(it -> it.header().payloadType() == DefaultJt1078PayloadType.H264)
                 // 当有数据到来时发送给 ffmpeg

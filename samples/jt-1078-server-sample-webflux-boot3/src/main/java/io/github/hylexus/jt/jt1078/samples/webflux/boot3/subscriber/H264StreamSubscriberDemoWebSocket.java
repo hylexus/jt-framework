@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.MyJt1078SessionCloseReason;
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.WebSocketUtils;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
@@ -44,7 +45,7 @@ public class H264StreamSubscriberDemoWebSocket implements WebSocketHandler {
     @Override
     public Mono<Void> handle(@NonNull WebSocketSession session) {
 
-        final DemoVideoStreamSubscriberDto params = DemoVideoStreamSubscriberDto.of(session, this.uriTemplate);
+        final DemoVideoStreamSubscriberDto params = WebSocketUtils.createForReactiveSession(session, this.uriTemplate);
         log.info("New H.264(RAW) publisher created via WebSocket: {}", params);
 
         final Mono<Void> input = session.receive()

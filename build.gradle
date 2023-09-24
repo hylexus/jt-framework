@@ -20,7 +20,9 @@ ext {
             "jt-dashboard-client",
             "jt-dashboard-client-spring-boot-starter",
             "jt-demo-808-server-webflux-boot3",
+            "jt-demo-808-server-webmvc-boot3",
             "jt-demo-1078-server-webflux-boot3",
+            "jt-demo-1078-server-webmvc-boot3",
             "jt-demo-dashboard-webflux-boot3",
             "jt-demo-dashboard-webmvc-boot3",
     ]

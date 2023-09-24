@@ -6,6 +6,86 @@
 </head>
 <body>
 <div id="app">
+    <el-row :gutter="24">
+        <el-col>
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Session 列表</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadSessionList">刷新</el-button>
+                </div>
+                <el-table
+                        :data="sessionList"
+                        border>
+                    <el-table-column
+                            fixed
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="id"
+                            width="500">
+                    </el-table-column>
+                    <el-table-column
+                            prop="sim"
+                            label="sim"
+                            min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="lastCommunicateTime"
+                            label="lastCommunicateTime"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row :gutter="24">
+        <el-col>
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Subscriber 列表</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadSubscriberList">刷新</el-button>
+                </div>
+                <el-table
+                        :data="subscriberList"
+                        border>
+                    <el-table-column
+                            fixed
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="id"
+                            width="450">
+                    </el-table-column>
+                    <el-table-column
+                            prop="sim"
+                            label="sim"
+                            min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="channel"
+                            label="channel"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="createdAt"
+                            label="createdAt"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="desc"
+                            label="desc"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
     <el-row>
         <el-col :span="24">
             <el-card class="box-card my-box">
@@ -39,8 +119,7 @@
                 </div>
                 <el-table
                         :data="tableData"
-                        border
-                        style="width: 100%">
+                        border>
                     <el-table-column
                             fixed
                             type="index"
@@ -125,52 +204,7 @@
             </el-card>
         </el-col>
     </el-row>
-    <el-row :gutter="24">
-        <el-col>
-            <el-card class="box-card my-box">
-                <div slot="header" class="clearfix">
-                    <span>Subscriber 列表</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadSubscriberList">刷新</el-button>
-                </div>
-                <el-table
-                        :data="subscriberList"
-                        border
-                        style="width: 100%">
-                    <el-table-column
-                            fixed
-                            type="index"
-                            width="50">
-                    </el-table-column>
-                    <el-table-column
-                            fixed
-                            prop="id"
-                            label="id"
-                            width="450">
-                    </el-table-column>
-                    <el-table-column
-                            prop="sim"
-                            label="sim"
-                            min-width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="channel"
-                            label="channel"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="createdAt"
-                            label="createdAt"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                            prop="desc"
-                            label="desc"
-                    >
-                    </el-table-column>
-                </el-table>
-            </el-card>
-        </el-col>
-    </el-row>
+
 </div>
 </body>
 <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
@@ -188,6 +222,7 @@
                 },
                 tableData: [],
                 subscriberList: [],
+                sessionList: [],
                 tmp: {
                     consoleOutput: '',
                     eventSource: undefined,
@@ -197,6 +232,7 @@
             }
         },
         created: function () {
+            this.reloadSessionList()
             this.reloadProcessList()
             this.reloadSubscriberList()
         },
@@ -278,6 +314,17 @@
                     .then(function (response) {
                         console.log(response)
                         context.subscriberList = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            reloadSessionList: function () {
+                const context = this
+                axios.get('/jt1078/session/list')
+                    .then(function (response) {
+                        console.log(response)
+                        context.sessionList = response.data
                     })
                     .catch(function (error) {
                         console.log(error);

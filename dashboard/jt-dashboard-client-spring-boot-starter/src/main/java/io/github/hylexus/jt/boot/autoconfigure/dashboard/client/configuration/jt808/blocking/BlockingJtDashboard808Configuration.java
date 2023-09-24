@@ -2,9 +2,13 @@ package io.github.hylexus.jt.boot.autoconfigure.dashboard.client.configuration.j
 
 import io.github.hylexus.jt.boot.autoconfigure.dashboard.client.configuration.props.JtApplicationProps;
 import io.github.hylexus.jt.boot.autoconfigure.dashboard.client.impl.factory.Jt808ApplicationFactory;
+import io.github.hylexus.jt.dashboard.client.controller.jt808.blocking.BuiltinBlockingJt1078CommandController;
+import io.github.hylexus.jt.dashboard.client.controller.jt808.reactive.BuiltinReactiveJt1078CommandController;
 import io.github.hylexus.jt.dashboard.client.registration.JtApplicationRegistrator;
 import io.github.hylexus.jt.dashboard.client.registration.impl.client.Jt808BlockingJtApplicationClient;
 import io.github.hylexus.jt.dashboard.client.registration.impl.registrator.DefaultJtApplicationRegistrator;
+import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -20,5 +24,10 @@ public class BlockingJtDashboard808Configuration {
                 jtApplicationProps.getJt808().getServerUrl(),
                 jtApplicationProps.getJt808().isRegisterOnce()
         );
+    }
+
+    @Bean
+    public BuiltinBlockingJt1078CommandController builtinJt1078CommandController(Jt808CommandSender commandSender, Jt808SessionManager sessionManager) {
+        return new BuiltinBlockingJt1078CommandController(commandSender, sessionManager);
     }
 }
