@@ -8,7 +8,7 @@ spring:
 jt-dashboard:
   server:
     static-application-registrator:
-      enabled: true
+      enabled: false
       jt1078-applications:
         - name: ${spring.application.name}
           base-url: http://node2:1078
@@ -23,3 +23,7 @@ jt-dashboard:
           base-url: http://node2:808
           metadata:
             notes: 808-server(static)
+logging:
+  level:
+    root: info
+    io.github.hylexus.jt.dashboard.server.registry: debug

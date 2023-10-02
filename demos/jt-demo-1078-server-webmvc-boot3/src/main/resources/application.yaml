@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: jt-demo-1078-server-webmvc-boot3

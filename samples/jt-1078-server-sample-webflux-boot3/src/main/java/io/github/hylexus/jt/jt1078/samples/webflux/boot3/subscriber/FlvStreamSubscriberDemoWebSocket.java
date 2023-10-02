@@ -1,13 +1,14 @@
 package io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber;
 
+import io.github.hylexus.jt.core.model.value.DefaultRespCode;
+import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.MyJt1078SessionCloseReason;
+import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.WebSocketUtils;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
-import io.github.hylexus.jt.core.model.value.DefaultRespCode;
-import io.github.hylexus.jt.core.model.value.Resp;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.samples.common.converter.DemoModelConverter;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
@@ -48,7 +49,7 @@ public class FlvStreamSubscriberDemoWebSocket implements WebSocketHandler {
     @Override
     public Mono<Void> handle(@NonNull WebSocketSession session) {
 
-        final DemoVideoStreamSubscriberDto params = DemoVideoStreamSubscriberDto.of(session, this.uriTemplate);
+        final DemoVideoStreamSubscriberDto params = WebSocketUtils.createForReactiveSession(session, this.uriTemplate);
         log.info("New FLV publisher created via WebSocket: {}", params);
 
         // websocket inbound

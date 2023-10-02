@@ -10,4 +10,5 @@ dependencies {
     compileOnly(project(":jt-1078-server-support"))
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-starter-webflux")
+    compileOnly("org.springframework.boot:spring-boot-starter-websocket")
 }

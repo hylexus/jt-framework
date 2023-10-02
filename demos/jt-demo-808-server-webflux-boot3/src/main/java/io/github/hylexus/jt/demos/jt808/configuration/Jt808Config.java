@@ -17,7 +17,7 @@ public class Jt808Config {
         CLIENT_REGISTER(0x0100, "终端注册"),
         CLIENT_AUTH(0x0102, "终端鉴权"),
         // ...
-        // TODO 这里补充其他类型
+        // TODO 这里扩展其他类型
         ;
 
         private final int msgId;
