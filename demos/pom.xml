@@ -15,7 +15,9 @@
 
     <modules>
         <module>jt-demo-808-server-webflux-boot3</module>
+        <module>jt-demo-808-server-webmvc-boot3</module>
         <module>jt-demo-1078-server-webflux-boot3</module>
+        <module>jt-demo-1078-server-webmvc-boot3</module>
         <module>jt-demo-dashboard-webflux-boot3</module>
         <module>jt-demo-dashboard-webmvc-boot3</module>
     </modules>

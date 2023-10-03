@@ -37,12 +37,20 @@
             <artifactId>jt-1078-server-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.github.hylexus.jt</groupId>
+            <artifactId>jt-sample-common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

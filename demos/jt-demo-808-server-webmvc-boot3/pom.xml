@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.hylexus.jt</groupId>
-        <artifactId>jt-dashboard</artifactId>
+        <artifactId>jt-demos</artifactId>
         <version>2.2.0-beta2</version>
     </parent>
-    <artifactId>jt-dashboard-client-spring-boot-starter</artifactId>
+    <artifactId>jt-demo-808-server-webmvc-boot3</artifactId>
     <packaging>jar</packaging>
-    <name>jt-dashboard-client-spring-boot-starter</name>
+    <name>jt-demo-808-server-webmvc-boot3</name>
 
     <properties>
     </properties>
@@ -33,44 +33,26 @@
         </dependency>
 
         <dependency>
-            <artifactId>spring-boot-starter</artifactId>
-            <groupId>org.springframework.boot</groupId>
-        </dependency>
-
-        <dependency>
             <groupId>io.github.hylexus.jt</groupId>
-            <artifactId>jt-core</artifactId>
+            <artifactId>jt-808-server-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>io.github.hylexus.jt</groupId>
-            <artifactId>jt-dashboard-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.github.hylexus.jt</groupId>
-            <artifactId>jt-808-server-support</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.hylexus.jt</groupId>
-            <artifactId>jt-1078-server-support</artifactId>
-            <scope>provided</scope>
+            <artifactId>jt-dashboard-client-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <scope>provided</scope>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-            <scope>provided</scope>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -85,8 +67,9 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${maximumSpringBootBomVersion}</version>
             </plugin>
         </plugins>
     </build>
