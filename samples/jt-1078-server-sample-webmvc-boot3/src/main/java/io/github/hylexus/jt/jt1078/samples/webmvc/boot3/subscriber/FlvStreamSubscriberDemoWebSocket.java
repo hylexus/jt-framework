@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 
 @Slf4j
 public class FlvStreamSubscriberDemoWebSocket extends AbstractWebSocketHandler {
-    public static final String PATH_PATTERN = "/jt1078/subscription/flv/{sim}/{channel}";
+    public static final String PATH_PATTERN = "/jt1078/subscription/websocket/flv/{sim}/{channel}";
     private final Map<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
     private final UriTemplate uriTemplate;
     private final Jt1078Publisher publisher;
