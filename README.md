@@ -78,22 +78,6 @@ Jt-808协议服务端。
       ├── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
       └── jt-sample-common                    # samples 项目共同的依赖 (jdk11+)
 
-.
-├── build-script    # gradle用到的构建脚本和checkstyle配置
-├── docs            # 文档 (vue-press)
-├── gradle
-├── jt-808-server-spring-boot-starter       # spring-boot-v3 自动配置 (jdk17+)
-├── jt-808-server-spring-boot-starter-boot2 # spring-boot-v2 自动配置 (jdk11+)
-├── jt-808-server-support                   # jt-808的实现
-├── jt-core                                 # 一些公共类(后期可能改名为 jt-common)
-├── jt-spring                               # 和 spring 集成相关的类(2.x不再依赖,后期可能删除)
-└── samples         # 示例项目
-    ├── jt-808-server-sample-bare           # 几乎零配置的示例(spring-boot-2.x)
-    ├── jt-808-server-sample-bare-boot3     # 几乎零配置的示例(spring-boot-3.x)
-    ├── jt-808-server-sample-annotation     # 注解相关的示例(spring-boot-2.x)
-    ├── jt-808-server-sample-customized     # 定制化示例(spring-boot-2.x)
-    ├── jt-808-client-sample-debug          # 开发时用来Debug的项目,请忽略
-    └── jt-808-server-sample-debug          # 开发时用来Debug的项目,请忽略
 ```
 
 ## Docs

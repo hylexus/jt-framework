@@ -1,3 +1,15 @@
+## 2.1.3
+
+### 🐞 Bug Fixes
+
+- `BuiltinCommonHandler.processTerminalHeartBeatMsg` 应该回复 `0x8001` 消息，而不是不回复消息
+
+## 2.1.2
+
+### ⭐ New Features
+
+- 参见 [#78](https://github.com/hylexus/jt-framework/issues/78)
+
 ## 2.1.1
 
 ### ⭐ New Features
@@ -239,7 +251,8 @@ jt808:
 
 新增配置项：
 
-- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的 三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。
+- `jt808.server.idle-state-handler` : 对应 `io.netty.handler.timeout.IdleStateHandler` 的
+  三个属性：`readerIdleTime`、 `writerIdleTime` 、`allIdelTime`。
   默认值都是 `20m`;
 - `jt808.protocol.max-frame-length` : 对应 `io.netty.handler.codec.DelimiterBasedFrameDecoder` 的 `maxFrameLength` 属性。
 
