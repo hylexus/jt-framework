@@ -1,9 +1,12 @@
 package io.github.hylexus.jt.jt1078.support.extension.flv.impl;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioFormatConverterJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvEncoder;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvTagHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.Amf;
+import io.github.hylexus.jt.jt1078.support.extension.flv.tag.AudioFlvTag;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.ScriptFlvTag;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.VideoFlvTag;
 import io.github.hylexus.jt.jt1078.support.extension.h264.*;
@@ -24,6 +27,7 @@ import java.util.Optional;
  * @author hylexus
  * @see <a href="https://rtmp.veriskope.com/pdf/video_file_format_spec_v10.pdf">video_file_format_spec_v10.pdf</a>
  * @see <a href="https://www.jianshu.com/p/916899d4833b">30分钟学会FLV</a>
+ * @see <a href="https://www.jianshu.com/p/07657d85617e">FLV视频封装格式详细解析</a>
  * @see <a href="https://www.cnblogs.com/chyingp/p/flv-getting-started.html">FLV协议5分钟入门浅析</a>
  * @see <a href="https://www.cnblogs.com/CoderTian/p/8278369.html">FLV文件格式解析</a>
  * @see <a href="https://gitee.com/ldming/JT1078">https://gitee.com/ldming/JT1078</a>
@@ -47,9 +51,21 @@ public class DefaultFlvEncoder implements FlvEncoder {
     private ByteBuf lastIFrame;
 
     private long baseTimestamp = -1;
+    private long baseAudioTimestamp = -1;
+
+    private final Jt1078AudioFormatConverter jt1078AudioFormatConverter;
+
+    public DefaultFlvEncoder(Jt1078AudioFormatConverter jt1078AudioFormatConverter) {
+        this.jt1078AudioFormatConverter = jt1078AudioFormatConverter;
+    }
 
     @Override
     public List<ByteBuf> encode(Jt1078Request request) {
+        // 音频
+        if (request.header().payloadType().isAudio()) {
+            return this.doEncodeAudio(request);
+        }
+        // 视频
         final List<H264Nalu> h264NaluList;
         try {
             h264NaluList = this.h264Decoder.decode(request);
@@ -63,6 +79,44 @@ public class DefaultFlvEncoder implements FlvEncoder {
             data.ifPresent(list::add);
         }
         return list;
+    }
+
+
+    private List<ByteBuf> doEncodeAudio(Jt1078Request request) {
+        try (final FlvJt1078AudioFormatConverterJt1078AudioData audio = (FlvJt1078AudioFormatConverterJt1078AudioData) jt1078AudioFormatConverter.convert(request.body())) {
+            if (audio.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            return this.doEncodeFlvAudioTag(request, audio);
+        }
+    }
+
+    private List<ByteBuf> doEncodeFlvAudioTag(Jt1078Request request, FlvJt1078AudioFormatConverterJt1078AudioData audio) {
+        final ByteBuf buffer = this.allocator.buffer();
+        try {
+            // 1. tagHeader : 11 bytes
+            final int pts = this.calculateAudioTimestamp(request.header().timestamp().orElse(0L));
+            final int outerHeaderSize = FlvTagHeader.newAudioTagHeader(0, pts).writeTo(buffer);
+
+            // 2.1 tagData[audioTagHeader] : 1 bytes / 2 bytes(AAC)
+            final AudioFlvTag.AudioFlvTagHeader audioTagHeader = audio.flvTagHeader();
+            final int audioHeaderSize = audioTagHeader.writeTo(buffer);
+
+            // 2.2 tagData[audioTagData]
+            buffer.writeBytes(audio.payload());
+
+            // 2.3 给 3 字节的 dataSize 赋值(之前的 0 只是个占位符)
+            final int tagDataSize = audioHeaderSize + audio.payloadSize();
+            buffer.setBytes(1, IntBitOps.intTo3Bytes(tagDataSize));
+
+            // 3. previous tag size: 11 + tagDataSize
+            buffer.writeInt(outerHeaderSize + tagDataSize);
+            return List.of(buffer);
+        } catch (Throwable throwable) {
+            buffer.release();
+            throw throwable;
+        }
     }
 
     private Optional<ByteBuf> doEncode(H264Nalu nalu) {
@@ -149,6 +203,14 @@ public class DefaultFlvEncoder implements FlvEncoder {
         }
 
         return (int) (ts - this.baseTimestamp);
+    }
+
+    private int calculateAudioTimestamp(long ts) {
+        if (this.baseAudioTimestamp < 0) {
+            this.baseAudioTimestamp = ts;
+        }
+
+        return (int) (ts - this.baseAudioTimestamp);
     }
 
     private ByteBuf createFlvBasicFrame() {

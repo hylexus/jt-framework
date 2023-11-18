@@ -131,6 +131,10 @@ public abstract class JtCommonUtils {
         return byteBuf;
     }
 
+    public static byte[] getBytes(ByteBuf byteBuf) {
+        return getBytes(byteBuf, byteBuf.readerIndex(), byteBuf.readableBytes());
+    }
+
     public static byte[] getBytes(ByteBuf byteBuf, int startIndex, int length) {
         final byte[] bytes = new byte[length];
         byteBuf.getBytes(startIndex, bytes, 0, length);
@@ -145,8 +149,8 @@ public abstract class JtCommonUtils {
 
     public static int setBitRange(int from, int length, int target, int offset) {
         return ((~(((1 << length) - 1) << offset)) & target)
-               |
-               (from << offset);
+                |
+                (from << offset);
     }
 
     public static String toBinaryString(int value, int width) {

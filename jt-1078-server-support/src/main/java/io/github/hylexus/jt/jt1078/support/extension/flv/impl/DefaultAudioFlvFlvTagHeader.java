@@ -7,13 +7,16 @@ import java.util.Optional;
 
 public class DefaultAudioFlvFlvTagHeader implements AudioFlvTag.AudioFlvTagHeader, AudioFlvTag.AudioFlvTagHeaderBuilder {
     private AudioFlvTag.AudioSoundFormat soundFormat;
-    private byte soundRate;
+    private AudioFlvTag.AudioSoundRate soundRate;
     private AudioFlvTag.AudioSoundSize soundSize;
     private AudioFlvTag.AudioSoundType soundType;
     private AudioFlvTag.AudioAacPacketType aacPacketType;
 
+    public DefaultAudioFlvFlvTagHeader() {
+    }
+
     public DefaultAudioFlvFlvTagHeader(
-            AudioFlvTag.AudioSoundFormat soundFormat, byte soundRate,
+            AudioFlvTag.AudioSoundFormat soundFormat, AudioFlvTag.AudioSoundRate soundRate,
             AudioFlvTag.AudioSoundSize soundSize, AudioFlvTag.AudioSoundType soundType,
             AudioFlvTag.AudioAacPacketType aacPacketType) {
         this.soundFormat = soundFormat;
@@ -35,12 +38,12 @@ public class DefaultAudioFlvFlvTagHeader implements AudioFlvTag.AudioFlvTagHeade
     }
 
     @Override
-    public byte soundRate() {
+    public AudioFlvTag.AudioSoundRate soundRate() {
         return this.soundRate;
     }
 
     @Override
-    public AudioFlvTag.AudioFlvTagHeaderBuilder soundRate(byte soundRate) {
+    public AudioFlvTag.AudioFlvTagHeaderBuilder soundRate(AudioFlvTag.AudioSoundRate soundRate) {
         this.soundRate = soundRate;
         return this;
     }
@@ -82,7 +85,7 @@ public class DefaultAudioFlvFlvTagHeader implements AudioFlvTag.AudioFlvTagHeade
     public AudioFlvTag.AudioFlvTagHeader build() {
         return new DefaultAudioFlvFlvTagHeader(
                 Assertions.requireNonNull(this.soundFormat, "soundFormat is null"),
-                Assertions.assertThat(this.soundRate, it -> it >= 0 && it <= 3, "soundFormat is invalid"),
+                Assertions.requireNonNull(this.soundRate, "soundFormat is null"),
                 Assertions.requireNonNull(this.soundSize, "soundSize is null"),
                 Assertions.requireNonNull(this.soundType, "soundType is null"),
                 this.aacPacketType

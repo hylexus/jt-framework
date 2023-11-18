@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.extension.flv.tag;
 
+import io.github.hylexus.jt.jt1078.support.extension.flv.impl.DefaultAudioFlvFlvTagHeader;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
@@ -35,7 +36,7 @@ public interface AudioFlvTag {
          *
          * @return 采样率
          */
-        byte soundRate();
+        AudioSoundRate soundRate();
 
         /**
          * bit[1]
@@ -61,18 +62,23 @@ public interface AudioFlvTag {
          */
         AudioSoundType soundType();
 
+        /**
+         * 只有 AAC 格式才有该字段
+         */
         Optional<AudioAacPacketType> aacPacketType();
 
-        default void writeTo(ByteBuf byteBuf) {
-            final int v = (this.soundType().getValue() & 0b0001)
-                    | (this.soundSize().getValue() & 0b0010)
-                    | (this.soundRate() & 0b1100)
-                    | (this.soundFormat().getValue() & 0b11110000);
+        default int writeTo(ByteBuf byteBuf) {
+            final int writerIndex = byteBuf.writerIndex();
+            final int v = (this.soundType().getValue() & 0b1)
+                    | ((this.soundSize().getValue() & 0b1) << 1)
+                    | ((this.soundRate().getValue() & 0b11) << 2)
+                    | (this.soundFormat().getValue() << 4);
 
             byteBuf.writeByte(v);
 
             // 只有 H.264 才有该属性
             this.aacPacketType().ifPresent(t -> byteBuf.writeByte(t.getValue()));
+            return byteBuf.writerIndex() - writerIndex;
         }
     }
 
@@ -89,8 +95,8 @@ public interface AudioFlvTag {
 
     @Getter
     enum AudioSoundSize {
-        BIT_8((byte) 0),
-        BIT_16((byte) 1);
+        SND_BIT_8((byte) 0),
+        SND_BIT_16((byte) 1);
         private final byte value;
 
         AudioSoundSize(byte value) {
@@ -99,9 +105,38 @@ public interface AudioFlvTag {
     }
 
     @Getter
+    enum AudioSoundRate {
+        // 5.5-kHz
+        RATE_5_5_KHZ((byte) 0),
+        // 11-kHz
+        RATE_11_KHZ((byte) 1),
+        // 22-kHz
+        RATE_22_KHZ((byte) 2),
+        // 44-kHz
+        RATE_44_KHZ((byte) 3),
+        ;
+        private final byte value;
+
+        AudioSoundRate(byte value) {
+            this.value = value;
+        }
+    }
+
+    @Getter
     enum AudioSoundFormat {
+        LINEAR_PCM_PLATFORM_ENDIAN((byte) 0),
+        ADPCM((byte) 1),
         MP3((byte) 2),
+        LINEAR_PCM_LITTLE_ENDIAN((byte) 3),
+        NELLYMOSER_16_KHZ_MONO((byte) 4),
+        NELLYMOSER_8_KHZ_MONO((byte) 5),
+        NELLYMOSER_6((byte) 6),
+        G_711_A_LAW_LOGARITHMIC_PCM((byte) 7),
+        G_711_MU_LAW_LOGARITHMIC_PCM((byte) 8),
         AAC((byte) 10),
+        SPEEX((byte) 11),
+        MP3_8_KHZ((byte) 14),
+        DEVICE_SPECIFIC_SOUND((byte) 15),
         // TODO 补充其他格式
         ;
         private final byte value;
@@ -128,7 +163,7 @@ public interface AudioFlvTag {
     interface AudioFlvTagHeaderBuilder {
         AudioFlvTagHeaderBuilder soundFormat(AudioSoundFormat soundFormat);
 
-        AudioFlvTagHeaderBuilder soundRate(byte soundRate);
+        AudioFlvTagHeaderBuilder soundRate(AudioSoundRate soundRate);
 
         AudioFlvTagHeaderBuilder soundSize(AudioSoundSize soundSize);
 
@@ -137,5 +172,9 @@ public interface AudioFlvTag {
         AudioFlvTagHeaderBuilder aacPacketType(AudioAacPacketType aacPacketType);
 
         AudioFlvTagHeader build();
+    }
+
+    static AudioFlvTagHeaderBuilder newTagHeaderBuilder() {
+        return new DefaultAudioFlvFlvTagHeader();
     }
 }
