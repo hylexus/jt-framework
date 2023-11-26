@@ -1,6 +1,6 @@
-sample:
+local-debug:
   flv-to-file:
-    parent-dir: /Users/hylexus/tmp/jtt/flv/
+    parent-dir: /tmp/jtt/flv/
 
 server:
   port: 1078

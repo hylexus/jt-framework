@@ -7,7 +7,6 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.ByteArrayJt1078Subscription;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078SubscriptionType;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.AdpcmImaToPcmJt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.impl.DefaultFlvEncoder;
 import io.github.hylexus.jt.utils.ByteBufUtils;
@@ -27,13 +26,17 @@ import java.util.concurrent.ThreadFactory;
 public class H264ToFlvJt1078ChannelCollector
         extends AbstractAsyncChannelCollector<ByteArrayJt1078Subscription, H264ToFlvSubscriber> {
 
-    static final Set<Jt1078PayloadType> SUPPORTED_PAYLOAD_TYPES = Set.of(DefaultJt1078PayloadType.H264, DefaultJt1078PayloadType.ADPCMA);
+    static final Set<Jt1078PayloadType> SUPPORTED_PAYLOAD_TYPES = Set.of(
+            DefaultJt1078PayloadType.H264,
+            DefaultJt1078PayloadType.ADPCMA,
+            DefaultJt1078PayloadType.G_726
+    );
     private final DefaultFlvEncoder flvEncoder;
     private static final Map<Jt1078PayloadType, Boolean> WARNING_FLAGS = new HashMap<>();
 
-    public H264ToFlvJt1078ChannelCollector(ThreadFactory threadFactory, AdpcmImaToPcmJt1078AudioFormatConverter audioFormatConverter) {
+    public H264ToFlvJt1078ChannelCollector(ThreadFactory threadFactory) {
         super(threadFactory);
-        this.flvEncoder = new DefaultFlvEncoder(audioFormatConverter);
+        this.flvEncoder = new DefaultFlvEncoder();
     }
 
     private boolean isSupported(Jt1078PayloadType payloadType) {
@@ -77,6 +80,12 @@ public class H264ToFlvJt1078ChannelCollector
                         }
                     }
 
+                    if (!subscriber.isLastIFrameSent()) {
+                        return;
+                    }
+                    if (!subscriber.isFlvHeaderSent()) {
+                        return;
+                    }
                     // 3. data
                     sink.next(subscription);
                 }
@@ -97,6 +106,21 @@ public class H264ToFlvJt1078ChannelCollector
         if (flag == null || !flag) {
             WARNING_FLAGS.put(payloadType, true);
             log.error("Unsupported payloadType : {}. sim = {}, channelNumber = {}, dataType = {}, request = {}", payloadType, request.sim(), request.channelNumber(), request.header().dataType(), request);
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            super.close();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
+        try {
+            this.flvEncoder.close();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
     }
 

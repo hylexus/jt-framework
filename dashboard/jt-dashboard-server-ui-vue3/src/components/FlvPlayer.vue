@@ -130,13 +130,15 @@ const initPlayer = async () => {
     {
       isLive: true,
       type: 'flv',
-      url: remoteUrl.value
+      url: remoteUrl.value,
+      hasAudio: true,
+      hasVideo: props.config.type === 1,
       // enableWorker: true,
       // enableStashBuffer: false,
       // stashInitialSize: 128
     },
     {
-      enableWorker: true
+      enableWorker: false
     }
   )
   if (video.value !== undefined) {

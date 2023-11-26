@@ -9,11 +9,10 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Getter
+@Setter
 public class H264ToFlvSubscriber extends DefaultByteArraySubscriber {
 
-    @Setter
     private boolean flvHeaderSent;
-    @Setter
     private boolean lastIFrameSent;
 
     public H264ToFlvSubscriber(String id, String sim, short channel, String desc, LocalDateTime createdAt, Map<String, Object> metadata, FluxSink<ByteArrayJt1078Subscription> sink) {

@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN" "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
-
+    <!-- 排除对 io/github/hylexus/jt/jt1078/support/extension/audio/impl/converters/g7xx 的代码风格检测(这里的代码是从 C 源码复制过来的) -->
+    <suppress files="[/\\]io/github/hylexus/jt/jt1078/support/extension/audio/impl/converters/g7xx[/\\]" checks=".*"/>
 </suppressions>

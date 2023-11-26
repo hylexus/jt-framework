@@ -14,13 +14,13 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 @Builder
-public class FlvJt1078AudioFormatConverterJt1078AudioData implements Jt1078AudioFormatConverter.Jt1078AudioData {
+public class FlvJt1078AudioData implements Jt1078AudioFormatConverter.Jt1078AudioData {
 
     private final ByteBuf payload;
     private final int payloadSize;
     private final AudioFlvTag.AudioFlvTagHeader flvTagHeader;
 
-    public FlvJt1078AudioFormatConverterJt1078AudioData(ByteBuf payload, int payloadSize, AudioFlvTag.AudioFlvTagHeader flvTagHeader) {
+    public FlvJt1078AudioData(ByteBuf payload, int payloadSize, AudioFlvTag.AudioFlvTagHeader flvTagHeader) {
         this.payload = payload;
         this.payloadSize = payloadSize;
         this.flvTagHeader = flvTagHeader;

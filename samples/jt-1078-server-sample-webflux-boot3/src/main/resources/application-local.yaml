@@ -1,5 +1,7 @@
-sample:
-  flv-to-file:
+local-debug:
+  raw-data-dump-to-file:
+    parent-dir: /tmp/jtt/dump/
+  flv-data-dump-to-file:
     parent-dir: /tmp/jtt/flv/
 
 server:

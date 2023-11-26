@@ -9,4 +9,6 @@ public interface FlvEncoder {
 
     List<ByteBuf> encode(Jt1078Request request);
 
+    default void close() {
+    }
 }

@@ -25,7 +25,7 @@ public class FlvToFileSubscriber implements InitializingBean {
     private final OutputStream outputStream1;
     private final OutputStream outputStream2;
 
-    public FlvToFileSubscriber(Jt1078Publisher publisher, @Value("${sample.flv-to-file.parent-dir}") String baseDir) {
+    public FlvToFileSubscriber(Jt1078Publisher publisher, @Value("${local-debug.flv-to-file.parent-dir}") String baseDir) {
         this.publisher = publisher;
         try {
             this.outputStream1 = new FileOutputStream(baseDir + "/1.flv");

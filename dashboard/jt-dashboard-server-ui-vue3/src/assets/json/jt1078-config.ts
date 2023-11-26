@@ -6,17 +6,17 @@ export const channelConfig = [
   { channel: 3, location: '车前门', type: 1, title: '通道3--车前门--音视频/视频' },
   { channel: 4, location: '车厢前部', type: 1, title: '通道4--车厢前部--音视频/视频' },
   { channel: 5, location: '车厢后部', type: 1, title: '通道5--车厢后部--音视频/视频' },
-  { channel: 6, location: '车后门', type: 1, title: '通道6--车后门--音视频/视频' }
-  // {channel: 7, location: '行李舱', type: 1, title: '通道7--行李舱--音视频/视频'},
-  // {channel: 8, location: '车辆左侧', type: 1, title: '通道8--车辆左侧--音视频/视频'},
-  // {channel: 9, location: '车辆右侧', type: 1, title: '通道9--车辆右侧--音视频/视频'},
-  // {channel: 10, location: '车辆正后方', type: 1, title: '通道10--车辆正后方--音视频/视频'},
-  // {channel: 11, location: '车厢中部', type: 1, title: '通道11--车厢中部--音视频/视频'},
-  // {channel: 12, location: '车中部', type: 1, title: '通道12--车中部--音视频/视频'},
-  // {channel: 13, location: '驾驶席车门', type: 1, title: '通道13--驾驶席车门--音视频/视频'},
-  // {channel: 33, location: '驾驶员', type: 2, title: '通道33--驾驶员--音频'},
-  // {channel: 36, location: '车厢前部', type: 2, title: '通道36--车厢前部--音频'},
-  // {channel: 37, location: '车厢后部', type: 2, title: '通道37--车厢后部--音频'},
+  { channel: 6, location: '车后门', type: 1, title: '通道6--车后门--音视频/视频' },
+  { channel: 7, location: '行李舱', type: 1, title: '通道7--行李舱--音视频/视频'},
+  { channel: 8, location: '车辆左侧', type: 1, title: '通道8--车辆左侧--音视频/视频'},
+  { channel: 9, location: '车辆右侧', type: 1, title: '通道9--车辆右侧--音视频/视频'},
+  { channel: 10, location: '车辆正后方', type: 1, title: '通道10--车辆正后方--音视频/视频'},
+  { channel: 11, location: '车厢中部', type: 1, title: '通道11--车厢中部--音视频/视频'},
+  { channel: 12, location: '车中部', type: 1, title: '通道12--车中部--音视频/视频'},
+  { channel: 13, location: '驾驶席车门', type: 1, title: '通道13--驾驶席车门--音视频/视频'},
+  { channel: 33, location: '驾驶员', type: 2, title: '通道33--驾驶员--音频'},
+  { channel: 36, location: '车厢前部', type: 2, title: '通道36--车厢前部--音频'},
+  { channel: 37, location: '车厢后部', type: 2, title: '通道37--车厢后部--音频'},
 ]
 
 const dataType = [

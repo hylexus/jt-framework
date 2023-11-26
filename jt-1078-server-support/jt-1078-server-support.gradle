@@ -16,6 +16,7 @@ dependencies {
     api("com.github.ben-manes.caffeine:caffeine") {
         exclude(group: "com.google.errorprone", module: "error_prone_annotations")
     }
+    api("de.sciss:jump3r:1.0.5")
 
     compileOnly "org.springframework.boot:spring-boot-starter-logging"
     compileOnly("com.google.code.findbugs:jsr305")

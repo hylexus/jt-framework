@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt1078.spec.impl.subscription;
 import io.github.hylexus.jt.jt1078.spec.*;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SubscriberCloseException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import java.util.stream.Stream;
  * @author hylexus
  * @see Jt1078ChannelCollector
  */
+@Slf4j
 public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
 
     private final ReentrantReadWriteLock.ReadLock readLock;
@@ -92,7 +94,13 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
                 if (predicate.test(entry)) {
                     iterator.remove();
                     entry.getValue().values().forEach(col -> {
-                        col.unsubscribe(reason);
+                        try {
+                            col.unsubscribe(reason);
+                        } catch (Throwable e) {
+                            log.error(e.getMessage(), e);
+                        } finally {
+                            col.close();
+                        }
                     });
                 }
             }

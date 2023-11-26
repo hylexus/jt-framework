@@ -1,8 +1,13 @@
 package io.github.hylexus.jt.jt1078.support.extension.flv.impl;
 
+import io.github.hylexus.jt.exception.JtIllegalStateException;
+import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioFormatConverterJt1078AudioData;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.AdpcmImaToMp3Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G726ToMp3Jt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvEncoder;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvTagHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.Amf;
@@ -53,10 +58,10 @@ public class DefaultFlvEncoder implements FlvEncoder {
     private long baseTimestamp = -1;
     private long baseAudioTimestamp = -1;
 
-    private final Jt1078AudioFormatConverter jt1078AudioFormatConverter;
+    private final AdpcmImaToMp3Jt1078AudioFormatConverter adpcmImaToMp3Converter = new AdpcmImaToMp3Jt1078AudioFormatConverter();
+    private final G726ToMp3Jt1078AudioFormatConverter g726ToMp3Converter = new G726ToMp3Jt1078AudioFormatConverter();
 
-    public DefaultFlvEncoder(Jt1078AudioFormatConverter jt1078AudioFormatConverter) {
-        this.jt1078AudioFormatConverter = jt1078AudioFormatConverter;
+    public DefaultFlvEncoder() {
     }
 
     @Override
@@ -64,6 +69,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
         // 音频
         if (request.header().payloadType().isAudio()) {
             return this.doEncodeAudio(request);
+            // return Collections.emptyList();
         }
         // 视频
         final List<H264Nalu> h264NaluList;
@@ -83,16 +89,50 @@ public class DefaultFlvEncoder implements FlvEncoder {
 
 
     private List<ByteBuf> doEncodeAudio(Jt1078Request request) {
-        try (final FlvJt1078AudioFormatConverterJt1078AudioData audio = (FlvJt1078AudioFormatConverterJt1078AudioData) jt1078AudioFormatConverter.convert(request.body())) {
+        final Jt1078AudioFormatConverter converter = this.getAudioConverter(request.header().payloadType());
+        if (converter == null) {
+            return Collections.emptyList();
+        }
+
+        try (final Jt1078AudioFormatConverter.Jt1078AudioData audio = converter.convert(beforeConvert(request.body()))) {
             if (audio.isEmpty()) {
                 return Collections.emptyList();
             }
 
-            return this.doEncodeFlvAudioTag(request, audio);
+            if (audio instanceof FlvJt1078AudioData) {
+                return this.doEncodeFlvAudioTag(request, (FlvJt1078AudioData) audio);
+            } else {
+                throw new JtIllegalStateException("Unsupported AudioType " + audio.getClass());
+            }
         }
     }
 
-    private List<ByteBuf> doEncodeFlvAudioTag(Jt1078Request request, FlvJt1078AudioFormatConverterJt1078AudioData audio) {
+    protected ByteBuf beforeConvert(ByteBuf stream) {
+        // 参考: https://www.hentai.org.cn/article?id=8
+        // 参考: https://www.hentai.org.cn/article?id=8
+        // 参考: https://www.hentai.org.cn/article?id=8
+        // 音频数据体通常会带上"海思"头，它的形式如 00 01 XX 00
+        // XX表示后续字节数的一半，如果碰到符合这个规则的前四个字节，直接去掉就可以了
+        if (stream.getByte(0) == 0
+                && stream.getByte(1) == 1
+                && stream.getByte(2) == (stream.readableBytes() - 4) >>> 1
+                && stream.getByte(3) == 0) {
+            stream.readerIndex(stream.readerIndex() + 4);
+        }
+        return stream;
+    }
+
+    private Jt1078AudioFormatConverter getAudioConverter(Jt1078PayloadType payloadType) {
+        if (payloadType == DefaultJt1078PayloadType.ADPCMA) {
+            return this.adpcmImaToMp3Converter;
+        } else if (payloadType == DefaultJt1078PayloadType.G_726) {
+            return this.g726ToMp3Converter;
+        } else {
+            return null;
+        }
+    }
+
+    private List<ByteBuf> doEncodeFlvAudioTag(Jt1078Request request, FlvJt1078AudioData audio) {
         final ByteBuf buffer = this.allocator.buffer();
         try {
             // 1. tagHeader : 11 bytes
@@ -260,5 +300,20 @@ public class DefaultFlvEncoder implements FlvEncoder {
         buffer.setBytes(writerIndex + 1, IntBitOps.intTo3Bytes(tagDataSize));
         // 3. previous tag size: 11 + tagDataSize
         buffer.writeInt(outerHeaderSize + tagDataSize);
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.g726ToMp3Converter.close();
+        } catch (Exception ignore) {
+            // ignore
+        }
+
+        try {
+            this.adpcmImaToMp3Converter.close();
+        } catch (Exception ignore) {
+            // ignore
+        }
     }
 }

@@ -1,12 +1,15 @@
 package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioFormatConverterJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.AudioFlvTag;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.annotation.Nonnull;
 
 /**
  * IMA(Interactive Multimedia Association) ADPCM 解码算法实现。
@@ -29,6 +32,7 @@ import lombok.ToString;
  * @see <a href="https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf">https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf</a>
  * @see <a href="https://www.hentai.org.cn/article?id=8">https://www.hentai.org.cn/article?id=8</a>
  */
+@Slf4j
 public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioFormatConverter {
     private static final int[] IMA_INDEX_TABLE = {
             -1, -1, -1, -1, 2, 4, 6, 8,
@@ -54,18 +58,12 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
      * @param stream ADPCM(IMA)
      * @return PCM
      */
+    @Nonnull
     @Override
     public Jt1078AudioData convert(ByteBuf stream) {
-        // 参考: https://www.hentai.org.cn/article?id=8
-        // 参考: https://www.hentai.org.cn/article?id=8
-        // 参考: https://www.hentai.org.cn/article?id=8
-        // 音频数据体通常会带上"海思"头，它的形式如00 01 XX 00
-        // XX表示后续字节数的一半，如果碰到符合这个规则的前四个字节，直接去掉就可以了
-        if (stream.getByte(0) == 0
-                && stream.getByte(1) == 1
-                && stream.getByte(2) == (stream.readableBytes() - 4) / 2
-                && stream.getByte(3) == 0) {
-            stream.readerIndex(stream.readerIndex() + 4);
+        if (isEmptyStream(stream)) {
+            log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
+            return Jt1078AudioData.empty();
         }
 
         final AdpcmImaBlockStatus status = this.readPreamble(stream);
@@ -91,7 +89,7 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
                 .soundType(AudioFlvTag.AudioSoundType.MONO)
                 .aacPacketType(null).build();
 
-        return FlvJt1078AudioFormatConverterJt1078AudioData.builder()
+        return FlvJt1078AudioData.builder()
                 .payload(buffer)
                 .payloadSize(buffer.readableBytes())
                 .flvTagHeader(flvTagHeader)
@@ -195,19 +193,36 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
         byte index = status.stepIndex;
         final int step = IMA_STEP_TABLE[index];
         int diffq = step >> 3;
-        if ((code & 4) > 0) diffq += step;
-        if ((code & 2) > 0) diffq += step >> 1;
-        if ((code & 1) > 0) diffq += step >> 2;
+        if ((code & 4) > 0) {
+            diffq += step;
+        }
+        if ((code & 2) > 0) {
+            diffq += step >> 1;
+        }
+        if ((code & 1) > 0) {
+            diffq += step >> 2;
+        }
 
-        if ((code & 8) > 0) predSample -= diffq;
-        else predSample += diffq;
+        if ((code & 8) > 0) {
+            predSample -= diffq;
+        } else {
+            predSample += diffq;
+        }
 
-        if (predSample > 32767) predSample = 32767;
-        if (predSample < -32768) predSample = -32768;
+        if (predSample > 32767) {
+            predSample = 32767;
+        }
+        if (predSample < -32768) {
+            predSample = -32768;
+        }
 
         index += (byte) IMA_INDEX_TABLE[code];
-        if (index < 0) index = 0;
-        if (index > 88) index = 88;
+        if (index < 0) {
+            index = 0;
+        }
+        if (index > 88) {
+            index = 88;
+        }
         status.predictor = (short) predSample;
         status.stepIndex = index;
         return status.predictor;
