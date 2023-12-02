@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.extension.flv.impl;
 
+import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
@@ -182,7 +183,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
         }
 
         if (this.ppsFrame != null && this.spsFrame != null && this.flvBasicFrame == null) {
-            this.flvBasicFrame = this.createFlvBasicFrame();
+            this.flvBasicFrame = this.createFlvBasicFrame(nalu.timestamp().orElse(0L));
         }
 
         if (this.flvBasicFrame == null) {
@@ -253,12 +254,14 @@ public class DefaultFlvEncoder implements FlvEncoder {
         return (int) (ts - this.baseAudioTimestamp);
     }
 
-    private ByteBuf createFlvBasicFrame() {
+    private ByteBuf createFlvBasicFrame(long ts) {
         final Sps sps = this.spsDecoder.decodeSps(this.spsFrame);
         final ByteBuf buffer = this.allocator.buffer();
         this.flvBasicFrame = buffer;
         this.writeScriptTag(buffer, sps);
         this.writeFirstVideoTag(buffer, sps);
+        this.baseAudioTimestamp = ts;
+        this.baseTimestamp = ts;
         return buffer;
     }
 
@@ -315,5 +318,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
         } catch (Exception ignore) {
             // ignore
         }
+
+        JtCommonUtils.release(this.flvBasicFrame, this.spsFrame, this.ppsFrame, this.lastIFrame);
     }
 }

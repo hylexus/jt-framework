@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber;
+package io.github.hylexus.jt.demos.jt1078.mvc;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt.common.JtCommonUtils;
@@ -23,8 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber.LocalDebugSessionEventListener.close;
-import static io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber.LocalDebugSessionEventListener.writeInternal;
+import static io.github.hylexus.jt.demos.jt1078.mvc.LocalDebugFlvSubscriber.writeInternal;
 
 
 /**
@@ -37,12 +36,12 @@ import static io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber.Local
 @Slf4j
 @Component
 @DebugOnly
-public class LocalDebugJt1078RequestLifecycleListener
+public class LocalDebugRawDataCollector
         implements Jt1078RequestLifecycleListener, Jt1078SessionEventListener, DisposableBean {
 
     private final String targetDir;
 
-    public LocalDebugJt1078RequestLifecycleListener(@Value("${local-debug.raw-data-dump-to-file.parent-dir}") String targetDir) {
+    public LocalDebugRawDataCollector(@Value("${local-debug.raw-data-dump-to-file.parent-dir}") String targetDir) {
         this.targetDir = targetDir;
     }
 
@@ -78,7 +77,7 @@ public class LocalDebugJt1078RequestLifecycleListener
 
         final OutputStream outputStream = this.registry.get(key);
         if (outputStream != null) {
-            close(outputStream);
+            JtCommonUtils.close(outputStream);
         }
 
         this.registry.put(key, this.createNewOutputStream(key));
@@ -93,7 +92,7 @@ public class LocalDebugJt1078RequestLifecycleListener
     }
 
     private OutputStream createNewOutputStream(String key) {
-        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) + ".dat";
+        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
         final File file = new File(fileName);
         try {
             file.getParentFile().mkdirs();
@@ -106,7 +105,7 @@ public class LocalDebugJt1078RequestLifecycleListener
     @Override
     public void destroy() throws Exception {
         this.registry.forEach((k, v) -> {
-            LocalDebugSessionEventListener.close(v);
+            JtCommonUtils.close(v);
         });
     }
 }

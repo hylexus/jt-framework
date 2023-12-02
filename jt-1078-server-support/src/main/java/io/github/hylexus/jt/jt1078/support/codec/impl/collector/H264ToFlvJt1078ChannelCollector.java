@@ -80,9 +80,11 @@ public class H264ToFlvJt1078ChannelCollector
                         }
                     }
 
+                    // 确保先把 关键帧 发送出去(中途订阅)
                     if (!subscriber.isLastIFrameSent()) {
                         return;
                     }
+                    // 确保先把 flvHeader 发送出去(中途订阅)
                     if (!subscriber.isFlvHeaderSent()) {
                         return;
                     }

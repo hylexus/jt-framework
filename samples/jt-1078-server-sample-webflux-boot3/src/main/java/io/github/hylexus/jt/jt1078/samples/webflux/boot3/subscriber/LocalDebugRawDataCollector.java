@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.demos.jt1078.mvc;
+package io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber;
 
 import io.github.hylexus.jt.annotation.DebugOnly;
 import io.github.hylexus.jt.common.JtCommonUtils;
@@ -11,6 +11,7 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -22,8 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.hylexus.jt.demos.jt1078.mvc.LocalDebugSessionEventListener.close;
-import static io.github.hylexus.jt.demos.jt1078.mvc.LocalDebugSessionEventListener.writeInternal;
+import static io.github.hylexus.jt.jt1078.samples.webflux.boot3.subscriber.LocalDebugFlvSubscriber.writeInternal;
 
 
 /**
@@ -34,14 +34,14 @@ import static io.github.hylexus.jt.demos.jt1078.mvc.LocalDebugSessionEventListen
  * 用来收集设备数据--裸流(仅仅用于测试)
  */
 @Slf4j
-// @Component
+@Component
 @DebugOnly
-public class LocalDebugJt1078RequestLifecycleListener
+public class LocalDebugRawDataCollector
         implements Jt1078RequestLifecycleListener, Jt1078SessionEventListener, DisposableBean {
 
     private final String targetDir;
 
-    public LocalDebugJt1078RequestLifecycleListener(@Value("${local-debug.raw-data-dump-to-file.parent-dir}") String targetDir) {
+    public LocalDebugRawDataCollector(@Value("${local-debug.raw-data-dump-to-file.parent-dir}") String targetDir) {
         this.targetDir = targetDir;
     }
 
@@ -77,7 +77,7 @@ public class LocalDebugJt1078RequestLifecycleListener
 
         final OutputStream outputStream = this.registry.get(key);
         if (outputStream != null) {
-            close(outputStream);
+            JtCommonUtils.close(outputStream);
         }
 
         this.registry.put(key, this.createNewOutputStream(key));
@@ -92,7 +92,7 @@ public class LocalDebugJt1078RequestLifecycleListener
     }
 
     private OutputStream createNewOutputStream(String key) {
-        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(LocalDateTime.now())) + ".dat";
+        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
         final File file = new File(fileName);
         try {
             file.getParentFile().mkdirs();
@@ -105,7 +105,7 @@ public class LocalDebugJt1078RequestLifecycleListener
     @Override
     public void destroy() throws Exception {
         this.registry.forEach((k, v) -> {
-            close(v);
+            JtCommonUtils.close(v);
         });
     }
 }
