@@ -42,5 +42,5 @@ public class DashboardCommand9102Dto {
      */
     private Integer streamType;
 
-    private Duration timeout = Duration.ofSeconds(3);
+    private Duration timeout = Duration.ofSeconds(10);
 }

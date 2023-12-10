@@ -80,7 +80,7 @@ public class LocalDebugRawDataCollector
             JtCommonUtils.close(outputStream);
         }
 
-        this.registry.put(key, this.createNewOutputStream(key));
+        this.registry.put(key, this.createNewOutputStream(session.sim(), key));
     }
 
     String key(Jt1078Session session) {
@@ -91,8 +91,8 @@ public class LocalDebugRawDataCollector
         return session.sim() + "-" + session.channelNumber();
     }
 
-    private OutputStream createNewOutputStream(String key) {
-        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
+    private OutputStream createNewOutputStream(String sim, String key) {
+        final String fileName = this.targetDir + File.separator + sim + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
         final File file = new File(fileName);
         try {
             file.getParentFile().mkdirs();

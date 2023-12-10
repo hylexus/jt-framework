@@ -30,5 +30,5 @@ public class StreamAddressDto {
     @NotNull(message = "dataType is null")
     private Integer dataType;
 
-    private Duration timeout = Duration.ofSeconds(3);
+    private Duration timeout = Duration.ofSeconds(10);
 }

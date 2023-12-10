@@ -101,13 +101,13 @@ public class LocalDebugFlvSubscriber implements Jt1078SessionEventListener, Disp
             JtCommonUtils.close(metadata);
         }
 
-        final OutputStream newOutputStream = this.createNewOutputStream(key);
+        final OutputStream newOutputStream = this.createNewOutputStream(session.sim(), key);
         this.registry.put(key, newOutputStream);
         return newOutputStream;
     }
 
-    private OutputStream createNewOutputStream(String key) {
-        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".flv";
+    private OutputStream createNewOutputStream(String sim, String key) {
+        final String fileName = this.targetDir + File.separator + sim + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".flv";
         final File file = new File(fileName);
         try {
             file.getParentFile().mkdirs();

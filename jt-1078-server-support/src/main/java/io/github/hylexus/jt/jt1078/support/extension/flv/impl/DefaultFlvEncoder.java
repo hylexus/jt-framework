@@ -260,8 +260,8 @@ public class DefaultFlvEncoder implements FlvEncoder {
         this.flvBasicFrame = buffer;
         this.writeScriptTag(buffer, sps);
         this.writeFirstVideoTag(buffer, sps);
-        this.baseAudioTimestamp = ts;
-        this.baseTimestamp = ts;
+        // this.baseAudioTimestamp = ts;
+        // this.baseTimestamp = ts;
         return buffer;
     }
 

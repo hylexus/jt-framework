@@ -59,10 +59,10 @@ public class PcmToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConv
                 offset += processed;
                 length = Math.min(buffer.length, pcm.length - offset);
             }
-            processed = this.lameEncoder.encodeFinish(buffer);
-            if (processed > 0) {
-                mp3Stream.writeBytes(buffer, 0, processed);
-            }
+            // processed = this.lameEncoder.encodeFinish(buffer);
+            // if (processed > 0) {
+            //     mp3Stream.writeBytes(buffer, 0, processed);
+            // }
         } catch (Throwable e) {
             JtCommonUtils.release(mp3Stream);
             throw new RuntimeException(e);

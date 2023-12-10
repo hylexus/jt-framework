@@ -23,8 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.hylexus.jt.demos.jt1078.mvc.LocalDebugFlvSubscriber.writeInternal;
-
 
 /**
  * 用来收集设备数据--裸流(仅仅用于测试)
@@ -59,8 +57,8 @@ public class LocalDebugRawDataCollector
                 return true;
             }
             final byte[] bytes = JtCommonUtils.getBytes(rawByteBuf);
-            writeInternal(outputStream, new byte[]{0x30, 0x31, 0x63, 0x64});
-            writeInternal(outputStream, bytes);
+            LocalDebugFlvSubscriber.writeInternal(outputStream, new byte[]{0x30, 0x31, 0x63, 0x64});
+            LocalDebugFlvSubscriber.writeInternal(outputStream, bytes);
             return true;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -80,7 +78,7 @@ public class LocalDebugRawDataCollector
             JtCommonUtils.close(outputStream);
         }
 
-        this.registry.put(key, this.createNewOutputStream(key));
+        this.registry.put(key, this.createNewOutputStream(session.sim(), key));
     }
 
     String key(Jt1078Session session) {
@@ -91,8 +89,8 @@ public class LocalDebugRawDataCollector
         return session.sim() + "-" + session.channelNumber();
     }
 
-    private OutputStream createNewOutputStream(String key) {
-        final String fileName = this.targetDir + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
+    private OutputStream createNewOutputStream(String sim, String key) {
+        final String fileName = this.targetDir + File.separator + sim + File.separator + key + File.separator + (DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now())) + ".dat";
         final File file = new File(fileName);
         try {
             file.getParentFile().mkdirs();
