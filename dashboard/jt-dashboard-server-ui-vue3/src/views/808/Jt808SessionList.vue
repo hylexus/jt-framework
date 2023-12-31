@@ -73,7 +73,7 @@ const sizeChange = (pageSize: number) => {
   <el-card class="box-card terminal-list-box" style="border-radius: 10px">
     <template #header>
       <el-form inline size="small" @submit.prevent>
-        <el-form-item label="终端ID">
+        <el-form-item label="终端ID / SIM">
           <el-input
             v-model="query.terminalId"
             placeholder="terminalId"
@@ -95,7 +95,7 @@ const sizeChange = (pageSize: number) => {
     </template>
     <el-table :data="table.data" border stripe w-full>
       <el-table-column type="index" width="50"> </el-table-column>
-      <el-table-column prop="terminalId" label="终端ID" width="220"> </el-table-column>
+      <el-table-column prop="terminalId" label="终端ID / SIM" width="220"> </el-table-column>
       <el-table-column prop="version" label="协议版本" width="100" filter-placement="bottom-end">
         <template #default="scope">
           <el-tag :type="scope.row.version === '2019' ? '' : 'success'" disable-transitions
@@ -103,6 +103,7 @@ const sizeChange = (pageSize: number) => {
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="createdAt" label="会话建立时间" width="200"> </el-table-column>
       <el-table-column prop="lastCommunicationTime" label="最近一次通信时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">

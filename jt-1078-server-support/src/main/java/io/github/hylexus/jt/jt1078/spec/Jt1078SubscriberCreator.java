@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt1078.spec;
 
+import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -18,4 +19,6 @@ public class Jt1078SubscriberCreator {
     private Duration timeout;
     private String desc;
     private Map<String, Object> metadata;
+
+    Jt1078AudioFormatConverter.AudioFormatOptions sourceAudioOptions;
 }

@@ -4,10 +4,14 @@ import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.AdpcmImaToMp3Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G711aToMp3Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G711uToMp3Jt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G726ToMp3Jt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvEncoder;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvTagHeader;
@@ -23,6 +27,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,8 +66,40 @@ public class DefaultFlvEncoder implements FlvEncoder {
 
     private final AdpcmImaToMp3Jt1078AudioFormatConverter adpcmImaToMp3Converter = new AdpcmImaToMp3Jt1078AudioFormatConverter();
     private final G726ToMp3Jt1078AudioFormatConverter g726ToMp3Converter = new G726ToMp3Jt1078AudioFormatConverter();
+    private final G711aToMp3Jt1078AudioFormatConverter g711aToMp3Converter = new G711aToMp3Jt1078AudioFormatConverter();
+    private final G711uToMp3Jt1078AudioFormatConverter g711uToMp3Converter = new G711uToMp3Jt1078AudioFormatConverter();
 
-    public DefaultFlvEncoder() {
+    private Jt1078AudioFormatConverter.AudioFormatOptions sourceAudioOptions;
+
+
+    private Jt1078AudioFormatConverter audioFormatConverter;
+
+    public DefaultFlvEncoder(Jt1078SubscriberCreator creator) {
+        if (creator.sourceAudioOptions() == null) {
+            return;
+        }
+
+        final Jt1078AudioFormatConverter.AudioFormatOptions sourceOptions = creator.sourceAudioOptions();
+        if (sourceOptions instanceof BuiltinAudioFormatOptions) {
+            final BuiltinAudioFormatOptions type = ((BuiltinAudioFormatOptions) sourceOptions);
+            if (type.isG726()) {
+                this.sourceAudioOptions = sourceOptions;
+                this.audioFormatConverter = this.g726ToMp3Converter;
+            } else if (type.isAdpcm()) {
+                this.sourceAudioOptions = sourceOptions;
+                this.audioFormatConverter = this.adpcmImaToMp3Converter;
+            } else if (type.isG711()) {
+                if (type == BuiltinAudioFormatOptions.G711_A_MONO) {
+                    this.sourceAudioOptions = sourceOptions;
+                    this.audioFormatConverter = this.g711aToMp3Converter;
+                } else if (type == BuiltinAudioFormatOptions.G711_U_MONO) {
+                    this.sourceAudioOptions = sourceOptions;
+                    this.audioFormatConverter = this.g711uToMp3Converter;
+                }
+            }
+        } else {
+            throw new NotImplementedException();
+        }
     }
 
     @Override
@@ -88,14 +125,23 @@ public class DefaultFlvEncoder implements FlvEncoder {
         return list;
     }
 
-
-    private List<ByteBuf> doEncodeAudio(Jt1078Request request) {
-        final Jt1078AudioFormatConverter converter = this.getAudioConverter(request.header().payloadType());
-        if (converter == null) {
-            return Collections.emptyList();
+    Jt1078AudioFormatConverter.Jt1078AudioData convertAudio(Jt1078Request request) {
+        // todo 优化代码
+        final ByteBuf mayBeChanged = beforeConvert(request.body());
+        if (this.audioFormatConverter != null) {
+            return this.audioFormatConverter.convert(beforeConvert(mayBeChanged), this.sourceAudioOptions);
         }
 
-        try (final Jt1078AudioFormatConverter.Jt1078AudioData audio = converter.convert(beforeConvert(request.body()))) {
+        final Jt1078PayloadType payloadType = request.header().payloadType();
+        final Jt1078AudioFormatConverter converter = this.initDefaultAudioConverter(payloadType);
+        if (converter == null) {
+            return Jt1078AudioFormatConverter.Jt1078AudioData.empty();
+        }
+        return converter.convert(mayBeChanged, this.sourceAudioOptions);
+    }
+
+    private List<ByteBuf> doEncodeAudio(Jt1078Request request) {
+        try (final Jt1078AudioFormatConverter.Jt1078AudioData audio = this.convertAudio(request)) {
             if (audio.isEmpty()) {
                 return Collections.emptyList();
             }
@@ -123,12 +169,25 @@ public class DefaultFlvEncoder implements FlvEncoder {
         return stream;
     }
 
-    private Jt1078AudioFormatConverter getAudioConverter(Jt1078PayloadType payloadType) {
+    private Jt1078AudioFormatConverter initDefaultAudioConverter(Jt1078PayloadType payloadType) {
         if (payloadType == DefaultJt1078PayloadType.ADPCMA) {
-            return this.adpcmImaToMp3Converter;
+            this.sourceAudioOptions = BuiltinAudioFormatOptions.ADPCM_IMA_MONO;
+            this.audioFormatConverter = this.adpcmImaToMp3Converter;
+            return this.audioFormatConverter;
         } else if (payloadType == DefaultJt1078PayloadType.G_726) {
-            return this.g726ToMp3Converter;
+            this.sourceAudioOptions = BuiltinAudioFormatOptions.G726_S32_LE_MONO;
+            this.audioFormatConverter = this.g726ToMp3Converter;
+            return this.audioFormatConverter;
+        } else if (payloadType == DefaultJt1078PayloadType.G_711A) {
+            this.sourceAudioOptions = BuiltinAudioFormatOptions.G711_A_MONO;
+            this.audioFormatConverter = this.g711aToMp3Converter;
+            return this.audioFormatConverter;
+        } else if (payloadType == DefaultJt1078PayloadType.G_711U) {
+            this.sourceAudioOptions = BuiltinAudioFormatOptions.G711_U_MONO;
+            this.audioFormatConverter = this.g711uToMp3Converter;
+            return this.audioFormatConverter;
         } else {
+            // TODO 初始化默认的忽略音频的转换器
             return null;
         }
     }

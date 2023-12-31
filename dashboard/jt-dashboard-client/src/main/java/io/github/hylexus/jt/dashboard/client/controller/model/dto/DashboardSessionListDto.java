@@ -8,4 +8,6 @@ import lombok.Setter;
 @Setter
 public class DashboardSessionListDto extends SimplePageableDto {
     private boolean withSubscribers = false;
+    private String sim;
+    private short channelNumber = -1;
 }

@@ -29,14 +29,15 @@ public class H264ToFlvJt1078ChannelCollector
     static final Set<Jt1078PayloadType> SUPPORTED_PAYLOAD_TYPES = Set.of(
             DefaultJt1078PayloadType.H264,
             DefaultJt1078PayloadType.ADPCMA,
-            DefaultJt1078PayloadType.G_726
+            DefaultJt1078PayloadType.G_726,
+            DefaultJt1078PayloadType.G_711A
     );
     private final DefaultFlvEncoder flvEncoder;
     private static final Map<Jt1078PayloadType, Boolean> WARNING_FLAGS = new HashMap<>();
 
-    public H264ToFlvJt1078ChannelCollector(ThreadFactory threadFactory) {
+    public H264ToFlvJt1078ChannelCollector(ThreadFactory threadFactory, Jt1078SubscriberCreator creator) {
         super(threadFactory);
-        this.flvEncoder = new DefaultFlvEncoder();
+        this.flvEncoder = new DefaultFlvEncoder(creator);
     }
 
     private boolean isSupported(Jt1078PayloadType payloadType) {

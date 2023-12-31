@@ -7,20 +7,19 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Nonnull;
 
 @Slf4j
-public class AdpcmImaToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConverter {
-    private final AdpcmImaToPcmJt1078AudioFormatConverter adpcmImaToPcmConverter = new AdpcmImaToPcmJt1078AudioFormatConverter();
+public class G711uToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConverter {
+
+    private final G711uToPcmJt1078AudioFormatConverter g711uToPcmConverter = new G711uToPcmJt1078AudioFormatConverter();
     private final PcmToMp3Jt1078AudioFormatConverter pcmToMp3Converter = new PcmToMp3Jt1078AudioFormatConverter();
 
     @Nonnull
     @Override
     public Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions) {
-
         if (isEmptyStream(stream)) {
             log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
             return Jt1078AudioData.empty();
         }
-
-        try (Jt1078AudioData pcmData = this.adpcmImaToPcmConverter.convert(stream, sourceOptions)) {
+        try (Jt1078AudioData pcmData = this.g711uToPcmConverter.convert(stream, sourceOptions)) {
             return this.pcmToMp3Converter.convert(pcmData.payload(), pcmData.payloadOptions());
         }
     }

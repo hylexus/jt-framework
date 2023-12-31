@@ -163,10 +163,19 @@ public interface AudioFlvTag {
     interface AudioFlvTagHeaderBuilder {
         AudioFlvTagHeaderBuilder soundFormat(AudioSoundFormat soundFormat);
 
+        /**
+         * @param soundRate 采样率
+         */
         AudioFlvTagHeaderBuilder soundRate(AudioSoundRate soundRate);
 
+        /**
+         * @param soundSize 采样精度(位深)
+         */
         AudioFlvTagHeaderBuilder soundSize(AudioSoundSize soundSize);
 
+        /**
+         * @param soundType 声道类型
+         */
         AudioFlvTagHeaderBuilder soundType(AudioSoundType soundType);
 
         AudioFlvTagHeaderBuilder aacPacketType(AudioAacPacketType aacPacketType);

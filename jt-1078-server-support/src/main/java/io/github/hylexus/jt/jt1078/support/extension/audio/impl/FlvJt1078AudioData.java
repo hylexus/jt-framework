@@ -19,11 +19,13 @@ public class FlvJt1078AudioData implements Jt1078AudioFormatConverter.Jt1078Audi
     private final ByteBuf payload;
     private final int payloadSize;
     private final AudioFlvTag.AudioFlvTagHeader flvTagHeader;
+    private final Jt1078AudioFormatConverter.AudioFormatOptions payloadOptions;
 
-    public FlvJt1078AudioData(ByteBuf payload, int payloadSize, AudioFlvTag.AudioFlvTagHeader flvTagHeader) {
+    public FlvJt1078AudioData(ByteBuf payload, int payloadSize, AudioFlvTag.AudioFlvTagHeader flvTagHeader, Jt1078AudioFormatConverter.AudioFormatOptions payloadOptions) {
         this.payload = payload;
         this.payloadSize = payloadSize;
         this.flvTagHeader = flvTagHeader;
+        this.payloadOptions = payloadOptions;
     }
 
     @Override
@@ -33,4 +35,8 @@ public class FlvJt1078AudioData implements Jt1078AudioFormatConverter.Jt1078Audi
         }
     }
 
+    @Override
+    public Jt1078AudioFormatConverter.AudioFormatOptions payloadOptions() {
+        return payloadOptions;
+    }
 }

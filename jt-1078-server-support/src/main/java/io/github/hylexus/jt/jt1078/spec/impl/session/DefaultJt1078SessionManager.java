@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt1078.spec.*;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -162,6 +163,16 @@ public class DefaultJt1078SessionManager implements Jt1078SessionManager {
         this.lock.readLock().lock();
         try {
             return sessionMap.values().size();
+        } finally {
+            this.lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public long count(Predicate<Jt1078Session> filter) {
+        this.lock.readLock().lock();
+        try {
+            return this.sessionMap.values().stream().filter(filter).count();
         } finally {
             this.lock.readLock().unlock();
         }

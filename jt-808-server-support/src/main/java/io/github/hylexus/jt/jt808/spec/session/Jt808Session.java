@@ -57,6 +57,15 @@ public interface Jt808Session extends Jt808FlowIdGenerator {
     Jt808Session lastCommunicateTimestamp(long lastCommunicateTimestamp);
 
     /**
+     * session 创建时间
+     *
+     * @since 2.2.0
+     */
+    default long createdAt() {
+        return 0;
+    }
+
+    /**
      * 给当前会话中存储一些 Key-Value 属性
      *
      * @since 2.0.3

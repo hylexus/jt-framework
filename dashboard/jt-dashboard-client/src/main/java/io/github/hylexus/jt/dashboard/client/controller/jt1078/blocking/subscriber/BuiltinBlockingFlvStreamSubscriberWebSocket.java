@@ -9,6 +9,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt.utils.JtWebUtils;
 import io.github.hylexus.oaks.utils.Numbers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
@@ -21,6 +22,7 @@ import org.springframework.web.util.UriTemplate;
 import reactor.core.scheduler.Scheduler;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
@@ -56,12 +58,18 @@ public class BuiltinBlockingFlvStreamSubscriberWebSocket extends AbstractWebSock
         synchronized (this.sessionMap) {
             sessionMap.put(session.getId(), session);
         }
-
+        final String clientIp = JtWebUtils.getClientIp(session.getHandshakeHeaders()::getFirst)
+                .or(() -> Optional.ofNullable(session.getRemoteAddress()).map(InetSocketAddress::getHostName))
+                .orElse("");
         final Jt1078SubscriberCreator creator = Jt1078SubscriberCreator.builder()
                 .sim(params.getSim())
                 .channelNumber(params.getChannel())
                 .timeout(Duration.ofSeconds(params.getTimeout()))
-                .metadata(Map.of("createdBy", this.getClass().getSimpleName(), "clientUri", Optional.ofNullable(session.getUri()).map(URI::toString).orElse("")))
+                .metadata(Map.of(
+                        "createdBy", this.getClass().getSimpleName(),
+                        "clientIp", clientIp,
+                        "clientUri", Optional.ofNullable(session.getUri()).map(URI::toString).orElse(""))
+                )
                 .build();
         this.jt1078Publisher.subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, creator)
                 .publishOn(this.scheduler)

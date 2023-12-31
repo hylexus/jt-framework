@@ -15,6 +15,7 @@ dependencies {
     api("com.google.guava:guava") {
         exclude(group: "org.checkerframework", module: "checker-qual")
     }
+    api 'org.apache.commons:commons-lang3'
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

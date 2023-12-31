@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.spec.impl.subscription.ByteArrayJt1078Subscription;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.FormatUtils;
+import io.github.hylexus.jt.utils.JtWebUtils;
 import io.github.hylexus.jt808.samples.common.converter.DemoModelConverter;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
 import io.github.hylexus.jt808.samples.common.dto.DemoVideoStreamSubscriberDto;
@@ -21,8 +22,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 @Slf4j
@@ -48,7 +51,7 @@ public class FlvStreamSubscriberDemoHttp {
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_OCTET_STREAM);
         // exchange.getResponse().getHeaders().setContentType(MediaType.valueOf("video/x-flv"));
 
-        final Flux<byte[]> flvStream = subscribeFlvStream(params);
+        final Flux<byte[]> flvStream = subscribeFlvStream(params, exchange);
 
         final Flux<byte[]> output = send9101CommandIfNecessary(flvStream, params);
 
@@ -78,7 +81,11 @@ public class FlvStreamSubscriberDemoHttp {
                 });
     }
 
-    private Flux<byte[]> subscribeFlvStream(DemoVideoStreamSubscriberDto params) {
+    private Flux<byte[]> subscribeFlvStream(DemoVideoStreamSubscriberDto params, ServerWebExchange exchange) {
+        final String clientIp = JtWebUtils.getClientIp(name -> exchange.getRequest().getHeaders().getFirst(name))
+                .or(() -> Optional.ofNullable(exchange.getRequest().getRemoteAddress()).map(InetSocketAddress::getHostName))
+                .orElse("");
+
         final int timeout = params.getTimeout();
         return this.publisher.subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.getSim(), params.getChannel(), Duration.ofSeconds(timeout))
                 .publishOn(WebSocketConfig.SCHEDULER)

@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,6 +27,7 @@ public class DefaultJt808Session implements Jt808Session {
     public DefaultJt808Session(Jt808FlowIdGenerator delegateFlowIdGenerator) {
         this.delegateFlowIdGenerator = delegateFlowIdGenerator;
         this.attributes = new ConcurrentHashMap<>();
+        this.createdAt = new Date().getTime();
     }
 
     @Getter
@@ -43,6 +45,10 @@ public class DefaultJt808Session implements Jt808Session {
     @Getter
     @Setter
     private long lastCommunicateTimestamp = 0L;
+
+    @Getter
+    @Setter
+    private long createdAt = 0L;
 
     @Getter
     @Setter

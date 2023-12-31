@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -95,6 +96,10 @@ public interface Jt1078SessionManager {
 
     Stream<Jt1078Session> list();
 
-    long count();
+    default long count() {
+        return this.count(session -> true);
+    }
+
+    long count(Predicate<Jt1078Session> filter);
 
 }

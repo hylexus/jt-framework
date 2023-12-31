@@ -1,15 +1,9 @@
 package io.github.hylexus.jt808.samples.common.dto;
 
-import io.github.hylexus.oaks.utils.Numbers;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.util.StringUtils;
-import org.springframework.web.reactive.socket.WebSocketSession;
-import org.springframework.web.util.UriTemplate;
 
-import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,6 +39,8 @@ public class DemoVideoStreamSubscriberDto {
     private int streamType = 0;
     // 音视频
     private int dataType = 0;
+
+    private String sourceAudioHints;
 
     public static boolean parseBoolean(Map<String, String> params, String key, boolean def) {
         return Optional.ofNullable(params.get(key)).map(it -> {

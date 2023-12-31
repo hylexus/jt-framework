@@ -23,22 +23,31 @@ Jt-808协议服务端。
 
 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
 
-| Module                                    | JDK   | spring-boot      | Desc                              |
-|-------------------------------------------|-------|------------------|-----------------------------------|
-| `jt-808-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter |
-| `jt-808-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter |
+| Module                                     | JDK   | spring-boot      | Desc                                       |
+|--------------------------------------------|-------|------------------|--------------------------------------------|
+| `jt-808-server-spring-boot-starter-boot2`  | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter          |
+| `jt-808-server-spring-boot-starter`        | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter          |
+| `jt-1078-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter; `beta版` |
+| `jt-1078-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter; `beta版` |
+| `jt-dashboard-client-spring-boot-starter`  | `17+` | `[3.0.0, ...]`   | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
+| `jt-dashboard-server-spring-boot-starter`  | `17+` | `[3.0.0, ...]`   | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
 
 ## Modules
 
 本项目默认的 **JDK版本** 和 **spring-boot版本** 见下表(有必要的话,根据实际情况自行调整):
 
-| Module                                  | JDK | CompileLevel | .class      | spring-boot |
-|-----------------------------------------|-----|--------------|-------------|-------------|
-| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |
-| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |
-| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |
-| jt-808-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |
-| jt-808-server-core                      | 17  | JDK-11       | 55 (JDK-11) | --          |
+| Module                                   | JDK | CompileLevel | .class      | spring-boot | Desc                                      |
+|------------------------------------------|-----|--------------|-------------|-------------|-------------------------------------------|
+| jt-core                                  | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
+| jt-808-server-spring-boot-starter        | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |                                           |
+| jt-808-server-spring-boot-starter-boot2  | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-808-server-spring-boot-autoconfigure  | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-808-server-support                    | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
+| jt-1078-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |                                           |
+| jt-1078-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-1078-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-1078-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
+| `dashboard/**`                           | 17  | _**JDK-17**_ | 61 (JDK-11) | _**3.1.2**_ | dashboard 模块暂时只支持 `spring-boot-3.x/jdk17` |
 
 - 模块介绍
 
@@ -189,7 +198,7 @@ Maven版示例项目
 - Windows
 
 ```shell script
-./gradlew.bat clean build
+.\gradlew.bat clean build
 ```
 
 ## Reporting Issues

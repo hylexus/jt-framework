@@ -101,8 +101,8 @@ const tableRowClassName = ({ row }: { row: any }) => {
   <el-card class="box-card terminal-list-box" style="border-radius: 10px">
     <template #header>
       <el-form inline size="small" @submit.prevent>
-        <el-form-item label="sim">
-          <el-input v-model="query.sim" placeholder="sim" @keyup.enter="reloadData"></el-input>
+        <el-form-item label="终端ID / SIM">
+          <el-input v-model="query.sim" placeholder="终端ID / SIM" @keyup.enter="reloadData"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="reloadData" :icon="Search">查询</el-button>
@@ -116,10 +116,10 @@ const tableRowClassName = ({ row }: { row: any }) => {
         <template #default="{ row }">
           <el-table :data="row.subscribers" border :row-class-name="tableRowClassName">
             <el-table-column label="订阅时间" prop="createdAt" />
-            <el-table-column label="sim" prop="sim" />
-            <el-table-column label="desc" prop="desc" />
+            <el-table-column label="终端ID / SIM" prop="sim" />
+            <el-table-column label="Desc" prop="desc" />
             <el-table-column
-              label="metadata"
+              label="Metadata"
               :show-overflow-tooltip="{
                 effect: 'light',
                 popperClass: 'tip-content'
@@ -139,7 +139,7 @@ const tableRowClassName = ({ row }: { row: any }) => {
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id" width="180"></el-table-column>
+      <el-table-column prop="id" label="SubscriberId" width="180"></el-table-column>
       <el-table-column prop="lastCommunicateTime" label="最近一次通信时间"></el-table-column>
       <el-table-column prop="channel" label="通道">
         <template #default="{ row }">

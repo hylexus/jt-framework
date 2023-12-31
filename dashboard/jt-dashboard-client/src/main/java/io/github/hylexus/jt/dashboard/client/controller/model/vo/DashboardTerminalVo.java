@@ -16,4 +16,6 @@ public class DashboardTerminalVo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastCommunicationTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdAt;
 }

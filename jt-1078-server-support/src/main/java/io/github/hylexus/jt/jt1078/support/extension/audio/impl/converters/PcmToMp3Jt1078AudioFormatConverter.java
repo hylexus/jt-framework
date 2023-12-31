@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
-import de.sciss.jump3r.mp3.Lame;
 import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
@@ -23,26 +22,40 @@ import javax.sound.sampled.AudioFormat;
 @Slf4j
 public class PcmToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConverter {
 
-    private final LameEncoder lameEncoder;
+    private volatile LameEncoder lameEncoder;
     private final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
-    private final byte[] buffer;
+    private byte[] buffer;
 
     public PcmToMp3Jt1078AudioFormatConverter() {
-        this.lameEncoder = new LameEncoder(
-                new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 8000, 16, 1, 1 * 2, -1, false),
-                256,
-                3,
-                Lame.MEDIUM,
+    }
+
+    private void initLameEncoderIfNecessary(AudioFormatOptions sourceOptions) {
+        if (this.lameEncoder == null) {
+            synchronized (this) {
+                if (this.lameEncoder == null) {
+                    this.lameEncoder = this.createLameEncoder(sourceOptions);
+                    this.buffer = new byte[this.lameEncoder.getPCMBufferSize()];
+                }
+            }
+        }
+    }
+
+    private LameEncoder createLameEncoder(AudioFormatOptions sourceOptions) {
+        final int sourceFrameSize = sourceOptions.bitDepth() / 8 * sourceOptions.channelCount();
+        return new LameEncoder(
+                new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sourceOptions.sampleRate(), sourceOptions.bitDepth(), sourceOptions.channelCount(), sourceFrameSize <= 0 ? -1 : sourceFrameSize, -1, false),
+                sourceOptions.bitRate() / 1000,
+                LameEncoder.CHANNEL_MODE_MONO,
+                LameEncoder.QUALITY_MIDDLE,
                 false);
-        this.buffer = new byte[this.lameEncoder.getPCMBufferSize()];
     }
 
     @Nonnull
     @Override
-    public Jt1078AudioData convert(ByteBuf stream) {
+    public Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions) {
+        this.initLameEncoderIfNecessary(sourceOptions);
 
         if (isEmptyStream(stream)) {
-            log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
             return Jt1078AudioData.empty();
         }
 
@@ -50,13 +63,12 @@ public class PcmToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConv
 
         int offset = 0;
         int length = Math.min(this.lameEncoder.getPCMBufferSize(), pcm.length);
-
         int processed;
         final ByteBuf mp3Stream = this.allocator.buffer();
         try {
             while ((processed = this.lameEncoder.encodeBuffer(pcm, offset, length, buffer)) > 0) {
                 mp3Stream.writeBytes(buffer, 0, processed);
-                offset += processed;
+                offset += length;
                 length = Math.min(buffer.length, pcm.length - offset);
             }
             // processed = this.lameEncoder.encodeFinish(buffer);
@@ -79,6 +91,7 @@ public class PcmToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatConv
                 .payload(mp3Stream)
                 .payloadSize(mp3Stream.readableBytes())
                 .flvTagHeader(flvTagHeader)
+                .payloadOptions(sourceOptions)
                 .build();
     }
 

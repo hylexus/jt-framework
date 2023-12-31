@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.AudioFlvTag;
 import io.netty.buffer.ByteBuf;
@@ -60,7 +61,7 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
      */
     @Nonnull
     @Override
-    public Jt1078AudioData convert(ByteBuf stream) {
+    public Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions) {
         if (isEmptyStream(stream)) {
             log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
             return Jt1078AudioData.empty();
@@ -93,6 +94,7 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
                 .payload(buffer)
                 .payloadSize(buffer.readableBytes())
                 .flvTagHeader(flvTagHeader)
+                .payloadOptions(BuiltinAudioFormatOptions.PCM_S16_LE_MONO)
                 .build();
     }
 

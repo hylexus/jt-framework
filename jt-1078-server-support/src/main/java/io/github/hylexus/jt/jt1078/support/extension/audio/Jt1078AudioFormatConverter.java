@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.support.extension.audio;
 
 import io.github.hylexus.jt.core.ReplaceableComponent;
 import io.netty.buffer.ByteBuf;
+import org.apache.commons.lang3.NotImplementedException;
 
 import javax.annotation.Nonnull;
 
@@ -17,7 +18,7 @@ import javax.annotation.Nonnull;
 public interface Jt1078AudioFormatConverter extends ReplaceableComponent {
 
     @Nonnull
-    Jt1078AudioData convert(ByteBuf stream);
+    Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions);
 
     default void close() {
     }
@@ -30,6 +31,8 @@ public interface Jt1078AudioFormatConverter extends ReplaceableComponent {
         void close();
 
         ByteBuf payload();
+
+        AudioFormatOptions payloadOptions();
 
         default boolean isEmpty() {
             return this.payload() == null || this.payload().readableBytes() <= 0;
@@ -53,10 +56,37 @@ public interface Jt1078AudioFormatConverter extends ReplaceableComponent {
             }
 
             @Override
-            public boolean isEmpty() {
-                return true;
+            public AudioFormatOptions payloadOptions() {
+                throw new UnsupportedOperationException();
             }
         }
     }
+
+    interface AudioFormatOptions {
+
+        default int sampleRate() {
+            throw new NotImplementedException();
+        }
+
+        default int bitDepth() {
+            throw new NotImplementedException();
+        }
+
+        default int channelCount() {
+            throw new NotImplementedException();
+        }
+
+        default int bitCount() {
+            throw new NotImplementedException();
+        }
+
+        default int bitRate() {
+            return sampleRate() * bitDepth() * channelCount();
+            // return sampleRate() * bitCount() * channelCount();
+        }
+
+    }
+
+
 
 }

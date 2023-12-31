@@ -7,8 +7,10 @@ import io.github.hylexus.jt.jt1078.samples.webflux.boot3.common.WebSocketUtils;
 import io.github.hylexus.jt.jt1078.samples.webflux.boot3.config.WebSocketConfig;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Publisher;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
+import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt808.samples.common.converter.DemoModelConverter;
 import io.github.hylexus.jt808.samples.common.dto.Command9101Dto;
@@ -96,8 +98,15 @@ public class FlvStreamSubscriberDemoWebSocket implements WebSocketHandler {
     }
 
     private Mono<Void> subscribeFlv(WebSocketSession session, DemoVideoStreamSubscriberDto params) {
+        final Jt1078SubscriberCreator subscriberCreator = Jt1078SubscriberCreator.builder()
+                .sim(params.getSim())
+                .channelNumber(params.getChannel())
+                .timeout(Duration.ofSeconds(params.getTimeout()))
+                .sourceAudioOptions(BuiltinAudioFormatOptions.parseFrom(params.getSourceAudioHints()).orElse(null))
+                .build();
+
         return this.jt1078Publisher
-                .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, params.getSim(), params.getChannel(), Duration.ofSeconds(params.getTimeout()))
+                .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, subscriberCreator)
                 .publishOn(WebSocketConfig.SCHEDULER)
                 .onErrorComplete(Jt1078SessionDestroyException.class)
                 .onErrorComplete(TimeoutException.class)
@@ -113,7 +122,7 @@ public class FlvStreamSubscriberDemoWebSocket implements WebSocketHandler {
                 .flatMap(subscription -> {
                     final byte[] data = subscription.payload();
 
-                    log.info("FLV WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
+                    log.debug("FLV WebSocket outbound: {}", HexStringUtils.bytes2HexString(data));
 
                     final WebSocketMessage webSocketMessage = session.binaryMessage(factory -> factory.wrap(data));
                     return Mono.just(webSocketMessage);

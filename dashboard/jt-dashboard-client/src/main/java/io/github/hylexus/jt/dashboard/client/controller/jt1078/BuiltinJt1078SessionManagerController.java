@@ -14,9 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.github.hylexus.jt.dashboard.common.consts.DashboardJt1078SessionCloseReason.CLOSED_BY_DASHBOARD_HTTP_API;
@@ -36,9 +38,20 @@ public class BuiltinJt1078SessionManagerController {
     @GetMapping("/sessions")
     // public Resp<PageableVo<Jt1078SessionVo>> sessionList(DashboardSessionListDto pageable) {
     public Resp<Object> sessionList(DashboardSessionListDto pageable) {
-        final long total = this.sessionManager.count();
+
+        Predicate<Jt1078Session> filter = session -> true;
+        if (StringUtils.isNotEmpty(pageable.getSim())) {
+            filter = filter.and(session -> session.sim().contains(pageable.getSim()));
+        }
+
+        if (pageable.getChannelNumber() > 0) {
+            filter = filter.and(session -> session.channelNumber() == pageable.getChannelNumber());
+        }
+
+        final long total = this.sessionManager.count(filter);
         final Set<String> sessionIds = new HashSet<>();
         final List<Jt1078SessionVo> list = this.sessionManager.list()
+                .filter(filter)
                 .sorted(Comparator.comparing(Jt1078Session::sessionId))
                 .skip((long) (pageable.getPage() - 1) * pageable.getPageSize())
                 .limit(pageable.getPageSize())

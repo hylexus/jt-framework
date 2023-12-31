@@ -49,16 +49,16 @@ public class DefaultJt1078Publisher implements Jt1078PublisherInternal {
     public <S extends Jt1078Subscription> Jt1078Subscriber<S> doSubscribe(Class<? extends Jt1078ChannelCollector<S>> cls, Jt1078SubscriberCreator creator) {
         creator.sim(this.terminalIdConverter().convert(creator.sim()));
         final Jt1078Subscriber.SubscriberKey subscriberKey = Jt1078Subscriber.SubscriberKey.of(creator.sim(), creator.channelNumber());
-        final Jt1078ChannelCollector<? extends Jt1078Subscription> channelCollector = this.getOrCreate(subscriberKey, cls);
+        final Jt1078ChannelCollector<? extends Jt1078Subscription> channelCollector = this.getOrCreate(subscriberKey, cls, creator);
         @SuppressWarnings("unchecked") final Jt1078Subscriber<S> subscriber = (Jt1078Subscriber<S>) channelCollector.doSubscribe(creator);
         return subscriber;
     }
 
-    private <S extends Jt1078Subscription> Jt1078ChannelCollector<? extends Jt1078Subscription> getOrCreate(Jt1078Subscriber.SubscriberKey key, Class<? extends Jt1078ChannelCollector<S>> cls) {
+    private <S extends Jt1078Subscription> Jt1078ChannelCollector<? extends Jt1078Subscription> getOrCreate(Jt1078Subscriber.SubscriberKey key, Class<? extends Jt1078ChannelCollector<S>> cls, Jt1078SubscriberCreator creator) {
         this.writeLock.lock();
         try {
             final Map<Class<? extends Jt1078ChannelCollector<? extends Jt1078Subscription>>, Jt1078ChannelCollector<? extends Jt1078Subscription>> map = this.collectors.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
-            return map.computeIfAbsent(cls, k -> collectorFactory.create(cls));
+            return map.computeIfAbsent(cls, k -> collectorFactory.create(cls, creator));
         } finally {
             this.writeLock.unlock();
         }

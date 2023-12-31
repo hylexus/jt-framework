@@ -9,6 +9,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.FormatUtils;
+import io.github.hylexus.jt.utils.JtWebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -16,11 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import reactor.core.scheduler.Scheduler;
-import reactor.netty.http.server.HttpServerRequest;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 @Slf4j
@@ -56,11 +57,19 @@ public class BuiltinBlockingFlvStreamSubscriberHttp {
     private void subscribeFlvStream(DashboardVideoStreamSubscriberDto params, ResponseBodyEmitter sseEmitter, HttpServletRequest request) {
         final int timeout = params.getTimeout();
 
+        final String clientIp = JtWebUtils.getClientIp(request::getHeader)
+                .or(() -> Optional.ofNullable(request.getRemoteHost()))
+                .orElse("");
+
         final Jt1078SubscriberCreator creator = Jt1078SubscriberCreator.builder()
                 .sim(params.getSim())
                 .channelNumber(params.getChannel())
                 .timeout(Duration.ofSeconds(params.getTimeout()))
-                .metadata(Map.of("createdBy", this.getClass().getSimpleName(), "clientUri", request.getRequestURL().toString()))
+                .metadata(Map.of(
+                        "createdBy", this.getClass().getSimpleName(),
+                        "clientIp", clientIp,
+                        "clientUri", request.getRequestURL().toString())
+                )
                 .build();
         this.publisher.subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, creator)
                 .publishOn(this.scheduler)

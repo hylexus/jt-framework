@@ -54,6 +54,7 @@ public class BuiltinJt808TerminalManagerController {
         return new DashboardTerminalVo()
                 .setTerminalId(session.terminalId())
                 .setVersion(session.protocolVersion().getShortDesc())
-                .setLastCommunicationTime(new Date(session.lastCommunicateTimestamp()));
+                .setLastCommunicationTime(new Date(session.lastCommunicateTimestamp()))
+                .setCreatedAt(new Date(session.createdAt()));
     }
 }

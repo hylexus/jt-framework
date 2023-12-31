@@ -2,6 +2,7 @@ package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.g7xx.*;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.AudioFlvTag;
@@ -15,48 +16,60 @@ import static io.github.hylexus.jt.jt1078.support.extension.audio.impl.converter
 
 /**
  * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28">https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28</a>
+ * @see <a href="https://blog.csdn.net/li_wen01/article/details/81141085">https://blog.csdn.net/li_wen01/article/details/81141085</a>
+ * @see <a href="https://datatracker.ietf.org/doc/html/rfc3551#autoid-14">https://datatracker.ietf.org/doc/html/rfc3551#autoid-14</a>
  */
 @Slf4j
 public class G726ToPcmJt1078AudioFormatConverter implements Jt1078AudioFormatConverter {
-
-    // pcm采样率
-    private static final int PCM_SAMPLE = 8000;
-
-    // pcm采样点
-    private static final int PCM_POINT = 320;
-    // 音频通道数
-    private static final int CHANNEL = 1;
 
     private final ByteBufAllocator allocator = ByteBufAllocator.DEFAULT;
 
     @Nonnull
     @Override
-    public Jt1078AudioData convert(ByteBuf stream) {
+    public Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions) {
 
+        // 80/160/240/320/480
         final int readableBytes = stream.readableBytes();
         if (readableBytes <= 0) {
             log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
             return Jt1078AudioData.empty();
         }
 
-        int point = PCM_POINT;
+        final BuiltinAudioFormatOptions builtinAudioFormatOptions = (BuiltinAudioFormatOptions) sourceOptions;
 
-        // 计算G726的码率
-        int rateBit = readableBytes * 8 * PCM_SAMPLE / point;
-
-        int pcmSize = point * CHANNEL * 2;
-        byte[] pcm = new byte[pcmSize];
-
-        final byte[] data = JtCommonUtils.getBytes(stream);
-        final int length = data.length;
-        final G72X g72X = this.getDecoder(rateBit);
-        if (g72X == null) {
-            return Jt1078AudioData.empty();
+        final G72X decoder;
+        final AudioFormatOptions resultOptions;
+        switch (builtinAudioFormatOptions) {
+            case G726_S32_LE_MONO: {
+                decoder = G726_32.getInstance();
+                resultOptions = BuiltinAudioFormatOptions.PCM_S32_LE_MONO;
+                break;
+            }
+            case G726_S16_LE_MONO: {
+                decoder = G726_16.getInstance();
+                resultOptions = BuiltinAudioFormatOptions.PCM_S16_LE_MONO;
+                break;
+            }
+            case G726_S24_LE_MONO: {
+                decoder = G726_24.getInstance();
+                resultOptions = BuiltinAudioFormatOptions.PCM_S24_LE_MONO;
+                break;
+            }
+            case G726_S40_LE_MONO: {
+                decoder = G726_40.getInstance();
+                resultOptions = BuiltinAudioFormatOptions.PCM_S40_LE_MONO;
+                break;
+            }
+            default: {
+                return Jt1078AudioData.empty();
+            }
         }
 
-        final int ret = g72X.decode(data, 0, length, AUDIO_ENCODING_LINEAR, pcm, 0);
+        final byte[] pcm = new byte[builtinAudioFormatOptions.estimateDecodedPcmSize(readableBytes)];
+        final byte[] data = JtCommonUtils.getBytes(stream);
+        final int ret = decoder.decode(data, 0, data.length, AUDIO_ENCODING_LINEAR, pcm, 0);
         if (ret < 0) {
-            log.warn("{} return empty data !!!", g72X.getClass().getSimpleName());
+            log.warn("{} return empty data !!!", decoder.getClass().getSimpleName());
             return Jt1078AudioData.empty();
         }
 
@@ -73,27 +86,8 @@ public class G726ToPcmJt1078AudioFormatConverter implements Jt1078AudioFormatCon
                 .payload(payload)
                 .payloadSize(payload.readableBytes())
                 .flvTagHeader(flvTagHeader)
+                .payloadOptions(resultOptions)
                 .build();
-    }
-
-    private G72X getDecoder(int rateBit) {
-        switch (rateBit) {
-            case 40000: {
-                return G726_40.getInstance();
-            }
-            case 32000: {
-                return G726_32.getInstance();
-            }
-            case 16000: {
-                return G726_16.getInstance();
-            }
-            case 24000: {
-                return G726_24.getInstance();
-            }
-            default: {
-                return null;
-            }
-        }
     }
 
 }

@@ -46,6 +46,7 @@ public class WebSocketUtils {
                 .setJt1078ServerPortUdp(Numbers.parseInteger(params.get("jt1078ServerPortUdp")).orElse(null))
                 .setStreamType(Numbers.parseInteger(params.get("streamType")).orElse(0))
                 .setDataType(Numbers.parseInteger(params.get("dataType")).orElse(0))
+                .setSourceAudioHints(params.get("sourceAudioHints"))
                 ;
     }
 

@@ -10,6 +10,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
 import io.github.hylexus.jt.utils.HexStringUtils;
+import io.github.hylexus.jt.utils.JtWebUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -19,8 +20,10 @@ import org.springframework.web.util.UriTemplate;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
+import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -75,11 +78,19 @@ public class BuiltinFlvStreamSubscriberWebSocket implements WebSocketHandler {
 
     private Mono<Void> subscribeFlv(WebSocketSession session, DashboardVideoStreamSubscriberDto params) {
 
+        final String clientIp = JtWebUtils.getClientIp(session.getHandshakeInfo().getHeaders()::getFirst)
+                .or(() -> Optional.ofNullable(session.getHandshakeInfo().getRemoteAddress()).map(InetSocketAddress::getHostName))
+                .orElse("");
+
         final Jt1078SubscriberCreator creator = Jt1078SubscriberCreator.builder()
                 .sim(params.getSim())
                 .channelNumber(params.getChannel())
                 .timeout(Duration.ofSeconds(params.getTimeout()))
-                .metadata(Map.of("createdBy", this.getClass().getSimpleName(), "clientUri", session.getHandshakeInfo().getUri().toString()))
+                .metadata(Map.of(
+                        "createdBy", this.getClass().getSimpleName(),
+                        "clientIp", clientIp,
+                        "clientUri", session.getHandshakeInfo().getUri().toString())
+                )
                 .build();
         return this.jt1078Publisher
                 .subscribe(Jt1078ChannelCollector.H264_TO_FLV_COLLECTOR, creator)

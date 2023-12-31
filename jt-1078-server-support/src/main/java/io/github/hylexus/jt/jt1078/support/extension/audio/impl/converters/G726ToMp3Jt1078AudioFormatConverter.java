@@ -11,15 +11,18 @@ public class G726ToMp3Jt1078AudioFormatConverter implements Jt1078AudioFormatCon
     private final G726ToPcmJt1078AudioFormatConverter g726ToPcmConverter = new G726ToPcmJt1078AudioFormatConverter();
     private final PcmToMp3Jt1078AudioFormatConverter pcmToMp3Converter = new PcmToMp3Jt1078AudioFormatConverter();
 
+    public G726ToMp3Jt1078AudioFormatConverter() {
+    }
+
     @Nonnull
     @Override
-    public Jt1078AudioData convert(ByteBuf stream) {
+    public Jt1078AudioData convert(ByteBuf stream, AudioFormatOptions sourceOptions) {
         if (isEmptyStream(stream)) {
             log.warn("Jt1078AudioFormatConverter receive empty stream !!!");
             return Jt1078AudioData.empty();
         }
-        try (Jt1078AudioData pcmData = this.g726ToPcmConverter.convert(stream)) {
-            return this.pcmToMp3Converter.convert(pcmData.payload());
+        try (Jt1078AudioData pcmData = this.g726ToPcmConverter.convert(stream, sourceOptions)) {
+            return this.pcmToMp3Converter.convert(pcmData.payload(), pcmData.payloadOptions());
         }
     }
 
