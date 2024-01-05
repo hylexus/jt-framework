@@ -4,15 +4,13 @@ import io.github.hylexus.jt.common.JtCommonUtils;
 import io.github.hylexus.jt.exception.JtIllegalStateException;
 import io.github.hylexus.jt.jt1078.spec.Jt1078PayloadType;
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
+import io.github.hylexus.jt.jt1078.spec.Jt1078RequestHeader;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.impl.request.DefaultJt1078PayloadType;
 import io.github.hylexus.jt.jt1078.support.extension.audio.Jt1078AudioFormatConverter;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.jt1078.support.extension.audio.impl.FlvJt1078AudioData;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.AdpcmImaToMp3Jt1078AudioFormatConverter;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G711aToMp3Jt1078AudioFormatConverter;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G711uToMp3Jt1078AudioFormatConverter;
-import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.G726ToMp3Jt1078AudioFormatConverter;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.*;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvEncoder;
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvTagHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.tag.Amf;
@@ -60,6 +58,8 @@ public class DefaultFlvEncoder implements FlvEncoder {
     private ByteBuf ppsFrame;
     @Getter
     private ByteBuf lastIFrame;
+    @Getter
+    private boolean hasAudio = true;
 
     private long baseTimestamp = -1;
     private long baseAudioTimestamp = -1;
@@ -96,6 +96,10 @@ public class DefaultFlvEncoder implements FlvEncoder {
                     this.sourceAudioOptions = sourceOptions;
                     this.audioFormatConverter = this.g711uToMp3Converter;
                 }
+            } else if (type == BuiltinAudioFormatOptions.SILENCE) {
+                this.sourceAudioOptions = sourceOptions;
+                this.hasAudio = false;
+                this.audioFormatConverter = new SilenceJt1078AudioFormatConverter();
             }
         } else {
             throw new NotImplementedException();
@@ -132,8 +136,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
             return this.audioFormatConverter.convert(beforeConvert(mayBeChanged), this.sourceAudioOptions);
         }
 
-        final Jt1078PayloadType payloadType = request.header().payloadType();
-        final Jt1078AudioFormatConverter converter = this.initDefaultAudioConverter(payloadType);
+        final Jt1078AudioFormatConverter converter = this.initDefaultAudioConverter(request.header());
         if (converter == null) {
             return Jt1078AudioFormatConverter.Jt1078AudioData.empty();
         }
@@ -169,7 +172,8 @@ public class DefaultFlvEncoder implements FlvEncoder {
         return stream;
     }
 
-    private Jt1078AudioFormatConverter initDefaultAudioConverter(Jt1078PayloadType payloadType) {
+    private Jt1078AudioFormatConverter initDefaultAudioConverter(Jt1078RequestHeader header) {
+        final Jt1078PayloadType payloadType = header.payloadType();
         if (payloadType == DefaultJt1078PayloadType.ADPCMA) {
             this.sourceAudioOptions = BuiltinAudioFormatOptions.ADPCM_IMA_MONO;
             this.audioFormatConverter = this.adpcmImaToMp3Converter;
@@ -187,8 +191,11 @@ public class DefaultFlvEncoder implements FlvEncoder {
             this.audioFormatConverter = this.g711uToMp3Converter;
             return this.audioFormatConverter;
         } else {
-            // TODO 初始化默认的忽略音频的转换器
-            return null;
+            log.info("Audio data ignored. sim={}, channel={}, payloadType={} ", header.sim(), header.channelNumber(), payloadType);
+            this.sourceAudioOptions = BuiltinAudioFormatOptions.SILENCE;
+            this.audioFormatConverter = new SilenceJt1078AudioFormatConverter();
+            this.hasAudio = false;
+            return this.audioFormatConverter;
         }
     }
 

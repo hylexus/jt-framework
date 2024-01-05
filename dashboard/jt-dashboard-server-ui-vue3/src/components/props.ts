@@ -16,3 +16,18 @@ export interface Config {
   status?: any
   registration?: Registration
 }
+
+export enum AudioHints {
+    SILENCE = "SILENCE",
+    G726_S16_LE_MONO = "G726_S16_LE_MONO",
+    G726_S24_LE_MONO = "G726_S24_LE_MONO",
+    G726_S32_LE_MONO = "G726_S32_LE_MONO",
+    G726_S40_LE_MONO = "G726_S40_LE_MONO",
+    ADPCM_IMA_MONO = "ADPCM_IMA_MONO",
+    G711_A_MONO = "G711_A_MONO",
+    G711_U_MONO = "G711_U_MONO",
+    PCM_S16_LE_MONO = "PCM_S16_LE_MONO",
+    PCM_S24_LE_MONO = "PCM_S24_LE_MONO",
+    PCM_S32_LE_MONO = "PCM_S32_LE_MONO",
+    PCM_S40_LE_MONO = "PCM_S40_LE_MONO",
+}

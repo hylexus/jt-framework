@@ -70,7 +70,7 @@ export default defineConfig({
     https: false,
     proxy: {
       '/backend/': {
-        target: 'http://localhost:9090',
+        target: 'http://node2:9090',
         ws: true,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/backend/, '')

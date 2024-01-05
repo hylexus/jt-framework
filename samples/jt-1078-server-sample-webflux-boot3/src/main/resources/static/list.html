@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-row :gutter="24">
+        <el-col>
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Session 列表</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadSessionList">刷新</el-button>
+                </div>
+                <el-table
+                        :data="sessionList"
+                        border>
+                    <el-table-column
+                            fixed
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="id"
+                            width="500">
+                    </el-table-column>
+                    <el-table-column
+                            prop="sim"
+                            label="sim"
+                            min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="lastCommunicateTime"
+                            label="lastCommunicateTime"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row :gutter="24">
+        <el-col>
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Subscriber 列表</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadSubscriberList">刷新</el-button>
+                </div>
+                <el-table
+                        :data="subscriberList"
+                        border>
+                    <el-table-column
+                            fixed
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="id"
+                            width="450">
+                    </el-table-column>
+                    <el-table-column
+                            prop="sim"
+                            label="sim"
+                            min-width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="channel"
+                            label="channel"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="createdAt"
+                            label="createdAt"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="desc"
+                            label="desc"
+                    >
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col :span="24">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>订阅(启动 Ffmpeg 进程)</span>
+                </div>
+                <el-form size="mini" :inline="true" label-width="80px">
+                    <el-form-item label="sim">
+                        <el-input v-model="subscribeForm.sim"/>
+                    </el-form-item>
+                    <el-form-item label="channel">
+                        <el-input-number :controls="false" v-model="subscribeForm.channel"/>
+                    </el-form-item>
+                    <el-form-item label="timeout">
+                        <el-input-number :controls="false" v-model="subscribeForm.timeout"/>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="doSubscribe">订阅(启动Ffmpeg进程)</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </el-col>
+
+    </el-row>
+    <el-row>
+        <el-col :span="24">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Ffmpeg 进程列表</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="reloadProcessList">刷新进程列表</el-button>
+                </div>
+                <el-table
+                        :data="tableData"
+                        border>
+                    <el-table-column
+                            fixed
+                            type="index"
+                            width="50">
+                    </el-table-column>
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="id"
+                            width="300">
+                    </el-table-column>
+                    <el-table-column
+                            prop="pid"
+                            label="pid"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="info.commandLine"
+                            label="commandLine"
+                            min-width="500">
+                    </el-table-column>
+                    <el-table-column
+                            prop="running"
+                            label="running"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="info.startInstant"
+                            label="startInstant"
+                            width="220">
+                    </el-table-column>
+                    <el-table-column
+                            prop="info.totalCpuDuration"
+                            label="totalCpuDuration"
+                            width="220">
+                    </el-table-column>
+                    <el-table-column
+                            prop="info.user"
+                            label="user"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="Ops"
+                            width="150">
+                        <template slot-scope="scope">
+                            <el-button @click="watchConsoleOutput(scope.row)" type="text" size="small">控制台输出</el-button>
+                            <el-button @click="destroyProcess(scope.row)" type="text" size="small">销毁进程</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-card>
+        </el-col>
+    </el-row>
+    <el-row :gutter="10">
+        <el-col :span="14">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>播放器</span>
+                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                </div>
+                <div>
+                    ...
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="10">
+            <el-card class="box-card my-box">
+                <div slot="header" class="clearfix">
+                    <span>Ffmpeg 进程控制台输出</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="closeEventSource">断开控制台监听</el-button>
+                </div>
+                {{ tmp.eventSourceTips }}
+                <el-input
+                        :readonly="true"
+                        type="textarea"
+                        :rows="10"
+                        wrap="off"
+                        placeholder="控制台输出"
+                        v-model="tmp.consoleOutput">
+                </el-input>
+            </el-card>
+        </el-col>
+    </el-row>
+
+</div>
+</body>
+<script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                subscribeForm: {
+                    sim: "018008501119",
+                    channel: 3,
+                    timeout: 150,
+                },
+                tableData: [],
+                subscriberList: [],
+                sessionList: [],
+                tmp: {
+                    consoleOutput: '',
+                    eventSource: undefined,
+                    eventSourceTips: undefined,
+                    currentProcessInfo: undefined,
+                },
+            }
+        },
+        created: function () {
+            this.reloadSessionList()
+            this.reloadProcessList()
+            this.reloadSubscriberList()
+        },
+        methods: {
+            doSubscribe: function () {
+                const context = this
+                axios.get('/jt1078/subscriber/ffmpeg?sim=' + this.subscribeForm.sim + '&timeout=' + this.subscribeForm.timeout + '&channel=' + this.subscribeForm.channel + '')
+                    .then(function (response) {
+                        console.log(response)
+                        context.reloadProcessList()
+                        context.reloadSubscriberList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            watchConsoleOutput: function (row) {
+
+                if (this.tmp.eventSource !== undefined) {
+                    this.tmp.eventSource.close()
+                    this.tmp.eventSource = undefined
+                    this.tmp.consoleOutput = ''
+                }
+
+                this.tmp.currentProcessInfo = row
+                this.tmp.eventSource = new EventSource('/jt1078/subscriber/ffmpeg/processes/' + row.id + '/std-error');
+
+                const context = this
+                this.tmp.eventSource.onopen = function () {
+                    console.log('open ...')
+                    context.tmp.eventSourceTips = '正在监听进程 ' + row.id + ' 的控制台输出'
+                }
+                this.tmp.eventSource.onmessage = function (e) {
+                    context.tmp.consoleOutput += e.data + "\n"
+                }
+                this.tmp.eventSource.onerror = function (e) {
+                    context.tmp.eventSourceTips = '监听 ' + row.id + ' 出错 ' + e
+                    console.log(e)
+                }
+            },
+            closeEventSource: function () {
+                if (this.tmp.currentProcessInfo === undefined) {
+                    return
+                }
+                if (this.tmp.eventSource === undefined) {
+                    return
+                }
+                this.tmp.eventSource.close()
+                this.tmp.eventSource = undefined
+                this.tmp.eventSourceTips = '已断开到 ' + this.tmp.currentProcessInfo.id + ' 控制台的连接'
+            },
+            destroyProcess(row) {
+                const url = "/jt1078/subscriber/ffmpeg/processes/" + row.id + "/destroy";
+                const context = this
+                axios.get(url)
+                    .then(function (response) {
+                        console.log(response)
+                        context.reloadProcessList()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            reloadProcessList: function () {
+                const context = this
+                axios.get('/jt1078/subscriber/ffmpeg/processes/list')
+                    .then(function (response) {
+                        console.log(response)
+                        context.tableData = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            reloadSubscriberList: function () {
+                const context = this
+                axios.get('/jt1078/subscriber/list')
+                    .then(function (response) {
+                        console.log(response)
+                        context.subscriberList = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            reloadSessionList: function () {
+                const context = this
+                axios.get('/jt1078/session/list')
+                    .then(function (response) {
+                        console.log(response)
+                        context.sessionList = response.data
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+        }
+    })
+</script>
+
+<style type="text/css">
+    .my-box {
+        margin-bottom: 10px;
+    }
+</style>
+</html>

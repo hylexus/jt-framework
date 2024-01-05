@@ -6,15 +6,24 @@ import * as CommonUtils from '@/utils/common-utils'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { ArrowRight } from '@element-plus/icons-vue'
+import {AudioHints} from "@/components/props";
 
 const route = useRoute()
 const instanceId = ref(route.params.instanceId)
 const terminalId = ref(route.params.sim)
-let playerConfigs = reactive<any>([])
+let playerConfigs = reactive<any[]>([])
 const players = ref<InstanceType<typeof FlvPlayer>[]>([])
 const playAll = () => {
   players.value.forEach((player) => {
     player?.play()
+  })
+}
+
+const ignoreAudioData = () => {
+  playerConfigs.forEach((config) => {
+    console.log(config)
+    config.audioHints = AudioHints.SILENCE
+    console.log(config)
   })
 }
 const initConfigs = () => {
@@ -27,7 +36,8 @@ const initConfigs = () => {
     sim: terminalId.value,
     refId: 'ref-' + it.channel,
     dataType: 0,
-    jt808ServerInstanceId: instanceId.value
+    jt808ServerInstanceId: instanceId.value,
+    audioHints: AudioHints.ADPCM_IMA_MONO,
   }))
 }
 initConfigs()
@@ -46,6 +56,7 @@ initConfigs()
   </nav>
   <div mt mb>
     <el-button @click="playAll" size="small">播放全部</el-button>
+    <el-button @click="ignoreAudioData" size="small">忽略音频数据</el-button>
   </div>
   <el-row :gutter="10" pr8 pl8>
     <el-col mt8 :span="6" v-for="(it, index) in playerConfigs" :key="index">

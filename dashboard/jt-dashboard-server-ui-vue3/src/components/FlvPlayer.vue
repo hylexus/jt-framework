@@ -4,6 +4,7 @@ import mpegts from 'mpegts.js'
 import { requestPlayerUrl } from '@/api/dashboard'
 import * as CommonUtils from '@/utils/common-utils'
 import { Refresh, VideoPause, VideoPlay } from '@element-plus/icons-vue'
+import {AudioHints} from "@/components/props";
 
 enum STATUS {
   OFFLINE = 'Offline',
@@ -19,6 +20,7 @@ interface Config {
   jt808ServerInstanceId?: string
   location?: string
   type: number
+  audioHints: AudioHints,
 }
 const props = defineProps<{
   config: Config
@@ -132,7 +134,7 @@ const initPlayer = async () => {
       type: 'flv',
       url: remoteUrl.value,
       hasAudio: true,
-      hasVideo: props.config.type === 1,
+      hasVideo: props.config.audioHints !== AudioHints.SILENCE && props.config.type === 1,
       // enableWorker: true,
       // enableStashBuffer: false,
       // stashInitialSize: 128
@@ -196,7 +198,7 @@ defineExpose({ play })
         <div class="player-header">
           <div>
             <span ml8 mr8><span :class="buttonCss.status"></span></span>
-            <span>通道{{ config.channel }}</span>
+            <span>通道{{ config.channel }} {{config.audioHints}}</span>
             <el-divider direction="vertical"></el-divider>
             <span>{{ config.location }}</span>
             <el-divider direction="vertical"></el-divider>

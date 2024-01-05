@@ -7,26 +7,57 @@ import java.util.Map;
 import java.util.Optional;
 
 public enum BuiltinAudioFormatOptions implements Jt1078AudioFormatConverter.AudioFormatOptions {
+    /**
+     * 静音--忽略音频数据
+     */
+    SILENCE(-1, 0, 0, 0, 0),
+    /**
+     * G726 有符号数 16bit 小端 单声道
+     */
     G726_S16_LE_MONO(0, 8_000, 2, 16, 1),
+    /**
+     * G726 有符号数 24bit 小端 单声道
+     */
     G726_S24_LE_MONO(0, 8_000, 3, 16, 1),
+    /**
+     * G726 有符号数 32bit 小端 单声道
+     */
     G726_S32_LE_MONO(0, 8_000, 4, 16, 1),
+    /**
+     * G726 有符号数 40bit 小端 单声道
+     */
     G726_S40_LE_MONO(0, 8_000, 5, 16, 1),
 
+    /**
+     * ADPCM IMA 单声道
+     */
     ADPCM_IMA_MONO(1, 8_000, 8, 16, 1),
+    /**
+     * G711_A 单声道
+     */
     G711_A_MONO(2, 8_000, 8, 8, 1),
+    /**
+     * G711_U 单声道
+     */
     G711_U_MONO(2, 8_000, 8, 8, 1),
 
+    /**
+     * PCM 有符号数 16bit 小端 单声道
+     */
     PCM_S16_LE_MONO(3, 8_000, 16, 16, 1),
+    /**
+     * PCM 有符号数 24bit 小端 单声道
+     */
     PCM_S24_LE_MONO(3, 8_000, 24, 24, 1),
+    /**
+     * PCM 有符号数 32bit 小端 单声道
+     */
     PCM_S32_LE_MONO(3, 8_000, 32, 32, 1),
+    /**
+     * PCM 有符号数 40bit 小端 单声道
+     */
     PCM_S40_LE_MONO(3, 8_000, 40, 40, 1),
     ;
-
-    public static void main(String[] args) {
-        for (final BuiltinAudioFormatOptions value : BuiltinAudioFormatOptions.values()) {
-            System.out.println(value);
-        }
-    }
 
     private final int family;
     private final int sampleRate;

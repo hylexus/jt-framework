@@ -65,7 +65,7 @@ public class H264ToFlvJt1078ChannelCollector
                         final ByteBuf basicFrame = flvEncoder.getFlvBasicFrame();
                         if (basicFrame != null) {
                             // header
-                            sink.next(Jt1078Subscription.forByteArray(DefaultJt1078SubscriptionType.FLV, FlvHeader.of(true, true).toBytes(true)));
+                            sink.next(Jt1078Subscription.forByteArray(DefaultJt1078SubscriptionType.FLV, FlvHeader.of(true, this.flvEncoder.isHasAudio()).toBytes(true)));
                             // sps+pps
                             sink.next(Jt1078Subscription.forByteArray(DefaultJt1078SubscriptionType.FLV, basicFrame));
                             subscriber.setFlvHeaderSent(true);
