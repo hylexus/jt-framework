@@ -28,5 +28,5 @@ public class DashboardVideoStreamSubscriberDto {
     private int streamType = 0;
     // 0:音视频; 1:视频; 2: 双向对讲; ....
     private int dataType = 0;
-
+    private String sourceAudioHints;
 }

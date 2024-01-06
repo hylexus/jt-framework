@@ -15,7 +15,7 @@ public class DashboardClientModelConverter {
     public static DashboardVideoStreamSubscriberDto convert(WebSocketSession session, UriTemplate uriTemplate) {
         final URI uri = session.getHandshakeInfo().getUri();
         final Map<String, String> values = uriTemplate.match(uri.getPath());
-        final String sim = values.getOrDefault("sim", "018930946552");
+        final String sim = values.getOrDefault("sim", "111111111111");
         final short channel = Numbers.parseInteger(values.getOrDefault("channel", "3")).orElseThrow().shortValue();
         final String query = uri.getQuery();
         if (!StringUtils.hasText(query)) {
@@ -39,6 +39,7 @@ public class DashboardClientModelConverter {
                 .setAutoCloseJt1078SessionOnClientClosed(parseBoolean(params, "autoCloseJt1078SessionOnClientClosed", false))
                 .setStreamType(Numbers.parseInteger(params.get("streamType")).orElse(0))
                 .setDataType(Numbers.parseInteger(params.get("dataType")).orElse(0))
+                .setSourceAudioHints(params.get("sourceAudioHints"))
                 ;
 
     }

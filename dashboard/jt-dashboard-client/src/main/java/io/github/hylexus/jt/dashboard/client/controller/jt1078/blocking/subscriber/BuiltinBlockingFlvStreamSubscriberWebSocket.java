@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt.utils.JtWebUtils;
 import io.github.hylexus.oaks.utils.Numbers;
@@ -65,6 +66,7 @@ public class BuiltinBlockingFlvStreamSubscriberWebSocket extends AbstractWebSock
                 .sim(params.getSim())
                 .channelNumber(params.getChannel())
                 .timeout(Duration.ofSeconds(params.getTimeout()))
+                .sourceAudioOptions(BuiltinAudioFormatOptions.parseFrom(params.getSourceAudioHints()).orElse(null))
                 .metadata(Map.of(
                         "createdBy", this.getClass().getSimpleName(),
                         "clientIp", clientIp,
@@ -128,7 +130,7 @@ public class BuiltinBlockingFlvStreamSubscriberWebSocket extends AbstractWebSock
     public static DashboardVideoStreamSubscriberDto parseParam(org.springframework.web.socket.WebSocketSession session, UriTemplate uriTemplate) {
         final URI uri = session.getUri();
         final Map<String, String> values = uriTemplate.match(uri.getPath());
-        final String sim = values.getOrDefault("sim", "018930946552");
+        final String sim = values.getOrDefault("sim", "111111111111");
         final short channel = Numbers.parseInteger(values.getOrDefault("channel", "3")).orElseThrow().shortValue();
         final String query = uri.getQuery();
         if (!StringUtils.hasText(query)) {
@@ -151,6 +153,7 @@ public class BuiltinBlockingFlvStreamSubscriberWebSocket extends AbstractWebSock
                 .setAutoCloseJt1078SessionOnClientClosed(parseBoolean(params, "autoCloseJt1078SessionOnClientClosed", false))
                 .setStreamType(Numbers.parseInteger(params.get("streamType")).orElse(0))
                 .setDataType(Numbers.parseInteger(params.get("dataType")).orElse(0))
+                .setSourceAudioHints(params.get("sourceAudioHints"))
                 ;
     }
 

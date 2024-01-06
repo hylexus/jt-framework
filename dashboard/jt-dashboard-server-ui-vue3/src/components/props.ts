@@ -6,6 +6,7 @@ export interface Registration {
   tcpPort?: string
   metadata?: string
 }
+
 export interface Config {
   instanceId?: string
   host?: string
@@ -18,16 +19,24 @@ export interface Config {
 }
 
 export enum AudioHints {
-    SILENCE = "SILENCE",
-    G726_S16_LE_MONO = "G726_S16_LE_MONO",
-    G726_S24_LE_MONO = "G726_S24_LE_MONO",
-    G726_S32_LE_MONO = "G726_S32_LE_MONO",
-    G726_S40_LE_MONO = "G726_S40_LE_MONO",
-    ADPCM_IMA_MONO = "ADPCM_IMA_MONO",
-    G711_A_MONO = "G711_A_MONO",
-    G711_U_MONO = "G711_U_MONO",
-    PCM_S16_LE_MONO = "PCM_S16_LE_MONO",
-    PCM_S24_LE_MONO = "PCM_S24_LE_MONO",
-    PCM_S32_LE_MONO = "PCM_S32_LE_MONO",
-    PCM_S40_LE_MONO = "PCM_S40_LE_MONO",
+  AUTO = 'AUTO',
+  SILENCE = 'SILENCE',
+  G726_S16_LE_MONO = 'G726_S16_LE_MONO',
+  G726_S24_LE_MONO = 'G726_S24_LE_MONO',
+  G726_S32_LE_MONO = 'G726_S32_LE_MONO',
+  G726_S40_LE_MONO = 'G726_S40_LE_MONO',
+  ADPCM_IMA_MONO = 'ADPCM_IMA_MONO',
+  G711_A_MONO = 'G711_A_MONO',
+  G711_U_MONO = 'G711_U_MONO',
+  PCM_S16_LE_MONO = 'PCM_S16_LE_MONO',
+  PCM_S24_LE_MONO = 'PCM_S24_LE_MONO',
+  PCM_S32_LE_MONO = 'PCM_S32_LE_MONO',
+  PCM_S40_LE_MONO = 'PCM_S40_LE_MONO',
+}
+
+export enum FlvPlayerStatus {
+  OFFLINE = 'Offline',
+  CONNECTING = 'Connecting',
+  RUNNING = 'Running',
+  PAUSE = 'Pause'
 }

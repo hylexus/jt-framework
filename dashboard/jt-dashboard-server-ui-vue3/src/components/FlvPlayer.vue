@@ -4,14 +4,9 @@ import mpegts from 'mpegts.js'
 import { requestPlayerUrl } from '@/api/dashboard'
 import * as CommonUtils from '@/utils/common-utils'
 import { Refresh, VideoPause, VideoPlay } from '@element-plus/icons-vue'
-import {AudioHints} from "@/components/props";
+import { AudioHints, FlvPlayerStatus } from '@/components/props'
+import * as JtUtils from '@/utils/jt-utils'
 
-enum STATUS {
-  OFFLINE = 'Offline',
-  CONNECTING = 'Connecting',
-  RUNNING = 'Running',
-  PAUSE = 'Pause'
-}
 interface Config {
   title?: string
   sim?: string
@@ -22,38 +17,39 @@ interface Config {
   type: number
   audioHints: AudioHints,
 }
+
 const props = defineProps<{
   config: Config
 }>()
 const video = ref<HTMLMediaElement>()
 const player = ref<mpegts.Player>()
 const remoteUrl = ref('')
-const status = ref(STATUS.OFFLINE)
+const status = ref(FlvPlayerStatus.OFFLINE)
 const errorTips = ref('')
 const buttonCss = computed(() => {
   switch (status.value) {
-    case STATUS.OFFLINE: {
+    case FlvPlayerStatus.OFFLINE: {
       return {
         play: VideoPlay,
         status: 'status-cycle-offline',
         reset: Refresh
       }
     }
-    case STATUS.CONNECTING: {
+    case FlvPlayerStatus.CONNECTING: {
       return {
         play: VideoPause,
         status: 'status-cycle-tidying',
         reset: Refresh
       }
     }
-    case STATUS.RUNNING: {
+    case FlvPlayerStatus.RUNNING: {
       return {
         play: VideoPause,
         status: 'status-cycle-online',
         reset: Refresh
       }
     }
-    case STATUS.PAUSE: {
+    case FlvPlayerStatus.PAUSE: {
       return {
         play: VideoPlay,
         status: 'status-cycle-offline',
@@ -84,12 +80,12 @@ const reset = () => {
     player.value = undefined
   }
 
-  status.value = STATUS.OFFLINE
+  status.value = FlvPlayerStatus.OFFLINE
 }
 const play = async () => {
-  if (status.value === STATUS.OFFLINE) {
+  if (status.value === FlvPlayerStatus.OFFLINE) {
     await initPlayer()
-    status.value = STATUS.CONNECTING
+    status.value = FlvPlayerStatus.CONNECTING
     player.value
       ?.play()
       ?.then((r: string | void) => {
@@ -100,12 +96,12 @@ const play = async () => {
       .catch((e: string) => {
         errorTips.value = e
       })
-  } else if (status.value === STATUS.CONNECTING) {
+  } else if (status.value === FlvPlayerStatus.CONNECTING) {
     // do nothing
-  } else if (status.value === STATUS.RUNNING) {
+  } else if (status.value === FlvPlayerStatus.RUNNING) {
     player.value?.pause()
-    status.value = STATUS.PAUSE
-  } else if (status.value === STATUS.PAUSE) {
+    status.value = FlvPlayerStatus.PAUSE
+  } else if (status.value === FlvPlayerStatus.PAUSE) {
     player.value
       ?.play()
       ?.then((r: string | void) => {
@@ -116,7 +112,7 @@ const play = async () => {
       .catch((e: string) => {
         errorTips.value = e
       })
-    status.value = STATUS.RUNNING
+    status.value = FlvPlayerStatus.RUNNING
   } else {
     errorTips.value = '未知状态: ' + status.value
   }
@@ -133,8 +129,8 @@ const initPlayer = async () => {
       isLive: true,
       type: 'flv',
       url: remoteUrl.value,
-      hasAudio: true,
-      hasVideo: props.config.audioHints !== AudioHints.SILENCE && props.config.type === 1,
+      hasAudio: props.config.audioHints !== AudioHints.SILENCE && props.config.type === 2,
+      hasVideo: props.config.type === 1
       // enableWorker: true,
       // enableStashBuffer: false,
       // stashInitialSize: 128
@@ -150,12 +146,12 @@ const initPlayer = async () => {
   player.value.load()
 
   player.value.on(mpegts.Events.LOADING_COMPLETE, () => {
-    status.value = STATUS.OFFLINE
+    status.value = FlvPlayerStatus.OFFLINE
     errorTips.value = '视频播放结束'
   })
 
   player.value.on(mpegts.Events.METADATA_ARRIVED, () => {
-    status.value = STATUS.RUNNING
+    status.value = FlvPlayerStatus.RUNNING
   })
 
   // this.player.on(mpegts.Events.MEDIA_INFO, (res) => {
@@ -183,13 +179,18 @@ const getPlayerUrl = async () => {
     instanceId: jt808ServerInstanceId
   }).then((resp: any) => {
     if (CommonUtils.isSuccess(resp)) {
-      remoteUrl.value = resp.data.address
+      // ws://localhost:1078/api/dashboard-client/jt1078/video-stream/websocket/flv/${sim}/${channelNumber}?timeout=10000
+      if (props.config.audioHints !== AudioHints.AUTO) {
+        remoteUrl.value = resp.data.address + '&sourceAudioHints=' + props.config.audioHints.toString()
+      } else {
+        remoteUrl.value = resp.data.address
+      }
     } else {
       errorTips.value = resp.msg
     }
   })
 }
-defineExpose({ play })
+defineExpose({ play, status })
 </script>
 <template>
   <div class="player-root">
@@ -198,7 +199,7 @@ defineExpose({ play })
         <div class="player-header">
           <div>
             <span ml8 mr8><span :class="buttonCss.status"></span></span>
-            <span>通道{{ config.channel }} {{config.audioHints}}</span>
+            <span>通道{{ config.channel }}</span>
             <el-divider direction="vertical"></el-divider>
             <span>{{ config.location }}</span>
             <el-divider direction="vertical"></el-divider>
@@ -219,6 +220,9 @@ defineExpose({ play })
         controls
         autoplay
       ></video>
+      <div>
+        音频:&nbsp;{{ JtUtils.audioHintDescription(config.audioHints) }}
+      </div>
       {{ errorTips }}
     </el-card>
   </div>
@@ -231,6 +235,7 @@ defineExpose({ play })
     align-items: center;
     font-size: var(--ep-font-size-small);
   }
+
   .__card {
     height: 100%;
 

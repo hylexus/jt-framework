@@ -30,7 +30,7 @@ import java.util.concurrent.TimeoutException;
  * 用来收集数据--Flv格式(仅仅用来测试)
  */
 @Slf4j
-@Component
+// @Component
 @DebugOnly
 public class LocalDebugFlvSubscriber implements Jt1078SessionEventListener, DisposableBean {
 

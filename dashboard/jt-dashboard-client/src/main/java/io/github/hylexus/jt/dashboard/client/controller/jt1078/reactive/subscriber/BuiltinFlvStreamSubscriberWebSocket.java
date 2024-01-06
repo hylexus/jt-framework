@@ -9,6 +9,7 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberCreator;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SubscriberManager;
 import io.github.hylexus.jt.jt1078.spec.exception.Jt1078SessionDestroyException;
 import io.github.hylexus.jt.jt1078.support.codec.Jt1078ChannelCollector;
+import io.github.hylexus.jt.jt1078.support.extension.audio.impl.BuiltinAudioFormatOptions;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.github.hylexus.jt.utils.JtWebUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +87,7 @@ public class BuiltinFlvStreamSubscriberWebSocket implements WebSocketHandler {
                 .sim(params.getSim())
                 .channelNumber(params.getChannel())
                 .timeout(Duration.ofSeconds(params.getTimeout()))
+                .sourceAudioOptions(BuiltinAudioFormatOptions.parseFrom(params.getSourceAudioHints()).orElse(null))
                 .metadata(Map.of(
                         "createdBy", this.getClass().getSimpleName(),
                         "clientIp", clientIp,
