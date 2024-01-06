@@ -14,7 +14,8 @@ interface Config {
   dataType: number
   jt808ServerInstanceId?: string
   location?: string
-  type: number
+  hasVideo: boolean
+  hasAudio: boolean
   audioHints: AudioHints,
 }
 
@@ -65,11 +66,18 @@ const buttonCss = computed(() => {
     }
   }
 })
-const streamDesc = (type: number) => {
-  if (type === 1) {
+const streamDesc = () => {
+  const audio = props.config.hasAudio
+  const video = props.config.hasVideo
+  if (audio && video) {
     return '音视频'
+  } else if (audio) {
+    return '音频'
+  } else if (video) {
+    return '视频'
+  } else {
+    return '未知'
   }
-  return '音频'
 }
 const reset = () => {
   if (player.value !== undefined) {
@@ -129,8 +137,8 @@ const initPlayer = async () => {
       isLive: true,
       type: 'flv',
       url: remoteUrl.value,
-      hasAudio: props.config.audioHints !== AudioHints.SILENCE && props.config.type === 2,
-      hasVideo: props.config.type === 1
+      hasAudio: props.config.audioHints !== AudioHints.SILENCE && props.config.hasAudio,
+      hasVideo: props.config.hasVideo
       // enableWorker: true,
       // enableStashBuffer: false,
       // stashInitialSize: 128
@@ -180,7 +188,7 @@ const getPlayerUrl = async () => {
   }).then((resp: any) => {
     if (CommonUtils.isSuccess(resp)) {
       // ws://localhost:1078/api/dashboard-client/jt1078/video-stream/websocket/flv/${sim}/${channelNumber}?timeout=10000
-      if (props.config.audioHints !== AudioHints.AUTO) {
+      if (props.config.audioHints !== AudioHints.AUTO && props.config.hasVideo) {
         remoteUrl.value = resp.data.address + '&sourceAudioHints=' + props.config.audioHints.toString()
       } else {
         remoteUrl.value = resp.data.address
@@ -203,7 +211,7 @@ defineExpose({ play, status })
             <el-divider direction="vertical"></el-divider>
             <span>{{ config.location }}</span>
             <el-divider direction="vertical"></el-divider>
-            <span>{{ streamDesc(config.type) }}</span>
+            <span>{{ streamDesc() }}</span>
           </div>
           <div>
             <el-button :icon="buttonCss.reset" circle @click="reset"></el-button>
@@ -220,7 +228,7 @@ defineExpose({ play, status })
         controls
         autoplay
       ></video>
-      <div>
+      <div v-if="config.hasVideo">
         音频:&nbsp;{{ JtUtils.audioHintDescription(config.audioHints) }}
       </div>
       {{ errorTips }}

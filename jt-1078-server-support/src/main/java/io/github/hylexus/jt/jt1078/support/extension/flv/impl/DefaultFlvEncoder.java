@@ -99,6 +99,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
             } else if (type == BuiltinAudioFormatOptions.SILENCE) {
                 this.sourceAudioOptions = sourceOptions;
                 this.hasAudio = false;
+                log.info("Audio data ignored. sim={}, channel={}, desc={} ", creator.sim(), creator.channelNumber(), creator.desc());
                 this.audioFormatConverter = new SilenceJt1078AudioFormatConverter();
             }
         } else {

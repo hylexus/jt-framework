@@ -122,7 +122,7 @@ docs/src/.vuepress/dist/
 .cache
 .temp/
 
-/dashboard/jt-dashboard-server/src/main/resources/static/client/
+#/dashboard/jt-dashboard-server/src/main/resources/static/client/
 
 application-debug.yaml
 /demos/deploy.sh
