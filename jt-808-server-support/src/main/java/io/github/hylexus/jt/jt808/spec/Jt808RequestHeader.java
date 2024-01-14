@@ -44,6 +44,10 @@ public interface Jt808RequestHeader {
 
     String toString();
 
+    static Jt808MsgHeaderBuilder newBuilder() {
+        return new DefaultJt808RequestHeader.DefaultJt808MsgHeaderBuilder();
+    }
+
     default Jt808MsgHeaderBuilder mutate() {
         return new DefaultJt808RequestHeader.DefaultJt808MsgHeaderBuilder(this);
     }

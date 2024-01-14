@@ -35,7 +35,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
 
     private final List<Jt808SessionEventListener> listeners = new ArrayList<>();
 
-    private DefaultJt808SessionManager(Jt808FlowIdGeneratorFactory flowIdGeneratorFactory) {
+    protected DefaultJt808SessionManager(Jt808FlowIdGeneratorFactory flowIdGeneratorFactory) {
         this.flowIdGeneratorFactory = flowIdGeneratorFactory;
     }
 

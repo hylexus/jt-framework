@@ -20,13 +20,13 @@ import javax.validation.constraints.NotEmpty;
 public class MsgProcessorExecutorGroupProps {
 
     @NotEmpty(message = "poolName is null or empty. defaultValue = '808-msg-processor' ")
-    private String poolName = "808-msg-processor";
+    private String poolName = "808-attachment-processor";
 
     /**
      * 默认: 128。
      */
     @Min(value = 1, message = "threadCount >= 1, defaultValue = 128")
-    private int threadCount = 128;
+    private int threadCount = 32;
 
     @Min(value = 16, message = "maxPendingTasks >= 16, defaultValue = 128")
     private int maxPendingTasks = 128;

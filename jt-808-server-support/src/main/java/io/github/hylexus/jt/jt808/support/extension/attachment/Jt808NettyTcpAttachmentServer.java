@@ -1,35 +1,34 @@
-package io.github.hylexus.jt.jt808.support.netty;
+package io.github.hylexus.jt.jt808.support.extension.attachment;
 
 import io.github.hylexus.jt.utils.AbstractRunner;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.Future;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 
 @Slf4j
 @Setter
 @Getter
-public class Jt808NettyTcpServer extends AbstractRunner {
+public class Jt808NettyTcpAttachmentServer extends AbstractRunner {
 
-    private final Jt808ServerNettyConfigure serverConfigure;
+    private final Jt808AttachmentServerNettyConfigure serverConfigure;
     private EventLoopGroup bossGroup = null;
     private EventLoopGroup workerGroup = null;
     private Integer port;
     private Integer workThreadCount;
     private Integer bossThreadCount;
-    private Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer;
 
-    public Jt808NettyTcpServer(
-            String name, Jt808ServerNettyConfigure serverConfigure,
-            Jt808NettyChildHandlerInitializer jt808NettyChildHandlerInitializer) {
+    public Jt808NettyTcpAttachmentServer(String name, Jt808AttachmentServerNettyConfigure serverConfigure) {
         super(name);
         this.serverConfigure = serverConfigure;
-        this.jt808NettyChildHandlerInitializer = jt808NettyChildHandlerInitializer;
     }
 
     private void bind() throws Exception {
@@ -39,11 +38,16 @@ public class Jt808NettyTcpServer extends AbstractRunner {
 
         serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(this.jt808NettyChildHandlerInitializer);
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(@NonNull SocketChannel ch) {
+                        serverConfigure.configureSocketChannel(ch);
+                    }
+                });
 
         serverConfigure.configureServerBootstrap(serverBootstrap);
 
-        log.info("----> netty tcp instruction server started, port = {}", this.port);
+        log.info("----> netty tcp attachment server started, port = {}", this.port);
         ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
 
         channelFuture.channel().closeFuture().sync();

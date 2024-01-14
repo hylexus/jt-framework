@@ -88,6 +88,10 @@ public class DefaultJt808Request implements Jt808Request {
         private byte calculatedCheckSum;
         private final MsgType msgType;
 
+        public DefaultJt808RequestBuilder(MsgType msgType) {
+            this.msgType = msgType;
+        }
+
         public DefaultJt808RequestBuilder(Jt808Request request) {
             this.header = request.header();
             this.rawByteBuf = request.rawByteBuf();

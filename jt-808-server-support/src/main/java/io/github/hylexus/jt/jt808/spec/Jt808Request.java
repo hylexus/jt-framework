@@ -130,6 +130,10 @@ public interface Jt808Request {
     // <== Shortcut Methods End
     // ++++++++++++++++++++++++++++++++++++++++++++
 
+    static Jt808RequestBuilder newBuilder(MsgType msgType) {
+        return new DefaultJt808Request.DefaultJt808RequestBuilder(msgType);
+    }
+
     interface Jt808RequestBuilder {
 
         Jt808RequestBuilder header(Jt808RequestHeader header);

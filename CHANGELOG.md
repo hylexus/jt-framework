@@ -1,3 +1,21 @@
+## 2.1.4-beta1(2024-01-14)
+
+### ⭐ New Features
+
+- 支持苏标附件服务器
+
+## 2.1.3(2023-10-03)
+
+### 🐞 Bug Fixes
+
+`BuiltinCommonHandler.processTerminalHeartBeatMsg` 应该回复 `0x8001` 消息，而不是不回复消息
+
+## 2.1.2(2023-09-01)
+
+### ⭐ New Features
+
+- [#78](https://github.com/hylexus/jt-framework/issues/78)
+
 ## 2.1.1
 
 ### ⭐ New Features
