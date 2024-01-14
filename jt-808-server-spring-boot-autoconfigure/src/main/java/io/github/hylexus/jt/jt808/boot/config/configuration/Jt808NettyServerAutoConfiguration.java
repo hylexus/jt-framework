@@ -52,7 +52,8 @@ import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_NETTY_HAND
  */
 @Slf4j
 @Import({
-        Jt808NettyServerAutoConfiguration.Jt808ServerParamPrinterConfig.class
+        Jt808NettyServerAutoConfiguration.Jt808ServerParamPrinterConfig.class,
+        Jt808AttachmentServerAutoConfiguration.class,
 })
 public class Jt808NettyServerAutoConfiguration {
 

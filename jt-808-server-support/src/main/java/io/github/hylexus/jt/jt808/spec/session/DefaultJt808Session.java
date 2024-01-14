@@ -32,6 +32,10 @@ public class DefaultJt808Session implements Jt808Session {
 
     @Getter
     @Setter
+    private Role role;
+
+    @Getter
+    @Setter
     private String id;
 
     @Getter

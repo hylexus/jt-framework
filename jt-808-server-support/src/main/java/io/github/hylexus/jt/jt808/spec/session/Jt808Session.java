@@ -19,6 +19,24 @@ import java.util.function.Supplier;
 @BuiltinComponent
 public interface Jt808Session extends Jt808FlowIdGenerator {
 
+    enum Role {
+        /**
+         * 指令服务器对应的会话
+         */
+        INSTRUCTION,
+        /**
+         * 附件服务器对应的会话
+         */
+        ATTACHMENT,
+    }
+
+    /**
+     * @since 2.1.4
+     */
+    default Role role() {
+        return Role.INSTRUCTION;
+    }
+
     /**
      * @param bytes 待发送给客户端的数据
      * @see #sendMsgToClient(ByteBuf)

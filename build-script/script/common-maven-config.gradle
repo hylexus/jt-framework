@@ -141,6 +141,6 @@ def isSnapshot() {
 }
 
 def static publishToMavenCentralRepo() {
-    // gradle clean build publish -Dpublish2MavenCentralRepo=true
-    System.getProperty("publish2MavenCentralRepo") ?: "false" == "true"
+    // ./gradlew clean build publish -DpublishToMavenCentralRepo=true
+    System.getProperty("publishToMavenCentralRepo") ?: "false" == "true"
 }

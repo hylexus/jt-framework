@@ -1,10 +1,11 @@
 package io.github.hylexus.jt.jt808.boot.props;
 
+import io.github.hylexus.jt.jt808.boot.props.attachment.AttachmentServerProps;
 import io.github.hylexus.jt.jt808.boot.props.builtin.BuiltComponentsProps;
 import io.github.hylexus.jt.jt808.boot.props.builtin.RequestSubPackageStorageProps;
 import io.github.hylexus.jt.jt808.boot.props.builtin.ResponseSubPackageStorageProps;
-import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorProps;
 import io.github.hylexus.jt.jt808.boot.props.feature.Jt808FeatureProps;
+import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorProps;
 import io.github.hylexus.jt.jt808.boot.props.protocol.ProtocolConfig;
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import lombok.Getter;
@@ -56,4 +57,7 @@ public class Jt808ServerProps {
 
     @NestedConfigurationProperty
     private Jt808FeatureProps features = new Jt808FeatureProps();
+
+    @NestedConfigurationProperty
+    private AttachmentServerProps attachmentServer = new AttachmentServerProps();
 }
