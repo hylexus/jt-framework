@@ -3,6 +3,8 @@ package io.github.hylexus.jt.jt808.spec.impl.request;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.MsgType;
+import io.github.hylexus.jt.jt808.spec.MutableJt808Request;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.netty.buffer.ByteBuf;
 
@@ -12,8 +14,8 @@ import java.util.Map;
 /**
  * @author hylexus
  */
-public class DefaultJt808Request implements Jt808Request {
-
+public class DefaultJt808Request implements MutableJt808Request {
+    protected Jt808Session session;
     protected final Jt808RequestHeader header;
     protected final ByteBuf rawByteBuf;
     protected final ByteBuf body;
@@ -25,6 +27,14 @@ public class DefaultJt808Request implements Jt808Request {
     public DefaultJt808Request(
             MsgType msgType, Jt808RequestHeader header, ByteBuf rawByteBuf, ByteBuf body,
             byte originalCheckSum, byte calculatedCheckSum) {
+        this(null, msgType, header, rawByteBuf, body, originalCheckSum, calculatedCheckSum);
+    }
+
+    public DefaultJt808Request(
+            Jt808Session session,
+            MsgType msgType, Jt808RequestHeader header, ByteBuf rawByteBuf, ByteBuf body,
+            byte originalCheckSum, byte calculatedCheckSum) {
+        this.session = session;
         this.header = header;
         this.rawByteBuf = rawByteBuf;
         this.body = (body == null)
@@ -67,6 +77,17 @@ public class DefaultJt808Request implements Jt808Request {
     }
 
     @Override
+    public Jt808Session session() {
+        return this.session;
+    }
+
+    @Override
+    public Jt808Request session(Jt808Session session) {
+        this.session = session;
+        return this;
+    }
+
+    @Override
     public MsgType msgType() {
         return msgType;
     }
@@ -74,14 +95,15 @@ public class DefaultJt808Request implements Jt808Request {
     @Override
     public String toString() {
         return "DefaultJt808Request{"
-               + "msgType=" + msgType
-               + ", header=" + header
-               + ", checkSum=" + originalCheckSum
-               + '}';
+                + "msgType=" + msgType
+                + ", header=" + header
+                + ", checkSum=" + originalCheckSum
+                + '}';
     }
 
     public static class DefaultJt808RequestBuilder implements Jt808RequestBuilder {
         private Jt808RequestHeader header;
+        private Jt808Session session;
         private ByteBuf rawByteBuf;
         private ByteBuf body;
         private byte originalCheckSum;
@@ -93,6 +115,7 @@ public class DefaultJt808Request implements Jt808Request {
         }
 
         public DefaultJt808RequestBuilder(Jt808Request request) {
+            this.session = request.session();
             this.header = request.header();
             this.rawByteBuf = request.rawByteBuf();
             this.body = request.body();
@@ -104,6 +127,12 @@ public class DefaultJt808Request implements Jt808Request {
         @Override
         public Jt808RequestBuilder header(Jt808RequestHeader header) {
             this.header = header;
+            return this;
+        }
+
+        @Override
+        public Jt808RequestBuilder session(Jt808Session session) {
+            this.session = session;
             return this;
         }
 
@@ -147,7 +176,7 @@ public class DefaultJt808Request implements Jt808Request {
 
         @Override
         public Jt808Request build() {
-            return new DefaultJt808Request(msgType, header, rawByteBuf, body, originalCheckSum, calculatedCheckSum);
+            return new DefaultJt808Request(session, msgType, header, rawByteBuf, body, originalCheckSum, calculatedCheckSum);
         }
     }
 }

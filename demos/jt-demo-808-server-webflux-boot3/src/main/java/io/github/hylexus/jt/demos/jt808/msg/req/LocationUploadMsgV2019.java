@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.demos.jt808.msg.req;
 
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.extra.ExtraItemSupport;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
@@ -66,7 +67,7 @@ public class LocationUploadMsgV2019 {
     private List<ExtraItem> extraItemList;
 
     @Data
-    public static class ExtraItem {
+    public static class ExtraItem implements ExtraItemSupport {
         // 附加信息ID
         @RequestField(order = 0, dataType = BYTE)
         private int id;

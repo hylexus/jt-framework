@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.spec;
 
 import io.github.hylexus.jt.core.OrderedComponent;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResultHandler;
@@ -81,6 +82,13 @@ public interface Jt808RequestLifecycleListener extends OrderedComponent {
      */
     default boolean beforeDecode(ByteBuf request, Channel channel) {
         return true;
+    }
+
+    /**
+     * @since 2.1.4
+     */
+    default boolean beforeDecode(ByteBuf request, Channel channel, Jt808Session.Role role) {
+        return beforeDecode(request, channel);
     }
 
     /**

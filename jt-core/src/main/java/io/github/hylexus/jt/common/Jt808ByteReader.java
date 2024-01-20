@@ -1,9 +1,11 @@
 package io.github.hylexus.jt.common;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author hylexus
@@ -14,6 +16,24 @@ public interface Jt808ByteReader {
 
     static Jt808ByteReader of(ByteBuf value) {
         return () -> value;
+    }
+
+    static <T> T doWithReader(byte[] bytes, Function<Jt808ByteReader, T> fn) {
+        final ByteBuf buf = ByteBufAllocator.DEFAULT.buffer().writeBytes(bytes);
+        try {
+            return fn.apply(of(buf));
+        } finally {
+            JtCommonUtils.release(buf);
+        }
+    }
+
+    static void doWithReader(byte[] bytes, Consumer<Jt808ByteReader> fn) {
+        final ByteBuf buf = ByteBufAllocator.DEFAULT.buffer().writeBytes(bytes);
+        try {
+            fn.accept(of(buf));
+        } finally {
+            JtCommonUtils.release(buf);
+        }
     }
 
     default String readBcd(int length) {
@@ -56,20 +76,36 @@ public interface Jt808ByteReader {
         return this;
     }
 
+    /**
+     * @deprecated 建议使用 {@link #readUnsignedDword()} 代替
+     */
+    @Deprecated(since = "2.1.4", forRemoval = false)
     default int readDword() {
         return JtCommonUtils.readDword(readable());
     }
 
+    /**
+     * @deprecated 建议使用 {@link #readUnsignedDword(Consumer)} 代替
+     */
+    @Deprecated(since = "2.1.4", forRemoval = false)
     default Jt808ByteReader readDword(Consumer<Integer> consumer) {
         final int dword = this.readDword();
         consumer.accept(dword);
         return this;
     }
 
+    /**
+     * @deprecated 建议使用 {@link #readUnsignedWord()} 代替
+     */
+    @Deprecated(since = "2.1.4", forRemoval = false)
     default short readWord() {
         return JtCommonUtils.readWord(readable());
     }
 
+    /**
+     * @deprecated 建议使用 {@link #readUnsignedWord(Consumer)} 代替
+     */
+    @Deprecated(since = "2.1.4", forRemoval = false)
     default Jt808ByteReader readWord(Consumer<Short> consumer) {
         final short word = this.readWord();
         consumer.accept(word);

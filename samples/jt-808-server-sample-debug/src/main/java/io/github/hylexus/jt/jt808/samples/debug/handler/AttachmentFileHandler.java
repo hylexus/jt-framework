@@ -1,4 +1,4 @@
-package io.github.hylexus.jt.demos.jt808.handler;
+package io.github.hylexus.jt.jt808.samples.debug.handler;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
@@ -12,6 +12,7 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinServerCommonReply
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
+import io.github.hylexus.jt.jt808.support.extension.attachment.AttachmentJt808CommandSender;
 import io.github.hylexus.jt.jt808.support.extension.attachment.AttachmentJt808SessionManager;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,13 @@ public class AttachmentFileHandler {
     // !!!因为附件上传和普通指令是不同的 TCP 连接
     private final AttachmentJt808SessionManager sessionManager;
 
-    public AttachmentFileHandler(AttachmentJt808SessionManager sessionManager) {
+    // AttachmentJt808CommandSender 和 Jt808CommandSender 类似
+    // 只不过 AttachmentJt808CommandSender 是针对于附件消息的
+    private final AttachmentJt808CommandSender attachmentJt808CommandSender;
+
+    public AttachmentFileHandler(AttachmentJt808SessionManager sessionManager, AttachmentJt808CommandSender attachmentJt808CommandSender) {
         this.sessionManager = sessionManager;
+        this.attachmentJt808CommandSender = attachmentJt808CommandSender;
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x1210, versions = Jt808ProtocolVersion.AUTO_DETECTION)
@@ -46,21 +52,18 @@ public class AttachmentFileHandler {
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x1212, versions = Jt808ProtocolVersion.AUTO_DETECTION)
-    public BuiltinMsg9212Alias processMsg0x1212(Jt808Request request, BuiltinMsg1212Alias reqBody) {
+    public BuiltinServerCommonReplyMsg processMsg0x1212(Jt808Request request, BuiltinMsg1212Alias reqBody) {
         log.info("0x1211 ==> {}", reqBody);
         warnLogIfNecessary(request, "0x1212 不应该由指令服务器对应的端口处理");
+        // final BuiltinMsg9212Alias respBody = new BuiltinMsg9212Alias();
+        // respBody.setFileNameLength(reqBody.getFileNameLength());
+        // respBody.setFileName(reqBody.getFileName());
+        // respBody.setFileType(reqBody.getFileType());
+        // respBody.setUploadResult((byte) 0x00);
+        // respBody.setPackageCountToReTransmit((short) 0);
 
-        final BuiltinMsg9212Alias resp = new BuiltinMsg9212Alias();
-        resp.setFileNameLength(reqBody.getFileNameLength());
-        resp.setFileName(reqBody.getFileName());
-        resp.setFileType(reqBody.getFileType());
-        // 0x00：完成
-        // 0x01：需要补传
-        resp.setUploadResult((byte) 0x00);
-        resp.setPackageCountToReTransmit((short) 0);
-        resp.setRetransmitItemList(null);
-
-        return resp;
+        // this.sendMsg9212(request.terminalId(), respBody);
+        return BuiltinServerCommonReplyMsg.success(request.header().msgId(), request.flowId());
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x30316364)
@@ -75,12 +78,14 @@ public class AttachmentFileHandler {
         if (request.session() == null) {
             return;
         }
-        if (sessionManager.findByTerminalId(request.terminalId()).orElseThrow() != request.session()) {
-            log.error("session invalid");
-        }
         if (request.session().role() == Jt808Session.Role.INSTRUCTION) {
             log.warn(msg);
         }
+        sessionManager.findByTerminalId(request.terminalId()).ifPresent(session -> {
+            if (session != request.session()) {
+                log.error("session invalid");
+            }
+        });
     }
 
     public void sendMsg9212(String terminalId, BuiltinMsg9212Alias body) {

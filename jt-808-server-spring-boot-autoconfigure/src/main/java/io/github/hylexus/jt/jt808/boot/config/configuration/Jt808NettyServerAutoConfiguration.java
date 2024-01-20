@@ -192,21 +192,23 @@ public class Jt808NettyServerAutoConfiguration {
     @ConditionalOnProperty(prefix = "jt808.features.request-filter", name = "enabled", havingValue = "true", matchIfMissing = false)
     public Jt808RequestMsgQueueListener filteringMsgQueueListener(
             Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
+            // Jt808SessionManager sessionManager,
+            Jt808RequestSubPackageStorage subPackageStorage,
             Jt808RequestSubPackageEventListener requestSubPackageEventListener,
             ObjectProvider<Jt808RequestFilter> filters) {
 
         final List<Jt808RequestFilter> allFilters = filters.orderedStream().collect(Collectors.toList());
-        return new FilteringJt808RequestMsgQueueListener(dispatcherHandler, sessionManager, subPackageStorage, requestSubPackageEventListener, allFilters);
+        return new FilteringJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener, allFilters);
     }
 
     @Bean
     @ConditionalOnMissingBean
     public Jt808RequestMsgQueueListener msgQueueListener(
             Jt808DispatcherHandler dispatcherHandler,
-            Jt808SessionManager sessionManager, Jt808RequestSubPackageStorage subPackageStorage,
+            // Jt808SessionManager sessionManager,
+            Jt808RequestSubPackageStorage subPackageStorage,
             Jt808RequestSubPackageEventListener requestSubPackageEventListener) {
-        return new DefaultJt808RequestMsgQueueListener(dispatcherHandler, sessionManager, subPackageStorage, requestSubPackageEventListener);
+        return new DefaultJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener);
     }
 
 

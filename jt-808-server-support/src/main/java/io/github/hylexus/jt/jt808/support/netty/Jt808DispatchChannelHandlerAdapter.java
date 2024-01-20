@@ -1,75 +1,22 @@
 package io.github.hylexus.jt.jt808.support.netty;
 
-import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListener;
-import io.github.hylexus.jt.jt808.spec.Jt808RequestLifecycleListenerAware;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestProcessor;
-import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nonnull;
-
-import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.CHANNEL_INACTIVE;
-import static io.github.hylexus.jt.jt808.spec.session.DefaultSessionCloseReason.SERVER_EXCEPTION_OCCURRED;
-
 /**
+ * v2.14中把代码都搬到了父类
+ *
  * @author hylexus
  * @author lirenhao
  **/
 @Slf4j
 @ChannelHandler.Sharable
-public class Jt808DispatchChannelHandlerAdapter extends ChannelInboundHandlerAdapter implements Jt808RequestLifecycleListenerAware {
-
-    private final Jt808SessionManager sessionManager;
-    private final Jt808RequestProcessor requestProcessor;
-    private Jt808RequestLifecycleListener requestLifecycleListener;
+public class Jt808DispatchChannelHandlerAdapter extends InternalJt808DispatchChannelHandlerAdapter {
 
     public Jt808DispatchChannelHandlerAdapter(Jt808RequestProcessor requestProcessor, Jt808SessionManager sessionManager) {
-        this.requestProcessor = requestProcessor;
-        this.sessionManager = sessionManager;
+        super(requestProcessor, sessionManager);
     }
 
-    @Override
-    public void channelRead(@Nonnull ChannelHandlerContext ctx, @Nonnull Object msg) throws Exception {
-        if (msg instanceof ByteBuf) {
-            final ByteBuf buf = (ByteBuf) msg;
-            try {
-                if (buf.readableBytes() <= 0) {
-                    return;
-                }
-                final boolean continueProcess = this.requestLifecycleListener.beforeDecode(buf, ctx.channel());
-                if (!continueProcess) {
-                    return;
-                }
-                this.requestProcessor.processJt808Request(buf, ctx.channel());
-            } finally {
-                JtProtocolUtils.release(buf);
-            }
-        } else {
-            ctx.fireChannelRead(msg);
-        }
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), SERVER_EXCEPTION_OCCURRED);
-        log.error("[exceptionCaught]", cause);
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.warn("channelInactive, address={} ", ctx.channel().remoteAddress());
-        }
-        sessionManager.removeBySessionIdAndClose(sessionManager.generateSessionId(ctx.channel()), CHANNEL_INACTIVE);
-    }
-
-    @Override
-    public void setRequestLifecycleListener(Jt808RequestLifecycleListener requestLifecycleListener) {
-        this.requestLifecycleListener = requestLifecycleListener;
-    }
 }

@@ -6,10 +6,14 @@ import io.github.hylexus.jt.jt808.boot.props.attachment.AttachmentServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
+import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
+import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestRouteExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
+import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.extension.attachment.*;
+import io.github.hylexus.jt.jt808.support.extension.attachment.impl.DefaultAttachmentJt808CommandSender;
 import io.github.hylexus.jt.jt808.support.extension.attachment.impl.DefaultAttachmentJt808SessionManager;
 import io.github.hylexus.jt.jt808.support.extension.attachment.impl.SimpleAttachmentJt808RequestProcessor;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
@@ -45,13 +49,22 @@ public class Jt808AttachmentServerAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public AttachmentJt808CommandSender attachmentJt808CommandSender(
+            AttachmentJt808SessionManager sessionManager, Jt808MsgEncoder encoder,
+            Jt808AnnotationBasedEncoder annotationBasedEncoder) {
+        return new DefaultAttachmentJt808CommandSender(sessionManager, encoder, annotationBasedEncoder);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(SimpleAttachmentJt808RequestProcessor.class)
     public SimpleAttachmentJt808RequestProcessor simpleAttachmentJt808RequestProcessor(
             Jt808MsgDecoder jt808MsgDecoder,
             AttachmentJt808SessionManager sessionManager,
             Jt808RequestRouteExceptionHandler routeExceptionHandler,
+            Jt808RequestMsgDispatcher msgDispatcher,
             Jt808DispatcherHandler dispatcherHandler) {
-        return new SimpleAttachmentJt808RequestProcessor(jt808MsgDecoder, sessionManager, routeExceptionHandler, dispatcherHandler);
+        return new SimpleAttachmentJt808RequestProcessor(jt808MsgDecoder, sessionManager, routeExceptionHandler, msgDispatcher, dispatcherHandler);
     }
 
     @Bean(name = BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)

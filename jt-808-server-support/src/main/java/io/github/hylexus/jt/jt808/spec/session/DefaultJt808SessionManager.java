@@ -81,6 +81,7 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
         session.terminalId(terminalId);
         session.lastCommunicateTimestamp(System.currentTimeMillis());
         session.protocolVersion(version);
+        session.role(Jt808Session.Role.INSTRUCTION);
         return session;
     }
 
