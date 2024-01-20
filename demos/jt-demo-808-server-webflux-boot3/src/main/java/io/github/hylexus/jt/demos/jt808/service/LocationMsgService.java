@@ -68,7 +68,7 @@ public class LocationMsgService {
         msg9208.setAttachmentServerPortUdp(0);
         msg9208.setAlarmIdentifier(msg64.getAlarmIdentifiers());
         msg9208.setAlarmNo(Randoms.randomString(32));
-        msg9208.setReservedByte16(null);
+        msg9208.setReservedByte16("");
         final Jt808CommandKey commandKey = Jt808CommandKey.of(session.terminalId(), BuiltinJt808MsgType.SERVER_MSG_9208, session.nextFlowId());
         try {
             final Object resp = this.commandSender.sendCommandAndWaitingForReply(commandKey, msg9208, 20L, TimeUnit.SECONDS);

@@ -3,7 +3,7 @@ package io.github.hylexus.jt.utils;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Randoms {
-    private static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+    private static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
 
     public static String randomString(int length) {
         final ThreadLocalRandom random = ThreadLocalRandom.current();

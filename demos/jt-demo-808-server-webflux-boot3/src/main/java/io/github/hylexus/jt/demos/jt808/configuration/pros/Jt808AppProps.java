@@ -7,4 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.jt808-server")
 public class Jt808AppProps {
     private String serverIp;
+    private Attachment attachment = new Attachment();
+
+    @Data
+    public static class Attachment {
+        private String temporaryPath;
+    }
 }

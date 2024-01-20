@@ -121,7 +121,7 @@ public class SimpleAttachmentJt808RequestProcessor implements AttachmentJt808Req
     /**
      * 模拟Jt808请求
      */
-    private Jt808Request simulateJt808Request(ByteBuf buf, Jt808Session session) {
+    public Jt808Request simulateJt808Request(ByteBuf buf, Jt808Session session) {
 
         final Jt808RequestHeader requestHeader = this.simulateJt808RequestHeader(session);
 

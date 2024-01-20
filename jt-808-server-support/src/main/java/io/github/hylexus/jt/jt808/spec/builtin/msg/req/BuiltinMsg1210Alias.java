@@ -56,5 +56,8 @@ public class BuiltinMsg1210Alias {
 
         @RequestFieldAlias.Dword(order = 30)
         private long fileSize;
+
+        // 这个属性不在报文里  由外部赋值
+        private BuiltinMsg1210Alias group;
     }
 }
