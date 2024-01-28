@@ -105,20 +105,4 @@ public class BuiltinMsg0200V2019AliasV2 {
     )
     private Map<Integer, Object> extraItemMap;
 
-    @Data
-    public static class ExtraItem {
-        // 附加信息ID
-        @RequestFieldAlias.Byte(order = 0)
-        private int id;
-
-        // 附加信息长度
-        @RequestFieldAlias.Byte(order = 1)
-        private int contentLength;
-
-        // 附加信息内容
-        @RequestFieldAlias.Bytes(order = 3, lengthExpression = "#this.contentLength")
-        // private byte[] content;
-        private ByteArrayContainer content;
-        // private ByteBufContainer content;
-    }
 }

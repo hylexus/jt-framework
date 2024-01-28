@@ -16,6 +16,12 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 
 /**
  * 位置上报消息的处理器
+ * <p>
+ * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+ * <p>
+ * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+ * <p>
+ * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
  *
  * @author hylexus
  */
@@ -37,6 +43,13 @@ public class LocationMsgHandler {
         return BuiltinServerCommonReplyMsg.success(request.msgId(), request.flowId());
     }
 
+    /**
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     * <p>
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     * <p>
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     */
     @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2019)
     public BuiltinServerCommonReplyMsg processLocationUploadMsgV2019(Jt808RequestEntity<LocationUploadMsgV2019> request, Jt808Session session) {
         final LocationUploadMsgV2019 body = request.body();
@@ -54,6 +67,13 @@ public class LocationMsgHandler {
         return BuiltinServerCommonReplyMsg.success(request.msgId(), request.flowId());
     }
 
+    /**
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     * <p>
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     * <p>
+     * 附加项列表和苏标附件服务器的示例，参考 demos/jt-demo-808-server-webflux-boot3 的 io.github.hylexus.jt.demos.jt808.handler.LocationMsgHandler
+     */
     @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2013)
     public BuiltinServerCommonReplyMsg processLocationUploadMsgV2013(Jt808RequestEntity<BuiltinMsg0200V2013Alias> request, Jt808Session session) {
         final BuiltinMsg0200V2013Alias body = request.body();
