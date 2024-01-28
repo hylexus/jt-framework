@@ -14,7 +14,6 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinServerCommonReply
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
-import io.github.hylexus.jt.jt808.support.extension.attachment.AttachmentJt808SessionManager;
 import io.github.hylexus.jt.jt808.support.extension.attachment.impl.SimpleAttachmentJt808RequestProcessor;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
@@ -39,14 +38,8 @@ public class AttachmentFileHandler {
             .expireAfterWrite(Duration.ofMinutes(5))
             .build();
 
-    // !!!如果需要用 session 的话，附件相关的几个 808 指令对应的 session 应该从 AttachmentJt808SessionManager 中获取
-    // !!!而不是从普通的 Jt808SessionManager 中获取
-    // !!!因为 附件上传 和 普通指令 是不同的 TCP 连接
-    private final AttachmentJt808SessionManager sessionManager;
-
-    public AttachmentFileHandler(AttachmentFileService attachmentFileService, AttachmentJt808SessionManager sessionManager) {
+    public AttachmentFileHandler(AttachmentFileService attachmentFileService) {
         this.attachmentFileService = attachmentFileService;
-        this.sessionManager = sessionManager;
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x1210, versions = Jt808ProtocolVersion.AUTO_DETECTION)
@@ -124,9 +117,7 @@ public class AttachmentFileHandler {
         if (request.session() == null) {
             return;
         }
-        if (sessionManager.findByTerminalId(request.terminalId()).orElseThrow() != request.session()) {
-            log.error("session invalid");
-        }
+
         if (request.session().role() == Jt808Session.Role.INSTRUCTION) {
             log.warn(msg);
         }

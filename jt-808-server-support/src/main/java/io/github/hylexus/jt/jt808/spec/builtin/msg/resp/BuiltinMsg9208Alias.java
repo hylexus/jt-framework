@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.builtin.msg.resp;
 
+import io.github.hylexus.jt.jt808.spec.builtin.msg.extension.location.AlarmIdentifierAlias;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseFieldAlias;
 import lombok.Data;
@@ -30,8 +31,8 @@ public class BuiltinMsg9208Alias {
     private int attachmentServerPortUdp;
 
     // BYTE[16]
-    @ResponseFieldAlias.Bytes(order = 50)
-    private String alarmIdentifier;
+    @ResponseFieldAlias.Object(order = 50)
+    private AlarmIdentifierAlias alarmIdentifier;
 
     // BYTE[32]
     @ResponseFieldAlias.Bytes(order = 60)
@@ -39,5 +40,5 @@ public class BuiltinMsg9208Alias {
 
     // BYTE[16]
     @ResponseFieldAlias.Bytes(order = 70)
-    private String reservedByte16;
+    private String reservedByte16 = "0000000000000000";
 }

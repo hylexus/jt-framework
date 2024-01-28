@@ -1,10 +1,10 @@
 package io.github.hylexus.jt.demos.jt808.handler;
 
 import io.github.hylexus.jt.demos.jt808.msg.req.LocationBatchUploadMsgV2019;
-import io.github.hylexus.jt.demos.jt808.msg.req.LocationUploadMsgV2019;
 import io.github.hylexus.jt.demos.jt808.service.LocationMsgService;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
-import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200V2013Alias;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200V2013AliasV2;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0200V2019AliasV2;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinServerCommonReplyMsg;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
@@ -43,8 +43,8 @@ public class LocationMsgHandler {
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2019)
-    public BuiltinServerCommonReplyMsg processLocationUploadMsgV2019(Jt808RequestEntity<LocationUploadMsgV2019> request, Jt808Session session) {
-        final LocationUploadMsgV2019 body = request.body();
+    public BuiltinServerCommonReplyMsg processLocationUploadMsgV2019(Jt808RequestEntity<BuiltinMsg0200V2019AliasV2> request, Jt808Session session) {
+        final BuiltinMsg0200V2019AliasV2 body = request.body();
         log.info("LocationUpload -- V2019 -- {}", body);
 
         locationMsgService.processLocationMsg(request.session(), body);
@@ -53,11 +53,11 @@ public class LocationMsgHandler {
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2013)
-    public BuiltinServerCommonReplyMsg processLocationUploadMsgV2013(Jt808RequestEntity<BuiltinMsg0200V2013Alias> request, Jt808Session session) {
-        final BuiltinMsg0200V2013Alias body = request.body();
+    public BuiltinServerCommonReplyMsg processLocationUploadMsgV2013(Jt808RequestEntity<BuiltinMsg0200V2013AliasV2> request, Jt808Session session) {
+        final BuiltinMsg0200V2013AliasV2 body = request.body();
         log.info("LocationUpload -- V2013 -- {}", body);
 
-        locationMsgService.processLocationMsg(body, request.session());
+        locationMsgService.processLocationMsg(request.session(), body);
 
         return BuiltinServerCommonReplyMsg.success(request.msgId(), request.flowId());
     }

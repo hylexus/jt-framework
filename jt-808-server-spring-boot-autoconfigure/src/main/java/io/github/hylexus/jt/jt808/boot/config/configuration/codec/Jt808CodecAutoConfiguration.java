@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
+import io.github.hylexus.jt.jt808.support.annotation.codec.SimpleJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.*;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
@@ -101,5 +102,11 @@ public class Jt808CodecAutoConfiguration {
     @ConditionalOnMissingBean
     public Jt808AnnotationBasedEncoder jt808AnnotationBasedEncoder(Jt808FieldSerializerRegistry fieldSerializerRegistry) {
         return new Jt808AnnotationBasedEncoder(fieldSerializerRegistry);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SimpleJt808MsgDecoder simpleJt808MsgDecoder(Jt808AnnotationBasedDecoder delegate) {
+        return new SimpleJt808MsgDecoder(delegate);
     }
 }

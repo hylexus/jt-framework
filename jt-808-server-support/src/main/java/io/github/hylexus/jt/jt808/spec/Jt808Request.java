@@ -22,6 +22,9 @@ import java.util.function.Supplier;
 @BuiltinComponent
 public interface Jt808Request {
 
+    /**
+     * @since 2.1.4
+     */
     Jt808Session session();
 
     /**

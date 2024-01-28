@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
+import io.github.hylexus.jt.utils.FormatUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -42,5 +43,14 @@ public class BuiltinTerminalCommonReplyMsg {
 
     public static BuiltinTerminalCommonReplyMsg success(int serverMsgId, int serverFlowId) {
         return new BuiltinTerminalCommonReplyMsg().setServerMsgId(serverMsgId).setServerFlowId(serverFlowId).setResult(RESULT_SUCCESS);
+    }
+
+    @Override
+    public String toString() {
+        return "BuiltinTerminalCommonReplyMsg{"
+                + "serverFlowId=" + serverFlowId
+                + ", serverMsgId=" + serverMsgId + "(0x" + FormatUtils.toHexString(serverMsgId) + ")"
+                + ", result=" + result
+                + '}';
     }
 }

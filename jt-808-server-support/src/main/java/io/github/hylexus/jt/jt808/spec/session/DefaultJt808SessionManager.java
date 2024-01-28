@@ -74,6 +74,11 @@ public class DefaultJt808SessionManager implements Jt808SessionManager {
         return buildSession(terminalId, version, channel, flowIdGenerator);
     }
 
+    @Override
+    public Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel, Jt808Session.Role role) {
+        return ((DefaultJt808Session) this.generateSession(terminalId, version, channel)).role(role);
+    }
+
     protected DefaultJt808Session buildSession(String terminalId, Jt808ProtocolVersion version, Channel channel, Jt808FlowIdGenerator flowIdGenerator) {
         final DefaultJt808Session session = new DefaultJt808Session(flowIdGenerator);
         session.channel(channel);

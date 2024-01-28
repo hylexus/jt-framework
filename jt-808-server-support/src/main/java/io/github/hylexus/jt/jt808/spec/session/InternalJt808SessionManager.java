@@ -94,6 +94,13 @@ public interface InternalJt808SessionManager {
     Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel);
 
     /**
+     * @since 2.1.4
+     */
+    default Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel, Jt808Session.Role role) {
+        return this.generateSession(terminalId, version, channel);
+    }
+
+    /**
      * @param terminalId 终端号(手机号)
      * @param version    协议版本号
      * @param channel    Channel

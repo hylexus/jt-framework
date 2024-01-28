@@ -79,7 +79,9 @@ public class JavaBeanMetadataUtils {
                 javaBeanFieldMetadata.setRequestFieldLengthExtractor(RequestFieldLengthExtractor.createFor(fieldType, annotation.dataType(), annotation));
                 javaBeanFieldMetadata.setFieldCharset(Charset.forName(annotation.charset()));
                 javaBeanMetadata.getRequestFieldMetadataList().add(javaBeanFieldMetadata);
-            } else if (javaBeanFieldMetadata.isAnnotationPresent(ResponseField.class)) {
+            }
+
+            if (javaBeanFieldMetadata.isAnnotationPresent(ResponseField.class)) {
                 final ResponseField annotation = javaBeanFieldMetadata.getAnnotation(ResponseField.class);
                 javaBeanFieldMetadata.setOrder(annotation.order());
                 javaBeanMetadata.getResponseFieldMetadataList().add(javaBeanFieldMetadata);

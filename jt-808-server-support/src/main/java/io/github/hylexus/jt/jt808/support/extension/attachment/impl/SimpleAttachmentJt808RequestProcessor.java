@@ -6,13 +6,13 @@ import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808MsgBodyProps;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ServerExchange;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808RequestRouteExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.exception.Jt808UnknownMsgException;
 import io.github.hylexus.jt.jt808.support.extension.attachment.AttachmentJt808RequestProcessor;
-import io.github.hylexus.jt.jt808.support.extension.attachment.AttachmentJt808SessionManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.util.AttributeKey;
@@ -27,11 +27,11 @@ public class SimpleAttachmentJt808RequestProcessor implements AttachmentJt808Req
 
     private final Jt808RequestMsgDispatcher msgDispatcher;
     private final Jt808DispatcherHandler dispatcherHandler;
-    private final AttachmentJt808SessionManager sessionManager;
+    private final Jt808SessionManager sessionManager;
 
     public SimpleAttachmentJt808RequestProcessor(
             Jt808MsgDecoder decoder,
-            AttachmentJt808SessionManager sessionManager,
+            Jt808SessionManager sessionManager,
             Jt808RequestRouteExceptionHandler routeExceptionHandler,
             Jt808RequestMsgDispatcher msgDispatcher,
             Jt808DispatcherHandler dispatcherHandler) {
@@ -100,6 +100,7 @@ public class SimpleAttachmentJt808RequestProcessor implements AttachmentJt808Req
             exchange = new DefaultJt808ServerExchange(originalRequest, originalResponse, jt808Session);
             dispatcherHandler.handleRequest(exchange);
         } finally {
+            originalRequest.release();
             if (exchange != null && exchange.response() != originalResponse) {
                 originalResponse.release();
             }
@@ -111,9 +112,11 @@ public class SimpleAttachmentJt808RequestProcessor implements AttachmentJt808Req
     private Jt808Session persistenceSessionIfNecessary(Channel channel, Jt808Request request) {
         final Jt808Session session = this.getSession(channel);
         if (session != null) {
-            return session;
+            return session.lastCommunicateTimestamp(System.currentTimeMillis());
         }
-        final Jt808Session attachmentSession = sessionManager.persistenceIfNecessary(request.terminalId(), request.version(), channel);
+        final Jt808Session attachmentSession = sessionManager.generateSession(request.terminalId(), request.version(), channel, Jt808Session.Role.ATTACHMENT);
+
+        // sessionManager.persistenceIfNecessary(request.terminalId(), request.version(), channel);
         channel.attr(SESSION_ATTR_KEY).set(attachmentSession);
         return attachmentSession;
     }
