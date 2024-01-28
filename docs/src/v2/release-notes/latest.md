@@ -4,6 +4,33 @@ icon: branch
 
 # 2.1.x
 
+## 2.1.4-rc.2(2024-01-28)
+
+### ⭐ New Features
+
+- 优化苏标附件服务器的支持
+- 支持位置附加项列表注解 `@RequestFieldAlias.LocationMsgExtraItemMapping()`
+- 新增 `@RequestField#conditionalOn()` 属性
+- 内置几个和苏标相关的实体类
+
+## 2.1.4-beta1(2024-01-14)
+
+### ⭐ New Features
+
+- 支持苏标附件服务器
+
+## 2.1.3(2023-10-05)
+
+### 🐞 Bug Fixes
+
+- `BuiltinCommonHandler.processTerminalHeartBeatMsg` 应该回复 `0x8001` 消息，而不是不回复消息
+
+## 2.1.2(2023-09-01)
+
+### ⭐ New Features
+
+- 参见 [#78](https://github.com/hylexus/jt-framework/issues/78)
+
 ## 2.1.1(2023-05-12)
 
 ### ⭐ New Features

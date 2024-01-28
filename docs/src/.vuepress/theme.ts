@@ -3,14 +3,9 @@ import {zhNavbar} from "./navbar";
 import {zhSidebar} from "./sidebar";
 
 export default hopeTheme({
-    fullscreen: true,
+    fullscreen: false,
 
-    themeColor: {
-        blue: "#2196f3",
-        red: "#f26d6d",
-        green: "#3eaf7c",
-        orange: "#fb9b5f",
-    },
+    themeColor: true,
 
     hostname: "https://github.com/hylexus/jt-framework",
 
@@ -56,13 +51,27 @@ export default hopeTheme({
     // hotReload: true,
     plugins: {
         // git: true,
-
+        searchPro: {
+            // 索引全部内容
+            indexContent: true,
+            hotKeys: [{key: 'k', ctrl: true}],
+            // 为分类和标签添加索引
+            // customFields: [
+            //     {
+            //         getter: (page) => page.frontmatter.category,
+            //         formatter: "分类：$content",
+            //     },
+            //     {
+            //         getter: (page) => page.frontmatter.tag,
+            //         formatter: "标签：$content",
+            //     },
+            // ],
+        },
         mdEnhance: {
             align: true,
             attrs: true,
             chart: true,
             codetabs: true,
-            container: true,
             demo: true,
             echarts: true,
             figure: true,
@@ -76,8 +85,9 @@ export default hopeTheme({
             playground: {
                 presets: ["ts", "vue"],
             },
-            presentation: {
+            revealJs: {
                 plugins: ["highlight", "math", "search", "notes", "zoom"],
+                themes: ["auto", "beige", "black", "blood", "league", "moon", "night", "serif", "simple", "sky", "solarized", "white"],
             },
             stylize: [
                 {
