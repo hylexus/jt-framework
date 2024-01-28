@@ -6,8 +6,8 @@ import io.github.hylexus.jt.jt808.spec.CommandWaitingPool;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.spec.session.InternalJt808SessionManager;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
-import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.exception.Jt808EncodeException;
 import io.netty.buffer.ByteBuf;
 
@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
 
     protected final CommandWaitingPool commandWaitingPool = CommandWaitingPool.getInstance();
-    protected final Jt808SessionManager sessionManager;
+    protected final InternalJt808SessionManager sessionManager;
 
-    protected AbstractJt808CommandSender(Jt808SessionManager sessionManager) {
+    protected AbstractJt808CommandSender(InternalJt808SessionManager sessionManager) {
         this.sessionManager = sessionManager;
     }
 

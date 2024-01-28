@@ -5,6 +5,17 @@ spring:
   jackson:
     time-zone: Asia/Shanghai
 
+## 应用自身的配置
+## 和框架无关
+app:
+  jt808-server:
+    ## 下发 0x9208 指令时用到
+    ## 应该是一个公网IP(设备能访问的IP)
+    server-ip: node2
+    attachment:
+      temporary-path: /Users/hylexus/Desktop/jtt/1078/attachment
+
+## dashboard配置
 jt-dashboard:
   client:
     jt808:
@@ -14,6 +25,8 @@ jt-dashboard:
       server-url: http://localhost:9090
       metadata:
         role: 808-server
+
+## 808服务配置
 jt808:
   server:
     port: 6808
@@ -43,18 +56,22 @@ jt808:
       ttl: 3m
     redis:
       ttl: 3m
+  attachment-server:
+    enabled: true
+    port: 6809
 
 logging:
   level:
     root: info
     io.github.hylexus: info
     # 将默认解码器的日志级别调整到debug 来观察分包请求消息的解码
-    jt-808.request.decoder: debug
+    jt-808.request.decoder: info
     # 将请求分包暂存器(默认为基于Caffeine的实现)的日志级别调整的debug 来观察分包请求的处理过程
-    io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
-    jt-808.response.encoder: debug
-    jt-808.command-sender: debug
-    io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler: debug
+    io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: info
+    jt-808.response.encoder: info
+    jt-808.command-sender: info
+    io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler: info
+
 management:
   endpoints:
     web:

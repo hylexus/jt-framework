@@ -71,7 +71,7 @@ class ExtendedJt808FieldDeserializerBcdTimeTest {
 
     private static Jt808FieldDeserializer.Context createContext(String field) {
         final JavaBeanFieldMetadata fieldMetadata = JavaBeanMetadataUtils.getBeanMetadata(Placeholder.class).getFieldMapping().get(field);
-        return new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata);
+        return new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata, null, null);
     }
 
 }

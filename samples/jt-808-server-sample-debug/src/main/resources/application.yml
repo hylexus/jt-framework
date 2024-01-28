@@ -10,7 +10,7 @@ jt808:
     request-filter:
       enabled: true
     program-param-printer:
-      enabled: true
+      enabled: false
   request-sub-package-storage:
     type: caffeine
     caffeine:

@@ -1,11 +1,14 @@
 package io.github.hylexus.jt.jt808.support.data.deserialize;
 
 import io.github.hylexus.jt.core.ReplaceableComponent;
+import io.github.hylexus.jt.jt808.spec.Jt808Request;
+import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedDecoder;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -31,19 +34,45 @@ public interface Jt808FieldDeserializer<T> extends ReplaceableComponent {
 
     interface Context {
         JavaBeanFieldMetadata fieldMetadata();
+
+        /**
+         * @since 2.1.4
+         */
+        @Nullable
+        Jt808AnnotationBasedDecoder delegate();
+
+        /**
+         * @since 2.1.4
+         */
+        @Nullable
+        Jt808Request request();
     }
 
     class DefaultInternalDecoderContext implements Context {
 
         private final JavaBeanFieldMetadata fieldMetadata;
+        private final Jt808AnnotationBasedDecoder delegate;
+        private final Jt808Request request;
 
-        public DefaultInternalDecoderContext(JavaBeanFieldMetadata fieldMetadata) {
+        public DefaultInternalDecoderContext(JavaBeanFieldMetadata fieldMetadata, Jt808AnnotationBasedDecoder delegate, Jt808Request request) {
             this.fieldMetadata = fieldMetadata;
+            this.delegate = delegate;
+            this.request = request;
         }
 
         @Override
         public JavaBeanFieldMetadata fieldMetadata() {
             return this.fieldMetadata;
+        }
+
+        @Override
+        public Jt808AnnotationBasedDecoder delegate() {
+            return this.delegate;
+        }
+
+        @Override
+        public Jt808Request request() {
+            return this.request;
         }
     }
 

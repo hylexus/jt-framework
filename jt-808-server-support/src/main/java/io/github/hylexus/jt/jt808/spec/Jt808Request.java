@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.impl.request.DefaultJt808Request;
+import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteReader;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
@@ -20,6 +21,11 @@ import java.util.function.Supplier;
  */
 @BuiltinComponent
 public interface Jt808Request {
+
+    /**
+     * @since 2.1.4
+     */
+    Jt808Session session();
 
     /**
      * @return 消息ID
@@ -137,6 +143,8 @@ public interface Jt808Request {
     interface Jt808RequestBuilder {
 
         Jt808RequestBuilder header(Jt808RequestHeader header);
+
+        Jt808RequestBuilder session(Jt808Session session);
 
         default Jt808RequestBuilder rawByteBuf(ByteBuf byteBuf) {
             return this.rawByteBuf(byteBuf, true);

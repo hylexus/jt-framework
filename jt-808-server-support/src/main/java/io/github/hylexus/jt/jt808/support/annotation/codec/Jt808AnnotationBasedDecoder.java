@@ -17,11 +17,13 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.github.hylexus.jt.utils.Assertions;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,14 +52,16 @@ public class Jt808AnnotationBasedDecoder {
         return result;
     }
 
-    public Object decode(Class<?> cls, Object instance, ByteBuf byteBuf, Jt808Request request) throws Jt808AnnotationArgumentResolveException {
+    public Object decode(Class<?> cls, Object instance, ByteBuf byteBuf, @Nullable Jt808Request request) throws Jt808AnnotationArgumentResolveException {
 
         this.processAwareMethod(instance, request);
 
         final EvaluationContext evaluationContext = new StandardEvaluationContext(instance);
         evaluationContext.setVariable("this", instance);
-        evaluationContext.setVariable("request", request);
-        evaluationContext.setVariable("header", request.header());
+        if (request != null) {
+            evaluationContext.setVariable("request", request);
+            evaluationContext.setVariable("header", request.header());
+        }
         final AnnotationDecoderContext context = new AnnotationDecoderContext(byteBuf.readableBytes(), byteBuf);
         evaluationContext.setVariable("ctx", context);
         evaluationContext.setVariable("context", context);
@@ -80,11 +84,15 @@ public class Jt808AnnotationBasedDecoder {
 
     private void processBasicField(
             EvaluationContext evaluationContext, Class<?> cls, Object instance, JavaBeanFieldMetadata fieldMetadata,
-            ByteBuf bodyDataBuf, Jt808Request request) {
+            ByteBuf bodyDataBuf, @Nullable Jt808Request request) {
 
         final RequestField annotation = fieldMetadata.getAnnotation(RequestField.class);
         final MsgDataType jtDataType = annotation.dataType();
         final Class<?> javaDataType = fieldMetadata.getFieldType();
+
+        if (this.shouldSkip(evaluationContext, annotation)) {
+            return;
+        }
 
         // v2.1.1 开始可以不再返回 `startIndex` 这个偏移量(2.x 中是按照 ByteBuf 顺序读取的,用不到1.x中遗留的 `startIndex` 逻辑)
         final int startIndex = getBasicFieldStartIndex(evaluationContext, cls, instance, annotation, fieldMetadata);
@@ -98,7 +106,7 @@ public class Jt808AnnotationBasedDecoder {
         final Field field = fieldMetadata.getField();
         if (converterClass != Jt808FieldDeserializer.PlaceholderFieldDeserializer.class) {
             final Jt808FieldDeserializer<?> fieldDeserializer = getFieldDeserializer(converterClass);
-            deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length, fieldMetadata);
+            deserialize(bodyDataBuf, instance, field, fieldDeserializer, jtDataType, startIndex, length, fieldMetadata, request);
             return;
         }
 
@@ -141,15 +149,26 @@ public class Jt808AnnotationBasedDecoder {
                 .orElseThrow(() -> new Jt808AnnotationArgumentResolveException(
                         "No Jt808FieldDeserializer found, Unsupported expectedTargetClassType " + javaDataType + " for field " + field));
 
-        deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length, fieldMetadata);
+        deserialize(bodyDataBuf, instance, field, deserializer, jtDataType, startIndex, length, fieldMetadata, request);
+    }
+
+    private boolean shouldSkip(EvaluationContext evaluationContext, RequestField annotation) {
+        if (StringUtils.isEmpty(annotation.conditionalOn())) {
+            return false;
+        }
+        final Boolean condition = this.parser.parseExpression(annotation.conditionalOn()).getValue(evaluationContext, Boolean.class);
+        if (condition == null) {
+            return false;
+        }
+        return !condition;
     }
 
     private void deserialize(
             ByteBuf byteBuf, Object instance, Field field,
-            Jt808FieldDeserializer<?> deserializer, MsgDataType jtDataType, int offset, int length, JavaBeanFieldMetadata fieldMetadata) {
+            Jt808FieldDeserializer<?> deserializer, MsgDataType jtDataType, int offset, int length, JavaBeanFieldMetadata fieldMetadata, Jt808Request request) {
 
         final Object value = deserializer.deserialize(byteBuf, jtDataType, offset, length,
-                new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata));
+                new Jt808FieldDeserializer.DefaultInternalDecoderContext(fieldMetadata, this, request));
 
         if (log.isDebugEnabled()) {
             log.debug("Deserialize field [{}#{}] by {}, result : {}",
@@ -276,4 +295,10 @@ public class Jt808AnnotationBasedDecoder {
 
     }
 
+    /**
+     * @since 2.1.4
+     */
+    public Jt808FieldDeserializerRegistry basicFieldDeserializerRegistry() {
+        return this.jt808FieldDeserializerRegistry;
+    }
 }

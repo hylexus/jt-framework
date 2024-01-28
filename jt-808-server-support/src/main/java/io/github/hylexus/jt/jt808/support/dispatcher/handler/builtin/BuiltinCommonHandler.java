@@ -21,7 +21,7 @@ public class BuiltinCommonHandler {
 
     @Jt808RequestHandlerMapping(msgType = 0x0002)
     public BuiltinServerCommonReplyMsg processTerminalHeartBeatMsg(Jt808RequestEntity<BuiltinMsg0002> request) {
-        log.info("TerminalHeartBeatMsg, terminalId={}, flowId={}", request.terminalId(), request.flowId());
+        log.info("TerminalHeartBeatMsg, terminalId={}, flowId={}, role={}", request.terminalId(), request.flowId(), request.session().role());
         return BuiltinServerCommonReplyMsg.success(request.msgType().getMsgId(), request.flowId());
     }
 

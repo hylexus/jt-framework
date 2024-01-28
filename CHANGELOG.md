@@ -1,3 +1,12 @@
+## 2.1.4-rc.2(2024-01-28)
+
+### ⭐ New Features
+
+- 优化苏标附件服务器的支持
+- 支持位置附加项列表注解 `@RequestFieldAlias.LocationMsgExtraItemMapping()`
+- 新增 `@RequestField#conditionalOn()` 属性
+- 内置几个和苏标相关的实体类
+
 ## 2.1.4-beta1(2024-01-14)
 
 ### ⭐ New Features

@@ -23,4 +23,8 @@ public class AttachmentServerProps {
 
     @NestedConfigurationProperty
     private MsgProcessorProps msgProcessor = new MsgProcessorProps();
+
+    @NestedConfigurationProperty
+    private IdleStateHandlerProps idleStateHandler = new IdleStateHandlerProps();
+
 }

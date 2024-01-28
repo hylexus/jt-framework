@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec.session;
 
+import io.github.hylexus.jt.annotation.Internal;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.netty.channel.Channel;
 
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Internal
 public interface InternalJt808SessionManager {
     /**
      * @return 以 {@link Stream} 的形式返回当前 {@link Jt808Session} 列表
@@ -92,6 +94,13 @@ public interface InternalJt808SessionManager {
     Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel);
 
     /**
+     * @since 2.1.4
+     */
+    default Jt808Session generateSession(String terminalId, Jt808ProtocolVersion version, Channel channel, Jt808Session.Role role) {
+        return this.generateSession(terminalId, version, channel);
+    }
+
+    /**
      * @param terminalId 终端号(手机号)
      * @param version    协议版本号
      * @param channel    Channel
@@ -158,7 +167,5 @@ public interface InternalJt808SessionManager {
         session.sendMsgToClient(bytes);
     }
 
-    Jt808SessionManager addListener(Jt808SessionEventListener listener);
 
-    List<Jt808SessionEventListener> getListeners();
 }

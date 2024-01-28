@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.extension.location.AlarmIdentifierAlias;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestField;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestFieldAlias;
@@ -26,8 +27,8 @@ public class BuiltinMsg1210Alias {
     private String terminalId;
 
     // byte[7,23)
-    @RequestFieldAlias.Bytes(order = 20, length = 16)
-    private String alarmIdentifier;
+    @RequestFieldAlias.Object(order = 20, length = 16)
+    private AlarmIdentifierAlias alarmIdentifier;
 
     // byte[23,55)
     @RequestFieldAlias.Bytes(order = 30, length = 32)
@@ -56,5 +57,8 @@ public class BuiltinMsg1210Alias {
 
         @RequestFieldAlias.Dword(order = 30)
         private long fileSize;
+
+        // 这个属性不在报文里  由外部赋值
+        private BuiltinMsg1210Alias group;
     }
 }

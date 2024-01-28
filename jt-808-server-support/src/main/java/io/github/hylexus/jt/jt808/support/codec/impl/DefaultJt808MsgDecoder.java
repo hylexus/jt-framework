@@ -38,7 +38,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     }
 
     @Override
-    public Jt808Request decode(ByteBuf byteBuf) {
+    public MutableJt808Request decode(ByteBuf byteBuf) {
         if (log.isDebugEnabled()) {
             log.debug("- >>>>>>>>>>>>>>> : 7E{}7E", HexStringUtils.byteBufToString(byteBuf));
         }

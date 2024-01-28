@@ -1,8 +1,12 @@
 package io.github.hylexus.jt.jt808.support.annotation.msg.req;
 
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.extensions.ValueDescriptor;
+import io.github.hylexus.jt.jt808.support.annotation.msg.req.extensions.KeyValueMapping;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerBcdTime;
 import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerGeoPoint;
+import io.github.hylexus.jt.jt808.support.data.deserialize.extension.ExtendedJt808FieldDeserializerLocationExtraItem;
+import io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
@@ -24,6 +28,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -36,6 +43,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -47,6 +57,9 @@ public @interface RequestFieldAlias {
     @interface Bcd {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
 
         @AliasFor(annotation = RequestField.class, attribute = "length")
         int length() default -1;
@@ -70,6 +83,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -91,6 +107,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -103,6 +122,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -114,6 +136,9 @@ public @interface RequestFieldAlias {
     @interface Bytes {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
 
         @AliasFor(annotation = RequestField.class, attribute = "length")
         int length() default -1;
@@ -136,6 +161,9 @@ public @interface RequestFieldAlias {
 
         @AliasFor(annotation = RequestField.class, attribute = "charset")
         java.lang.String charset() default "GBK";
+
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
 
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
@@ -170,6 +198,9 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
         java.lang.String lengthMethod() default "";
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
     }
@@ -182,7 +213,45 @@ public @interface RequestFieldAlias {
         @AliasFor(annotation = RequestField.class, attribute = "order")
         int order();
 
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
         @AliasFor(annotation = RequestField.class, attribute = "desc")
         java.lang.String desc() default "";
+    }
+
+    /**
+     * 位置附加项
+     *
+     * @since 2.1.4
+     */
+    @Target({ElementType.FIELD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @RequestField(dataType = MsgDataType.OBJECT, order = -1, customerFieldDeserializerClass = ExtendedJt808FieldDeserializerLocationExtraItem.class)
+    @interface LocationMsgExtraItemMapping {
+
+        @AliasFor(annotation = RequestField.class, attribute = "order")
+        int order();
+
+        @AliasFor(annotation = RequestField.class, attribute = "conditionalOn")
+        java.lang.String conditionalOn() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "length")
+        int length() default -1;
+
+        @AliasFor(annotation = RequestField.class, attribute = "lengthExpression")
+        java.lang.String lengthExpression() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "lengthMethod")
+        java.lang.String lengthMethod() default "";
+
+        @AliasFor(annotation = RequestField.class, attribute = "desc")
+        java.lang.String desc() default "";
+
+        KeyValueMapping[] keyValueMappings();
+
+        ValueDescriptor defaultKeyValueMapping() default @ValueDescriptor(source = MsgDataType.BYTES, target = ByteArrayContainer.class);
+
     }
 }

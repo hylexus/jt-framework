@@ -103,4 +103,10 @@ public @interface RequestField {
     Class<? extends Jt808FieldDeserializer<?>> customerFieldDeserializerClass() default Jt808FieldDeserializer.PlaceholderFieldDeserializer.class;
 
     String desc() default "";
+
+    /**
+     * @return SpEL(Spring Expression Language); 解析之后的结果为true时才会反序列化该字段。
+     * @since 2.1.4
+     */
+    String conditionalOn() default "";
 }

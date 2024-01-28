@@ -69,14 +69,6 @@ public interface Jt808ServerNettyConfigure extends JtServerNettyConfigure {
         }
 
         @Override
-        public void configureServerBootstrap(ServerBootstrap serverBootstrap) {
-            serverBootstrap
-                    .option(ChannelOption.SO_BACKLOG, 2048)
-                    .option(ChannelOption.SO_REUSEADDR, true)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
-        }
-
-        @Override
         public void configureSocketChannel(SocketChannel ch) {
             if (serverBootstrapProps.getIdleStateHandlerProps().isEnabled()) {
                 final long readerIdleTime = serverBootstrapProps.getIdleStateHandlerProps().getReaderIdleTime().toMillis();

@@ -1,7 +1,7 @@
 package io.github.hylexus.jt.jt808.support.dispatcher.impl;
 
-import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.jt808.spec.MutableJt808Request;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
@@ -40,14 +40,15 @@ public class SimpleJt808RequestProcessor implements Jt808RequestProcessor {
 
     @Override
     public void processJt808Request(ByteBuf buf, Channel channel) throws Exception {
-        Jt808Session jt808Session = null;
-        Jt808Request request = null;
+        MutableJt808Request request = null;
         try {
             try {
                 request = decoder.decode(buf);
                 final Jt808RequestHeader header = request.header();
                 final String terminalId = header.terminalId();
-                jt808Session = sessionManager.persistenceIfNecessary(terminalId, header.version(), channel);
+                final Jt808Session jt808Session = sessionManager.persistenceIfNecessary(terminalId, header.version(), channel);
+                // since 2.1.4
+                request.session(jt808Session);
 
                 if (log.isDebugEnabled()) {
                     log.debug("[decode] : {}, terminalId={}, msg = {}", request.msgType(), terminalId, request);

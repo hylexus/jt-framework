@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 
 import io.github.hylexus.jt.annotation.BuiltinComponent;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.req.extra.ExtraItemSupport;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.Jt808RequestBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.RequestFieldAlias;
 import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
@@ -66,7 +67,7 @@ public class BuiltinMsg0200V2013Alias {
     private List<ExtraItem> extraItemList;
 
     @Data
-    public static class ExtraItem {
+    public static class ExtraItem implements ExtraItemSupport {
         // 附加信息ID
         @RequestFieldAlias.Byte(order = 0)
         private int id;

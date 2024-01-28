@@ -6,7 +6,7 @@ import io.netty.channel.Channel;
 /**
  * @author hylexus
  */
-public interface Jt808RequestProcessor {
+public interface Jt808RequestProcessor extends InternalJt808RequestProcessor {
 
     void processJt808Request(ByteBuf byteBuf, Channel channel) throws Exception;
 
