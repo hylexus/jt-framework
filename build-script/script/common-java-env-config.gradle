@@ -39,8 +39,11 @@ dependencyManagement {
 }
 
 apply plugin: 'java-library'
-sourceCompatibility = obtainJavaVersion()
-targetCompatibility = obtainJavaVersion()
+
+java {
+    sourceCompatibility = obtainJavaVersion()
+    targetCompatibility = obtainJavaVersion()
+}
 
 tasks.withType(JavaCompile) {
     options.encoding = "${defaultCharset}"
