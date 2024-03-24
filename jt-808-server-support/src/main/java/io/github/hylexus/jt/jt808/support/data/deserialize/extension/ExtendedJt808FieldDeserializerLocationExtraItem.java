@@ -35,6 +35,10 @@ public class ExtendedJt808FieldDeserializerLocationExtraItem extends AbstractExt
             throw new JtIllegalStateException("Jt808AnnotationBasedDecoder is null");
         }
 
+        if (length > 0) {
+            byteBuf = byteBuf.readSlice(length);
+        }
+
         final Map<Integer, Object> result = new LinkedHashMap<>();
         while (byteBuf.isReadable()) {
             final int key = byteBuf.readUnsignedByte();
