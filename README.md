@@ -8,6 +8,13 @@ Jt-808协议服务端。
 
 最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
 
+## 私有协议编解码小工具推荐「广告」
+
+不依赖具体协议的私有协议编解码小工具。
+
+- Github : https://github.com/hylexus/xtream-codec
+- Gitee : https://gitee.com/hylexus/xtream-codec
+
 ## Compatibility
 
 支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
