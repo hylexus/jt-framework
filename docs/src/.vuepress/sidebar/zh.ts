@@ -57,6 +57,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/annotation-based-dev/exception-handler.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-upload-msg-parse-demo.md',
                     '/v2/jt-808/guide/annotation-based-dev/location-batch-upload-msg-parse-demo.md',
+                    '/v2/jt-808/guide/annotation-based-dev/extra-location-msg-paring.md',
                     '/v2/jt-808/guide/annotation-based-dev/notices-for-builtin-msg.md',
                 ]
             },
@@ -71,6 +72,14 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
                     '/v2/jt-808/guide/customization/jt-808-request-filter.md',
+                ]
+            },
+            {
+                text: "协议扩展",
+                collapsible: true,
+                icon: 'extend',
+                children: [
+                    '/v2/jt-808/guide/protocol-extension/jangsu/index.md',
                 ]
             },
             {
@@ -103,6 +112,7 @@ export const zhSidebar = sidebar({
             "/v2/jt-808/config/message-processor.md",
             "/v2/jt-808/config/sub-package.md",
             "/v2/jt-808/config/others.md",
+            "/v2/jt-808/config/extension-jiangsu.md",
         ],
         '/v1/jt-808/config/': ["/v1/jt-808/config/"],
         '/v1/jt-808/guide/': [

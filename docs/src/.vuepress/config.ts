@@ -1,4 +1,4 @@
-import {path} from '@vuepress/utils'
+import {path} from "vuepress/utils"
 import {defineUserConfig} from 'vuepress'
 import theme from "./theme"
 

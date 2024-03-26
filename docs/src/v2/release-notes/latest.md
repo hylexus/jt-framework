@@ -4,6 +4,12 @@ icon: branch
 
 # 2.1.x
 
+## 2.1.4-rc.3(2024-03-24)
+
+### 🐞 Bug Fixes
+
+- 解决 `ExtendedJt808FieldDeserializerLocationExtraItem` 没有考虑 `length` 属性的问题
+
 ## 2.1.4-rc.2(2024-01-28)
 
 ### ⭐ New Features
