@@ -30,6 +30,12 @@ export default hopeTheme({
     footer: '<a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">备案号: 沪ICP备2022029946号-2</a >',
     displayFooter: true,
 
+    navbarLayout: {
+        start: ["Brand"],
+        center: ["Links"],
+        end: ["RepoGitee", "Repo", 'SocialLink', "Outlook", "Search"],
+    },
+
     locales: {
         "/": {
             // navbar

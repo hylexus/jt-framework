@@ -1,0 +1,13 @@
+.vp-navbar .vp-repo {
+    margin: 0 !important;
+}
+.vp-navbar .vp-repo-link {
+    display: inline-block;
+    margin: auto;
+    padding: 6px;
+    color: var(--dark-grey);
+    line-height: 1;
+}
+.vp-navbar .vp-repo-link :hover,.vp-navbar .vp-repo-link :active {
+    color: var(--theme-color);
+}

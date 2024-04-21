@@ -32,6 +32,24 @@ public class DemoController {
 }
 ```
 
+## CommandSender 消息下发流程图
+
+1. 通过 `Jt808SessionManager` 获取到 `Jt808Session`
+2. 通过上一步中获取到的 `Jt808Session` 下发消息
+3. 同时生成一个消息应答的 `key` 放入 `CommandWaitingPool` 中等待
+4. 出站（服务端下发）
+5. 入站（客户端上报）
+6. 消息处理器处理
+    - 这里的消息处理器就是被 `@Jt808RequestHandlerMapping` 修饰的消息处理方法
+7. 这一步应该将收到的客户端消息放入的 `CommandWaitingPool` 中
+    - 然后 **步骤3** 中处于等待状态的线程会拿到这个 `key` 对应的消息
+    - **步骤3** 和 **步骤7** 生成的 `key` 必须是一致的，否则 **步骤3** 中的线程取不到值
+    - 同时应该注意：**步骤3** 中的线程应该和 **步骤7** 中的线程分开，不要使用同一个线程，否则会出现线程阻塞问题，取不到值
+
+<p class="">
+    <img :src="$withBase('/img/v2/basic/command-sender-flow.png')">
+</p> 
+
 ## 通过CommandSender下发
 
 下发消息，并等待。
@@ -94,3 +112,4 @@ public class CommonHandler {
     }
 }
 ```
+
