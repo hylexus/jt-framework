@@ -90,16 +90,16 @@ public class DefaultJt808Response implements Jt808Response {
         return body.readableBytes();
     }
 
-    // @Override
-    // public int encryptionType() {
-    //     return encryptionType;
-    // }
+    @Override
+    public int encryptionType() {
+        return this.encryptionType;
+    }
 
-    // @Override
-    // public Jt808Response encryptionType(int encType) {
-    //     this.encryptionType = encType;
-    //     return this;
-    // }
+    @Override
+    public Jt808Response encryptionType(int encType) {
+        this.encryptionType = encType;
+        return this;
+    }
 
     @Override
     public int maxPackageSize() {

@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.spec.impl.response;
 
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808FlowIdGenerator;
@@ -169,7 +170,8 @@ public class DefaultJt808ResponseBuilderTest {
         return new DefaultJt808MsgEncoder(
                 ByteBufAllocator.DEFAULT, new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
                 new CompositeJt808ResponseSubPackageEventListener(new ArrayList<>()),
-                Jt808ResponseSubPackageStorage.NO_OPS_STORAGE
+                Jt808ResponseSubPackageStorage.NO_OPS_STORAGE,
+                Jt808MsgEncryptionHandler.NO_OPS
         ).encode(response, new DefaultJt808FlowIdGenerator());
     }
 }

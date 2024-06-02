@@ -54,14 +54,31 @@ public interface Jt808Response extends Jt808ByteWriter {
         return body().readableBytes();
     }
 
-    // /**
-    //  * byte[2,4).bit[10,12) -- 数据加密方式
-    //  */
-    // default int encryptionType() {
-    //     return 0;
-    // }
+    /**
+     * byte[2,4).bit[10,12) -- 数据加密方式
+     *
+     * @since 2.1.4
+     */
+    int encryptionType();
 
-    // Jt808Response encryptionType(int encType);
+    /**
+     * @since 2.1.4
+     */
+    Jt808Response encryptionType(int encType);
+
+    /**
+     * @since 2.1.4
+     */
+    default Jt808Response encryptionType(Jt808MsgEncryptionType encType) {
+        return this.encryptionType(encType.intValue());
+    }
+
+    /**
+     * @since 2.1.4
+     */
+    default Jt808MsgEncryptionType dataEncryptionType() {
+        return Jt808MsgEncryptionType.fromIntValue(this.encryptionType());
+    }
 
     /**
      * byte[2,4).bit[15] -- 保留位
@@ -184,7 +201,11 @@ public interface Jt808Response extends Jt808ByteWriter {
 
         Jt808ResponseBuilder version(Jt808ProtocolVersion version);
 
-        //Jt808ResponseBuilder encryptionType(int encryptionType);
+        Jt808ResponseBuilder encryptionType(int encryptionType);
+
+        default Jt808ResponseBuilder encryptionType(Jt808MsgEncryptionType encryptionType) {
+            return this.encryptionType(encryptionType.intValue());
+        }
 
         Jt808ResponseBuilder reversedBit15InHeader(byte reversedBit15InHeader);
 

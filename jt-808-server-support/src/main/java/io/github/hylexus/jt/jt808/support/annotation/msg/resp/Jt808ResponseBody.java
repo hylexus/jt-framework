@@ -23,11 +23,12 @@ public @interface Jt808ResponseBody {
      */
     int msgId();
 
-    // /**
-    //  * @return 消息体加密类型
-    //  * @see Jt808Response#encryptionType()
-    //  */
-    // byte encryptionType() default 0;
+    /**
+     * @return 消息体加密类型
+     * @see Jt808Response#encryptionType()
+     * @since 2.1.4
+     */
+    byte encryptionType() default Jt808Response.DEFAULT_ENCRYPTION_TYPE;
 
     /**
      * @return 单个消息包的最大字节数, 超过该值会自动分包发送

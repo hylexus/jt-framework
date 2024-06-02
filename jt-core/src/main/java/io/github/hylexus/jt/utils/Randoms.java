@@ -13,4 +13,10 @@ public class Randoms {
         }
         return sb.toString();
     }
+
+    public static byte[] randomBytes(int length) {
+        final byte[] bytes = new byte[length];
+        ThreadLocalRandom.current().nextBytes(bytes);
+        return bytes;
+    }
 }

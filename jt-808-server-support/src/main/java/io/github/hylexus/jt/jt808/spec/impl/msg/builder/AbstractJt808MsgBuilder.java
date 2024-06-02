@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.impl.msg.builder;
 import io.github.hylexus.jt.annotation.UnstableApi;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
@@ -49,7 +50,8 @@ public abstract class AbstractJt808MsgBuilder<B, S extends AbstractJt808MsgBuild
                 msgBytesProcessor,
                 responseSubPackage -> {
                 },
-                Jt808ResponseSubPackageStorage.NO_OPS_STORAGE
+                Jt808ResponseSubPackageStorage.NO_OPS_STORAGE,
+                Jt808MsgEncryptionHandler.NO_OPS
         );
     }
 
@@ -80,6 +82,12 @@ public abstract class AbstractJt808MsgBuilder<B, S extends AbstractJt808MsgBuild
     @Override
     public S terminalId(String terminalId) {
         this.terminalId = requireNonNull(terminalId, "terminalId() can not be null");
+        return self();
+    }
+
+    @Override
+    public S encryptionType(int encType) {
+        this.encryptionType = encType;
         return self();
     }
 

@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.builtin.msg.req;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
@@ -36,7 +37,8 @@ class BuiltinMsg0104Test {
     private final Jt808MsgDecoder jt808MsgDecoder = new DefaultJt808MsgDecoder(
             new BuiltinJt808MsgTypeParser(),
             new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
-            new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector())
+            new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector()),
+            Jt808MsgEncryptionHandler.NO_OPS
     );
     private final Jt808AnnotationBasedDecoder annotationBasedDecoder = new Jt808AnnotationBasedDecoder(new DefaultJt808FieldDeserializerRegistry(true));
 

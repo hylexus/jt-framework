@@ -1,3 +1,14 @@
+## 2.1.4-rc.4(2024-06-02)
+
+### ⭐ New Features
+
+初步支持消息加解密，详情见: [#82](https://github.com/hylexus/jt-framework/issues/82)
+
+- 新增 `Jt808MsgEncryptionHandler`
+- `@Jt808ResponseBody` 新增 `encryptionType(int)` 属性
+- `Jt808Response` 新增 `encryptionType(int)` 属性
+- `Jt808MsgBuilder` 新增 `encryptionType(int)` 属性
+
 ## 2.1.4-rc.3(2024-03-24)
 
 ### 🐞 Bug Fixes

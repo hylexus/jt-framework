@@ -2,10 +2,14 @@ package io.github.hylexus.jt808.samples.customized.config;
 
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
-import io.github.hylexus.jt.jt808.spec.session.*;
+import io.github.hylexus.jt.jt808.spec.session.DefaultJt808FlowIdGeneratorV2;
+import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
+import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.*;
 import io.github.hylexus.jt.jt808.support.codec.impl.*;
 import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
@@ -73,7 +77,7 @@ public class MyJt808Config {
     public Jt808MsgEncoder jt808MsgEncoder(
             Jt808MsgBytesProcessor processor, Jt808ResponseSubPackageEventListener listener,
             Jt808ResponseSubPackageStorage subPackageStorage) {
-        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, listener, subPackageStorage);
+        return new DefaultJt808MsgEncoder(ByteBufAllocator.DEFAULT, processor, listener, subPackageStorage, Jt808MsgEncryptionHandler.NO_OPS);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808MsgDecoder
@@ -82,7 +86,7 @@ public class MyJt808Config {
             Jt808MsgTypeParser jt808MsgTypeParser,
             Jt808MsgBytesProcessor bytesProcessor,
             Jt808ProtocolVersionDetectorRegistry registry) {
-        return new DefaultJt808MsgDecoder(jt808MsgTypeParser, bytesProcessor, registry);
+        return new DefaultJt808MsgDecoder(jt808MsgTypeParser, bytesProcessor, registry, Jt808MsgEncryptionHandler.NO_OPS);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808SessionManager

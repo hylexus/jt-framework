@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration.codec;
 
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
@@ -55,12 +56,19 @@ public class Jt808CodecAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public Jt808MsgEncryptionHandler jt808MsgEncryptionHandler() {
+        return Jt808MsgEncryptionHandler.NO_OPS;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public Jt808MsgDecoder jt808MsgDecoder(
             Jt808MsgTypeParser msgTypeParser,
             Jt808MsgBytesProcessor msgBytesProcessor,
-            Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry) {
+            Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry,
+            Jt808MsgEncryptionHandler encryptionHandler) {
 
-        return new DefaultJt808MsgDecoder(msgTypeParser, msgBytesProcessor, versionDetectorRegistry);
+        return new DefaultJt808MsgDecoder(msgTypeParser, msgBytesProcessor, versionDetectorRegistry, encryptionHandler);
     }
 
     @Bean
@@ -68,8 +76,9 @@ public class Jt808CodecAutoConfiguration {
     public Jt808MsgEncoder jt808MsgEncoder(
             Jt808MsgBytesProcessor msgBytesProcessor,
             Jt808ResponseSubPackageEventListener subPackageEventListener,
-            Jt808ResponseSubPackageStorage subPackageStorage) {
-        return new DefaultJt808MsgEncoder(PooledByteBufAllocator.DEFAULT, msgBytesProcessor, subPackageEventListener, subPackageStorage);
+            Jt808ResponseSubPackageStorage subPackageStorage,
+            Jt808MsgEncryptionHandler encryptionHandler) {
+        return new DefaultJt808MsgEncoder(PooledByteBufAllocator.DEFAULT, msgBytesProcessor, subPackageEventListener, subPackageStorage, encryptionHandler);
     }
 
     @Bean

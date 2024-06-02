@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.codec.impl;
 import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
@@ -31,14 +32,27 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     private final Jt808MsgBytesProcessor msgBytesProcessor;
     private final Jt808ResponseSubPackageEventListener subPackageEventListener;
     private final Jt808ResponseSubPackageStorage subPackageStorage;
+    private final Jt808MsgEncryptionHandler encryptionHandler;
 
+    /**
+     * @deprecated 使用 {@link #DefaultJt808MsgEncoder(ByteBufAllocator, Jt808MsgBytesProcessor, Jt808ResponseSubPackageEventListener, Jt808ResponseSubPackageStorage, Jt808MsgEncryptionHandler)} 代替
+     */
+    @Deprecated(forRemoval = true, since = "2.1.4")
     public DefaultJt808MsgEncoder(
             ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor,
             Jt808ResponseSubPackageEventListener subPackageEventListener, Jt808ResponseSubPackageStorage subPackageStorage) {
+        this(allocator, msgBytesProcessor, subPackageEventListener, subPackageStorage, Jt808MsgEncryptionHandler.NO_OPS);
+    }
+
+    public DefaultJt808MsgEncoder(
+            ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor,
+            Jt808ResponseSubPackageEventListener subPackageEventListener, Jt808ResponseSubPackageStorage subPackageStorage,
+            Jt808MsgEncryptionHandler encryptionHandler) {
         this.msgBytesProcessor = msgBytesProcessor;
         this.allocator = allocator;
         this.subPackageEventListener = subPackageEventListener;
         this.subPackageStorage = subPackageStorage;
+        this.encryptionHandler = encryptionHandler;
     }
 
     @Override
@@ -88,6 +102,10 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     }
 
     private CompositeByteBuf buildPackage(Jt808Response response, ByteBuf body, int totalSubPackageCount, int currentPackageNo, int flowId) {
+
+        // @see https://github.com/hylexus/jt-framework/issues/82
+        body = this.encryptionHandler.encryptResponseBody(response, body);
+
         final ByteBuf headerBuf = this.encodeMsgHeader(response, body, totalSubPackageCount > 0, totalSubPackageCount, currentPackageNo, flowId);
         final CompositeByteBuf compositeByteBuf = allocator.compositeBuffer()
                 .addComponent(true, headerBuf)
@@ -130,7 +148,7 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
 
         // bytes[2-4) 消息体属性 Word
         final int bodyPropsForJt808 = JtProtocolUtils.generateMsgBodyPropsForJt808(
-                body.readableBytes(), 0,
+                body.readableBytes(), response.encryptionType(),
                 hasSubPackage, response.version(), response.reversedBit15InHeader()
         );
         JtProtocolUtils.writeWord(header, bodyPropsForJt808);

@@ -26,7 +26,12 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     private final Jt808MsgTypeParser msgTypeParser;
     private final Jt808MsgBytesProcessor msgBytesProcessor;
     private final Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry;
+    private final Jt808MsgEncryptionHandler encryptionHandler;
 
+    /**
+     * @deprecated 使用 {@link #DefaultJt808MsgDecoder(io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser, io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor, io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry, io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler) } 代替
+     */
+    @Deprecated(forRemoval = true, since = "2.1.4")
     public DefaultJt808MsgDecoder(
             Jt808MsgTypeParser msgTypeParser,
             Jt808MsgBytesProcessor msgBytesProcessor,
@@ -35,6 +40,19 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         this.msgTypeParser = msgTypeParser;
         this.msgBytesProcessor = msgBytesProcessor;
         this.versionDetectorRegistry = versionDetectorRegistry;
+        this.encryptionHandler = Jt808MsgEncryptionHandler.NO_OPS;
+    }
+
+    public DefaultJt808MsgDecoder(
+            Jt808MsgTypeParser msgTypeParser,
+            Jt808MsgBytesProcessor msgBytesProcessor,
+            Jt808ProtocolVersionDetectorRegistry versionDetectorRegistry,
+            Jt808MsgEncryptionHandler encryptionHandler) {
+
+        this.msgTypeParser = msgTypeParser;
+        this.msgBytesProcessor = msgBytesProcessor;
+        this.versionDetectorRegistry = versionDetectorRegistry;
+        this.encryptionHandler = encryptionHandler;
     }
 
     @Override
@@ -60,16 +78,31 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
 
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);
         final byte calculatedCheckSum = this.msgBytesProcessor.calculateCheckSum(escaped.slice(0, escaped.readableBytes() - 1));
+
+        // @see https://github.com/hylexus/jt-framework/issues/82
+        final ByteBuf body = escaped.retainedSlice(msgBodyStartIndex, header.msgBodyLength());
+        final ByteBuf newBody = this.encryptionHandler.decryptRequestBody(header, body);
+        final int newBodyLength = newBody.readableBytes();
+
+        final Jt808RequestHeader newHeader;
+        if (body.readableBytes() == newBodyLength) {
+            newHeader = header;
+        } else {
+            // 重新计算消息体属性(长度发生变化)
+            final Jt808RequestHeader.Jt808MsgBodyProps newProps = header.msgBodyProps().mutate().msgBodyLength(newBodyLength).build();
+            newHeader = header.mutate().msgBodyProps(newProps).build();
+        }
+
         final DefaultJt808Request request = new DefaultJt808Request(
-                msgType, header,
-                escaped, escaped.retainedSlice(msgBodyStartIndex, header.msgBodyLength()),
+                msgType, newHeader,
+                escaped, newBody,
                 originalCheckSum, calculatedCheckSum
         );
         debugLog(msgType, request);
         return request;
     }
 
-    private void debugLog(MsgType msgType, DefaultJt808Request request) {
+    protected void debugLog(MsgType msgType, DefaultJt808Request request) {
         if (log.isDebugEnabled()) {
             if (request.header().msgBodyProps().hasSubPackage()) {
                 log.debug("+ >>>>>>>>>>>>>>> ({}--{}) {}/{}: 7E{}7E",
@@ -91,7 +124,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         }
     }
 
-    private Jt808RequestHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
+    protected Jt808RequestHeader parseMsgHeaderSpec(ByteBuf byteBuf) {
         // 1. bytes[0-1] WORD
         final int msgId = JtProtocolUtils.getWord(byteBuf, 0);
         // bytes[2-3] WORD 消息体属性
@@ -108,7 +141,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         throw new JtIllegalStateException("未知版本: " + version);
     }
 
-    private Jt808RequestHeader parseHeaderGreatThanOrEqualsV2019(
+    protected Jt808RequestHeader parseHeaderGreatThanOrEqualsV2019(
             Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
 
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();
@@ -136,7 +169,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         return headerSpec;
     }
 
-    private Jt808RequestHeader parseHeaderLessThanOrEqualsV2013(
+    protected Jt808RequestHeader parseHeaderLessThanOrEqualsV2013(
             Jt808ProtocolVersion version, Jt808RequestHeader.Jt808MsgBodyProps msgBodyProps, ByteBuf byteBuf) {
 
         final DefaultJt808RequestHeader headerSpec = new DefaultJt808RequestHeader();

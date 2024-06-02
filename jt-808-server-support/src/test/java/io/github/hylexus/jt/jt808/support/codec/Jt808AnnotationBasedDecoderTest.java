@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.support.codec;
 
+import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808Request;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ProtocolVersionDetector;
@@ -20,7 +21,8 @@ public class Jt808AnnotationBasedDecoderTest {
     private final Jt808MsgDecoder jt808MsgDecoder = new DefaultJt808MsgDecoder(
             new BuiltinJt808MsgTypeParser(),
             new DefaultJt808MsgBytesProcessor(ByteBufAllocator.DEFAULT),
-            new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector())
+            new DefaultJt808ProtocolVersionDetectorRegistry(new DefaultJt808ProtocolVersionDetector()),
+            Jt808MsgEncryptionHandler.NO_OPS
     );
 
     private Jt808AnnotationBasedDecoder decoder;

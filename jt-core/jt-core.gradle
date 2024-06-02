@@ -16,6 +16,7 @@ dependencies {
         exclude(group: "org.checkerframework", module: "checker-qual")
     }
     api 'org.apache.commons:commons-lang3'
+    api("org.bouncycastle:bcprov-jdk18on")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

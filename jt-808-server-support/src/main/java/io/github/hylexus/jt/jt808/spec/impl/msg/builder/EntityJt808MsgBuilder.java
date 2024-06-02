@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
 import io.github.hylexus.jt.jt808.support.annotation.codec.Jt808AnnotationBasedEncoder;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
+import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.data.serializer.DefaultJt808FieldSerializerRegistry;
 import io.github.hylexus.jt.jt808.support.data.serializer.Jt808FieldSerializerRegistry;
 import io.netty.buffer.ByteBuf;
@@ -29,6 +30,11 @@ public class EntityJt808MsgBuilder extends AbstractJt808MsgBuilder<Object, Entit
 
     public EntityJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808FieldSerializerRegistry registry) {
         this(new Jt808AnnotationBasedEncoder(registry), flowIdGenerator);
+    }
+
+    public EntityJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808MsgEncoder encoder) {
+        super(flowIdGenerator, encoder);
+        this.annotationBasedEncoder = new Jt808AnnotationBasedEncoder(new DefaultJt808FieldSerializerRegistry(true));
     }
 
     public EntityJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator) {
@@ -73,6 +79,13 @@ public class EntityJt808MsgBuilder extends AbstractJt808MsgBuilder<Object, Entit
         final byte reversedBit15InHeader = this.reversedBit15InHeader == null ? annotation.reversedBit15InHeader() : this.reversedBit15InHeader;
         final int maxPackageSize = this.maxPackageSize == null ? annotation.maxPackageSize() : this.maxPackageSize;
         final int msgId = this.msgId == null ? annotation.msgId() : this.msgId;
+
+        int encryptionType;
+        if (this.encryptionType == 0) {
+            encryptionType = annotation.encryptionType();
+        } else {
+            encryptionType = this.encryptionType;
+        }
 
         final ByteBuf respBody = this.annotationBasedEncoder.encodeMsgBody(null, body, null);
         return new DefaultJt808Response(

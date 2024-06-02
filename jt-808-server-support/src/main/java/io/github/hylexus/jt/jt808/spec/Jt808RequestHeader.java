@@ -61,9 +61,21 @@ public interface Jt808RequestHeader {
             return intValue() & 0x3ff;
         }
 
-        // bit[10-12] 0001,1100,0000,0000(1C00)(加密类型)
+        /**
+         * bit[10-12] 0001,1100,0000,0000(1C00)(加密类型)
+         *
+         * @see #dataEncryptionType()
+         */
         default int encryptionType() {
             return (intValue() & 0x1c00) >> 10;
+        }
+
+        /**
+         * @see #encryptionType()
+         * @since 2.1.4
+         */
+        default Jt808MsgEncryptionType dataEncryptionType() {
+            return Jt808MsgEncryptionType.fromIntValue(this.encryptionType());
         }
 
         // bit[13] 0010,0000,0000,0000(2000)(是否有子包)

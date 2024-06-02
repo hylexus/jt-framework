@@ -35,6 +35,12 @@ public class DefaultJt808ResponseBuilder implements Jt808Response.Jt808ResponseB
     }
 
     @Override
+    public Jt808Response.Jt808ResponseBuilder encryptionType(int encryptionType) {
+        this.encryptionType = encryptionType;
+        return this;
+    }
+
+    @Override
     public Jt808Response.Jt808ResponseBuilder body(ByteBuf body, boolean autoRelease) {
         final ByteBuf old = this.body;
         try {
