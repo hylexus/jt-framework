@@ -3,6 +3,7 @@ package io.github.hylexus.jt808.samples.client.debug.client1;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
+import io.github.hylexus.jt.jt808.spec.impl.msg.builder.ByteBufJt808MsgBuilder;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
 import io.github.hylexus.jt808.samples.client.debug.client1.entity.ClientLocationUploadMsgV2019;
 import io.github.hylexus.jt808.samples.client.debug.client1.entity.ClientRegisterMsgV2013;
@@ -77,25 +78,27 @@ public class MessageGenerator {
     }
 
     public ByteBuf randomClientRegisterV2019(Jt808FlowIdGenerator flowIdGenerator, String terminalId) {
-        return Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, ByteBufAllocator.DEFAULT.buffer(128))
-                .version(VERSION_2019)
-                .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
-                .terminalId(terminalId)
-                .body(writer -> writer
-                        // 省域ID WORD
-                        .writeWord(11)
-                        // 市县域ID WORD
-                        .writeWord(2)
-                        // 制造商ID byte[11]
-                        .writeString("id987654321")
-                        // 终端型号 byte[30]
-                        .writeString("type00123456781234567887654321")
-                        // 终端ID byte[30]
-                        .writeString("ID0000123456781234567887654321")
-                        .writeByte(1)
-                        .writeString("甘J-123459")
-                )
-                .build();
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, ByteBufAllocator.DEFAULT.buffer(128))) {
+            return builder
+                    .version(VERSION_2019)
+                    .msgId(BuiltinJt808MsgType.CLIENT_REGISTER)
+                    .terminalId(terminalId)
+                    .body(writer -> writer
+                            // 省域ID WORD
+                            .writeWord(11)
+                            // 市县域ID WORD
+                            .writeWord(2)
+                            // 制造商ID byte[11]
+                            .writeString("id987654321")
+                            // 终端型号 byte[30]
+                            .writeString("type00123456781234567887654321")
+                            // 终端ID byte[30]
+                            .writeString("ID0000123456781234567887654321")
+                            .writeByte(1)
+                            .writeString("甘J-123459")
+                    )
+                    .build();
+        }
     }
 
     public ByteBuf randomClientRegisterV2013(Jt808FlowIdGenerator flowIdGenerator, String terminalId) {
@@ -140,32 +143,34 @@ public class MessageGenerator {
     public ByteBuf randomLocationMsgV2019(Jt808FlowIdGenerator flowIdGenerator, String terminalId, int maxPackageSize) {
         final int mileage = mileages[new Random().nextInt(3)];
 
-        return Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, ByteBufAllocator.DEFAULT.buffer(256))
-                .version(VERSION_2019)
-                .msgId(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD)
-                .terminalId(terminalId)
-                .maxPackageSize(maxPackageSize)
-                .body(writer -> writer
-                        .writeDWord(0)
-                        .writeDWord(0)
-                        .writeDWord(31235930 + ThreadLocalRandom.current().nextInt(100000))
-                        .writeDWord(121480540 + ThreadLocalRandom.current().nextInt(100000))
-                        // 16 height
-                        .writeWord(22)
-                        .writeWord(100)
-                        .writeWord(11)
-                        // 22 time
-                        .writeBcd("220322001214")
-                        // item1
-                        .writeByte(0x01)
-                        .writeByte(4)
-                        .writeDWord(ThreadLocalRandom.current().nextInt(mileage))
-                        //
-                        // item2
-                        .writeByte(0x02)
-                        .writeByte(2)
-                        .writeWord(99)
-                )
-                .build();
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, ByteBufAllocator.DEFAULT.buffer(256))) {
+            return builder
+                    .version(VERSION_2019)
+                    .msgId(BuiltinJt808MsgType.CLIENT_LOCATION_INFO_UPLOAD)
+                    .terminalId(terminalId)
+                    .maxPackageSize(maxPackageSize)
+                    .body(writer -> writer
+                            .writeDWord(0)
+                            .writeDWord(0)
+                            .writeDWord(31235930 + ThreadLocalRandom.current().nextInt(100000))
+                            .writeDWord(121480540 + ThreadLocalRandom.current().nextInt(100000))
+                            // 16 height
+                            .writeWord(22)
+                            .writeWord(100)
+                            .writeWord(11)
+                            // 22 time
+                            .writeBcd("220322001214")
+                            // item1
+                            .writeByte(0x01)
+                            .writeByte(4)
+                            .writeDWord(ThreadLocalRandom.current().nextInt(mileage))
+                            //
+                            // item2
+                            .writeByte(0x02)
+                            .writeByte(2)
+                            .writeWord(99)
+                    )
+                    .build();
+        }
     }
 }

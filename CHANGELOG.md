@@ -1,3 +1,25 @@
+## 2.1.4(2024-06-08)
+
+### ⭐ New Features
+
+- 完善 `Jt808MsgBuilder`
+- 新增 `RebuildableByteBufJt808MsgBuilder`
+
+### 🔨 Dependency Upgrades
+
+- `Gradle` : **8.6** 升级到 **8.8**
+- `spring-boot-dependencies`
+    - **2.7.14** 升级到 **2.7.18**
+    - **3.1.2** 升级到 **3.3.0**
+- `spring-cloud-dependencies`
+    - **2021.0.8** 升级到 **2021.0.9**
+    - **2022.0.4** 升级到 **2023.0.2**
+
+### 📔 Documentation
+
+- 新增消息加解密相关文档
+- 新增 `RebuildableByteBufJt808MsgBuilder` 相关文档
+
 ## 2.1.4-rc.4(2024-06-02)
 
 ### ⭐ New Features

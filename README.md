@@ -17,8 +17,10 @@ Jt-808协议服务端。
 
 ## Compatibility
 
-支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
-和 **spring-boot-3.x** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
+支持 **spring-boot-2.x
+** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
+和 **spring-boot-3.x
+** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
 
 更多有关版本兼容性的信息，请移步: [入门--兼容性](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/compatibility.html) 。
 
@@ -28,14 +30,14 @@ Jt-808协议服务端。
 
 `starter` 的 **JDK** 版本、**spring-boot** 版本限制如下：
 
-| Module                                     | JDK   | spring-boot      | Desc                                       |
-|--------------------------------------------|-------|------------------|--------------------------------------------|
-| `jt-808-server-spring-boot-starter-boot2`  | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter          |
-| `jt-808-server-spring-boot-starter`        | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter          |
-| `jt-1078-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.7.x]` | 为 **spring-boot-2.x** 提供的 starter; `beta版` |
-| `jt-1078-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`   | 为 **spring-boot-3.x** 提供的 starter; `beta版` |
-| `jt-dashboard-client-spring-boot-starter`  | `17+` | `[3.0.0, ...]`   | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
-| `jt-dashboard-server-spring-boot-starter`  | `17+` | `[3.0.0, ...]`   | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
+| Module                                     | JDK   | spring-boot       | Desc                                       |
+|--------------------------------------------|-------|-------------------|--------------------------------------------|
+| `jt-808-server-spring-boot-starter-boot2`  | `11+` | `[2.2.x, 2.7.18]` | 为 **spring-boot-2.x** 提供的 starter          |
+| `jt-808-server-spring-boot-starter`        | `17+` | `[3.0.0, ...]`    | 为 **spring-boot-3.x** 提供的 starter          |
+| `jt-1078-server-spring-boot-starter-boot2` | `11+` | `[2.2.x, 2.7.18]` | 为 **spring-boot-2.x** 提供的 starter; `beta版` |
+| `jt-1078-server-spring-boot-starter`       | `17+` | `[3.0.0, ...]`    | 为 **spring-boot-3.x** 提供的 starter; `beta版` |
+| `jt-dashboard-client-spring-boot-starter`  | `17+` | `[3.0.0, ...]`    | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
+| `jt-dashboard-server-spring-boot-starter`  | `17+` | `[3.0.0, ...]`    | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
 
 ## Modules
 
@@ -44,15 +46,15 @@ Jt-808协议服务端。
 | Module                                   | JDK | CompileLevel | .class      | spring-boot | Desc                                      |
 |------------------------------------------|-----|--------------|-------------|-------------|-------------------------------------------|
 | jt-core                                  | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
-| jt-808-server-spring-boot-starter        | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |                                           |
-| jt-808-server-spring-boot-starter-boot2  | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
-| jt-808-server-spring-boot-autoconfigure  | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-808-server-spring-boot-starter        | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.3.0**_ |                                           |
+| jt-808-server-spring-boot-starter-boot2  | 17  | JDK-11       | 55 (JDK-11) | 2.7.18      |                                           |
+| jt-808-server-spring-boot-autoconfigure  | 17  | JDK-11       | 55 (JDK-11) | 2.7.18      |                                           |
 | jt-808-server-support                    | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
-| jt-1078-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.1.2**_ |                                           |
-| jt-1078-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
-| jt-1078-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.7.14      |                                           |
+| jt-1078-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.3.0**_ |                                           |
+| jt-1078-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.7.18      |                                           |
+| jt-1078-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.7.18      |                                           |
 | jt-1078-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |                                           |
-| `dashboard/**`                           | 17  | _**JDK-17**_ | 61 (JDK-11) | _**3.1.2**_ | dashboard 模块暂时只支持 `spring-boot-3.x/jdk17` |
+| `dashboard/**`                           | 17  | _**JDK-17**_ | 61 (JDK-11) | _**3.3.0**_ | dashboard 模块暂时只支持 `spring-boot-3.x/jdk17` |
 
 - 模块介绍
 
@@ -139,7 +141,7 @@ Jt-808协议服务端。
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.4-rc.3"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.1.4"
 ```
 
 - maven
@@ -149,7 +151,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.1.4-rc.3</version>
+    <version>2.1.4</version>
 </dependency>
 ```
 
@@ -219,4 +221,5 @@ Maven版示例项目
 
 项目的发展离不开你的支持，请作者喝一杯🍺吧！
 
-![有钱的捧个钱场 没钱的捧个人场](https://img.dferic.com/img/pay.png)
+![有钱的捧个钱场 没钱的捧个人场](https://hylexus.github.io/jt-framework/img/pay.png)
+

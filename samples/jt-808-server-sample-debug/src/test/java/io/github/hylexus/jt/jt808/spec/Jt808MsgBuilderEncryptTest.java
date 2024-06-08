@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.samples.debug.handler.Jt808MsgEncryptionHandlerDemo01;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.impl.msg.builder.EntityJt808MsgBuilder;
+import io.github.hylexus.jt.jt808.spec.impl.msg.builder.RebuildableByteBufJt808MsgBuilder;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.ResponseFieldAlias;
@@ -13,8 +14,10 @@ import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author hylexus
  */
+@Slf4j
 public class Jt808MsgBuilderEncryptTest {
 
     // 这里使用-1，通过 Jt808MsgBuilder.msgId(int msgId) 来指定了消息ID
@@ -105,35 +109,43 @@ public class Jt808MsgBuilderEncryptTest {
         assertEquals(0, result.refCnt());
     }
 
-    // @Test
-    // public void testByteBufMsgBuilder() {
-    //     final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer(128);
-    //     final ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(ALWAYS_RETURN_1, encoder, originalBuf)
-    //             .version(Jt808ProtocolVersion.VERSION_2013)
-    //             .msgId(BuiltinJt808MsgType.CLIENT_COMMON_REPLY)
-    //             .terminalId("013912344323")
-    //             .encryptionType(0b010)
-    //             // 消息体借助 Jt808ByteWriter 来写入内容
-    //             // 也可以直接提供一个已经写好内容的 ByteBuf 用来充当消息体
-    //             .body(writer -> writer
-    //                     // 1. 应答流水号 WORD    对应的平台消息的流水号
-    //                     .writeWord(0)
-    //                     // 2. 应答id WORD     对应的平台消息的 ID
-    //                     .writeWord(0x8103)
-    //                     // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
-    //                     .writeByte(0)
-    //             );
-    //
-    //     final ByteBuf result = builder.build();
-    //     assertEquals("7E000108100139123443230001B35513C19F57CC81A1CA86622E4E506C047E", HexStringUtils.byteBufToString(result));
-    //     assertEquals("7E000108100139123443230001B35513C19F57CC81A1CA86622E4E506C047E", builder.toHexString());
-    //
-    //     assertEquals(1, originalBuf.refCnt());
-    //     assertEquals(result.refCnt(), originalBuf.refCnt());
-    //
-    //     result.release();
-    //
-    //     assertEquals(0, originalBuf.refCnt());
-    //     assertEquals(result.refCnt(), originalBuf.refCnt());
-    // }
+    @Test
+    public void testByteBufMsgBuilder() {
+        // `./gradlew clean build -Dio.netty.allocator.type=pooled`
+        // `./gradlew clean build -Dio.netty.allocator.type=unpooled`
+        // final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer(128);
+        final ByteBuf originalBuf = Unpooled.buffer(128);
+
+        try (RebuildableByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(ALWAYS_RETURN_1, encoder, originalBuf)) {
+
+            builder.version(Jt808ProtocolVersion.VERSION_2013)
+                    .msgId(BuiltinJt808MsgType.CLIENT_COMMON_REPLY)
+                    .terminalId("013912344323")
+                    .encryptionType(0b010)
+                    // 消息体借助 Jt808ByteWriter 来写入内容
+                    // 也可以直接提供一个已经写好内容的 ByteBuf 用来充当消息体
+                    .body(writer -> writer
+                            // 1. 应答流水号 WORD    对应的平台消息的流水号
+                            .writeWord(0x1111)
+                            // 2. 应答id WORD     对应的平台消息的 ID
+                            .writeWord(0x8103)
+                            // 3. 结果  byte 0:成功/确认;1:失败;2:消息有误;3:不支持
+                            .writeByte(0x22)
+                    );
+
+            final ByteBuf result = builder.build();
+            assertEquals("7E000108100139123443230001061EE8FEE8B9FA59FAF19642F93BC9E5AB7E", HexStringUtils.byteBufToString(result));
+            assertEquals("7E000108100139123443230001061EE8FEE8B9FA59FAF19642F93BC9E5AB7E", builder.toHexString());
+
+            assertEquals(1, originalBuf.refCnt());
+            assertEquals(1, result.refCnt());
+
+            // 在恰当的时机释放构建结果
+            result.release();
+            assertEquals(0, result.refCnt());
+        }
+
+        // try-with-resource 释放了 originalBuf
+        assertEquals(0, originalBuf.refCnt());
+    }
 }

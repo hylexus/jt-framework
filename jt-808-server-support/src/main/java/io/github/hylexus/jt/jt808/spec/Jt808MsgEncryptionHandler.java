@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import io.github.hylexus.jt.jt808.support.annotation.msg.resp.Jt808ResponseBody;
 import io.netty.buffer.ByteBuf;
 
@@ -34,6 +35,7 @@ public interface Jt808MsgEncryptionHandler {
 
     Jt808MsgEncryptionHandler NO_OPS = new NoOps();
 
+    @BuiltinComponent
     class NoOps implements Jt808MsgEncryptionHandler {
 
         @Override

@@ -67,7 +67,8 @@ public class Jt808ServerComponentStatistics implements CommandLineRunner, Applic
                     Jt808TerminalHeatBeatHandler.class,
                     Jt808ServerNettyConfigure.class,
                     //Jt808RequestMsgQueue.class,
-                    Jt808RequestMsgQueueListener.class
+                    Jt808RequestMsgQueueListener.class,
+                    Jt808MsgEncryptionHandler.class
             )
     );
     @Setter

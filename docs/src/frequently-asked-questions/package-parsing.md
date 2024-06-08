@@ -12,4 +12,9 @@
 
 ## 报文加密解密
 
-暂时不支持
+`2.1.4` 开始支持。
+
+报文加解密参考资料：
+
+- [消息加密](../v2/jt-808/guide/customization/msg-encryption.md)
+- [issues-82](https://github.com/hylexus/jt-framework/issues/82)

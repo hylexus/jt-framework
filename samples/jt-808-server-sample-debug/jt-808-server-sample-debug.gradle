@@ -28,4 +28,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // https://github.com/gradle/gradle/issues/7773
+    systemProperties(System.properties)
 }

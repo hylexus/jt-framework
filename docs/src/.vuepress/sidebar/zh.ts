@@ -72,6 +72,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
                     '/v2/jt-808/guide/customization/jt-808-request-filter.md',
+                    '/v2/jt-808/guide/customization/msg-encryption.md',
                 ]
             },
             {

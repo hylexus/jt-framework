@@ -1,6 +1,5 @@
 package io.github.hylexus.jt.jt808.spec.impl.msg.builder;
 
-import io.github.hylexus.jt.annotation.UnstableApi;
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
 import io.github.hylexus.jt.jt808.spec.impl.response.DefaultJt808Response;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
@@ -16,45 +15,39 @@ import java.util.function.Consumer;
 import static io.github.hylexus.jt.utils.Assertions.assertThat;
 import static io.github.hylexus.jt.utils.Assertions.requireNonNull;
 
-/**
- * @author hylexus
- */
-@UnstableApi
-public class ByteBufJt808MsgBuilder extends AbstractJt808MsgBuilder<ByteBuf, ByteBufJt808MsgBuilder> implements AutoCloseable {
+public class RebuildableByteBufJt808MsgBuilder extends AbstractJt808MsgBuilder<ByteBuf, RebuildableByteBufJt808MsgBuilder> implements AutoCloseable {
 
-    private boolean alreadyBuilt = false;
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808MsgEncoder encoder) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808MsgEncoder encoder) {
         this(flowIdGenerator, encoder, ByteBufAllocator.DEFAULT.buffer());
     }
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808MsgEncoder encoder, ByteBuf byteBuf) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, Jt808MsgEncoder encoder, ByteBuf byteBuf) {
         super(flowIdGenerator, encoder);
         this.body = byteBuf;
     }
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator) {
         this(flowIdGenerator, ByteBufAllocator.DEFAULT.buffer());
     }
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBuf byteBuf) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBuf byteBuf) {
         super(flowIdGenerator);
         this.body = byteBuf;
     }
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBufAllocator allocator, ByteBuf byteBuf) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBufAllocator allocator, ByteBuf byteBuf) {
         super(flowIdGenerator, allocator);
         this.body = byteBuf;
     }
 
-    public ByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor, ByteBuf byteBuf) {
+    public RebuildableByteBufJt808MsgBuilder(Jt808FlowIdGenerator flowIdGenerator, ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor, ByteBuf byteBuf) {
         super(flowIdGenerator, allocator, msgBytesProcessor);
         this.body = byteBuf;
     }
 
     @Override
     protected Jt808Response toJt808Response() {
-        this.alreadyBuilt = true;
         return new DefaultJt808Response(
                 requireNonNull(version, "version() can not be null"),
                 assertThat(msgId, id -> id != null && id > 0, "msgId() can not be null"),
@@ -63,18 +56,18 @@ public class ByteBufJt808MsgBuilder extends AbstractJt808MsgBuilder<ByteBuf, Byt
                 reversedBit15InHeader == null ? 0 : reversedBit15InHeader,
                 requireNonNull(terminalId, "terminalId() can not be null"),
                 -1,
-                requireNonNull(body, "body() can not be null")
+                requireNonNull(body, "body() can not be null").copy()
         );
     }
 
-    public ByteBufJt808MsgBuilder body(Consumer<Jt808ByteWriter> consumer) {
+    public RebuildableByteBufJt808MsgBuilder body(Consumer<Jt808ByteWriter> consumer) {
         final Jt808ByteWriter writer = Jt808ByteWriter.of(this.body);
         consumer.accept(writer);
         return this;
     }
 
     @Override
-    public ByteBufJt808MsgBuilder body(ByteBuf body) {
+    public RebuildableByteBufJt808MsgBuilder body(ByteBuf body) {
         final ByteBuf old = this.body();
         try {
             return super.body(body);
@@ -85,25 +78,21 @@ public class ByteBufJt808MsgBuilder extends AbstractJt808MsgBuilder<ByteBuf, Byt
 
     @Override
     public ByteBuf build() {
-        if (this.alreadyBuilt) {
-            throw new IllegalStateException("ByteBufJt808MsgBuilder can not be built more than once.");
-        }
-
         Jt808Response jt808Response = null;
         try {
             jt808Response = this.toJt808Response();
             return this.encoder.encode(jt808Response, this.flowIdGenerator);
         } catch (Exception e) {
-            this.release();
             if (jt808Response != null) {
                 jt808Response.release();
             }
+            this.release();
             throw e;
         }
     }
 
     @Override
-    public ByteBufJt808MsgBuilder release() {
+    public RebuildableByteBufJt808MsgBuilder release() {
         JtProtocolUtils.release(this.body);
         return this;
     }
