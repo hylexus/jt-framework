@@ -3,11 +3,39 @@ package io.github.hylexus.jt.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static io.github.hylexus.jt.utils.BitOperator.binaryString;
-import static io.github.hylexus.jt.utils.BitOperator.mutable;
+import java.math.BigInteger;
+
+import static io.github.hylexus.jt.utils.BitOperator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BitOperatorTest {
+
+    @Test
+    void testRange() {
+        final BitOperator operator = mutable(0).set(63);
+        assertEquals(new BigInteger("9223372036854775808"), operator.rangedUnsignedLongValue(0, 64));
+        assertEquals(-9223372036854775808L, operator.rangedLongValue(0, 64));
+        assertEquals(Long.MIN_VALUE, operator.rangedLongValue(0, 64));
+
+        assertEquals(0L, operator.rangedLongValue(0, 63));
+        assertThrows(IllegalArgumentException.class, () -> operator.rangedLongValue(0, 65));
+        assertThrows(IllegalArgumentException.class, () -> operator.rangedLongValue(-1, 1));
+        assertThrows(IllegalArgumentException.class, () -> operator.rangedLongValue(-1, 65));
+
+
+        assertEquals(Long.MIN_VALUE, mutable(0).set(63).longValue());
+        assertEquals(Long.MIN_VALUE + 1, mutable(0).set(63).set(0).longValue());
+        assertEquals(Long.MIN_VALUE + 2, mutable(0).set(63).set(1).longValue());
+        assertEquals(Long.MIN_VALUE + 3, mutable(0).set(63).set(1).set(0).longValue());
+
+        final BitOperator operator1 = immutable(0);
+        // 全 1
+        assertEquals(new BigInteger("18446744073709551615"), operator1.setRange(0, 64).unsignedLongValue());
+        assertThrows(IllegalArgumentException.class, () -> operator1.setRange(0, 65));
+        assertThrows(IllegalArgumentException.class, () -> operator1.setRange(-1, 64));
+        assertThrows(IllegalArgumentException.class, () -> operator1.setRange(-1, 65));
+    }
 
     @Test
     void testBit() {
@@ -70,24 +98,24 @@ class BitOperatorTest {
     void testMapCondition() {
         final long original = 0b11111111L;
 
-        assertEquals(original, mutable(original).map(it -> 0b11111110L, false).value());
-        assertEquals(0b11111110L, mutable(original).map(it -> 0b11111110L, true).value());
+        assertEquals(original, mutable(original).mapIf(it -> 0b11111110L, false).value());
+        assertEquals(0b11111110L, mutable(original).mapIf(it -> 0b11111110L, true).value());
 
-        assertEquals(original, mutable(original).map(it -> 0b11111110L, it -> false).value());
-        assertEquals(0b11111110L, mutable(original).map(it -> 0b11111110L, it -> true).value());
+        assertEquals(original, mutable(original).mapIf(it -> 0b11111110L, it -> false).value());
+        assertEquals(0b11111110L, mutable(original).mapIf(it -> 0b11111110L, it -> true).value());
 
-        assertEquals(original, mutable(original).map(it -> 0b11111110L, () -> false).value());
-        assertEquals(0b11111110L, mutable(original).map(it -> 0b11111110L, () -> true).value());
+        assertEquals(original, mutable(original).mapIf(it -> 0b11111110L, () -> false).value());
+        assertEquals(0b11111110L, mutable(original).mapIf(it -> 0b11111110L, () -> true).value());
     }
 
     @Test
     void testSet() {
 
-        assertEquals(0b11111010L, mutable(0b11111111L).set(0, false).set(2, false).longValue());
-        assertEquals(0b11111111L, mutable(0b11111000L).set(0, true).set(1, true).set(2, true).longValue());
+        assertEquals(0b11111010L, mutable(0b11111111L).setWithStatus(0, false).setWithStatus(2, false).longValue());
+        assertEquals(0b11111111L, mutable(0b11111000L).setWithStatus(0, true).setWithStatusIf(1, true, true).setWithStatus(2, true).longValue());
 
-        assertEquals(0b1110, mutable(0b1110).set(0, it -> false).intValue());
-        assertEquals(0b1111, mutable(0b1110).set(0, it -> true).intValue());
+        assertEquals(0b1110, mutable(0b1110).setIf(0, it -> false).intValue());
+        assertEquals(0b1111, mutable(0b1110).setIf(0, it -> true).intValue());
     }
 
     @Test
@@ -101,9 +129,9 @@ class BitOperatorTest {
                 .reset(0)
                 .reset(2)
                 .longValue(it -> assertEquals(0b1010L, it))
-                .reset(1, it -> false)
+                .resetIf(1, it -> false)
                 .longValue(it -> assertEquals(0b1010L, it))
-                .reset(1, it -> true)
+                .resetIf(1, it -> true)
                 .longValue(it -> assertEquals(0b1000L, it));
     }
 
