@@ -1,3 +1,32 @@
+## 2.1.5(2024-07-20)
+
+### ⭐ New Features
+
+`BitOperator` 新增方法:
+
+- `mapIf(...)`
+- `setIf(...)`
+- `setWithStatus(...)`
+- `setWithStatusIf(...)`
+- `setRangeIf(...)`
+- `resetIf(...)`
+- `resetRangeIf(...)`
+- `unsignedLongValue(...)`
+- `rangedUnsignedIntValue(...)`
+- `rangedUnsignedLongValue(...)`
+
+### 🐞 Bug Fixes
+
+`BitOperator` 操作 `offset >= 31` 的 `bit` 时溢出的问题，涉及到的方法如下：
+
+- `BitOperator#set(int offset)`
+- `BitOperator#reset(int offset)`
+- `BitOperatorget(int offset)`
+
+### 🔨 Dependency Upgrades
+
+- `oaks-common-utils` 升级到 **1.0.7**
+
 ## 2.1.4(2024-06-08)
 
 ### ⭐ New Features

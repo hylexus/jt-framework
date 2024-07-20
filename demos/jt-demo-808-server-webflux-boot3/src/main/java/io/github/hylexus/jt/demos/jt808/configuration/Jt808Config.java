@@ -16,6 +16,7 @@ public class Jt808Config {
     public enum MyMsgType implements MsgType {
         CLIENT_REGISTER(0x0100, "终端注册"),
         CLIENT_AUTH(0x0102, "终端鉴权"),
+        MSG_0X_1205(0x1205, "0x1205"),
         // ...
         // TODO 这里扩展其他类型
         ;

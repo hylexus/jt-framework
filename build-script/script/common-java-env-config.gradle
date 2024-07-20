@@ -26,7 +26,7 @@ dependencyManagement {
     }
     dependencies {
         dependency "org.hibernate:hibernate-validator:8.0.0.Final"
-        dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.6") {
+        dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.7") {
             exclude "org.projectlombok:lombok"
         }
         dependency "com.github.sarveswaran-m:util.concurrent.blockingMap:0.91"
