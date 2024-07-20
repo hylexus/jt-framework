@@ -4,6 +4,68 @@ icon: branch
 
 # 2.1.x
 
+## 2.1.5(2024-07-20)
+
+### ⭐ New Features
+
+`BitOperator` 新增方法:
+
+- `mapIf(...)`
+- `setIf(...)`
+- `setWithStatus(...)`
+- `setWithStatusIf(...)`
+- `setRangeIf(...)`
+- `resetIf(...)`
+- `resetRangeIf(...)`
+- `unsignedLongValue(...)`
+- `rangedUnsignedIntValue(...)`
+- `rangedUnsignedLongValue(...)`
+
+### 🐞 Bug Fixes
+
+`BitOperator` 操作 `offset >= 31` 的 `bit` 时溢出的问题，涉及到的方法如下：
+
+- `BitOperator#set(int offset)`
+- `BitOperator#reset(int offset)`
+- `BitOperatorget(int offset)`
+
+### 🔨 Dependency Upgrades
+
+- `oaks-common-utils` 升级到 **1.0.7**
+
+## 2.1.4(2024-06-08)
+
+### ⭐ New Features
+
+- 完善 `Jt808MsgBuilder`
+- 新增 `RebuildableByteBufJt808MsgBuilder`
+
+### 🔨 Dependency Upgrades
+
+- `Gradle` : **8.6** 升级到 **8.8**
+- `spring-boot-dependencies`
+    - **2.7.14** 升级到 **2.7.18**
+    - **3.1.2** 升级到 **3.3.0**
+- `spring-cloud-dependencies`
+    - **2021.0.8** 升级到 **2021.0.9**
+    - **2022.0.4** 升级到 **2023.0.2**
+
+### 📔 Documentation
+
+- 新增消息加解密相关文档
+- 新增 `RebuildableByteBufJt808MsgBuilder` 相关文档
+
+## 2.1.4-rc.4(2024-06-02)
+
+### ⭐ New Features
+
+初步支持消息加解密，详情见: [#82](https://github.com/hylexus/jt-framework/issues/82)
+
+- 新增 `Jt808MsgEncryptionHandler`
+- `@Jt808ResponseBody` 新增 `encryptionType(int)` 属性
+- `Jt808Response` 新增 `encryptionType(int)` 属性
+- `Jt808MsgBuilder` 新增 `encryptionType(int)` 属性
+
 ## 2.1.4-rc.3(2024-03-24)
 
 ### 🐞 Bug Fixes
