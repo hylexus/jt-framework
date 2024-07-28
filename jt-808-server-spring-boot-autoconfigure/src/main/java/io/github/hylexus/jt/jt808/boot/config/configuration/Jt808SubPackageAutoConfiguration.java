@@ -138,7 +138,7 @@ public class Jt808SubPackageAutoConfiguration {
                 Jt808ServerProps storageProps,
                 @Autowired @Qualifier("builtinRedisJt808ResponseSubPackageStorage") RedisTemplate<String, Object> redisTemplate) {
 
-            final var packageStorageProps = storageProps.getResponseSubPackageStorage().getRedis();
+            final RedisJt808ResponseSubPackageStorage.StorageConfig packageStorageProps = storageProps.getResponseSubPackageStorage().getRedis();
             return new RedisJt808ResponseSubPackageStorage(ByteBufAllocator.DEFAULT, packageStorageProps, redisTemplate);
         }
 
@@ -148,7 +148,7 @@ public class Jt808SubPackageAutoConfiguration {
             final RedisTemplate<String, Object> template = new RedisTemplate<>();
             template.setConnectionFactory(redisConnectionFactory);
 
-            final var jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(RedisJt808ResponseSubPackageCacheItem.class);
+            final Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(RedisJt808ResponseSubPackageCacheItem.class);
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             jackson2JsonRedisSerializer.setObjectMapper(objectMapper);

@@ -21,7 +21,7 @@ class RebuildableByteBufJt808MsgBuilderTest {
 
     @Test
     void test1() {
-        try (var builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator)) {
+        try (RebuildableByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")
@@ -50,7 +50,7 @@ class RebuildableByteBufJt808MsgBuilderTest {
     @Test
     void test2() {
         final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer();
-        try (var builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, originalBuf)) {
+        try (RebuildableByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, originalBuf)) {
             builder.version(Jt808ProtocolVersion.VERSION_2013)
                     .msgId(BuiltinJt808MsgType.CLIENT_COMMON_REPLY)
                     .terminalId("013912344323")
@@ -96,7 +96,7 @@ class RebuildableByteBufJt808MsgBuilderTest {
                 Jt808MsgEncryptionHandler.NO_OPS
         );
         final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer();
-        try (var builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, encoder, originalBuf)) {
+        try (RebuildableByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, encoder, originalBuf)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")
@@ -134,7 +134,7 @@ class RebuildableByteBufJt808MsgBuilderTest {
                 Jt808ResponseSubPackageStorage.NO_OPS_STORAGE,
                 Jt808MsgEncryptionHandler.NO_OPS
         );
-        try (var builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, encoder)) {
+        try (RebuildableByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newRebuildableByteBufBuilder(flowIdGenerator, encoder)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")

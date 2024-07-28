@@ -4,6 +4,7 @@ import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -20,7 +21,7 @@ public class DefaultJt808ProtocolVersionDetector implements Jt808ProtocolVersion
 
     @Override
     public Set<Integer> getSupportedMsgTypes() {
-        return Set.of(DEFAULT_VERSION_DETECTOR_MSG_ID);
+        return Jdk8Adapter.setOf(DEFAULT_VERSION_DETECTOR_MSG_ID);
     }
 
     @Override

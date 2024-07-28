@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808ResponseSubPackageStorage;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class BuiltinRetransmissionHandler {
 
     @Jt808RequestHandlerMapping(msgType = 0x0005)
     public void processRetransmissionMsg(Jt808RequestEntity<BuiltinMsg0005> request) {
-        final Jt808Session session = this.sessionManager.findByTerminalId(request.terminalId()).orElseThrow();
+        final Jt808Session session = this.sessionManager.findByTerminalId(request.terminalId()).orElseThrow(Jdk8Adapter::optionalOrElseThrowEx);
         final BuiltinMsg0005 body = request.body();
         this.subPackageEventConsumer.getSubPackageMsg(
                 request.terminalId(),

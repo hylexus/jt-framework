@@ -10,6 +10,7 @@ import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
@@ -78,7 +79,7 @@ public class Jt808RequestMsgHandlerScanner {
                     for (Jt808ProtocolVersion version : mappingAnnotation.versions()) {
                         final HandlerMethod handlerMethod = new HandlerMethod(
                                 beanInstance, method, isVoidReturnType(method),
-                                Set.of(version), Set.of(msgType), order
+                                Jdk8Adapter.setOf(version), Jdk8Adapter.setOf(msgType), order
                         );
                         componentMapping.register(handlerMethod, msgType, version);
                     }

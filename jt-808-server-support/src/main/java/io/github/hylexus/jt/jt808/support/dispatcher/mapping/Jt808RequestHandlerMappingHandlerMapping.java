@@ -11,6 +11,7 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerInterceptor;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.Jt808RequestHandlerReporter;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.reflection.HandlerMethod;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.ComponentMapping;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class Jt808RequestHandlerMappingHandlerMapping
     public Stream<RequestMappingReporter> report() {
         return this.msgHandlerComponentMapping.getMappings().entrySet().stream().flatMap(entry -> {
             final Integer msgId = entry.getKey();
-            final MsgType msgType = msgTypeParser.parseMsgType(msgId).orElseThrow();
+            final MsgType msgType = msgTypeParser.parseMsgType(msgId).orElseThrow(Jdk8Adapter::optionalOrElseThrowEx);
             return entry.getValue().entrySet().stream()
                     .map(it -> new RequestMappingReporter(
                             msgType, it.getKey(), it.getValue(),

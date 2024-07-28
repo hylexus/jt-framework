@@ -79,7 +79,8 @@ public interface Jt808ByteReader {
     /**
      * @deprecated 建议使用 {@link #readUnsignedDword()} 代替
      */
-    @Deprecated(since = "2.1.4", forRemoval = false)
+    //@Deprecated (since = "2.1.4", forRemoval = false)
+    @Deprecated
     default int readDword() {
         return JtCommonUtils.readDword(readable());
     }
@@ -87,7 +88,8 @@ public interface Jt808ByteReader {
     /**
      * @deprecated 建议使用 {@link #readUnsignedDword(Consumer)} 代替
      */
-    @Deprecated(since = "2.1.4", forRemoval = false)
+    //@Deprecated(since = "2.1.4", forRemoval = false)
+    @Deprecated
     default Jt808ByteReader readDword(Consumer<Integer> consumer) {
         final int dword = this.readDword();
         consumer.accept(dword);
@@ -97,7 +99,8 @@ public interface Jt808ByteReader {
     /**
      * @deprecated 建议使用 {@link #readUnsignedWord()} 代替
      */
-    @Deprecated(since = "2.1.4", forRemoval = false)
+    //@Deprecated(since = "2.1.4", forRemoval = false)
+    @Deprecated
     default short readWord() {
         return JtCommonUtils.readWord(readable());
     }
@@ -105,7 +108,8 @@ public interface Jt808ByteReader {
     /**
      * @deprecated 建议使用 {@link #readUnsignedWord(Consumer)} 代替
      */
-    @Deprecated(since = "2.1.4", forRemoval = false)
+    //@Deprecated(since = "2.1.4", forRemoval = false)
+    @Deprecated
     default Jt808ByteReader readWord(Consumer<Short> consumer) {
         final short word = this.readWord();
         consumer.accept(word);

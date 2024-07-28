@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.BaseReqRespMsgTest;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.oaks.utils.Numbers;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class BuiltinMsg8602Test extends BaseReqRespMsgTest {
 
     @Test
     void testBuild0x8602V2011() throws ParseException {
-        List<BuiltinMsg8602V2011Alias.Area> areaList = List.of(
+        List<BuiltinMsg8602V2011Alias.Area> areaList = Jdk8Adapter.listOf(
                 new BuiltinMsg8602V2011Alias.Area()
                         .setAreaId(100)
                         .setAreaAttr(Numbers.setBitAt(0, 1))
@@ -59,7 +60,7 @@ class BuiltinMsg8602Test extends BaseReqRespMsgTest {
 
     @Test
     void testBuild0x8602V2019() throws ParseException {
-        List<BuiltinMsg8602V2019Alias.Area> areaList = List.of(
+        List<BuiltinMsg8602V2019Alias.Area> areaList = Jdk8Adapter.listOf(
                 new BuiltinMsg8602V2019Alias.Area()
                         .setAreaId(100)
                         .setAreaAttr(0b1)

@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.spec.impl;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetector;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestHeader;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ public class BuiltinTerminalRegisterJt808ProtocolVersionDetector implements Jt80
 
     @Override
     public Set<Integer> getSupportedMsgTypes() {
-        return Set.of(BuiltinJt808MsgType.CLIENT_REGISTER.getMsgId());
+        return Jdk8Adapter.setOf(BuiltinJt808MsgType.CLIENT_REGISTER.getMsgId());
     }
 
     @Override

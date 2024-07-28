@@ -109,6 +109,9 @@ javadoc {
 
 apply plugin: "checkstyle"
 checkstyle {
+    // jdk8版本
+    //toolVersion = "8.29"
+    // jdk11版本
     toolVersion = "10.9.1"
     getConfigDirectory().set(rootProject.file("build-script/checkstyle/"))
 }

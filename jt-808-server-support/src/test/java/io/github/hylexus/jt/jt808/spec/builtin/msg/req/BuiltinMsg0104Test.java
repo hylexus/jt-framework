@@ -15,6 +15,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.data.deserialize.DefaultJt808FieldDeserializerRegistry;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -48,7 +49,7 @@ class BuiltinMsg0104Test {
                 .serverFlowId(111)
                 .count(2)
                 .paramList(
-                        List.of(
+                        Jdk8Adapter.listOf(
                                 Msg0104EncodePlaceholder.TerminalParam.builder()
                                         .paramId(0x0001).contentLength(4).paramContent(IntBitOps.intTo4Bytes(99))
                                         .build(),

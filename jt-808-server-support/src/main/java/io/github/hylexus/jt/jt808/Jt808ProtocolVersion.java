@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808;
 
+import io.github.hylexus.jt.utils.Jdk8Adapter;
+
 import java.util.Set;
 
 /**
@@ -32,10 +34,10 @@ public enum Jt808ProtocolVersion {
     private final byte versionBit;
     private final String shortDesc;
 
-    private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Set.of(AUTO_DETECTION);
-    private static final Set<Jt808ProtocolVersion> V2019 = Set.of(VERSION_2019);
-    private static final Set<Jt808ProtocolVersion> V2013 = Set.of(VERSION_2013);
-    private static final Set<Jt808ProtocolVersion> V2011 = Set.of(VERSION_2011);
+    private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Jdk8Adapter.setOf(AUTO_DETECTION);
+    private static final Set<Jt808ProtocolVersion> V2019 = Jdk8Adapter.setOf(VERSION_2019);
+    private static final Set<Jt808ProtocolVersion> V2013 = Jdk8Adapter.setOf(VERSION_2013);
+    private static final Set<Jt808ProtocolVersion> V2011 = Jdk8Adapter.setOf(VERSION_2011);
 
     Jt808ProtocolVersion(String shortDesc, byte versionBit) {
         this.shortDesc = shortDesc;

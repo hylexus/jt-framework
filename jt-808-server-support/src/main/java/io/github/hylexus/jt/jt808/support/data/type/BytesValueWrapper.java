@@ -11,7 +11,8 @@ import io.netty.buffer.ByteBuf;
  * @deprecated 使用 {@link io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer ByteArrayContainer} 或
  * {@link io.github.hylexus.jt.jt808.support.data.type.bytebuf.ByteBufContainer ByteBufContainer} 代替.
  */
-@Deprecated(since = "2.1.1")
+//@Deprecated(since = "2.1.1")
+@Deprecated
 public interface BytesValueWrapper<T> {
 
     void write(ByteBuf byteBuf);

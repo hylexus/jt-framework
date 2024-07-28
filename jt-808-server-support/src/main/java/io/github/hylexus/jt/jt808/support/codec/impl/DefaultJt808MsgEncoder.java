@@ -37,7 +37,8 @@ public class DefaultJt808MsgEncoder implements Jt808MsgEncoder {
     /**
      * @deprecated 使用 {@link #DefaultJt808MsgEncoder(ByteBufAllocator, Jt808MsgBytesProcessor, Jt808ResponseSubPackageEventListener, Jt808ResponseSubPackageStorage, Jt808MsgEncryptionHandler)} 代替
      */
-    @Deprecated(forRemoval = true, since = "2.1.4")
+    //@Deprecated(forRemoval = true, since = "2.1.4")
+    @Deprecated
     public DefaultJt808MsgEncoder(
             ByteBufAllocator allocator, Jt808MsgBytesProcessor msgBytesProcessor,
             Jt808ResponseSubPackageEventListener subPackageEventListener, Jt808ResponseSubPackageStorage subPackageStorage) {

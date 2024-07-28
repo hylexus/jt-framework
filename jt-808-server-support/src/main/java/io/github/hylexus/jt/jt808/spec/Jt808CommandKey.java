@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.spec;
 
 import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808CommandKey;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public interface Jt808CommandKey {
     Optional<Integer> serverFlowId();
 
     default String getKeyAsString() {
-        return serverFlowId().isEmpty()
+        return Jdk8Adapter.optionalIsEmpty(serverFlowId())
                 ? String.format("%s_%s", terminalId(), int2HexString(terminalReplyMsgId(), 4))
                 : String.format("%s_%s_%s", terminalId(), int2HexString(terminalReplyMsgId(), 4), serverFlowId().get());
     }

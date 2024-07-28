@@ -19,7 +19,7 @@ class ByteBufJt808MsgBuilderTest {
 
     @Test
     void test1() {
-        try (var builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator)) {
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")
@@ -40,7 +40,7 @@ class ByteBufJt808MsgBuilderTest {
     @Test
     void test2() {
         final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer();
-        try (var builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, originalBuf)) {
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, originalBuf)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")
@@ -71,7 +71,7 @@ class ByteBufJt808MsgBuilderTest {
                 Jt808MsgEncryptionHandler.NO_OPS
         );
         final ByteBuf originalBuf = ByteBufAllocator.DEFAULT.buffer();
-        try (var builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, encoder, originalBuf)) {
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, encoder, originalBuf)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")
@@ -101,7 +101,7 @@ class ByteBufJt808MsgBuilderTest {
                 Jt808ResponseSubPackageStorage.NO_OPS_STORAGE,
                 Jt808MsgEncryptionHandler.NO_OPS
         );
-        try (var builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, encoder)) {
+        try (ByteBufJt808MsgBuilder builder = Jt808MsgBuilder.newByteBufBuilder(flowIdGenerator, encoder)) {
             builder.version(Jt808ProtocolVersion.VERSION_2019)
                     .msgId(0x1111)
                     .terminalId("013912344323")

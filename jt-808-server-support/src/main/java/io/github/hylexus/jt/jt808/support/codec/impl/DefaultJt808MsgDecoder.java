@@ -31,7 +31,8 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
     /**
      * @deprecated 使用 {@link #DefaultJt808MsgDecoder(io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser, io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor, io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry, io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler) } 代替
      */
-    @Deprecated(forRemoval = true, since = "2.1.4")
+    //@Deprecated(forRemoval = true, since = "2.1.4")
+    @Deprecated
     public DefaultJt808MsgDecoder(
             Jt808MsgTypeParser msgTypeParser,
             Jt808MsgBytesProcessor msgBytesProcessor,

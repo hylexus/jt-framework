@@ -6,7 +6,8 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author hylexus
  */
-@Deprecated(since = "2.1.1")
+//@Deprecated(since = "2.1.1")
+@Deprecated
 public class ByteArrayWrapper implements BytesValueWrapper<byte[]> {
     private byte[] value;
 

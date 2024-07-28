@@ -5,14 +5,13 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.BitOperator;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
-
-import java.util.Set;
 
 public class BitOperatorFieldSerializer extends AbstractJt808FieldSerializer<BitOperator> {
 
     public BitOperatorFieldSerializer() {
-        super(Set.of(
+        super(Jdk8Adapter.setOf(
                 ConvertibleMetadata.forJt808ResponseMsgDataType(BitOperator.class, MsgDataType.DWORD),
                 ConvertibleMetadata.forJt808ResponseMsgDataType(BitOperator.class, MsgDataType.WORD),
                 ConvertibleMetadata.forJt808ResponseMsgDataType(BitOperator.class, MsgDataType.BYTE)

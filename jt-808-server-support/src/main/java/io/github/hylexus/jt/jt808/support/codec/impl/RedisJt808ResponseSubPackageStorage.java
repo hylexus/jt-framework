@@ -44,12 +44,12 @@ public class RedisJt808ResponseSubPackageStorage implements Jt808ResponseSubPack
         log.debug("<<ResponseSubPackage>> terminalId={}, flowId={}, {}/{}", subPackage.terminalId(), subPackage.flowId(), subPackage.totalSubPackageCount(),
                 subPackage.currentPackageNo());
         final String hexString = HexStringUtils.byteBufToString(subPackage.msg());
-        final var cacheItem = new RedisJt808ResponseSubPackageCacheItem(hexString, subPackage.createdAt());
+        final RedisJt808ResponseSubPackageCacheItem cacheItem = new RedisJt808ResponseSubPackageCacheItem(hexString, subPackage.createdAt());
         final String key = generateKey(subPackage.terminalId(), subPackage.firstFlowIdOfSubPackageGroup());
         //this.redisTemplate.opsForHash().put(key, generateHashKey(subPackage.currentPackageNo()), cacheItem);
         final BoundHashOperations<String, Object, Object> boundHashOps = this.redisTemplate.boundHashOps(key);
         boundHashOps.put(generateHashKey(subPackage.currentPackageNo()), cacheItem);
-        boundHashOps.expire(storageProps.getTtl().toSeconds(), TimeUnit.SECONDS);
+        boundHashOps.expire(storageProps.getTtl().toMillis(), TimeUnit.MILLISECONDS);
     }
 
     @Override

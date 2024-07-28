@@ -3,6 +3,7 @@ package io.github.hylexus.jt.jt808.support.dispatcher.handler.exception.handler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808ExceptionHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.ArgumentContext;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nonnull;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Slf4j
 public class BuiltinLoggingOnlyExceptionHandler implements Jt808ExceptionHandler {
 
-    private final Set<Class<? extends Throwable>> supportedExceptionTypes = Set.of(Throwable.class);
+    private final Set<Class<? extends Throwable>> supportedExceptionTypes = Jdk8Adapter.setOf(Throwable.class);
 
     @Override
     public int getOrder() {

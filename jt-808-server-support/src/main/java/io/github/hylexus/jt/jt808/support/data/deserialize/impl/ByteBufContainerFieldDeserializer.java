@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.support.data.RequestMsgConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.deserialize.Jt808FieldDeserializer;
 import io.github.hylexus.jt.jt808.support.data.type.bytebuf.ByteBufContainer;
 import io.github.hylexus.jt.jt808.support.data.type.bytebuf.DefaultByteBufContainer;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 
 public class ByteBufContainerFieldDeserializer implements Jt808FieldDeserializer<ByteBufContainer> {
 
-    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Set.of(
+    private static final Set<RequestMsgConvertibleMetadata> CONVERTIBLE_METADATA_SET = Jdk8Adapter.setOf(
             ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTES, ByteBufContainer.class),
             ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTE, ByteBufContainer.class),
             ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.STRING, ByteBufContainer.class),

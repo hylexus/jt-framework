@@ -13,7 +13,7 @@ public final class FormatUtils {
     public static String toBinaryString(int i, int minLen) {
         final String binaryString = Integer.toBinaryString(i);
         final int prefixLen = Math.max(minLen - binaryString.length(), 0);
-        return "0".repeat(prefixLen) + binaryString;
+        return Jdk8Adapter.stringRepeat("0", prefixLen) + binaryString;
     }
 
     public static String toHexString(int i) {
@@ -23,7 +23,7 @@ public final class FormatUtils {
     public static String toHexString(int i, int minLen) {
         final String hexString = Integer.toHexString(i);
         final int prefixLen = Math.max(minLen - hexString.length(), 0);
-        return "0".repeat(prefixLen) + hexString;
+        return Jdk8Adapter.stringRepeat("0", prefixLen) + hexString;
     }
 
     public static String toHexString(ByteBuf byteBuf) {

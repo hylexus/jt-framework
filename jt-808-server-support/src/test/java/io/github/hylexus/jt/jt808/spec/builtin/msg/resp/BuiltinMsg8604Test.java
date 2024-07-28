@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.JtProtocolConstant;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.BaseReqRespMsgTest;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.oaks.utils.Numbers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class BuiltinMsg8604Test extends BaseReqRespMsgTest {
 
     @Test
     void testBuild0x8604V2011() throws ParseException {
-        final List<BuiltinMsg8604V2011Alias.Vertices> areaList = List.of(
+        final List<BuiltinMsg8604V2011Alias.Vertices> areaList = Jdk8Adapter.listOf(
                 new BuiltinMsg8604V2011Alias.Vertices(31235930, 121480540),
                 new BuiltinMsg8604V2011Alias.Vertices(31198320, 121547960)
         );
@@ -44,7 +45,7 @@ class BuiltinMsg8604Test extends BaseReqRespMsgTest {
 
     @Test
     void testBuild0x8604V2019() throws ParseException {
-        final List<BuiltinMsg8604V2019Alias.Vertices> areaList = List.of(
+        final List<BuiltinMsg8604V2019Alias.Vertices> areaList = Jdk8Adapter.listOf(
                 new BuiltinMsg8604V2019Alias.Vertices(31235930, 121480540),
                 new BuiltinMsg8604V2019Alias.Vertices(31198320, 121547960)
         );

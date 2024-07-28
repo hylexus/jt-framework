@@ -8,6 +8,7 @@ import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.RequestFieldLengthExtractor;
 import io.github.hylexus.jt.jt808.support.data.meta.RequestFieldOffsetExtractor;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -29,7 +30,7 @@ public class JavaBeanMetadataUtils {
     /**
      * 支持按bit拆分的类型
      */
-    public static final Set<Class<?>> SLICED_TYPE = Set.of(
+    public static final Set<Class<?>> SLICED_TYPE = Jdk8Adapter.setOf(
             Byte.class, byte.class,
             Short.class, short.class,
             Integer.class, int.class,

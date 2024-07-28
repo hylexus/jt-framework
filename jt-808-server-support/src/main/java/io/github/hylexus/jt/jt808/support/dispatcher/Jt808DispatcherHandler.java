@@ -8,14 +8,15 @@ import io.github.hylexus.jt.jt808.support.dispatcher.handler.argument.resolver.A
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerAdapterNotFoundException;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerNotFoundException;
 import io.github.hylexus.jt.jt808.support.exception.Jt808HandlerResultHandlerNotFoundException;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author hylexus
@@ -171,7 +172,8 @@ public class Jt808DispatcherHandler implements Jt808RequestLifecycleListenerAwar
     }
 
     protected <T extends OrderedComponent> List<T> sort(Collection<T> components) {
-        return components.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).collect(Collectors.toUnmodifiableList());
+        Jdk8Adapter.mark("Collectors.toUnmodifiableList()替换为collectingAndThen(toList(), Collections::unmodifiableList)");
+        return components.stream().sorted(Comparator.comparing(OrderedComponent::getOrder)).collect(collectingAndThen(toList(), Collections::unmodifiableList));
     }
 
     @Override

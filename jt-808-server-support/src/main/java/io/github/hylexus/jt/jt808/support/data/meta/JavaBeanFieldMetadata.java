@@ -65,9 +65,8 @@ public class JavaBeanFieldMetadata {
     public Object getFieldValue(Object instance, boolean createNewIfNull) {
 
         try {
-            // if (!field.isAccessible()) {
-            if (!field.canAccess(instance)) {
-
+            //if (!field.canAccess(instance)) {
+            if (!field.isAccessible()) {
                 field.setAccessible(true);
             }
             Object oldValue = field.get(instance);

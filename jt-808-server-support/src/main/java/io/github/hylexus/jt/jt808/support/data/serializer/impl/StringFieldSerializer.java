@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata;
 import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -15,7 +16,7 @@ import java.util.Set;
 public class StringFieldSerializer extends AbstractJt808FieldSerializer<String> {
 
     public StringFieldSerializer() {
-        super(Set.of(
+        super(Jdk8Adapter.setOf(
                 ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.BCD),
                 ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.STRING),
                 ConvertibleMetadata.forJt808ResponseMsgDataType(String.class, MsgDataType.BYTES))

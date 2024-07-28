@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.support.data.MsgDataType;
 import io.github.hylexus.jt.jt808.support.exception.Jt808AnnotationArgumentResolveException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
 import io.github.hylexus.jt.utils.BitOperator;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
 public class BitOperatorFieldDeserializer extends AbstractJt808FieldDeserializer<BitOperator> {
 
     public BitOperatorFieldDeserializer() {
-        super(Set.of(
+        super(Jdk8Adapter.setOf(
                 ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.DWORD, BitOperator.class),
                 ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.WORD, BitOperator.class),
                 ConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTE, BitOperator.class)

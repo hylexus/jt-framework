@@ -10,7 +10,7 @@ public class DefaultJt808FlowIdGeneratorTest {
 
     @Test
     public void testFlowId() {
-        final var idGenerator = new DefaultJt808FlowIdGenerator();
+        final DefaultJt808FlowIdGenerator idGenerator = new DefaultJt808FlowIdGenerator();
         Assertions.assertEquals(0, idGenerator.currentFlowId());
         Assertions.assertEquals(1, idGenerator.nextFlowId());
         Assertions.assertEquals(1, idGenerator.currentFlowId());
@@ -20,7 +20,7 @@ public class DefaultJt808FlowIdGeneratorTest {
 
     @Test
     public void testFlowIds() {
-        final var idGenerator = new DefaultJt808FlowIdGenerator();
+        final DefaultJt808FlowIdGenerator idGenerator = new DefaultJt808FlowIdGenerator();
         final int count = 20;
         final int[] flowIds = idGenerator.flowIds(count);
 
@@ -36,7 +36,7 @@ public class DefaultJt808FlowIdGeneratorTest {
     @Test
     public void testFlowIdsOverflow() {
 
-        final var idGenerator = new DefaultJt808FlowIdGenerator();
+        final DefaultJt808FlowIdGenerator idGenerator = new DefaultJt808FlowIdGenerator();
         idGenerator.flowId(Jt808FlowIdGenerator.MAX_FLOW_ID - 100);
         Assertions.assertEquals(Jt808FlowIdGenerator.MAX_FLOW_ID - 100, idGenerator.currentFlowId());
 

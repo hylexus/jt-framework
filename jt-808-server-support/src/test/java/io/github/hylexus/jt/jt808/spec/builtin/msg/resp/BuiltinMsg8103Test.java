@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.BaseReqRespMsgTest;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.data.type.bytebuf.ByteBufContainer;
 import io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BuiltinMsg8103Test extends BaseReqRespMsgTest {
     @Test
     void test() {
-        final List<BuiltinMsg8103Alias.ParamItem> paramItemList = List.of(
+        final List<BuiltinMsg8103Alias.ParamItem> paramItemList = Jdk8Adapter.listOf(
                 new BuiltinMsg8103Alias.ParamItem(0x0001, ByteBufContainer.ofDword(66)),
                 new BuiltinMsg8103Alias.ParamItem(0x0013, ByteBufContainer.ofString("www.xxx.fff.zzz.com")),
                 new BuiltinMsg8103Alias.ParamItem(0x0081, ByteBufContainer.ofWord(11)),
@@ -40,7 +41,7 @@ class BuiltinMsg8103Test extends BaseReqRespMsgTest {
 
     @Test
     void test1() {
-        final List<BuiltinMsg8103.ParamItem> paramItemList = List.of(
+        final List<BuiltinMsg8103.ParamItem> paramItemList = Jdk8Adapter.listOf(
                 new BuiltinMsg8103.ParamItem(0x0001, ByteArrayContainer.ofDword(66)),
                 new BuiltinMsg8103.ParamItem(0x0013, ByteArrayContainer.ofString("www.xxx.fff.zzz.com")),
                 new BuiltinMsg8103.ParamItem(0x0081, ByteArrayContainer.ofWord(11)),

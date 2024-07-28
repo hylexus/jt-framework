@@ -4,6 +4,7 @@ import io.github.hylexus.jt.jt808.support.annotation.msg.req.SlicedFrom;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanFieldMetadata;
 import io.github.hylexus.jt.jt808.support.data.meta.JavaBeanMetadata;
 import io.github.hylexus.jt.jt808.support.utils.JavaBeanMetadataUtils;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.oaks.utils.Numbers;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class SlicedFromAnnotationDecoder {
             }
 
             Optional<JavaBeanFieldMetadata> sourceFieldInfo = beanMetadata.findFieldMedataByName(annotation.sourceFieldName());
-            if (sourceFieldInfo.isEmpty()) {
+            if (Jdk8Adapter.optionalIsEmpty(sourceFieldInfo)) {
                 log.error("No field found with name {} on {}", annotation.sourceFieldName(), cls);
                 continue;
             }

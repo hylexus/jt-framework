@@ -58,8 +58,8 @@ public class ReflectionUtils {
     }
 
     public static void setFieldValue(Object instance, Field field, Object value) {
-        // if (!field.isAccessible()) {
-        if (!field.canAccess(instance)) {
+        // if (!field.canAccess(instance)) {
+        if (!field.isAccessible()) {
             field.setAccessible(true);
         }
         try {
