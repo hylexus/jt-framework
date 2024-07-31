@@ -62,6 +62,7 @@ public class JavaBeanFieldMetadata {
      * @param instance        当前field对应的实例
      * @param createNewIfNull 当值为空时，新创建field对应类型的实例返回
      */
+    @SuppressWarnings("deprecation")
     public Object getFieldValue(Object instance, boolean createNewIfNull) {
 
         try {

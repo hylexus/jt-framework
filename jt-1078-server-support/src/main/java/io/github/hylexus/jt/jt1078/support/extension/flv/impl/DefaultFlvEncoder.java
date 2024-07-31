@@ -20,6 +20,7 @@ import io.github.hylexus.jt.jt1078.support.extension.flv.tag.VideoFlvTag;
 import io.github.hylexus.jt.jt1078.support.extension.h264.*;
 import io.github.hylexus.jt.jt1078.support.extension.h264.impl.DefaultH264Decoder;
 import io.github.hylexus.jt.jt1078.support.extension.h264.impl.DefaultSpsDecoder;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.oaks.utils.IntBitOps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -220,7 +221,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
 
             // 3. previous tag size: 11 + tagDataSize
             buffer.writeInt(outerHeaderSize + tagDataSize);
-            return List.of(buffer);
+            return Jdk8Adapter.listOf(buffer);
         } catch (Throwable throwable) {
             buffer.release();
             throw throwable;
@@ -229,7 +230,7 @@ public class DefaultFlvEncoder implements FlvEncoder {
 
     private Optional<ByteBuf> doEncode(H264Nalu nalu) {
         final Optional<H264NaluHeader.NaluType> optional = nalu.header().type();
-        if (optional.isEmpty()) {
+        if (!optional.isPresent()) {
             return Optional.empty();
         }
 
@@ -346,9 +347,9 @@ public class DefaultFlvEncoder implements FlvEncoder {
     }
 
     private List<Amf> generateMetadata(Sps sps) {
-        return List.of(
+        return Jdk8Adapter.listOf(
                 Amf.ofString("onMetaData"),
-                Amf.ofEcmaArray(List.of(
+                Amf.ofEcmaArray(Jdk8Adapter.listOf(
                         Amf.ofPair("videocodecid", Amf.ofNumber(VideoFlvTag.VideoCodecId.AVC.getValue() * 1.0)),
                         Amf.ofPair("width", Amf.ofNumber(sps.getWidth() * 1.0D)),
                         Amf.ofPair("height", Amf.ofNumber(sps.getHeight() * 1.0D))

@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.samples.debug.controller;
 
 import com.google.common.collect.Lists;
+import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.RespTerminalSettings;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
@@ -44,7 +45,7 @@ public class DebugController {
         param.setParamList(paramList);
         param.setTotalParamCount(paramList.size());
 
-        final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow();
+        final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
         final int nextFlowId = session.nextFlowId();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
         final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, param, 15L, TimeUnit.SECONDS);

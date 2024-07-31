@@ -57,6 +57,7 @@ public class ReflectionUtils {
         return cls == Byte.class || cls == byte.class;
     }
 
+    @SuppressWarnings("deprecation")
     public static void setFieldValue(Object instance, Field field, Object value) {
         // if (!field.canAccess(instance)) {
         if (!field.isAccessible()) {

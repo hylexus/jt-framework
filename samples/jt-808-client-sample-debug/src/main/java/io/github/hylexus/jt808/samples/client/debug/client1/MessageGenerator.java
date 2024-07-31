@@ -5,6 +5,7 @@ import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.impl.msg.builder.ByteBufJt808MsgBuilder;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGenerator;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.jt808.samples.client.debug.client1.entity.ClientLocationUploadMsgV2019;
 import io.github.hylexus.jt808.samples.client.debug.client1.entity.ClientRegisterMsgV2013;
 import io.github.hylexus.oaks.utils.IntBitOps;
@@ -127,7 +128,7 @@ public class MessageGenerator {
                 .setLng(121480540 + ThreadLocalRandom.current().nextInt(100000))
                 .setLat(31235930 + ThreadLocalRandom.current().nextInt(100000))
                 .setTime("220322001214")
-                .setExtraItemList(List.of(
+                .setExtraItemList(Jdk8Adapter.listOf(
                         new ClientLocationUploadMsgV2019.ExtraItem().setId(0x01).setContentLength(4).setContent(IntBitOps.intTo4Bytes(mileage))
                 ));
 

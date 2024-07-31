@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.data.type.byteseq.ByteArrayContainer;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.github.hylexus.jt808.samples.annotation.msg.resp.RespTerminalSettings;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class DemoController {
             @RequestParam(name = "terminalId", required = false, defaultValue = "013912344323") String terminalId) throws InterruptedException {
 
         final RespTerminalSettings param = new RespTerminalSettings();
-        final List<RespTerminalSettings.ParamItem> paramList = List.of(
+        final List<RespTerminalSettings.ParamItem> paramList = Jdk8Adapter.listOf(
                 new RespTerminalSettings.ParamItem(0x0029, ByteArrayContainer.ofDword(100)),
                 new RespTerminalSettings.ParamItem(0x0030, ByteArrayContainer.ofDword(211))
         );

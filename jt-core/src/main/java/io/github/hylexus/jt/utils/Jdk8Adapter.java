@@ -30,10 +30,12 @@ public class Jdk8Adapter {
         return new NoSuchElementException("No value present");
     }
 
+    @SafeVarargs
     public static <E> Set<E> setOf(E... e) {
         return Arrays.stream(e).collect(Collectors.toSet());
     }
 
+    @SafeVarargs
     public static <E> List<E> listOf(E... e) {
         return Arrays.stream(e).collect(Collectors.toList());
     }

@@ -1,5 +1,6 @@
 package io.github.hylexus.jt808.samples.annotation.handler;
 
+import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestEntity;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0005;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
@@ -36,7 +37,7 @@ public class RetransmissionHandler {
     // 7E000540080100000000013912344329000100030002000100023B7E
     @Jt808RequestHandlerMapping(msgType = 0x0005, desc = "终端补传分包请求")
     public void processRetransmissionMsg(Jt808RequestEntity<BuiltinMsg0005> request) {
-        final Jt808Session session = this.sessionManager.findByTerminalId(request.terminalId()).orElseThrow();
+        final Jt808Session session = this.sessionManager.findByTerminalId(request.terminalId()).orElseThrow(() -> new JtSessionNotFoundException(request.terminalId()));
 
         final BuiltinMsg0005 body = request.body();
         // 分包消息中第一包的流水号

@@ -13,6 +13,7 @@ import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -80,7 +81,7 @@ public class AnnotationHandler01 {
         return new BuiltinMsg8003()
                 .setFirstSubPackageFlowId(101)
                 .setTotalCount(3)
-                .setPackageIdList(List.of(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
+                .setPackageIdList(Jdk8Adapter.listOf(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
     }
 
     @Jt808RequestHandlerMapping(msgType = 0x8003, versions = VERSION_2019)
@@ -89,6 +90,6 @@ public class AnnotationHandler01 {
         return new BuiltinMsg8003()
                 .setFirstSubPackageFlowId(101)
                 .setTotalCount(3)
-                .setPackageIdList(List.of(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
+                .setPackageIdList(Jdk8Adapter.listOf(new BuiltinMsg8003.PackageId(2), new BuiltinMsg8003.PackageId(4), new BuiltinMsg8003.PackageId(5)));
     }
 }

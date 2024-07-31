@@ -1,6 +1,12 @@
 server:
   port: 1078
 
+local-debug:
+  raw-data-dump-to-file:
+    parent-dir: /tmp/jtt/dump/
+  flv-data-dump-to-file:
+    parent-dir: /tmp/jtt/flv/
+
 spring:
   jackson:
     time-zone: Asia/Shanghai

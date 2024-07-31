@@ -51,7 +51,7 @@ public class Jt1078Controller {
         final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
         final int nextFlowId = session.nextFlowId();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
-        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().toSeconds(), TimeUnit.SECONDS);
+        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().getSeconds(), TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
         if (resp == null) {
             return Resp.failure(DefaultRespCode.SEND_COMMAND_FAILURE, "未收到终端回复(" + dto.getTimeout() + ")");
@@ -73,7 +73,7 @@ public class Jt1078Controller {
         final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
         final int nextFlowId = session.nextFlowId();
         final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
-        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().toSeconds(), TimeUnit.SECONDS);
+        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, msg, dto.getTimeout().getSeconds(), TimeUnit.SECONDS);
         log.info("RESP::::::: {}", resp);
 
         if (resp == null) {

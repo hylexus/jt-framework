@@ -2,9 +2,11 @@ package io.github.hylexus.jt808.samples.customized.config;
 
 import io.github.hylexus.jt.core.OrderedComponent;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
+import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
+import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808FlowIdGeneratorV2;
 import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
@@ -27,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * @author hylexus
@@ -37,9 +40,20 @@ public class MyJt808Config {
     @Bean
     public Jt808MsgTypeParser jt808MsgTypeParser() {
         // 优先使用自定义类型解析
-        return msgId -> MyMsgType.CLIENT_AUTH.parseFromInt(msgId)
-                // 使用内置类型解析
-                .or(() -> BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgId));
+        // return msgId -> MyMsgType.CLIENT_AUTH.parseFromInt(msgId)
+        //         // 使用内置类型解析
+        //         .or(() -> BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgId));
+
+        // 兼容 JDK8
+        return msgId -> {
+            // 优先使用自定义类型解析
+            final Optional<MsgType> msgType = MyMsgType.CLIENT_AUTH.parseFromInt(msgId);
+            if (msgType.isPresent()) {
+                return msgType;
+            }
+            // 使用内置类型解析
+            return BuiltinJt808MsgType.CLIENT_AUTH.parseFromInt(msgId);
+        };
     }
 
     // [[ 非必须配置 ]] -- 替换内置响应消息分包暂存器
@@ -106,8 +120,8 @@ public class MyJt808Config {
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
 
-        final var idleStateHandler = serverProps.getServer().getIdleStateHandler();
-        final var serverBootstrapProps = new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps(
+        final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = serverProps.getServer().getIdleStateHandler();
+        final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps = new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps(
                 serverProps.getProtocol().getMaxFrameLength(),
                 new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.IdleStateHandlerProps(
                         idleStateHandler.isEnabled(),

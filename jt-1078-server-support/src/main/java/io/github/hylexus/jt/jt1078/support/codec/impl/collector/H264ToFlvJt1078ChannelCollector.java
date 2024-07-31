@@ -10,6 +10,7 @@ import io.github.hylexus.jt.jt1078.spec.impl.subscription.DefaultJt1078Subscript
 import io.github.hylexus.jt.jt1078.support.extension.flv.FlvHeader;
 import io.github.hylexus.jt.jt1078.support.extension.flv.impl.DefaultFlvEncoder;
 import io.github.hylexus.jt.utils.ByteBufUtils;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 import reactor.core.publisher.FluxSink;
 
@@ -26,7 +27,7 @@ import java.util.concurrent.ThreadFactory;
 public class H264ToFlvJt1078ChannelCollector
         extends AbstractAsyncChannelCollector<ByteArrayJt1078Subscription, H264ToFlvSubscriber> {
 
-    static final Set<Jt1078PayloadType> SUPPORTED_PAYLOAD_TYPES = Set.of(
+    static final Set<Jt1078PayloadType> SUPPORTED_PAYLOAD_TYPES = Jdk8Adapter.setOf(
             DefaultJt1078PayloadType.H264,
             DefaultJt1078PayloadType.ADPCMA,
             DefaultJt1078PayloadType.G_726,

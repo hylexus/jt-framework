@@ -29,7 +29,9 @@ public class DefaultPlatformProcess implements PlatformProcess, Runnable {
 
     @Override
     public boolean running() {
-        return this.running.get() && (this.process() != null && this.process().toHandle().isAlive());
+        // todo 待确认(JDK8)
+        // return this.running.get() && (this.process() != null && this.process().toHandle().isAlive());
+        return this.running.get() && (this.process() != null && this.process().isAlive());
     }
 
 
@@ -63,12 +65,15 @@ public class DefaultPlatformProcess implements PlatformProcess, Runnable {
         if (!this.running.compareAndSet(false, true)) {
             return;
         }
+        // todo 待确认(JDK8)
         try {
-            this.process().onExit().thenApply(this.onExitCallback).get();
-            // final int exitedCode = this.process.waitFor();
-            // log.info("{} exited with code : {}", this, exitedCode);
+            // this.process().onExit().thenApply(this.onExitCallback).get();
+            final int exitedCode = this.process.waitFor();
+            log.info("{} exited with code : {}", this, exitedCode);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            this.onExitCallback.apply(this.process);
         }
     }
 

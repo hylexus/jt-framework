@@ -1,11 +1,15 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
+def obtainJavaVersion() {
+    springBoot3Modules.contains(project.name) ? maximumJavaVersion : defaultJavaVersion
+}
+
 jar {
     manifest.attributes["Implementation-Title"] = project.name
     manifest.attributes["Implementation-Version"] = project.version
     manifest.attributes["Automatic-Module-Name"] = project.name.replace('-', '.')
-    manifest.attributes["JDK-Version"] = "${System.getProperty("java.version")}"
+    manifest.attributes["JDK-Version"] = obtainJavaVersion()
     manifest.attributes["Created-By"] = "${System.getProperty("user.name")}"
 
     from(rootProject.projectDir) {

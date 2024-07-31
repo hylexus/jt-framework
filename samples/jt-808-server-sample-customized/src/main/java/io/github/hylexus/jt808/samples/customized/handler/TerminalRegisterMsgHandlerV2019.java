@@ -7,6 +7,7 @@ import io.github.hylexus.jt.jt808.spec.MsgType;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0100V2019;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.SimpleJt808RequestHandler;
+import io.github.hylexus.jt.utils.Jdk8Adapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class TerminalRegisterMsgHandlerV2019 implements SimpleJt808RequestHandle
      */
     @Override
     public Set<MsgType> getSupportedMsgTypes() {
-        return Set.of(BuiltinJt808MsgType.CLIENT_REGISTER);
+        return Jdk8Adapter.setOf(BuiltinJt808MsgType.CLIENT_REGISTER);
     }
 
     /**

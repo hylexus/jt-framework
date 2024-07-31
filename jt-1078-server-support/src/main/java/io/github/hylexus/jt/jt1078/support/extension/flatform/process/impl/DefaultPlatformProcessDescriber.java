@@ -26,17 +26,17 @@ public class DefaultPlatformProcessDescriber {
     public static DefaultPlatformProcessDescriber of(PlatformProcess it) {
         final DefaultPlatformProcessDescriber describer = new DefaultPlatformProcessDescriber();
         describer.setId(it.uuid());
-        describer.setPid(it.process().pid());
+        // describer.setPid(it.process().pid());
         describer.setRunning(it.running());
-        final ProcessHandle.Info processInfo = it.process().info();
-        final DefaultPlatformProcessDescriber.ProcessInfo info = new DefaultPlatformProcessDescriber.ProcessInfo()
-                .setCommand(processInfo.command().orElse(null))
-                .setCommandLine(processInfo.commandLine().orElse(null))
-                .setArguments(processInfo.arguments().orElse(null))
-                .setStartInstant(processInfo.startInstant().orElse(null))
-                .setTotalCpuDuration(processInfo.totalCpuDuration().orElse(null))
-                .setUser(processInfo.user().orElse(null));
-        describer.setInfo(info);
+        // final ProcessHandle.Info processInfo = it.process().info();
+        // final DefaultPlatformProcessDescriber.ProcessInfo info = new DefaultPlatformProcessDescriber.ProcessInfo()
+        //         .setCommand(processInfo.command().orElse(null))
+        //         .setCommandLine(processInfo.commandLine().orElse(null))
+        //         .setArguments(processInfo.arguments().orElse(null))
+        //         .setStartInstant(processInfo.startInstant().orElse(null))
+        //         .setTotalCpuDuration(processInfo.totalCpuDuration().orElse(null))
+        //         .setUser(processInfo.user().orElse(null));
+        // describer.setInfo(info);
         return describer;
     }
 
