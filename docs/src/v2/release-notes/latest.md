@@ -4,6 +4,25 @@ icon: branch
 
 # 2.1.x
 
+## 2.3.0-rc.1(2024-08-03)
+
+### ⭐ New Features
+
+下面模块的最低 **JDK** 版本从 `11` 改为 `8`:
+
+- **jt-core**
+- **jt-808-server-support**
+- **jt-808-server-spring-boot-autoconfigure**
+- **jt-808-server-spring-boot-starter-boot2**
+- **jt-1078-server-support**
+- **jt-1078-server-spring-boot-autoconfigure**
+- **jt-1078-server-spring-boot-starter-boot2**
+
+### ❤️ Contributors
+
+- [@MaxonCinker](https://github.com/MaxonCinker)
+- [@hylexus](https://github.com/hylexus)
+
 ## 2.1.5(2024-07-20)
 
 ### ⭐ New Features
