@@ -9,8 +9,8 @@ jar {
     manifest.attributes["Implementation-Title"] = project.name
     manifest.attributes["Implementation-Version"] = project.version
     manifest.attributes["Automatic-Module-Name"] = project.name.replace('-', '.')
-    manifest.attributes["JDK-Version"] = obtainJavaVersion()
-    manifest.attributes["Created-By"] = "${System.getProperty("user.name")}"
+    manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+    manifest.attributes["Minimum-Jdk-Version"] = obtainJavaVersion()
 
     from(rootProject.projectDir) {
         include "LICENSE"

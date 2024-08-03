@@ -17,6 +17,9 @@ icon: plugin
     - `jt-808-server-spring-boot-starter` 为 **spring-boot-3.x** 提供的 `starter`
     - `jt-808-server-spring-boot-starter-boot2` 为 **spring-boot-2.x** 提供的 `starter`
     - 后续版本会以 **spring-boot-3.x** 为主，同时尽量兼容 **spring-boot-2.x**
+- **2.3.x** 开始
+    - `jt-808-server-spring-boot-starter-boot2` 支持 **JDK-8+**
+    - 之前版本只支持 **JDK-11+**
 
 :::
 
@@ -26,16 +29,16 @@ icon: plugin
 
 | Module                                  | JDK | CompileLevel | .class      | spring-boot |
 |-----------------------------------------|-----|--------------|-------------|-------------|
-| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.0.2**_ |
-| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
-| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) | 2.6.14      |
-| jt-808-server-support                   | 17  | JDK-11       | 55 (JDK-11) | --          |
-| jt-808-server-core                      | 17  | JDK-11       | 55 (JDK-11) | --          |
+| jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) | _**3.3.0**_ |
+| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-8        | 52 (JDK-8)  | 2.7.18      |
+| jt-808-server-spring-boot-autoconfigure | 17  | JDK-8        | 52 (JDK-8)  | 2.7.18      |
+| jt-808-server-support                   | 17  | JDK-8        | 52 (JDK-8)  | --          |
+| jt-808-server-core                      | 17  | JDK-8        | 52 (JDK-8)  | --          |
 
 ## JDK
 
 - 项目源码要求的 **JDK版本** 为 `JDK17+`
-- 但是编译之后的 `jar` 包中 `.class` 文件最低要求为 `JDK11+`
+- 但是编译之后的 `jar` 包中 `.class` 文件最低要求为 `JDK8+`
 
 ::: info 提示
 
@@ -44,7 +47,7 @@ icon: plugin
 - 如果你直接在 **本项目源码** 上进行业务开发(不推荐)
     - 必须满足 `java.version >= 17`
 - 如果你是将本项目发布的 **jar文件** 依赖到你的项目里
-    - 基于 **spring-boot-2.x** 的项目, 满足 `java.version >= 11` 即可
+    - 基于 **spring-boot-2.x** 的项目, 满足 `java.version >= 8` 即可
     - 基于 **spring-boot-3.x** 的项目, 必须满足 `java.version >= 17`
 
 :::
@@ -64,7 +67,7 @@ icon: plugin
 
 ### 内置版本
 
-除了 `jt-808-server-spring-boot-starter` 模块依赖的 **spring-boot版本** 是 **3.0.2** 外，其他模块依赖的 **spring-boot版本** 都是 **2.6.14**。
+除了 `jt-808-server-spring-boot-starter` 模块依赖的 **spring-boot版本** 是 **3.3.0** 外，其他模块依赖的 **spring-boot版本** 都是 **2.7.18**。
 
 这里只讨论 **spring-boot版本**，至于 **spring-boot** 依赖的 **spring-framework** 的版本以对应版本的 `spring-boot-dependencies` 依赖为准。
 
@@ -84,8 +87,8 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-        <version>2.1.1</version>
-        <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(2.6.14) -->
+        <version>2.3.0-rc.1</version>
+        <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(2.7.18) -->
         <exclusions>
             <exclusion>
                 <artifactId>spring-boot-starter</artifactId>
@@ -97,7 +100,7 @@ icon: plugin
     <dependency>
         <artifactId>spring-boot-starter</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <!-- 使用2.5.12替换 jt-framework内置的 2.6.14     -->
+        <!-- 使用2.5.12替换 jt-framework内置的 2.7.18     -->
         <!-- jt-808-server-spring-boot-starter-boot2(注意和 spring-boot-3.x项目的区别) 对应的 spring-boot.version ∈ [2.2.x, 2.6.x]     -->
         <!-- jt-808-server-spring-boot-starter-boot2(注意和 spring-boot-3.x项目的区别) 对应的 spring-boot.version ∈ [2.2.x, 2.6.x]     -->
         <!-- jt-808-server-spring-boot-starter-boot2(注意和 spring-boot-3.x项目的区别) 对应的 spring-boot.version ∈ [2.2.x, 2.6.x]     -->
@@ -117,9 +120,9 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter</artifactId>
-        <version>2.1.1</version>
+        <version>2.3.0-rc.1</version>
         <exclusions>
-            <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(3.0.2) -->
+            <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(3.3.0) -->
             <exclusion>
                 <artifactId>spring-boot-starter</artifactId>
                 <groupId>org.springframework.boot</groupId>
@@ -130,7 +133,7 @@ icon: plugin
     <dependency>
         <artifactId>spring-boot-starter</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <!-- 使用3.0.0替换 jt-framework内置的 3.0.2     -->
+        <!-- 使用3.0.0替换 jt-framework内置的 3.3.0     -->
         <!-- jt-808-server-spring-boot-starter(注意和 spring-boot-2.x项目的区别) 对应的 spring-boot.version ∈ [3.0.x, ...]     -->
         <!-- jt-808-server-spring-boot-starter(注意和 spring-boot-2.x项目的区别) 对应的 spring-boot.version ∈ [3.0.x, ...]     -->
         <!-- jt-808-server-spring-boot-starter(注意和 spring-boot-2.x项目的区别) 对应的 spring-boot.version ∈ [3.0.x, ...]     -->

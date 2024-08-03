@@ -25,7 +25,7 @@ icon: code
 
 因为 `jt-808-server-spring-boot-starter` 模块是为 `spring-boot-3.x` 提供的，`spring-boot-3.x` 必须使用 `JDK17+`。
 
-其他模块虽然也用了 `JDK17`，但是编译级别是 `JDK11`。
+其他模块虽然也用了 `JDK17`，但是编译级别是 `JDK8`。
 
 :::
 
@@ -38,7 +38,7 @@ icon: code
 虽然源码要求的 `JDK` 版本必须在 `17` 以上，但是实际上：
 
 - 只有 `jt-808-server-spring-boot-starter` 模块必须使用 `JDK-17`，编译后的 `.class` 文件版本为 `61` (`JDK-17`)
-- 其余模块编译后的 `.class` 文件版本依然是 `55` (`JDK-11`)；也就是说使用 `JDK17` 编译输出了 `JDK11` 对应的 `.class`
+- 其余模块编译后的 `.class` 文件版本依然是 `52` (`JDK-11`)；也就是说使用 `JDK17` 编译输出了 `JDK8` 对应的 `.class`
 
 :::
 
@@ -47,10 +47,10 @@ icon: code
 | Module                                  | JDK | CompileLevel | .class      |
 |-----------------------------------------|-----|--------------|-------------|
 | jt-808-server-spring-boot-starter       | 17  | _**JDK-17**_ | 61 (JDK-17) |
-| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-11       | 55 (JDK-11) |
-| jt-808-server-spring-boot-autoconfigure | 17  | JDK-11       | 55 (JDK-11) |
-| jt-808-server-support                   | 17  | JDK-11       | 55 (JDK-11) |
-| jt-808-server-core                      | 17  | JDK-11       | 55 (JDK-11) |
+| jt-808-server-spring-boot-starter-boot2 | 17  | JDK-8        | 52 (JDK-8)  |
+| jt-808-server-spring-boot-autoconfigure | 17  | JDK-8        | 52 (JDK-8)  |
+| jt-808-server-support                   | 17  | JDK-8        | 52 (JDK-8)  |
+| jt-808-server-core                      | 17  | JDK-8        | 52 (JDK-8)  |
 
 在 `gradle.properties` 配置文件里有两个 `JDK` 版本的配置:
 
@@ -59,15 +59,15 @@ icon: code
 
 ```properties
 # spring-boot-2.x
-defaultJavaVersion=11
+defaultJavaVersion=8
 # spring-boot-3.x
 maximumJavaVersion=17
 ```
 
 ::: warning
 
-- 如果没有特殊需求，不建议对 `defaultJavaVersion` 降级(改为比 **11** 更低的版本)
-    - 因为当前源码的最低要求是 `JDK11`
+- 如果没有特殊需求，不建议对 `defaultJavaVersion` 降级(改为比 **8** 更低的版本)
+    - 因为当前源码的最低要求是 `JDK8`
     - 降级之后可能有一些 `Java` 语法不兼容
 - `maximumJavaVersion` 这个配置项必须 `>= 17`, 因为这个是给 `spring-boot-3.x` 用的
 - 但是你可以将 `defaultJavaVersion` 或 / 和 `maximumJavaVersion` 升级(改为高版本)
@@ -83,16 +83,16 @@ maximumJavaVersion=17
 
 ```properties
 # spring-boot-2.x
-defaultSpringBootBomVersion=2.6.14
+defaultSpringBootBomVersion=2.7.18
 # spring-boot-3.x
-maximumSpringBootBomVersion=3.0.2
+maximumSpringBootBomVersion=3.3.0
 ```
 
 ::: info
 
 如果没有特殊需求，也没必要修改源码中的 `spring-boot` 版本。
 
-- `defaultSpringBootBomVersion` 可取值为 `[2.2.x, 2.6.x]`
+- `defaultSpringBootBomVersion` 可取值为 `[2.2.x, 2.7.18]`
 - `maximumSpringBootBomVersion` 可取值为 `[3.0.0, ...)`
 
 :::
