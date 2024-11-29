@@ -9,6 +9,9 @@ import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorG
 import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestFilter;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
+import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListenerAsyncWrapper;
+import io.github.hylexus.jt.jt808.spec.Jt808ServerSchedulerFactory;
+import io.github.hylexus.jt.jt808.spec.impl.DefaultJt808ServerSchedulerFactory;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.DefaultJt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.impl.request.queue.FilteringJt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.session.DefaultJt808SessionManager;
@@ -33,6 +36,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -189,26 +193,34 @@ public class Jt808NettyServerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "jt808.features.request-filter", name = "enabled", havingValue = "true", matchIfMissing = false)
-    public Jt808RequestMsgQueueListener filteringMsgQueueListener(
+    @ConditionalOnProperty(prefix = "jt808.msg-handler", name = "enabled", havingValue = "true", matchIfMissing = true)
+    Jt808ServerSchedulerFactory jt808ServerSchedulerFactory() {
+        return new DefaultJt808ServerSchedulerFactory(serverProps.getMsgHandler().toExecutorProps());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Jt808RequestMsgQueueListener msgQueueListener(
+            @Autowired(required = false) Jt808ServerSchedulerFactory jt808ServerSchedulerFactory,
             Jt808DispatcherHandler dispatcherHandler,
             // Jt808SessionManager sessionManager,
             Jt808RequestSubPackageStorage subPackageStorage,
             Jt808RequestSubPackageEventListener requestSubPackageEventListener,
             ObjectProvider<Jt808RequestFilter> filters) {
 
-        final List<Jt808RequestFilter> allFilters = filters.orderedStream().collect(Collectors.toList());
-        return new FilteringJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener, allFilters);
-    }
+        final Jt808RequestMsgQueueListener delegate;
+        if (this.serverProps.getFeatures().getRequestFilter().isEnabled()) {
+            final List<Jt808RequestFilter> allFilters = filters.orderedStream().collect(Collectors.toList());
+            delegate = new FilteringJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener, allFilters);
+        } else {
+            delegate = new DefaultJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener);
+        }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public Jt808RequestMsgQueueListener msgQueueListener(
-            Jt808DispatcherHandler dispatcherHandler,
-            // Jt808SessionManager sessionManager,
-            Jt808RequestSubPackageStorage subPackageStorage,
-            Jt808RequestSubPackageEventListener requestSubPackageEventListener) {
-        return new DefaultJt808RequestMsgQueueListener(dispatcherHandler, subPackageStorage, requestSubPackageEventListener);
+        if (jt808ServerSchedulerFactory == null) {
+            return delegate;
+        }
+
+        return new Jt808RequestMsgQueueListenerAsyncWrapper(delegate, jt808ServerSchedulerFactory.getMsgHandlerExecutor());
     }
 
 

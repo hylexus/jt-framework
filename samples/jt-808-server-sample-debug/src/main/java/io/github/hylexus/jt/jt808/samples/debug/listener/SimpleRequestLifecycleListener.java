@@ -7,17 +7,18 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808HandlerResult;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
  * @author hylexus
  */
 @Component
-@Slf4j
 public class SimpleRequestLifecycleListener implements Jt808RequestLifecycleListener {
 
     private static final String LOG_PREFIX = "<><><><> ";
+    private static final Logger log = LoggerFactory.getLogger(SimpleRequestLifecycleListener.class);
 
     @Override
     public boolean beforeDecode(ByteBuf request, Channel channel) {
