@@ -111,6 +111,7 @@ export const zhSidebar = sidebar({
             "/v2/jt-808/config/protocol.md",
             "/v2/jt-808/config/server.md",
             "/v2/jt-808/config/message-processor.md",
+            "/v2/jt-808/config/message-handler.md",
             "/v2/jt-808/config/sub-package.md",
             "/v2/jt-808/config/others.md",
             "/v2/jt-808/config/extension-jiangsu.md",

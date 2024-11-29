@@ -37,7 +37,7 @@ jt808:
     keep-alive: 1m
     max-pending-tasks: 256
     daemon: true
-    thread-name-prefix: 808-handler
+    pool-name: 808-handler
   ## 苏标附件服务器
   attachment-server:
     enabled: true

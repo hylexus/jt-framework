@@ -1,3 +1,9 @@
+## 2.3.0-rc.2(2024-11-29)
+
+### ⭐ New Features
+
+新增业务线程池: `jt808.msg-handler`
+
 ## 2.3.0-rc.1(2024-08-03)
 
 ### ⭐ New Features

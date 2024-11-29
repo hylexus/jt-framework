@@ -12,12 +12,12 @@ import java.time.Duration;
 @ToString
 public class MsgHandlerProps {
     private boolean enabled = true;
-    private int corePoolSize = Math.max(64, 10 * Runtime.getRuntime().availableProcessors());
-    private int maxPoolSize = Math.max(128, 10 * Runtime.getRuntime().availableProcessors());
+    private int corePoolSize = 128;
+    private int maxPoolSize = 256;
     private Duration keepAlive = Duration.ofMinutes(1);
     private int maxPendingTasks = 256;
     private boolean daemon = true;
-    private String threadNamePrefix = "808-handler";
+    private String poolName = "808-handler";
 
     public DefaultJt808ServerSchedulerFactory.ExecutorProps toExecutorProps() {
         final DefaultJt808ServerSchedulerFactory.ExecutorProps executorProps = new DefaultJt808ServerSchedulerFactory.ExecutorProps();
@@ -26,7 +26,7 @@ public class MsgHandlerProps {
         executorProps.setKeepAlive(keepAlive);
         executorProps.setQueueSize(maxPendingTasks);
         executorProps.setDaemon(daemon);
-        executorProps.setThreadNamePrefix(threadNamePrefix);
+        executorProps.setThreadNamePrefix(poolName);
         return executorProps;
     }
 }

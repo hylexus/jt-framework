@@ -29,7 +29,7 @@ jt808:
 
 `msg-processor.thread-pool.xxx` 系列配置在 `2.0.2` 中已经废弃(存在跨线程资源回收问题)。
 
-使用 `msg-processor.executor-group` 代替。
+使用 `jt808.msg-handler` 代替。
 
 :::
 
