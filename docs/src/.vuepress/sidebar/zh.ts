@@ -68,6 +68,7 @@ export const zhSidebar = sidebar({
                 children: [
                     '/v2/jt-808/guide/customization/netty-config.md',
                     '/v2/jt-808/guide/customization/codec-config.md',
+                    '/v2/jt-808/guide/customization/custom-thread-pool.md',
                     '/v2/jt-808/guide/customization/session-config.md',
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',

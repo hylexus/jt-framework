@@ -36,6 +36,7 @@
 - 定制化
     - [Netty相关](./customization/netty-config.md)
     - [编码相关](./customization/codec-config.md)
+    - [业务线程池](./customization/custom-thread-pool.md)
     - [Session相关](./customization/session-config.md)
     - [分包相关](./customization/sub-package-config.md)
     - [请求生存周期监听器](./customization/request-lifecycle-listener.md)
