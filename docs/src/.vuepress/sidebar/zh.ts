@@ -103,6 +103,7 @@ export const zhSidebar = sidebar({
         ],
         '/v2/release-notes': [
             '/v2/release-notes/latest.md',
+            '/v2/release-notes/2.1.x.md',
             '/v2/release-notes/2.0.x.md',
             '/v2/release-notes/1.x.md',
         ],
