@@ -47,8 +47,14 @@ configure(allprojects) { project ->
     group = projectGroup
     version = projectVersion
     gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        tasks.withType(JavaCompile).configureEach {
+            // options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+            options.compilerArgs.addAll([
+                    "-Xlint:unchecked",
+                    "-Xlint:deprecation",
+                    // 保留参数名(否则JDK8环境下可能会启动异常)
+                    "-parameters"
+            ])
         }
     }
 }
