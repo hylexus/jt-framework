@@ -52,6 +52,7 @@ configure(allprojects) { project ->
             options.compilerArgs.addAll([
                     "-Xlint:unchecked",
                     "-Xlint:deprecation",
+                    "-Xlint:-options",
                     // 保留参数名(否则JDK8环境下可能会启动异常)
                     "-parameters"
             ])
