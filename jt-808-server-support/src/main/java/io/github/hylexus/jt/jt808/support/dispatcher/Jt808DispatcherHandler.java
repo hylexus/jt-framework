@@ -125,9 +125,11 @@ public class Jt808DispatcherHandler implements Jt808RequestLifecycleListenerAwar
 
     protected void handleResult(Jt808ServerExchange exchange, Jt808HandlerResult result) {
         if (!this.lifecycleListener.beforeEncode(exchange, result)) {
+            exchange.response().release();
             return;
         }
         if (Jt808HandlerResult.isEmptyResult(result)) {
+            exchange.response().release();
             return;
         }
         final Jt808HandlerResultHandler resultHandler = getResultHandler(result, exchange);

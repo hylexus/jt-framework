@@ -75,7 +75,7 @@ public class LocationMsgHandler {
     @Jt808RequestHandlerMapping(msgType = 0x0200, versions = VERSION_2013)
     public BuiltinServerCommonReplyMsg processLocationUploadMsgV2013(Jt808RequestEntity<BuiltinMsg0200V2013Alias> request, Jt808Session session) {
         final BuiltinMsg0200V2013Alias body = request.body();
-        log.info("LocationUpload -- V2019 -- {}", body);
+        log.info("LocationUpload -- V2013 -- {}", body);
 
         // 这里演示性的记录一下当前会话对应的终端最近一次上报的经纬度
         // 这里仅仅是为方便演示才将最近一次地理位置信息存储到内存中的  实际上你应该使用外部存储介质!!!(否则终端断开连接,session销毁, 数据也就没了)
