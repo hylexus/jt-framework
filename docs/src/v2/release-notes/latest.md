@@ -4,6 +4,12 @@ icon: branch
 
 # 2.3.x
 
+## 2.3.0-rc.4(2025-02-24)
+
+### 🐞 Bug Fixes
+
+- `DispatcherHandler` 未释放空消息的问题
+
 ## 2.3.0-rc.3(2024-12-11)
 
 ### 🐞 Bug Fixes
