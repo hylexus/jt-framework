@@ -1,3 +1,14 @@
+## 2.3.0-rc.5
+
+### ⭐ New Features
+
+- 新增 `DynamicFieldBasedJt808MsgEncoder`
+- `Jt808CommandSender` 新增接方法:
+    - `sendCommand(Metadata, List<DynamicField>)`
+    - `sendCommandWithDynamicFields(Metadata, List<Map<String,Object>>)`
+    - `sendCommandAndWaitingForReply(Jt808CommandKey, Metadata, List<DynamicField>, Duration)`
+    - `sendCommandWithDynamicFieldsAndWaitingForReply`
+
 ## 2.3.0-rc.4(2025-02-24)
 
 ### 🐞 Bug Fixes

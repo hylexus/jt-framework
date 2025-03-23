@@ -8,8 +8,9 @@ import io.github.hylexus.jt.utils.Jdk8Adapter;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author hylexus
@@ -52,6 +53,12 @@ public enum MsgDataType {
         this.byteCount = byteCount;
         this.desc = desc;
         this.expectedTargetClassType = expectedTargetClassType;
+    }
+
+    private static final Map<String, MsgDataType> NAME_MAPPINGS = Arrays.stream(values()).collect(Collectors.toMap(Enum::name, Function.identity()));
+
+    public static Optional<MsgDataType> of(String name) {
+        return Optional.ofNullable(NAME_MAPPINGS.get(name));
     }
 
 }

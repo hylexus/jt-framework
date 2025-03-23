@@ -14,6 +14,9 @@ dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-starter-logging")
     compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
+
+    testCompileOnly("org.springframework.boot:spring-boot-starter-json")
+    testRuntimeOnly("org.springframework.boot:spring-boot-starter-json")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     compileOnly("com.google.code.findbugs:jsr305")

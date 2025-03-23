@@ -1,9 +1,14 @@
 package io.github.hylexus.jt.jt808.spec;
 
 import io.github.hylexus.jt.exception.JtCommunicationException;
+import io.github.hylexus.jt.jt808.spec.utils.DynamicField;
+import io.github.hylexus.jt.jt808.spec.utils.DynamicFieldBasedJt808MsgEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,6 +30,14 @@ public interface Jt808CommandSenderInternal {
 
     void sendCommand(String terminalId, Object entity) throws JtCommunicationException;
 
+    void sendCommand(DynamicFieldBasedJt808MsgEncoder.Metadata metadata, List<DynamicField> body) throws JtCommunicationException;
+
+    /**
+     * @see DynamicField#fromMap(Map)
+     * @see #sendCommandWithDynamicFieldsAndWaitingForReply(Jt808CommandKey, DynamicFieldBasedJt808MsgEncoder.Metadata, List, Duration)
+     */
+    void sendCommandWithDynamicFields(DynamicFieldBasedJt808MsgEncoder.Metadata metadata, List<Map<String, Object>> body) throws JtCommunicationException;
+
     <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, ByteBuf byteBuf, long timeout, TimeUnit timeUnit)
             throws JtCommunicationException, InterruptedException;
 
@@ -38,6 +51,16 @@ public interface Jt808CommandSenderInternal {
             throws JtCommunicationException, InterruptedException;
 
     <T> T sendCommandAndWaitingForReply(Jt808CommandKey key, Object entity, Long timeout, TimeUnit timeUnit)
+            throws JtCommunicationException, InterruptedException;
+
+    <T> T sendCommandAndWaitingForReply(Jt808CommandKey commandKey, DynamicFieldBasedJt808MsgEncoder.Metadata metadata, List<DynamicField> body, Duration timeout)
+            throws JtCommunicationException, InterruptedException;
+
+    /**
+     * @see DynamicField#fromMap(Map)
+     * @see #sendCommandWithDynamicFields(DynamicFieldBasedJt808MsgEncoder.Metadata, List)
+     */
+    <T> T sendCommandWithDynamicFieldsAndWaitingForReply(Jt808CommandKey commandKey, DynamicFieldBasedJt808MsgEncoder.Metadata metadata, List<Map<String, Object>> body, Duration timeout)
             throws JtCommunicationException, InterruptedException;
 
 }

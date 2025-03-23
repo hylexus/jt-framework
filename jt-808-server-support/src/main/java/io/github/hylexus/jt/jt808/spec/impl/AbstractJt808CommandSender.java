@@ -52,7 +52,7 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
         return sendAndWait(key, session, timeout, timeUnit, byteBuf);
     }
 
-    private <T> T sendAndWait(Jt808CommandKey key, Jt808Session session, Long timeout, TimeUnit timeUnit, ByteBuf byteBuf) throws InterruptedException {
+    protected  <T> T sendAndWait(Jt808CommandKey key, Jt808Session session, Long timeout, TimeUnit timeUnit, ByteBuf byteBuf) throws InterruptedException {
         session.sendMsgToClient(byteBuf);
 
         @SuppressWarnings("unchecked") final T result = (T) commandWaitingPool.waitingForKey(key, timeout, timeUnit);
@@ -79,7 +79,7 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
         session.sendMsgToClient(byteBuf);
     }
 
-    private Jt808Session getSession(String terminalId) {
+    protected Jt808Session getSession(String terminalId) {
         return sessionManager.findByTerminalId(terminalId)
                 .orElseThrow(() -> new JtSessionNotFoundException("Session Not Found with TerminalId : [" + terminalId + "]", terminalId));
     }

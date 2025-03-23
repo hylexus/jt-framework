@@ -31,7 +31,7 @@ public enum BuiltinJt808MsgType implements MsgType {
     CLIENT_AUTH(0x0102, "终端鉴权"),
     CLIENT_LOCATION_INFO_UPLOAD(0x0200, "定位数据上报"),
     CLIENT_LOCATION_INFO_BATCH_UPLOAD(0x0704, "定位数据批量上报"),
-
+    CLIENT_MSG_0801(0x0801, "多媒体数据上传"),
     CLIENT_PARAM_QUERY_RESULT(0x0104, "终端参数查询结果"),
 
     CLIENT_MULTI_MEDIA_MSG_UPLOAD(0x0800, "多媒体事件信息上传"),

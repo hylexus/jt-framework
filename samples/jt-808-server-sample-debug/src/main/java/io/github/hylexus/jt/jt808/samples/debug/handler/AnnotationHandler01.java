@@ -1,5 +1,8 @@
 package io.github.hylexus.jt.jt808.samples.debug.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2013;
 import io.github.hylexus.jt.jt808.samples.debug.entity.req.DebugTerminalRegisterMsgV2019;
@@ -11,6 +14,7 @@ import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg0102V2019;
 import io.github.hylexus.jt.jt808.spec.builtin.msg.req.BuiltinMsg8003;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
+import io.github.hylexus.jt.jt808.spec.utils.DynamicFieldBasedJt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandler;
 import io.github.hylexus.jt.jt808.support.annotation.handler.Jt808RequestHandlerMapping;
 import io.github.hylexus.jt.utils.Jdk8Adapter;
@@ -18,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
@@ -26,6 +31,11 @@ import static io.github.hylexus.jt.jt808.Jt808ProtocolVersion.VERSION_2019;
 @Component
 @Jt808RequestHandler
 public class AnnotationHandler01 {
+    private final Jt808CommandSender commandSender;
+
+    public AnnotationHandler01(Jt808CommandSender commandSender) {
+        this.commandSender = commandSender;
+    }
 
     @Jt808RequestHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
     public void processMsg0001(Jt808Request request, TerminalCommonReplyMsg body) {
@@ -73,6 +83,43 @@ public class AnnotationHandler01 {
                 ;
     }
 
+    // @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
+    public void processRegisterMsgV2019ResponseWithDynamicFields(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2019 authMsgV2019) {
+        log.info("{}", authMsgV2019);
+        // this.commandSender.sendCommandWithDynamicFields(
+        //         new DynamicFieldBasedJt808MsgEncoder.Metadata()
+        //                 .setVersion(VERSION_2019)
+        //                 .setTerminalId(request.terminalId())
+        //                 .setMsgId(0x8100),
+        //         Jdk8Adapter.listOf(
+        //                 DynamicField.ofWord(request.flowId()),
+        //                 DynamicField.ofByte((short) 0),
+        //                 DynamicField.ofStringGbk("AuthCode2019DebugDemo", PrependLengthFieldType.none)
+        //         )
+        // );
+        this.commandSender.sendCommandWithDynamicFields(
+                new DynamicFieldBasedJt808MsgEncoder.Metadata()
+                        .setVersion(VERSION_2019)
+                        .setTerminalId(request.terminalId())
+                        .setMsgId(0x8100),
+                // 这里模拟一个 DynamicField.fromMap(map) 方法能解析的 DynamicField[]
+                toMapList("["
+                          + "{\"type\":\"WORD\", \"value\":" + request.flowId() + "},\n"
+                          + "{\"type\":\"BYTE\", \"value\":0},\n"
+                          + "{\"type\":\"STRING\", \"value\":\"AuthCode2019DebugDemo\", \"encoding\":\"GBK\"}"
+                          + "]"
+                )
+        );
+    }
+
+    private List<Map<String, Object>> toMapList(String json) {
+        try {
+            return new ObjectMapper().readValue(json, new TypeReference<List<Map<String, Object>>>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Jt808RequestHandlerMapping(msgType = 0x0102, versions = VERSION_2019)
     public Object debug001(Jt808RequestEntity<BuiltinMsg0102V2019> request) {
