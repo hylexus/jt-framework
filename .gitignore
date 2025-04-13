@@ -128,3 +128,4 @@ docs/src/.vuepress/dist/
 
 application-debug.yaml
 /demos/deploy.sh
+/buildSrc/.kotlin/

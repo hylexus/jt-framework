@@ -77,6 +77,7 @@ public class DefaultPlatformProcess implements PlatformProcess, Runnable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private Process createProcess() {
         try {
             // return new ProcessBuilder()

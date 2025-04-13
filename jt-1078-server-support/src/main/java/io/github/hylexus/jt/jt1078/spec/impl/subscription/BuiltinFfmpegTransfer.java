@@ -51,6 +51,7 @@ public class BuiltinFfmpegTransfer implements Runnable, AutoCloseable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private Process createProcess() {
         try {
             // return new ProcessBuilder()
