@@ -4,7 +4,7 @@ icon: branch
 
 # 2.3.x
 
-## 2.3.0-rc.5
+## 2.3.0-rc.5(2025-04-16)
 
 ### ⚡不兼容的变更
 
@@ -25,6 +25,10 @@ icon: branch
     - `sendCommandWithDynamicFields(Metadata, List<Map<String,Object>>)`
     - `sendCommandAndWaitingForReply(Jt808CommandKey, Metadata, List<DynamicField>, Duration)`
     - `sendCommandWithDynamicFieldsAndWaitingForReply`
+
+### 📖 升级参考
+
+- [文档 - 升级指南 - 升级到2.3.0-rc.5](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/upgrade-to-2.3.0-rc.5.html)
 
 ## 2.3.0-rc.4(2025-02-24)
 
