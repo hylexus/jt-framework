@@ -1,5 +1,6 @@
 package io.github.hylexus.jt.jt808.spec;
 
+import io.github.hylexus.jt.annotation.BuiltinComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * @author hylexus
  */
+@BuiltinComponent
 public class Jt808RequestMsgQueueListenerAsyncWrapper implements Jt808RequestMsgQueueListener {
 
     private static final Logger log = LoggerFactory.getLogger(Jt808RequestMsgQueueListenerAsyncWrapper.class);

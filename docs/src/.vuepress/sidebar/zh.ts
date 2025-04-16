@@ -67,6 +67,7 @@ export const zhSidebar = sidebar({
                 icon: 'customize',
                 children: [
                     '/v2/jt-808/guide/customization/netty-config.md',
+                    '/v2/jt-808/guide/customization/epoll-config.md',
                     '/v2/jt-808/guide/customization/codec-config.md',
                     '/v2/jt-808/guide/customization/custom-thread-pool.md',
                     '/v2/jt-808/guide/customization/session-config.md',
@@ -97,6 +98,7 @@ export const zhSidebar = sidebar({
                 collapsible: true,
                 icon: 'merge',
                 children: [
+                    '/v2/jt-808/guide/migration/upgrade-to-2.3.0-rc.5.md',
                     '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
                 ]
             },

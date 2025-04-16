@@ -3,8 +3,15 @@ package io.github.hylexus.jt.gradle.plugins
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-
+/**
+ * 由于本项目中示例性的 Spring FatJar 模块很多(严重影响构建时间)
+ *
+ * 因此，在 fastMode == true 时，禁用一些任务以加快构建速度
+ * @author hylexus
+ */
 class JtFrameworkFastModePlugin : Plugin<Project> {
+
+    // 这几个任务严重影响构建时间
     private val disabledTasks = setOf(
         "bootJar",
         "bootDistZip",
@@ -29,4 +36,5 @@ class JtFrameworkFastModePlugin : Plugin<Project> {
             }
         }
     }
+
 }

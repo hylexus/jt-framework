@@ -23,6 +23,8 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinCommonHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalAuthenticationMsgHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.builtin.BuiltinTerminalRegisterMsgHandler;
+import io.github.hylexus.jt.netty.JtServerNettyConfigure;
+import io.github.hylexus.jt.netty.SpringEnvironmentConfigurationProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -31,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 import java.util.Comparator;
 import java.util.List;
@@ -50,6 +53,12 @@ import java.util.stream.Collectors;
 })
 @EnableConfigurationProperties({Jt808ServerProps.class})
 public class Jt808AutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    JtServerNettyConfigure.ConfigurationProvider configurationProvider(Environment environment) {
+        return new SpringEnvironmentConfigurationProvider(environment);
+    }
 
     @Bean
     @ConditionalOnMissingBean

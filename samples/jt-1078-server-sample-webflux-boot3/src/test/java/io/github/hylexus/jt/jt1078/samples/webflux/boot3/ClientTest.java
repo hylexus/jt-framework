@@ -9,7 +9,7 @@ import java.io.*;
 @Slf4j
 public class ClientTest {
 
-    @Test
+    // @Test
     void test2() throws Exception {
         // String command = "ffmpeg -re -i - -vcodec libx264 -acodec copy -f flv rtmp://127.0.0.1:1935/live1/111";
         String command = "ffmpeg -i - -vcodec libx264 -acodec copy -f flv rtmp://127.0.0.1:1935/live1/111";

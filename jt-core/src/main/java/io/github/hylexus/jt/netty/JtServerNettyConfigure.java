@@ -1,7 +1,6 @@
 package io.github.hylexus.jt.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.SocketChannel;
 
 /**
@@ -9,13 +8,16 @@ import io.netty.channel.socket.SocketChannel;
  */
 public interface JtServerNettyConfigure {
 
-    default void configureServerBootstrap(ServerBootstrap serverBootstrap) {
-        serverBootstrap
-                .option(ChannelOption.SO_BACKLOG, 2048)
-                .option(ChannelOption.SO_REUSEADDR, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+    interface ConfigurationProvider {
+        <T> T getConfiguration(String key, Class<T> targetType, T defaultValue);
     }
 
-    void configureSocketChannel(SocketChannel ch);
+    /**
+     * @param configProvider 可以从中读取配置项(环境变量、系统属性、application.yaml、...)
+     * @return 返回入参中的 {@code serverBootstrap} 或 返回一个新的 {@link ServerBootstrap ServerBootstrap} 实例
+     */
+    ServerBootstrap configureServerBootstrap(ConfigurationProvider configProvider, ServerBootstrap serverBootstrap);
+
+    void configureSocketChannel(ConfigurationProvider configProvider, SocketChannel ch);
 
 }

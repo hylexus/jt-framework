@@ -9,12 +9,17 @@ import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListener;
 import io.github.hylexus.jt.jt1078.spec.Jt1078RequestLifecycleListenerAware;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManager;
 import io.github.hylexus.jt.jt1078.spec.Jt1078SessionManagerAware;
+import io.github.hylexus.jt.netty.JtServerNettyConfigure;
+import io.github.hylexus.jt.netty.SpringEnvironmentConfigurationProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 
 /**
  * @author hylexus
@@ -34,6 +39,12 @@ import org.springframework.context.annotation.Import;
 })
 @ConditionalOnProperty(prefix = "jt1078", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Jt1078AutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    JtServerNettyConfigure.ConfigurationProvider configurationProvider(Environment environment) {
+        return new SpringEnvironmentConfigurationProvider(environment);
+    }
 
     @Slf4j
     static class Jt1078RequestLifecycleListenerBinder {

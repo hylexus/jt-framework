@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.hylexus.jt.core.OrderedComponent;
+import io.github.hylexus.jt.jt808.boot.config.BuiltinJt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
-import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestFilter;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListener;
 import io.github.hylexus.jt.jt808.spec.Jt808RequestMsgQueueListenerAsyncWrapper;
@@ -29,7 +29,11 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestProcessor;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.DefaultJt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.dispatcher.impl.SimpleJt808RequestProcessor;
-import io.github.hylexus.jt.jt808.support.netty.*;
+import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
+import io.github.hylexus.jt.jt808.support.netty.Jt808NettyTcpServer;
+import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
+import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
+import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.EventExecutorGroup;
@@ -160,34 +164,19 @@ public class Jt808NettyServerAutoConfiguration {
             @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
-
-        final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = this.serverProps.getServer().getIdleStateHandler();
-        final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps = new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps(
-                this.serverProps.getProtocol().getMaxFrameLength(),
-                new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.IdleStateHandlerProps(
-                        idleStateHandler.isEnabled(),
-                        idleStateHandler.getReaderIdleTime(),
-                        idleStateHandler.getWriterIdleTime(),
-                        idleStateHandler.getAllIdleTime()
-                )
-        );
-
-        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter, eventExecutorGroup);
+        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroup, channelHandlerAdapter, heatBeatHandler);
     }
 
     @Bean(initMethod = "doStart", destroyMethod = "doStop")
     @ConditionalOnMissingBean
-    public Jt808NettyTcpServer jt808NettyTcpServer(Jt808ServerNettyConfigure configure) {
+    public Jt808NettyTcpServer jt808NettyTcpServer(Jt808ServerNettyConfigure configure, JtServerNettyConfigure.ConfigurationProvider provider) {
         final Jt808NettyTcpServer server = new Jt808NettyTcpServer(
-                "808-tcp-server",
+                "TcpServer(JT/T-808-Instruction)",
                 configure,
-                new Jt808NettyChildHandlerInitializer(configure)
+                provider
         );
 
-        final Jt808NettyTcpServerProps nettyProps = serverProps.getServer();
-        server.setPort(nettyProps.getPort());
-        server.setBossThreadCount(nettyProps.getBossThreadCount());
-        server.setWorkThreadCount(nettyProps.getWorkerThreadCount());
+        server.setPort(serverProps.getServer().getPort());
         return server;
     }
 

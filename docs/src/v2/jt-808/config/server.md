@@ -18,6 +18,8 @@ jt808:
     port: 6808
     boss-thread-count: 0
     worker-thread-count: 0
+    # 优先使用 Epoll(v2.3.0-rc.5)
+    prefer-epoll: true
     idle-state-handler:
       enabled: true
       reader-idle-time: 20m
@@ -53,6 +55,9 @@ this.bossGroup=new NioEventLoopGroup(bossThreadCount);
 ```java
 this.workerGroup=new NioEventLoopGroup(workThreadCount);
 ```
+## prefer-epoll
+
+从 **v2.3.0-rc.5** 开始，在 **Linux** 环境下，优先使用 `Epoll`。
 
 ## idle-state-handler
 

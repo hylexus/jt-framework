@@ -4,6 +4,28 @@ icon: branch
 
 # 2.3.x
 
+## 2.3.0-rc.5
+
+### ⚡不兼容的变更
+
+- `JtServerNettyConfigure` 及其子接口和实现类
+    - `Jt808ServerNettyConfigure`
+        - 删除了 ~~DefaultJt808ServerNettyConfigure~~
+        - 新增 `BuiltinJt808ServerNettyConfigure`
+    - `Jt808AttachmentServerNettyConfigure`
+        - 删除了 ~~DefaultJt808AttachmentServerNettyConfigure~~
+        - 新增 `BuiltinJt808AttachmentServerNettyConfigure`
+- `AbstractRunner` 构造器参数变更
+
+### ⭐ 新特性
+
+- 新增 `DynamicFieldBasedJt808MsgEncoder`
+- `Jt808CommandSender` 新增接方法:
+    - `sendCommand(Metadata, List<DynamicField>)`
+    - `sendCommandWithDynamicFields(Metadata, List<Map<String,Object>>)`
+    - `sendCommandAndWaitingForReply(Jt808CommandKey, Metadata, List<DynamicField>, Duration)`
+    - `sendCommandWithDynamicFieldsAndWaitingForReply`
+
 ## 2.3.0-rc.4(2025-02-24)
 
 ### 🐞 Bug Fixes

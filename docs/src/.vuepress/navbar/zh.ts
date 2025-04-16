@@ -29,7 +29,7 @@ export const zhNavbar = navbar([
         },
         {
             text: '升级指南',
-            link: '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
+            link: '/v2/jt-808/guide/migration/upgrade-to-2.3.0-rc.5.md',
             icon: 'merge'
         },
         {

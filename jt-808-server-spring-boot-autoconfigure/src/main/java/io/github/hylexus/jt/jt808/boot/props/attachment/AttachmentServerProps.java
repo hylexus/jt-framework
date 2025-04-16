@@ -13,6 +13,11 @@ public class AttachmentServerProps {
     private boolean enabled = false;
     private int port = 6809;
 
+    /**
+     * 优先使用 Epoll(Linux)
+     */
+    private boolean preferEpoll = true;
+
     @Min(value = 0, message = "bossThreadCount >= 0, 0 means that Netty's default logical")
     private int bossThreadCount = 0;
 

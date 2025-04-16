@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractRunner {
     private final String name;
     protected volatile boolean isRunning = false;
+    protected Integer port;
 
     public AbstractRunner(String name) {
         this.name = name;
@@ -33,7 +34,7 @@ public abstract class AbstractRunner {
             }
         }, this.getName()).start();
 
-        log.info("{} started successfully ", getName());
+        log.info("[{}] listening on port [{}] ", getName(), getPort());
     }
 
     public synchronized void doStop() {
@@ -52,7 +53,16 @@ public abstract class AbstractRunner {
     }
 
     public String getName() {
-        return "[RUNNER-" + name + "]";
+        return name;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public AbstractRunner setPort(Integer port) {
+        this.port = port;
+        return this;
     }
 
 }

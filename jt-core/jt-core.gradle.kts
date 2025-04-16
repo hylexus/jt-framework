@@ -17,6 +17,7 @@ dependencies {
 
     api("io.netty:netty-buffer")
     api("io.netty:netty-transport")
+    api("io.netty:netty-transport-classes-epoll")
 
     api("io.github.hylexus.oaks:oaks-common-utils") {
         exclude(group = "org.projectlombok", module = "lombok")

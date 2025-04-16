@@ -1,8 +1,8 @@
 package io.github.hylexus.jt808.samples.customized.config;
 
 import io.github.hylexus.jt.core.OrderedComponent;
+import io.github.hylexus.jt.jt808.boot.config.BuiltinJt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
-import io.github.hylexus.jt.jt808.boot.props.server.Jt808NettyTcpServerProps;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgEncryptionHandler;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgTypeParser;
 import io.github.hylexus.jt.jt808.spec.Jt808ProtocolVersionDetectorRegistry;
@@ -25,11 +25,14 @@ import io.github.hylexus.jt808.samples.customized.subpackage.MyResponseSubPackag
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.util.concurrent.EventExecutorGroup;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Comparator;
 import java.util.Optional;
+
+import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP;
 
 /**
  * @author hylexus
@@ -115,22 +118,12 @@ public class MyJt808Config {
     // [[ 非必须配置 ]] -- 替换内置的 Netty 配置类
     @Bean
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
-            EventExecutorGroup eventExecutorGroup,
-            Jt808ServerProps serverProps,
+            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
-            Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
+            Jt808DispatchChannelHandlerAdapter channelHandlerAdapter,
+            Jt808ServerProps serverProps) {
 
-        final Jt808NettyTcpServerProps.IdleStateHandlerProps idleStateHandler = serverProps.getServer().getIdleStateHandler();
-        final Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps serverBootstrapProps = new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.BuiltInServerBootstrapProps(
-                serverProps.getProtocol().getMaxFrameLength(),
-                new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure.IdleStateHandlerProps(
-                        idleStateHandler.isEnabled(),
-                        idleStateHandler.getReaderIdleTime(),
-                        idleStateHandler.getWriterIdleTime(),
-                        idleStateHandler.getAllIdleTime()
-                )
-        );
-        return new Jt808ServerNettyConfigure.DefaultJt808ServerNettyConfigure(serverBootstrapProps, heatBeatHandler, channelHandlerAdapter, eventExecutorGroup);
+        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroup, channelHandlerAdapter, heatBeatHandler);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的转义等逻辑

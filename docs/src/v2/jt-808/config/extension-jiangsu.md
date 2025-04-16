@@ -13,6 +13,8 @@ jt808:
     enabled: true
     # 附件服务器端口(TCP)
     port: 6809
+    # 优先使用 Epoll(v2.3.0-rc.5)
+    prefer-epoll: true
     # this.bossGroup=new NioEventLoopGroup(bossThreadCount);
     boss-thread-count: 2
     # this.workerGroup=new NioEventLoopGroup(workThreadCount);

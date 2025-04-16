@@ -19,6 +19,11 @@ import java.time.Duration;
 public class Jt1078NettyTcpServerProps {
     private int port = 61078;
 
+    /**
+     * 优先使用 Epoll(Linux)
+     */
+    private boolean preferEpoll = true;
+
     private int bossThreadCount = 0;
 
     private int workerThreadCount = 0;
