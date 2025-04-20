@@ -18,6 +18,7 @@ import java.time.Duration;
 @ToString
 @Validated
 public class Jt808NettyTcpServerProps {
+    private boolean enabled = true;
     private int port = 6808;
 
     /**

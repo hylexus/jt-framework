@@ -1,6 +1,7 @@
 package io.github.hylexus.jt.jt808.boot.config.configuration;
 
 import io.github.hylexus.jt.jt808.boot.config.BuiltinJt808AttachmentServerNettyConfigure;
+import io.github.hylexus.jt.jt808.boot.config.condition.ConditionalOnJt808Server;
 import io.github.hylexus.jt.jt808.boot.props.Jt808ServerProps;
 import io.github.hylexus.jt.jt808.boot.props.msg.processor.MsgProcessorExecutorGroupProps;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
@@ -18,15 +19,15 @@ import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP;
 import static io.github.hylexus.jt.jt808.JtProtocolConstant.BEAN_NAME_NETTY_HANDLER_NAME_ATTACHMENT_808_HEART_BEAT;
 
 @Slf4j
-@ConditionalOnProperty(prefix = "jt808.attachment-server", name = "enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnJt808Server(type = ConditionalOnJt808Server.Type.ATTACHMENT_SERVER)
 public class Jt808AttachmentServerAutoConfiguration {
+
     private final Jt808ServerProps instructionServerProps;
 
     public Jt808AttachmentServerAutoConfiguration(Jt808ServerProps instructionServerProps) {

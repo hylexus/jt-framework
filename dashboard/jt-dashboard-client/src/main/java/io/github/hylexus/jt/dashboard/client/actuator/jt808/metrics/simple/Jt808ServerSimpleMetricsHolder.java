@@ -13,9 +13,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
 @Getter
@@ -29,7 +29,7 @@ public class Jt808ServerSimpleMetricsHolder {
     @Setter
     public static class RequestInfo {
         private final LongAdder total = new LongAdder();
-        private final Map<Integer, RequestDetail> details = new HashMap<>();
+        private final Map<Integer, RequestDetail> details = new ConcurrentHashMap<>();
 
         public void incrementTotal() {
             this.total.increment();

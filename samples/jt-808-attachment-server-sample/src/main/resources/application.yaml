@@ -1,0 +1,18 @@
+demo-config:
+  attachment-file-temp-path: /tmp/jt808-attachment-server-demo/
+########################################################
+jt808:
+  server:
+    # 指令服务器: 禁用
+    enabled: false
+  attachment-server:
+    # 附件服务器: 启用
+    enabled: true
+    port: 6809
+    idle-state-handler:
+      enabled: true
+      reader-idle-time: 30s
+##############
+logging:
+  level:
+    root: info

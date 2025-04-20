@@ -15,6 +15,7 @@ icon: object
 ```yaml
 jt808:
   server:
+    enabled: true
     port: 6808
     boss-thread-count: 0
     worker-thread-count: 0
@@ -26,6 +27,13 @@ jt808:
       writer-idle-time: 0s # disabled
       all-idle-time: 0s # disabled
 ```
+
+## enabled <Badge text="v2.3.0-rc.6" type="tip" vertical="middle"/>
+
+- 类型：`boolean`
+- 默认值：`true`
+
+指令服务器是否开启。
 
 ## port
 
@@ -55,6 +63,7 @@ this.bossGroup=new NioEventLoopGroup(bossThreadCount);
 ```java
 this.workerGroup=new NioEventLoopGroup(workThreadCount);
 ```
+
 ## prefer-epoll
 
 从 **v2.3.0-rc.5** 开始，在 **Linux** 环境下，优先使用 `Epoll`。

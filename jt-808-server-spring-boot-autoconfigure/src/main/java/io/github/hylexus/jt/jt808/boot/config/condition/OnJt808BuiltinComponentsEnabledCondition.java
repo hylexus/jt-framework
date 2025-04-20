@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author hylexus
  */
-public class OnJt808BuiltinComponentsEnabledCondition implements Condition {
+class OnJt808BuiltinComponentsEnabledCondition implements Condition {
 
     @Override
     public boolean matches(@NonNull ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {

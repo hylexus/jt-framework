@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author hylexus
  */
-public class OnJt808ResponseSubPackageStorageEnabledCondition implements Condition {
+class OnJt808ResponseSubPackageStorageEnabledCondition implements Condition {
 
     @Override
     public boolean matches(@NonNull ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {

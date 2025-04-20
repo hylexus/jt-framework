@@ -1,6 +1,5 @@
-package io.github.hylexus.jt.jt808.boot.config.configuration;
+package io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher;
 
-import io.github.hylexus.jt.jt808.boot.config.configuration.dispatcher.*;
 import io.github.hylexus.jt.jt808.support.dispatcher.*;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

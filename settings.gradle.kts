@@ -37,6 +37,7 @@ include ("dashboard:jt-dashboard-client-spring-boot-starter")
 
 // samples
 include ("samples")
+include ("samples:jt-808-attachment-server-sample")
 include ("samples:jt-sample-common")
 include ("samples:jt-808-server-sample-debug")
 include ("samples:jt-808-server-sample-bare")
