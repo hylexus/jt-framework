@@ -103,7 +103,7 @@ public class Msg80300Issue91 {
         // 3 bytes: 总循环次数
         private int numberOfCycles;
 
-        // 2 bytes: 时间间隔
+        // 1 bytes: 时间间隔
         private Duration duration;
     }
 

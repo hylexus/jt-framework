@@ -1,5 +1,8 @@
 package io.github.hylexus.jt.jt808.issues.issue91;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.hylexus.jt.jt808.Jt808ProtocolVersion;
 import io.github.hylexus.jt.jt808.spec.Jt808MsgBuilder;
 import io.github.hylexus.jt.jt808.support.codec.Jt808ByteReader;
@@ -30,8 +33,8 @@ public class Msg80300Issue91Test {
     private Msg80300Issue91 createBody() {
         final Msg80300Issue91 body = new Msg80300Issue91();
         body.setFlag((byte) 0x01);
-        // body.setData(Jdk8Adapter.listOf(createItem0x30()));
-        body.setData(Jdk8Adapter.listOf(createItem0x30(), createItem0x31()));
+        // body.setData(createItem0x30());
+        body.setData(createItem0x31());
         return body;
     }
 
@@ -146,7 +149,8 @@ public class Msg80300Issue91Test {
     }
 
     @Test
-    void test2() {
+    void testDecode0x30() {
+        // 55300026001201000300962100644200326402000300320000643200966403000300320000643200966495
         final String hex = "3000260012010003009621006442003264020003003200006432009664030003003200006432009664";
         final ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer().writeBytes(HexStringUtils.hexString2Bytes(hex));
 
@@ -179,6 +183,39 @@ public class Msg80300Issue91Test {
             }
         }
 
-        System.out.println(item0x31Data);
+        try {
+            System.out.println(new ObjectMapper().registerModule(new JavaTimeModule()).writerWithDefaultPrettyPrinter().writeValueAsString(item0x30));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void testDecode0x31() {
+        // 55310006010000123243
+        final String hex = "3100060100001232";
+        final ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer().writeBytes(HexStringUtils.hexString2Bytes(hex));
+
+        final Msg80300Issue91.Item0x31 item0x31 = new Msg80300Issue91.Item0x31();
+        final byte command = byteBuf.readByte();
+        item0x31.setCommand(command);
+
+        final int length = byteBuf.readUnsignedShort();
+        item0x31.setLength(length);
+
+        final short rgbType = byteBuf.readUnsignedByte();
+        item0x31.setRgbType(rgbType);
+
+        final int numberOfCycles = byteBuf.readUnsignedMedium();
+        item0x31.setNumberOfCycles(numberOfCycles);
+
+        final int duration = byteBuf.readUnsignedByte();
+        System.out.println(duration);
+        item0x31.setDuration(Duration.ofMillis(duration * 20L));
+        try {
+            System.out.println(new ObjectMapper().registerModule(new JavaTimeModule()).writerWithDefaultPrettyPrinter().writeValueAsString(item0x31));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

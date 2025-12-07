@@ -6,8 +6,6 @@ import io.github.hylexus.jt.jt808.support.data.serializer.extension.AbstractExte
 import io.github.hylexus.jt.jt808.support.exception.Jt808FieldSerializerException;
 import io.netty.buffer.ByteBuf;
 
-import java.util.List;
-
 /**
  * 这个例子全是使用自定义编码器实现的
  * <p>
@@ -23,37 +21,34 @@ public class CustomJt808FieldSerializerIssue91 extends AbstractExtendedJt808Fiel
             return;
         }
 
-        // 这里假定你传了个 List
-        // 看情况自己修改
-        if (!(object instanceof List)) {
+        if (object instanceof Msg80300Issue91.Item0x30) {
+            this.encode0x30((Msg80300Issue91.Item0x30) object, byteBuf);
+        } else if (object instanceof Msg80300Issue91.Item0x31) {
+            this.encode0x31((Msg80300Issue91.Item0x31) object, byteBuf);
+        } else {
             throw new Jt808FieldSerializerException("Unsupported data type: " + object);
-        }
-
-        for (final Object value : ((List<?>) object)) {
-            if (value == null) {
-                continue;
-            }
-            if (value instanceof Msg80300Issue91.Item0x30) {
-                this.encode0x30((Msg80300Issue91.Item0x30) value, byteBuf);
-            } else if (value instanceof Msg80300Issue91.Item0x31) {
-                this.encode0x31((Msg80300Issue91.Item0x31) value, byteBuf);
-            } else {
-                throw new Jt808FieldSerializerException("Unsupported data type: " + value);
-            }
         }
     }
 
     private void encode0x31(Msg80300Issue91.Item0x31 value, ByteBuf byteBuf) {
+        // 固定帧头
+        final int writerIndexBeforeWrite = byteBuf.writerIndex();
+        byteBuf.writeByte(0x55);
         byteBuf.writeByte(value.getCommand());
         byteBuf.writeShort(value.getLength());
         byteBuf.writeByte(value.getRgbType());
         byteBuf.writeMedium(value.getNumberOfCycles());
         // 20ms 一个单元
-        byteBuf.writeShort((int) (value.getDuration().toMillis() / 20));
+        byteBuf.writeByte((int) (value.getDuration().toMillis() / 20));
+        final byte bcc = bcc(byteBuf, writerIndexBeforeWrite, byteBuf.writerIndex() - writerIndexBeforeWrite);
+        byteBuf.writeByte(bcc);
     }
 
     private void encode0x30(Msg80300Issue91.Item0x30 item0x30, ByteBuf byteBuf) {
         final Jt808ByteWriter writer = Jt808ByteWriter.of(byteBuf);
+        // 固定帧头
+        final int writerIndexBeforeWrite = byteBuf.writerIndex();
+        writer.writeByte(0x55);
         writer.writeByte(item0x30.getCommand());
         writer.writeWord(item0x30.getLength());
 
@@ -70,6 +65,20 @@ public class CustomJt808FieldSerializerIssue91 extends AbstractExtendedJt808Fiel
                 writer.writeByte(pwm.getPercent());
             }
         }
+
+        final byte bcc = bcc(byteBuf, writerIndexBeforeWrite, byteBuf.writerIndex() - writerIndexBeforeWrite);
+        writer.writeByte(bcc);
     }
 
+    public static byte bcc(ByteBuf buf, int start, int length) {
+        return bcc(buf, start, length, (byte) 0x00);
+    }
+
+    public static byte bcc(ByteBuf buf, int start, int length, byte init) {
+        byte bcc = init;
+        for (int i = 0; i < length; i++) {
+            bcc ^= buf.getByte(start + i);
+        }
+        return bcc;
+    }
 }
