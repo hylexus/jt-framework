@@ -1,0 +1,112 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Gradle Build(Multi-Platform)
+
+on:
+  # 1. 手动触发
+  workflow_dispatch:
+    inputs:
+      platforms:
+        type: choice
+        description: 'Select platforms to build (comma-separated if using "custom")'
+        default: 'all'
+        options:
+          - all
+          - linux
+          - windows
+          - macos
+          - custom
+      custom_platforms:
+        type: string
+        description: 'Custom platforms (e.g., "linux,windows"). Only used if "custom" is selected.'
+        default: ''
+      skip_tests:
+        type: boolean
+        description: 'Skip unit tests?'
+        default: false
+#  # 2. 推送
+#  push:
+#    branches: [ "develop" ]
+#  # 3. PR 合并到目标分支
+#  pull_request:
+#    branches: [ "main", "pre-release", "release-candidate" ]
+
+# 辅助 Job：动态生成平台矩阵
+jobs:
+  setup-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          platforms="${{ github.event.inputs.platforms || 'all' }}"
+          custom="${{ github.event.inputs.custom_platforms || '' }}"
+
+          # 默认全平台
+          if [ "$platforms" = "all" ]; then
+            echo "matrix={\"os\":[\"ubuntu-latest\",\"windows-latest\",\"macos-latest\"]}" >> "$GITHUB_OUTPUT"
+          elif [ "$platforms" = "linux" ]; then
+            echo "matrix={\"os\":[\"ubuntu-latest\"]}" >> "$GITHUB_OUTPUT"
+          elif [ "$platforms" = "windows" ]; then
+            echo "matrix={\"os\":[\"windows-latest\"]}" >> "$GITHUB_OUTPUT"
+          elif [ "$platforms" = "macos" ]; then
+            echo "matrix={\"os\":[\"macos-latest\"]}" >> "$GITHUB_OUTPUT"
+          elif [ "$platforms" = "custom" ]; then
+            # 解析自定义平台，映射为 runner 名称
+            os_list=()
+            IFS=',' read -ra PARTS <<< "$custom"
+            for part in "${PARTS[@]}"; do
+              part=$(echo "$part" | xargs)  # trim
+              case "$part" in
+                linux)   os_list+=("ubuntu-latest") ;;
+                windows) os_list+=("windows-latest") ;;
+                macos)   os_list+=("macos-latest") ;;
+                *) echo "Unknown platform: $part" >&2; exit 1 ;;
+              esac
+            done
+            if [ ${#os_list[@]} -eq 0 ]; then
+              echo "matrix={\"os\":[]}" >> "$GITHUB_OUTPUT"
+            else
+              # 构造 JSON 数组
+              json_array=$(printf '%s,' "${os_list[@]}" | sed 's/,$//')
+              echo "matrix={\"os\":[\"$(echo "$json_array" | sed 's/,/","/g')\"]}" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            # fallback to all
+            echo "matrix={\"os\":[\"ubuntu-latest\",\"windows-latest\",\"macos-latest\"]}" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: setup-matrix
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
+      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
+        with:
+          cache-read-only: false
+          cache-write-only: false
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew clean build

@@ -1,0 +1,49 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Gradle Build(Linux-Platform)
+
+on:
+  # 1. 手动触发
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        type: boolean
+        description: 'Skip unit tests?'
+        default: false
+  # 2. 推送
+  push:
+    branches: [ "develop" ]
+  # 3. PR 合并到目标分支
+  pull_request:
+    branches: [ "main", "pre-release", "release-candidate" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
+      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
+        with:
+          cache-read-only: false
+          cache-write-only: false
+
+      - name: Build with Gradle Wrapper
+        run: ./gradlew clean build

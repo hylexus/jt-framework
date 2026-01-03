@@ -1,0 +1,44 @@
+name: Dependency Graph
+
+# 只在推送新的 Tag 时触发
+on:
+  # 1. 手动触发
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        type: boolean
+        description: 'Skip unit tests?'
+        default: false
+  # 2. 推送
+  push:
+    tags:
+      # - '**' # 匹配所有 tag，例如 v1.0.0, 1.2.3, release-abc 等
+      - 'v*'    # 只匹配以 'v' 开头的 tag，如 v1.0.0
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4.4.2
+        with:
+          cache-read-only: false
+          cache-write-only: false
+      # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
+      # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0

@@ -1,5 +1,46 @@
 # jt-framework
 
+<p align="center">
+    <a href="https://github.com/hylexus/jt-framework">
+        <img alt="jt-framework logo" src="docs/src/.vuepress/public/logo.png" width="50%" />
+    </a>
+</p>
+
+<p align="center">
+    <a href="https://deepwiki.com/hylexus/jt-framework">
+        <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+    </a>
+    <br/>
+    <a href="https://openjdk.org/projects/jdk/17">
+        <img alt="JDK" src="https://img.shields.io/badge/JDK-8/17/21-red" />
+    </a>
+    <a href="https://central.sonatype.com/namespace/io.github.hylexus.jt">
+        <img alt="Maven Central" src="https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-core.svg?label=Maven%20Central&color=green-light" />
+    </a>
+    <br/>
+    <a href="https://github.com/hylexus/jt-framework/actions/workflows/gradle-build-linux-platform.yml">
+        <img alt="Gradle Build" src="https://img.shields.io/github/actions/workflow/status/hylexus/jt-framework/gradle-build-linux-platform.yml?logo=gradle&label=Gradle%20Build">
+    </a>
+    <a href="https://github.com/hylexus/jt-framework/graphs/commit-activity">
+        <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/hylexus/jt-framework?logo=github&label=Last%20Commit&color=blue">
+    </a>
+    <br/>
+    <a href="https://github.com/hylexus/jt-framework/graphs/commit-activity">
+        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/t/hylexus/jt-framework?logo=github&label=Total%20Commits"/>
+    </a>
+    <a href="https://github.com/hylexus/jt-framework/graphs/commit-activity">
+        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/hylexus/jt-framework?logo=github&label=Commit%20Activity"/>
+    </a>
+    <a href="https://github.com/hylexus/jt-framework/graphs/commit-activity">
+        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/hylexus/jt-framework?logo=github&label=Commit%20Activity"/>
+    </a>
+    <a href="https://github.com/hylexus/jt-framework/graphs/commit-activity">
+        <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/y/hylexus/jt-framework?logo=github&label=Commit%20Activity"/>
+    </a>
+</p>
+
+## Intro / 介绍
+
 Jt-808协议服务端。
 
 最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
@@ -11,7 +52,7 @@ Jt-808协议服务端。
 - Github : https://github.com/hylexus/xtream-codec
 - Gitee : https://gitee.com/hylexus/xtream-codec
 
-## Compatibility
+## Compatibility / 兼容性
 
 支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
 和 **spring-boot-3.x** [![spring-boot-3.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter.svg?label=spring-boot-3.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter%22) 。
@@ -33,7 +74,7 @@ Jt-808协议服务端。
 | `jt-dashboard-client-spring-boot-starter`  | `17+` | `[3.0.0, ...]`    | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
 | `jt-dashboard-server-spring-boot-starter`  | `17+` | `[3.0.0, ...]`    | 暂时只支持 `jdk17+/spring-boot-3.x`; `beta版`    |
 
-## Modules
+## Modules / 项目模块
 
 本项目默认的 **JDK版本** 和 **spring-boot版本** 见下表(有必要的话,根据实际情况自行调整):
 
@@ -90,11 +131,12 @@ Jt-808协议服务端。
 
 ```
 
-## Docs
+## Docs / 文档
 
-- 文档请移步：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)
+- Github：[https://hylexus.github.io/jt-framework/](https://hylexus.github.io/jt-framework/)
+- DeepWiki(**AI** 生成): https://deepwiki.com/hylexus/jt-framework/
 
-## QuickStart
+## QuickStart / 快速入门
 
 更多信息，请移步 [入门--快速开始](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/quick-start.html) 。
 
@@ -146,7 +188,7 @@ logging:
   level.jt-808.response.encoder: debug
 ```
 
-## Features
+## Features / 特性
 
 - 注解驱动开发
 - 支持苏标附件服务器
@@ -155,14 +197,14 @@ logging:
 - 支持多版本
 - 支持报文加解密
 
-## Maven Samples
+## Maven Samples / Maven 版示例
 
-Maven版示例项目
+Maven 版示例项目
 
 - Github: [https://github.com/hylexus/jt-framework-samples-maven](https://github.com/hylexus/jt-framework-samples-maven)
 - Gitee: [https://gitee.com/hylexus/jt-framework-samples-maven](https://gitee.com/hylexus/jt-framework-samples-maven)
 
-## Building from Source
+## Building from Source / 构建源码
 
 更多有关编译源码的信息，请移步 [入门--编译源码](https://hylexus.github.io/jt-framework/v2/jt-808/guide/quick-start/building-from-source.html) 。
 
@@ -178,16 +220,16 @@ Maven版示例项目
 .\gradlew.bat clean build
 ```
 
-## Reporting Issues
+## Reporting Issues / 提交问题
 
 - **GitHub** 提交 **Issue**
 - **QQ**交流群 : **1072477383**
 
-## Community
+## Community / 社区
 
 ![QQ交流群](https://hylexus.github.io/jt-framework/img/QQ-Group.jpeg)
 
-## Funding
+## Funding / 打赏
 
 项目的发展离不开你的支持，请作者喝一杯🍺吧！
 
