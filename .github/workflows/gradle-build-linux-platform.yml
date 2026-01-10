@@ -17,10 +17,10 @@ on:
         default: false
   # 2. 推送
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "master" ]
   # 3. PR 合并到目标分支
   pull_request:
-    branches: [ "main", "pre-release", "release-candidate" ]
+    branches: [ "master", "pre-release", "release-candidate" ]
 
 jobs:
   build:
