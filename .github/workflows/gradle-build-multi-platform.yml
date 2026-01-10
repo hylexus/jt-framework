@@ -110,11 +110,11 @@ jobs:
 
       - name: Build with Gradle Wrapper
         env:
-          ORG_GRADLE_PROJECT_jt_framework_maven_repo_central_portal_enabled: "false"
-          ORG_GRADLE_PROJECT_jt_framework_maven_repo_private_enabled: "false"
-          ORG_GRADLE_PROJECT_jt_framework_maven_repo_github_enabled: "false"
-          ORG_GRADLE_PROJECT_jt_framework_maven_publications_signing: "off"
-          ORG_GRADLE_PROJECT_jt_framework_backend_build_checkstyle_enabled: "true"
-          ORG_GRADLE_PROJECT_jt_framework_backend_build_debug_module_fatjar_enabled: "false"
+          JT_FRAMEWORK_MAVEN_REPO_CENTRAL_PORTAL_ENABLED: false
+          JT_FRAMEWORK_MAVEN_REPO_PRIVATE_ENABLED: false
+          JT_FRAMEWORK_MAVEN_REPO_GITHUB_ENABLED: false
+          JT_FRAMEWORK_MAVEN_PUBLICATIONS_SIGNING: off
+          JT_FRAMEWORK_BACKEND_BUILD_CHECKSTYLE_ENABLED: true
+          JT_FRAMEWORK_BACKEND_BUILD_DEBUG_MODULE_FATJAR_ENABLED: false
         run: |
           ./gradlew clean build

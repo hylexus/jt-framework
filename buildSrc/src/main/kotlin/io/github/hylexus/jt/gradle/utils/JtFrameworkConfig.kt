@@ -72,30 +72,31 @@ object JtFrameworkConfig {
 
         /**
          * 读取配置的最终逻辑：
-         * 1. Gradle properties (-Pkey=val 或 gradle.properties)
-         * 2. System properties (-Dkey=val)
-         * 3. 环境变量（自动将 key 转换为 ENV_KEY）
+         * 1. 环境变量（自动将 key 转换为 ENV_KEY）
+         * 2. Gradle properties (-Pkey=val 或 gradle.properties)
+         * 3. System properties (-Dkey=val)
          */
         fun loadConfigAsString(key: String, default: String? = null): String {
-            // 1. Gradle properties
-            project.findProperty(key)?.toString()?.let { value ->
-                project.logDebug("Loading config [Gradle property]: $key = ${filterValue(key, value)}")
-                return value
-            }
 
-            // 2. System properties
-            System.getProperty(key)?.let { value ->
-                project.logDebug("Loading config [System property]: $key = ${filterValue(key, value)}")
-                return value
-            }
-
-            // 3. 环境变量（自动转换 key → ENV_KEY）
+            // 1. 环境变量（自动转换 key → ENV_KEY）
             val envKey = key.replace('.', '_')
                 .replace('-', '_')
                 .uppercase()
 
             System.getenv(envKey)?.let { value ->
                 project.logDebug("Loading config [Environment variable]: $envKey = ${filterValue(envKey, value)} (mapped from $key)")
+                return value
+            }
+
+            // 2. Gradle properties
+            project.findProperty(key)?.toString()?.let { value ->
+                project.logDebug("Loading config [Gradle property]: $key = ${filterValue(key, value)}")
+                return value
+            }
+
+            // 3. System properties
+            System.getProperty(key)?.let { value ->
+                project.logDebug("Loading config [System property]: $key = ${filterValue(key, value)}")
                 return value
             }
 
