@@ -43,7 +43,8 @@
 
 Jt-808协议服务端。
 
-最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
+- 最新版依赖请查看: [Maven 中央仓库地址](https://central.sonatype.com/namespace/io.github.hylexus.jt)
+- 2.x 版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html)
 
 ## 私有协议编解码库推荐
 
@@ -147,16 +148,16 @@ Jt-808协议服务端。
 ### 2. 添加依赖
 
 - **spring-boot-3.x**
-    - `jt-808-server-spring-boot-starter-2.3.0-rc.6.jar`
+    - `jt-808-server-spring-boot-starter-2.3.0.jar`
 - **spring-boot-2.x**
-    - `jt-808-server-spring-boot-starter-boot2-2.3.0-rc.6.jar`
+    - `jt-808-server-spring-boot-starter-boot2-2.3.0.jar`
 
 按需求引入为 `808协议` 提供的 `spring-boot-starter`：
 
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.3.0-rc.6"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.3.0"
 ```
 
 - maven
@@ -166,7 +167,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.3.0-rc.6</version>
+    <version>2.3.0</version>
 </dependency>
 ```
 
