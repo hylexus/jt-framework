@@ -135,11 +135,11 @@ configure(subprojects) {
         tasks.withType<Checkstyle> {
             enabled = jtFrameworkConfig.checkStyleTaskEnabled
         }
-        tasks.withType<Checkstyle>().configureEach {
-            javaLauncher = javaToolchains.launcherFor {
-                languageVersion.set(JavaLanguageVersion.of(project.obtainJavaVersion().majorVersion))
-            }
-        }
+        // tasks.withType<Checkstyle>().configureEach {
+        //     javaLauncher = javaToolchains.launcherFor {
+        //         languageVersion.set(JavaLanguageVersion.of(project.obtainJavaVersion().majorVersion))
+        //     }
+        // }
     } else {
         logTip("\tDisabling task [checkstyle] in project [${project.name}] (jt-framework.backend.build.checkstyle.enabled == false)")
     }
