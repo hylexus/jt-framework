@@ -50,6 +50,7 @@ target
 ## Directory-based project format:
 !.idea/icon.png
 .idea/
+!.idea/dictionaries/
 
 # if you remove the above rule, at least ignore the following:
 

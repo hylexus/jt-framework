@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.gradle.plugins
 
+import io.github.hylexus.jt.gradle.utils.JtFrameworkConfig.jtFrameworkConfig
+import io.github.hylexus.jt.gradle.utils.logTip
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -21,19 +23,16 @@ class JtFrameworkFastModePlugin : Plugin<Project> {
     )
 
     override fun apply(project: Project) {
-        val fastMode = project.findProperty("fastMode")?.toString()?.toBoolean() ?: false
-        val fastModeLogging = project.findProperty("fastModeLogging")?.toString()?.toBoolean() ?: false
-        val disabledTaskNames = HashSet<String>()
-        if (fastMode) {
+        val skipFatJar = !project.jtFrameworkConfig.debugModulefatJarEnabled
+        val disabledTaskNames = kotlin.collections.HashSet<String>()
+        if (skipFatJar) {
             disabledTasks.forEach { taskName ->
                 project.tasks.findByName(taskName)?.let { task ->
                     task.enabled = false
                     disabledTaskNames.add(taskName)
                 }
             }
-            if (fastModeLogging) {
-                println("Disabling task: $disabledTaskNames in project ${project.name}(fastMode == true)")
-            }
+            project.logTip("Disabling task: $disabledTaskNames in project [${project.name}] (jt-framework.backend.build.debug-module-fatjar.enabled == false)")
         }
     }
 

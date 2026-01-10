@@ -1,125 +1,63 @@
-import java.util.*
+import io.github.hylexus.jt.gradle.utils.JtFrameworkConfig.jtFrameworkConfig
+import io.github.hylexus.jt.gradle.utils.logInfo2
+import io.github.hylexus.jt.gradle.utils.logTip
 
 plugins {
     id("java-library")
     id("io.spring.dependency-management")
     id("maven-publish")
+    id("io.gitee.pkmer.pkmerboot-central-publisher") apply false
     id("signing")
     id("checkstyle")
 }
-val defaultJavaVersion = getConfigAsString("defaultJavaVersion")
-val maximumJavaVersion = getConfigAsString("maximumJavaVersion")
+printCompatibilityMatrix()
+group = jtFrameworkConfig.projectGroupId
+version = jtFrameworkConfig.projectVersion
 
-val defaultSpringBootBomVersion = getConfigAsString("defaultSpringBootBomVersion")
-val maximumSpringBootBomVersion = JtFrameworkVersions.MAXIMUM_SPRING_BOOT_BOM_VERSION
+run {
+    jtFrameworkConfig.checkStyleTaskEnabled
+    jtFrameworkConfig.debugModulefatJarEnabled
+    jtFrameworkConfig.needSign
+}
 
-val defaultSpringCloudBomVersion = getConfigAsString("defaultSpringCloudBomVersion")
-val maximumSpringCloudBomVersion = getConfigAsString("maximumSpringCloudBomVersion")
-
-val mavenRepoConfig = getMavenRepoConfig()
-val modulesToPublishToMavenRepo = setOf(
-    "jt-core",
-    "jt-808-server-support",
-    "jt-808-server-spring-boot-autoconfigure",
-    "jt-808-server-spring-boot-starter-boot2",
-    "jt-808-server-spring-boot-starter",
-//        "jt-1078-server-support",
-//        "jt-1078-server-spring-boot-autoconfigure",
-//        "jt-1078-server-spring-boot-starter",
-//        "jt-1078-server-spring-boot-starter-boot2",
-//        "jt-dashboard-common",
-//        "jt-dashboard-client",
-//        "jt-dashboard-client-spring-boot-starter",
-//        "jt-dashboard-server",
-//        "jt-dashboard-server-spring-boot-starter",
-)
-val springBoot3Modules = setOf(
-    "jt-808-server-sample-bare-boot3",
-    "jt-808-server-spring-boot-starter",
-    "jt-1078-server-spring-boot-starter",
-    "jt-1078-server-sample-webflux-boot3",
-    "jt-1078-server-sample-webmvc-boot3",
-    "jt-dashboard-server",
-    "jt-dashboard-server-spring-boot-starter",
-    "jt-dashboard-client",
-    "jt-dashboard-client-spring-boot-starter",
-    "jt-demo-808-server-webflux-boot3",
-    "jt-demo-808-server-webmvc-boot3",
-    "jt-demo-1078-server-webflux-boot3",
-    "jt-demo-1078-server-webmvc-boot3",
-    "jt-demo-dashboard-webflux-boot3",
-    "jt-demo-dashboard-webmvc-boot3",
-)
+val mavenRepoConfig = jtFrameworkConfig.mavenRepoConfig
 
 configure(allprojects) {
-    group = getConfigAsString("projectGroup")
-    version = getProjectVersion()
+    group = jtFrameworkConfig.projectGroupId
+    version = jtFrameworkConfig.projectVersion
 }
 
 // region Java
 configure(subprojects) {
-    if (!isJavaProject(project)) {
+
+    version = jtFrameworkConfig.projectVersion
+
+    if (!isJavaProject()) {
         return@configure
     }
 
-    println("configure ....... " + project.name)
-
-    apply(plugin = "io.spring.dependency-management")
-    dependencyManagement {
-        resolutionStrategy {
-            cacheChangingModulesFor(0, TimeUnit.SECONDS)
-        }
-        applyMavenExclusions(false)
-        generatedPomCustomization {
-            enabled(false)
-        }
-        imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion(project)}")
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${obtainSpringCloudBomVersion(project)}")
-        }
-
-        dependencies {
-            // 其他依赖版本都由上面的 mavenBom 控制
-            // 这里指定 mavenBom 中没有包含的依赖版本
-            dependency("org.hibernate:hibernate-validator:8.0.0.Final")
-            dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.7") {
-                exclude("org.projectlombok:lombok")
-            }
-            dependency("com.github.sarveswaran-m:util.concurrent.blockingMap:0.91")
-            dependency("com.google.guava:guava:31.1-jre")
-            dependency("com.google.code.findbugs:jsr305:3.0.2")
-            dependency("com.google.code.findbugs:annotations:3.0.1")
-            dependency("javax.annotation:javax.annotation-api:1.3.2")
-            dependency("org.apache.commons:commons-collections4:4.4")
-            dependency("org.bouncycastle:bcprov-jdk18on:1.78.1")
-        }
-
-        group = getConfigAsString("projectGroup")
-        version = getProjectVersion()
-    }
+    logInfo2("configuring project: ${project.name}")
 
     apply(plugin = "java-library")
     java {
-        sourceCompatibility = JavaVersion.toVersion(obtainJavaVersion(project))
-        targetCompatibility = JavaVersion.toVersion(obtainJavaVersion(project))
+        sourceCompatibility = obtainJavaVersion()
+        targetCompatibility = obtainJavaVersion()
     }
-
-    repositories {
-        extraMavenRepositoryUrls().forEach {
-            maven(it)
-        }
-        mavenCentral()
-        mavenLocal()
+    tasks.test {
+        useJUnitPlatform()
+        // https://github.com/gradle/gradle/issues/7773
+        // systemProperties(System.getProperties().map { (k, v) -> k.toString() to v }.toMap())
     }
-    tasks.compileJava {
-        sourceCompatibility = obtainJavaVersion(project)
-        targetCompatibility = obtainJavaVersion(project)
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = obtainJavaVersion().majorVersion
+        targetCompatibility = obtainJavaVersion().majorVersion
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:-options", "-Xlint:deprecation", "-parameters"))
+        options.release.set(obtainJavaVersion().majorVersion.toInt())
     }
     tasks.compileTestJava {
-        sourceCompatibility = obtainJavaVersion(project)
-        targetCompatibility = obtainJavaVersion(project)
+        sourceCompatibility = obtainJavaVersion().majorVersion
+        targetCompatibility = obtainJavaVersion().majorVersion
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(listOf("-Xlint:unchecked", "-Xlint:-options", "-Xlint:deprecation", "-parameters"))
     }
@@ -139,31 +77,101 @@ configure(subprojects) {
         docletOptions.version(true)
         docletOptions.links("https://docs.oracle.com/en/java/javase/11/docs/api")
 
-        docletOptions.source = obtainJavaVersion(project)
+        docletOptions.source = obtainJavaVersion().majorVersion
         docletOptions.addBooleanOption("html5", true)
 
         isFailOnError = false
-        version = getProjectVersion()
+        version = jtFrameworkConfig.projectVersion
         logging.captureStandardError(LogLevel.INFO)
         logging.captureStandardOutput(LogLevel.INFO)
     }
 
-    apply(plugin = "checkstyle")
-    checkstyle {
-        toolVersion = "10.9.1"
-        configDirectory.set(rootProject.file("build-script/checkstyle/"))
+    // region DependencyManagement
+    apply(plugin = "io.spring.dependency-management")
+    dependencyManagement {
+        resolutionStrategy {
+            cacheChangingModulesFor(0, TimeUnit.SECONDS)
+        }
+        applyMavenExclusions(false)
+        generatedPomCustomization {
+            enabled(false)
+        }
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion()}")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${obtainSpringCloudBomVersion()}")
+        }
+
+        dependencies {
+            // 其他依赖版本都由上面的 mavenBom 控制
+            // 这里指定 mavenBom 中没有包含的依赖版本
+            dependency("org.hibernate:hibernate-validator:8.0.0.Final")
+            dependency("io.github.hylexus.oaks:oaks-common-utils:1.0.7") {
+                exclude("org.projectlombok:lombok")
+            }
+            dependency("com.github.sarveswaran-m:util.concurrent.blockingMap:0.91")
+            dependency("com.google.guava:guava:31.1-jre")
+            dependency("com.google.code.findbugs:jsr305:3.0.2")
+            dependency("com.google.code.findbugs:annotations:3.0.1")
+            dependency("javax.annotation:javax.annotation-api:1.3.2")
+            dependency("org.apache.commons:commons-collections4:4.4")
+            dependency("org.bouncycastle:bcprov-jdk18on:1.78.1")
+            dependency("org.jspecify:jspecify:1.0.0")
+            dependency("org.jetbrains:annotations:26.0.2")
+        }
+
+        group = jtFrameworkConfig.projectGroupId
+        version = jtFrameworkConfig.projectVersion
     }
+    // endregion DependencyManagement
+
+    // region checkstyle
+    // 严重影响构建时间
+    if (jtFrameworkConfig.checkStyleTaskEnabled) {
+        apply(plugin = "checkstyle")
+        checkstyle {
+            toolVersion = "10.23.0"
+            configDirectory.set(rootProject.file("build-script/checkstyle/"))
+        }
+        tasks.withType<Checkstyle> {
+            enabled = jtFrameworkConfig.checkStyleTaskEnabled
+        }
+        tasks.withType<Checkstyle>().configureEach {
+            javaLauncher = javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(project.obtainJavaVersion().majorVersion))
+            }
+        }
+    } else {
+        logTip("\tDisabling task [checkstyle] in project [${project.name}] (jt-framework.backend.build.checkstyle.enabled == false)")
+    }
+    // endregion checkstyle
+
+    // region CommonDependencies
+    dependencies {
+        if (jtFrameworkConfig.checkStyleTaskEnabled) {
+            // 最后一个支持 java8 的版本: 9.3
+            checkstyle("com.puppycrawl.tools:checkstyle:9.3")
+        }
+
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
+        testCompileOnly("org.projectlombok:lombok")
+        testAnnotationProcessor("org.projectlombok:lombok")
+
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        api("org.jspecify:jspecify")
+        api("org.jetbrains:annotations")
+    }
+    // endregion CommonDependencies
 }
 // endregion Java
 
 
 // region Maven
 configure(subprojects) {
-    if (!isJavaProject(project)) {
+    if (!isJavaProject()) {
         return@configure
     }
-    apply(plugin = "maven-publish")
-    apply(plugin = "signing")
 
     normalization {
         runtimeClasspath {
@@ -173,11 +181,12 @@ configure(subprojects) {
     tasks.jar {
         manifest {
             manifest.attributes["Implementation-Title"] = project.name
-            manifest.attributes["Implementation-Version"] = getProjectVersion()
+            manifest.attributes["Implementation-Version"] = jtFrameworkConfig.projectVersion
             manifest.attributes["Automatic-Module-Name"] = project.name.replace('-', '.')
-            manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
-            // manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
-            manifest.attributes["Minimum-Jdk-Version"] = obtainJavaVersion(project)
+            // manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.specification.vendor")})"
+            manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
+            manifest.attributes["Minimum-Jdk-Version"] = obtainJavaVersion().majorVersion
+            manifest.attributes["X-Requires-Java-Version"] = obtainJavaVersion().majorVersion
         }
 
         from(rootProject.projectDir) {
@@ -199,13 +208,35 @@ configure(subprojects) {
         from(tasks.named("javadoc"))
     }
 
-    if (modulesToPublishToMavenRepo.contains(project.name)) {
+    if (isMavenPublication()) {
+        val stagingRepositoryPath = jtFrameworkConfig.centralPortalArtifactsTempDir
+        apply(plugin = "maven-publish")
+        if (jtFrameworkConfig.centralPortalMavenRepoEnabled) {
+            apply(plugin = "io.gitee.pkmer.pkmerboot-central-publisher")
+            tasks.withType<io.gitee.pkmer.tasks.BundleTask>().configureEach {
+                dependsOn(tasks.test, tasks.checkstyleTest, tasks.checkstyleMain)
+                // 只有部分模块有这两个任务
+                dependsOn(tasks.matching { it.name in setOf("compileJmhJava", "checkstyleJmh") })
+            }
+            // 延迟配置，在插件完全应用后再执行
+            afterEvaluate {
+                project.extensions.findByType<io.gitee.pkmer.extension.PkmerBootPluginExtension>()?.apply {
+                    sonatypeMavenCentral {
+                        stagingRepository.set(file(stagingRepositoryPath))
+                        username.set(mavenRepoConfig.getProperty("maven-central-portal.username"))
+                        password.set(mavenRepoConfig.getProperty("maven-central-portal.password"))
+                        publishingType.set(io.gitee.pkmer.enums.PublishingType.USER_MANAGED)
+                    }
+                }
+            }
+        }
+
         publishing {
             publications {
                 create<MavenPublication>("maven") {
-                    groupId = getConfigAsString("projectGroup")
+                    groupId = jtFrameworkConfig.projectGroupId
                     artifactId = project.name
-                    version = getProjectVersion()
+                    version = jtFrameworkConfig.projectVersion
 
                     from(components["java"])
                     artifact(sourcesJar)
@@ -215,33 +246,33 @@ configure(subprojects) {
                         name.set(project.name)
                         packaging = "jar"
                         description.set(project.name)
-                        url.set(getConfigAsString("projectScmUrl"))
+                        url.set(jtFrameworkConfig.projectScmUrl)
 
                         licenses {
                             license {
-                                name.set(getConfigAsString("projectLicenseName"))
-                                url.set(getConfigAsString("projectLicenseUrl"))
-                                distribution.set(getConfigAsString("projectLicenseDistribution"))
+                                name.set(jtFrameworkConfig.projectLicenseName)
+                                url.set(jtFrameworkConfig.projectLicenseUrl)
+                                distribution.set(jtFrameworkConfig.projectLicenseDistribution)
                             }
                         }
 
                         scm {
-                            url.set(getConfigAsString("projectScmUrl"))
-                            connection.set(getConfigAsString("projectScmConnection"))
-                            developerConnection.set(getConfigAsString("projectScmDeveloperConnection"))
+                            url.set(jtFrameworkConfig.projectScmUrl)
+                            connection.set(jtFrameworkConfig.projectScmConnection)
+                            developerConnection.set(jtFrameworkConfig.projectScmDeveloperConnection)
                         }
 
                         developers {
                             developer {
-                                id.set(getConfigAsString("projectDeveloperId"))
-                                name.set(getConfigAsString("projectDeveloperName"))
-                                email.set(getConfigAsString("projectDeveloperEmail"))
+                                id.set(jtFrameworkConfig.projectDeveloperId)
+                                name.set(jtFrameworkConfig.projectDeveloperName)
+                                email.set(jtFrameworkConfig.projectDeveloperEmail)
                             }
                         }
 
                         issueManagement {
-                            system.set(getConfigAsString("projectIssueManagementSystem"))
-                            url.set(getConfigAsString("projectIssueManagementUrl"))
+                            system.set(jtFrameworkConfig.projectIssueManagementSystem)
+                            url.set(jtFrameworkConfig.projectIssueManagementUrl)
                         }
 
                         versionMapping {
@@ -256,25 +287,47 @@ configure(subprojects) {
 
                     repositories {
                         // 1. 发布到你自己的私有仓库
-                        // 1.1 将 build-script/maven/repo-credentials.debug-template.properties 另存到 ~/.gradle/repo-credentials.properties 然后修改用户名和密码等属性
-                        // 1.2 在 ~/.gradle/gradle.properties 中配置 signing.keyId, signing.password, signing.secretKeyRingFile
-                        maven {
-                            name = "private"
-                            url = uri(mavenRepoConfig.getProperty("privateRepo-release.url"))
-                            credentials {
-                                username = mavenRepoConfig.getProperty("privateRepo-release.username")
-                                password = mavenRepoConfig.getProperty("privateRepo-release.password")
+                        if (jtFrameworkConfig.privateMavenRepoEnabled) {
+                            maven {
+                                name = "private"
+                                url = uri(mavenRepoConfig.getProperty("privateRepo-release.url"))
+                                credentials {
+                                    username = mavenRepoConfig.getProperty("privateRepo-release.username")
+                                    password = mavenRepoConfig.getProperty("privateRepo-release.password")
+                                }
                             }
                         }
+                        // 2. 发布到 GitHub Packages
+                        if (jtFrameworkConfig.githubMavenRepoEnabled) {
+                            maven {
+                                name = "GitHubPackages"
+                                url = uri(mavenRepoConfig.getProperty("github-pkg-jt-framework.url"))
+                                credentials {
+                                    username = System.getenv("GITHUB_ACTOR")
+                                        ?: System.getProperty("gpr.user")
+                                                ?: mavenRepoConfig.getProperty("github-pkg-jt-framework.username")
 
-                        // 2. 发布到 Maven 中央仓库
-                        maven {
-                            name = "sonatype"
-                            url = uri(mavenRepoConfig.getProperty("sonatype-staging.url"))
-                            credentials {
-                                username = mavenRepoConfig.getProperty("sonatype-staging.username")
-                                password = mavenRepoConfig.getProperty("sonatype-staging.password")
+                                    password = System.getenv("GITHUB_TOKEN")
+                                        ?: System.getProperty("gpr.key")
+                                                ?: mavenRepoConfig.getProperty("github-pkg-jt-framework.password")
+                                }
                             }
+                        }
+                        // 3. 发布到 Maven 中央仓库
+                        // 已废弃: 新版中央仓库发版参考 io.gitee.pkmer.pkmerboot-central-publisher
+                        // maven {
+                        //     name = "centralPortal"
+                        //     url = uri(mavenRepoConfig.getProperty("sonatype-staging.url"))
+                        //     credentials {
+                        //         username = mavenRepoConfig.getProperty("sonatype-staging.username")
+                        //         password = mavenRepoConfig.getProperty("sonatype-staging.password")
+                        //     }
+                        // }
+
+                        maven {
+                            name = "centralPortalLocalArtifacts"
+                            // Specify the local staging repo path in the configuration.
+                            url = uri(stagingRepositoryPath)
                         }
                     }
                 }
@@ -282,67 +335,20 @@ configure(subprojects) {
 
         }
 
-        signing {
-            if (needSign()) {
+        if (jtFrameworkConfig.needSign) {
+            apply(plugin = "signing")
+            signing {
+                // 如果需要签名
+                // 记得将 build-script/gradle/debug-template.gradle.properties 中的 gpg 配置放到 ~/.gradle/gradle.properties
                 sign(publishing.publications["maven"])
             }
-            ////// 在 ~/.gradle/gradle.properties 文件中配置:
-            // 具体请参考模板文件: build-script/maven/debug-template.gradle.properties
-            // signing.keyId = ABCDEFGH
-            // signing.password = you-password
-            // signing.secretKeyRingFile = /path/to/secret.gpg
         }
     }
 }
 // endregion Maven
 
-fun isJavaProject(project: Project): Boolean {
-    return (project.name != "docs") && (project.name != "samples")
-}
+fun Project.obtainJavaVersion(): JavaVersion = project.compatibilityDefinition().jdkVersion
 
-fun obtainJavaVersion(project: Project) = if (springBoot3Modules.contains(project.name)) maximumJavaVersion else defaultJavaVersion
+fun Project.obtainSpringBootBomVersion(): String = project.compatibilityDefinition().springBootVersion
 
-fun obtainSpringBootBomVersion(project: Project) = if (springBoot3Modules.contains(project.name)) maximumSpringBootBomVersion else defaultSpringBootBomVersion
-
-fun obtainSpringCloudBomVersion(project: Project) = if (springBoot3Modules.contains(project.name)) maximumSpringCloudBomVersion else defaultSpringCloudBomVersion
-
-fun getProjectVersion() = getConfigAsString("projectVersion")
-
-fun getConfigAsString(key: String) = project.ext.get(key) as String
-
-fun extraMavenRepositoryUrls(): List<String> {
-    return listOf(
-//        "https://mirrors.cloud.tencent.com/nexus/repository/maven-public",
-//        "https://repo.huaweicloud.com/repository/maven",
-        "https://maven.aliyun.com/repository/central",
-        "https://maven.aliyun.com/repository/public",
-        "https://maven.aliyun.com/repository/google",
-        "https://maven.aliyun.com/repository/spring",
-        // Central
-        "https://repo1.maven.org/maven2",
-        "https://maven.aliyun.com/repository/spring-plugin",
-        "https://maven.aliyun.com/repository/gradle-plugin",
-        "https://maven.aliyun.com/repository/grails-core",
-        "https://maven.aliyun.com/repository/apache-snapshots",
-        "https://plugins.gradle.org/m2/",
-        "https://repo.spring.io/release",
-        "https://repo.spring.io/snapshot"
-    )
-}
-
-fun needSign() = !rootProject.version.toString().lowercase().endsWith("snapshot")
-
-@JvmName("getMavenRepoConfigJvm")
-fun getMavenRepoConfig(): Properties {
-    val properties = Properties()
-    val fileName = "repo-credentials.properties"
-    val repoCredentialFile = file(System.getProperty("user.home") + "/.gradle/${fileName}")
-    if (file(repoCredentialFile).exists()) {
-        logger.quiet("The maven repository credentials file <<${fileName}>> will be load from: ${repoCredentialFile.absolutePath}")
-        properties.load(repoCredentialFile.inputStream())
-    } else {
-        logger.quiet("The maven repository credentials file <<${fileName} -> {}>> not found , use `debug-template.repo-credentials.properties` for debugging.", repoCredentialFile.absolutePath)
-        properties.load(rootProject.file("build-script/maven/debug-template.repo-credentials.properties").inputStream())
-    }
-    return properties
-}
+fun Project.obtainSpringCloudBomVersion(): String = project.compatibilityDefinition().springCloudVersion

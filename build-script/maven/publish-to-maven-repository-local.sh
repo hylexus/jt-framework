@@ -6,4 +6,13 @@ echo "JT_PROJECT_PROJECT_ROOT_DIR : ${JT_PROJECT_PROJECT_ROOT_DIR}"
 cd ${JT_PROJECT_PROJECT_ROOT_DIR}
 echo "Working-Directory           : ${JT_PROJECT_PROJECT_ROOT_DIR}"
 
-./gradlew clean build publishToMavenLocal
+# @see jt-framework.maven.repo.central-portal.artifacts.temp-dir
+rm -rf /tmp/jt-framework/temp-artifacts
+
+./gradlew clean build publishMavenPublicationToMavenLocal \
+-P jt-framework.maven.repo.central-portal.enabled=false \
+-P jt-framework.maven.repo.private.enabled=false \
+-P jt-framework.maven.repo.github.enabled=false \
+-P jt-framework.maven.publications.signing=on \
+-P jt-framework.backend.build.checkstyle.enabled=true \
+-P jt-framework.backend.build.debug-module-fatjar.enabled=false

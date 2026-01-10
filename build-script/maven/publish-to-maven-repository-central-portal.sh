@@ -10,12 +10,12 @@ echo "Working-Directory           : ${JT_PROJECT_PROJECT_ROOT_DIR}"
 rm -rf /tmp/jt-framework/temp-artifacts
 
 # org.gradle.parallel=false @see https://stackoverflow.com/questions/72664149/gradle-maven-publish-sonatype-creates-multiple-repositories-that-cant-be-clos
+# https://central.sonatype.org/publish/publish-portal-api/
 
-./gradlew publishMavenPublicationToPrivateRepository \
--D org.gradle.parallel=false \
--P jt-framework.maven.repo.central-portal.enabled=false \
--P jt-framework.maven.repo.private.enabled=true \
+./gradlew clean build publishToMavenCentralPortal \
+-P jt-framework.maven.repo.central-portal.enabled=true \
+-P jt-framework.maven.repo.private.enabled=false \
 -P jt-framework.maven.repo.github.enabled=false \
--P jt-framework.maven.publications.signing=off \
+-P jt-framework.maven.publications.signing=on \
 -P jt-framework.backend.build.checkstyle.enabled=true \
 -P jt-framework.backend.build.debug-module-fatjar.enabled=false

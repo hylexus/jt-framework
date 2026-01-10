@@ -45,9 +45,9 @@ Jt-808协议服务端。
 
 最新版升级问题，请参考 [升级指南--2.0.x升级到2.1.x](https://hylexus.github.io/jt-framework/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.html) 。
 
-## 私有协议编解码小工具推荐
+## 私有协议编解码库推荐
 
-不依赖具体协议的私有协议编解码小工具。
+不依赖具体协议的私有协议编解码库。
 
 - Github : https://github.com/hylexus/xtream-codec
 - Gitee : https://gitee.com/hylexus/xtream-codec
