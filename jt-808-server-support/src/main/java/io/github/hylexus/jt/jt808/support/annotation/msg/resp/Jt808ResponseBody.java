@@ -1,7 +1,9 @@
 package io.github.hylexus.jt.jt808.support.annotation.msg.resp;
 
 import io.github.hylexus.jt.jt808.spec.Jt808Response;
+import io.github.hylexus.jt.jt808.support.annotation.msg.DrivenBy;
 import io.github.hylexus.jt.jt808.support.dispatcher.handler.result.Jt808ResponseBodyHandlerResultHandler;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.annotation.*;
 
@@ -16,6 +18,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Jt808ResponseBody {
+
+    /**
+     * @since 3.0.0
+     */
+    @ApiStatus.AvailableSince("3.0.0")
+    DrivenBy drivenBy() default @DrivenBy(DrivenBy.Type.DEFAULT);
 
     /**
      * @return 服务端响应消息的消息类型

@@ -1,3 +1,4 @@
+import JtFrameworkVersions.MODULES_DELOMBOK
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 
@@ -23,6 +24,33 @@ object JtFrameworkVersions {
                     jdkVersion = JavaVersion.VERSION_1_8,
                     springBootVersion = SPRING_BOOT_2_BOM_VERSION,
                     springCloudVersion = SPRING_BOOT_2_CLOUD_BOM_VERSION
+                )
+            }
+        )
+        .plus(
+            listOf<String>(
+                "jt-808-server-xtream-codec-adapter",
+                "jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2",
+                "xtream-codec-adapter-sample-boot2"
+            ).map { name ->
+                name to CompatibilityDefinition(
+                    name = name,
+                    jdkVersion = JavaVersion.VERSION_21,
+                    springBootVersion = SPRING_BOOT_2_BOM_VERSION,
+                    springCloudVersion = SPRING_BOOT_2_CLOUD_BOM_VERSION
+                )
+            }
+        )
+        .plus(
+            listOf<String>(
+                "jt-808-server-xtream-codec-adapter-spring-boot-starter",
+                "xtream-codec-adapter-sample-boot3",
+            ).map { name ->
+                name to CompatibilityDefinition(
+                    name = name,
+                    jdkVersion = JavaVersion.VERSION_21,
+                    springBootVersion = SPRING_BOOT_3_BOM_VERSION,
+                    springCloudVersion = SPRING_BOOT_3_CLOUD_BOM_VERSION
                 )
             }
         )
@@ -90,6 +118,18 @@ object JtFrameworkVersions {
         "jt-808-server-spring-boot-starter-boot2",
         "jt-808-server-spring-boot-starter",
     )
+
+    // 不需要 Lombok 的模块
+    // todo 后续会将 MODULES_TO_PUBLISH_TO_MAVEN_REPO 中的模块都去掉 lombok(方便使用者加断点调试)
+    val MODULES_DELOMBOK = setOf<String>(
+        "jt-808-server-xtream-codec-adapter",
+        "jt-808-server-xtream-codec-adapter-spring-boot-starter",
+        "jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2",
+    );
+}
+
+fun Project.needLombok(): Boolean {
+    return !MODULES_DELOMBOK.contains(project.name)
 }
 
 fun Project.compatibilityDefinition(): CompatibilityDefinition {

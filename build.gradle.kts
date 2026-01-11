@@ -99,6 +99,7 @@ configure(subprojects) {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion()}")
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${obtainSpringCloudBomVersion()}")
+            mavenBom("io.github.hylexus.xtream:xtream-codec-dependencies:0.4.0")
         }
 
         dependencies {
@@ -152,12 +153,15 @@ configure(subprojects) {
             checkstyle("com.puppycrawl.tools:checkstyle:9.3")
         }
 
-        compileOnly("org.projectlombok:lombok")
-        annotationProcessor("org.projectlombok:lombok")
-        testCompileOnly("org.projectlombok:lombok")
-        testAnnotationProcessor("org.projectlombok:lombok")
+        if (needLombok()) {
+            compileOnly("org.projectlombok:lombok")
+            annotationProcessor("org.projectlombok:lombok")
+            testCompileOnly("org.projectlombok:lombok")
+            testAnnotationProcessor("org.projectlombok:lombok")
+        }
 
         testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation("org.mockito:mockito-core")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         api("org.jspecify:jspecify")
         api("org.jetbrains:annotations")

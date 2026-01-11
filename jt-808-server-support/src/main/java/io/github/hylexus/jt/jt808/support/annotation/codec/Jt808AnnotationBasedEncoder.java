@@ -51,11 +51,15 @@ public class Jt808AnnotationBasedEncoder {
         this.fieldSerializerRegistry = fieldSerializerRegistry;
     }
 
-    // TODO annotation properties...
+
     public void encodeAndWriteToResponse(Object responseMsg, Jt808ServerExchange exchange) {
         final Class<?> entityClass = responseMsg.getClass();
         final Jt808ResponseBody annotation = getJt808ResponseBodyAnnotation(entityClass);
 
+        this.encodeAndWriteToResponse(responseMsg, exchange, annotation);
+    }
+
+    public void encodeAndWriteToResponse(Object responseMsg, Jt808ServerExchange exchange, Jt808ResponseBody annotation) {
         final Jt808Session session = exchange.session();
         final ByteBuf respBody = this.encodeMsgBody(exchange.request(), responseMsg, session);
 
@@ -90,6 +94,10 @@ public class Jt808AnnotationBasedEncoder {
     }
 
     public ByteBuf encodeMsgBody(Jt808Request request, Object instance, Jt808Session session) {
+        if (instance instanceof ByteBuf) {
+            return (ByteBuf) instance;
+        }
+
         final Class<?> entityClass = instance.getClass();
         final ByteBuf byteBuf = allocator.buffer();
 
@@ -116,7 +124,7 @@ public class Jt808AnnotationBasedEncoder {
         }
         final JavaBeanMetadata beanMetadata = JavaBeanMetadataUtils.getBeanMetadata(entityClass);
         for (JavaBeanFieldMetadata fieldMetadata : beanMetadata.getResponseFieldMetadataList()) {
-            //if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
+            // if (fieldMetadata.isAnnotationPresent(ResponseField.class)) {
             this.processBasicRespField(instance, fieldMetadata, byteBuf, request, session, evaluationContext);
             //}
         }

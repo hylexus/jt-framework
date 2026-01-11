@@ -1,0 +1,38 @@
+# xtream-codec 扩展配置
+xtream:
+  codec:
+    expression:
+      type: spel
+
+jt808:
+  built-components:
+    component-statistics:
+      enabled: true
+    request-handlers:
+      enabled: true
+  features:
+    request-filter:
+      enabled: true
+    program-param-printer:
+      enabled: false
+
+  ## 指令服务器
+  server:
+    enabled: true
+    port: 6808
+  ## 苏标附件服务器
+  attachment-server:
+    enabled: true
+    # 附件服务器端口(TCP)
+    port: 6809
+
+logging:
+  level:
+    root: info
+    io.github.hylexus.jt: info
+    jt-808.channel: info
+    # 将默认解码器的日志级别调整到debug 来观察分包请求消息的解码
+    jt-808.request.decoder: info
+    # 将请求分包暂存器(默认为基于Caffeine的实现)的日志级别调整的debug 来观察分包请求的处理过程
+    io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage: debug
+    jt-808.response.encoder: info

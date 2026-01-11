@@ -12,6 +12,7 @@ import io.github.hylexus.jt.jt808.support.codec.Jt808MsgBytesProcessor;
 import io.github.hylexus.jt.jt808.support.codec.Jt808MsgDecoder;
 import io.github.hylexus.jt.jt808.support.exception.Jt808UnknownMsgException;
 import io.github.hylexus.jt.jt808.support.utils.JtProtocolUtils;
+import io.github.hylexus.jt.utils.FormatUtils;
 import io.github.hylexus.jt.utils.HexStringUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +75,7 @@ public class DefaultJt808MsgDecoder implements Jt808MsgDecoder {
         final MsgType msgType = this.msgTypeParser.parseMsgType(header.msgId())
                 .orElseThrow(() -> {
                     JtProtocolUtils.release(escaped);
-                    return new Jt808UnknownMsgException(header.msgId(), byteBuf);
+                    return new Jt808UnknownMsgException("UnknownMsg: " + header.msgId() + "(0x" + FormatUtils.toHexString(header.msgId(), 4) + ")", header.msgId(), byteBuf);
                 });
 
         final byte originalCheckSum = escaped.getByte(escaped.readableBytes() - 1);

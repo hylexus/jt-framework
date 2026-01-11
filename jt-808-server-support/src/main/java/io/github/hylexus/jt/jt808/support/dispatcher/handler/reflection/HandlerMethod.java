@@ -71,7 +71,9 @@ public class HandlerMethod implements MultipleVersionSupport {
                 }
             } else {
                 log.error("Unsupported type : {}", type);
+                continue;
             }
+            parameter.afterInit();
         }
         return methodParameters;
     }

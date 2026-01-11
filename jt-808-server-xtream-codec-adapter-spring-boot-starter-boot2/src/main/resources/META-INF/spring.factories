@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.hylexus.jt.jt808.adapter.xtreamcodec.boot2.XtreamCodecAutoConfiguration

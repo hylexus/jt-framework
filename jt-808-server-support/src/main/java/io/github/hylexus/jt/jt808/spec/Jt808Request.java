@@ -28,7 +28,7 @@ public interface Jt808Request {
     Jt808Session session();
 
     /**
-     * @return 消息ID
+     * @return 消息 ID
      */
     MsgType msgType();
 

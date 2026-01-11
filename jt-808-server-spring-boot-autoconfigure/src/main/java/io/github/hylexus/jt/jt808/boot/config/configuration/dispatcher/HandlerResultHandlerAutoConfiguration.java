@@ -11,13 +11,14 @@ import org.springframework.context.annotation.Bean;
  * @author hylexus
  */
 public class HandlerResultHandlerAutoConfiguration {
+    public static final String JT_808_HANDLER_RESULT_HANDLER_BEAN_NAME = "jt808ResponseMsgBodyHandlerResultHandler";
 
     @Bean
     public Jt808HandlerResultHandler jt808ResponseHandlerResultHandler(Jt808MsgEncoder encoder) {
         return new Jt808ResponseHandlerResultHandler(encoder);
     }
 
-    @Bean
+    @Bean(name = JT_808_HANDLER_RESULT_HANDLER_BEAN_NAME)
     public Jt808HandlerResultHandler jt808ResponseMsgBodyHandlerResultHandler(Jt808MsgEncoder encoder, Jt808AnnotationBasedEncoder annotationBasedEncoder) {
         return new Jt808ResponseBodyHandlerResultHandler(annotationBasedEncoder, encoder);
     }

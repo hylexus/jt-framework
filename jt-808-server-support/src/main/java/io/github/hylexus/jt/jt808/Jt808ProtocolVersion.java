@@ -9,29 +9,31 @@ import java.util.Set;
  *
  * @author hylexus
  */
+@SuppressWarnings("LombokGetterMayBeUsed")
 public enum Jt808ProtocolVersion {
     /**
      * 自动检测2019版||2013版
      */
-    AUTO_DETECTION("ALL", (byte) -1),
+    AUTO_DETECTION("ALL", (byte) -1, Integer.MIN_VALUE),
     /**
      * 2013 版
      */
-    VERSION_2013("2013", (byte) 0),
+    VERSION_2013("2013", (byte) 0, 2013),
     /**
      * 2011 版
      */
-    VERSION_2011("2011", (byte) 0),
+    VERSION_2011("2011", (byte) 0, 2011),
     /**
      * 2019 版
      */
-    VERSION_2019("2019", (byte) 1),
+    VERSION_2019("2019", (byte) 1, 2019),
     ;
 
     /**
      * 消息体属性中 第14位
      */
     private final byte versionBit;
+    private final int versionIdentifier;
     private final String shortDesc;
 
     private static final Set<Jt808ProtocolVersion> V_AUTO_DETECTION = Jdk8Adapter.setOf(AUTO_DETECTION);
@@ -39,9 +41,10 @@ public enum Jt808ProtocolVersion {
     private static final Set<Jt808ProtocolVersion> V2013 = Jdk8Adapter.setOf(VERSION_2013);
     private static final Set<Jt808ProtocolVersion> V2011 = Jdk8Adapter.setOf(VERSION_2011);
 
-    Jt808ProtocolVersion(String shortDesc, byte versionBit) {
+    Jt808ProtocolVersion(String shortDesc, byte versionBit, int versionIdentifier) {
         this.shortDesc = shortDesc;
         this.versionBit = versionBit;
+        this.versionIdentifier = versionIdentifier;
     }
 
     public static Set<Jt808ProtocolVersion> unmodifiableSetVersionAutoDetection() {
@@ -63,6 +66,10 @@ public enum Jt808ProtocolVersion {
     // getters
     public byte getVersionBit() {
         return versionBit;
+    }
+
+    public int getVersionIdentifier() {
+        return versionIdentifier;
     }
 
     public String getShortDesc() {
