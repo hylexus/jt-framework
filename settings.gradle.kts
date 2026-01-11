@@ -115,6 +115,6 @@ fun extraMavenRepositoryUrls() = listOf(
     "https://maven.aliyun.com/repository/grails-core",
     "https://maven.aliyun.com/repository/apache-snapshots",
     "https://plugins.gradle.org/m2/",
-    "https://repo.spring.io/release",
-    "https://repo.spring.io/snapshot"
+    // "https://repo.spring.io/release",
+    // "https://repo.spring.io/snapshot"
 )

@@ -99,7 +99,7 @@ configure(subprojects) {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${obtainSpringBootBomVersion()}")
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${obtainSpringCloudBomVersion()}")
-            mavenBom("io.github.hylexus.xtream:xtream-codec-dependencies:0.4.0")
+            mavenBom("io.github.hylexus.xtream:xtream-codec-dependencies:0.5.0-rc.1")
         }
 
         dependencies {
