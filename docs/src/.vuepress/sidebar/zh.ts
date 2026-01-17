@@ -62,6 +62,15 @@ export const zhSidebar = sidebar({
                 ]
             },
             {
+                text:"xtream-codec 适配器",
+                icon: 'extend',
+                collapsible: true,
+                children: [
+                    '/v2/jt-808/guide/xtream-codec-adapter/intro.md',
+                    '/v2/jt-808/guide/xtream-codec-adapter/quick-start.md',
+                ]
+            },
+            {
                 text: "定制化",
                 collapsible: true,
                 icon: 'customize',
@@ -105,6 +114,7 @@ export const zhSidebar = sidebar({
         ],
         '/v2/release-notes': [
             '/v2/release-notes/latest.md',
+            '/v2/release-notes/2.3.x.md',
             '/v2/release-notes/2.1.x.md',
             '/v2/release-notes/2.0.x.md',
             '/v2/release-notes/1.x.md',
@@ -119,6 +129,7 @@ export const zhSidebar = sidebar({
             "/v2/jt-808/config/sub-package.md",
             "/v2/jt-808/config/others.md",
             "/v2/jt-808/config/extension-jiangsu.md",
+            "/v2/jt-808/config/xtream-codec.md",
         ],
         '/v1/jt-808/config/': ["/v1/jt-808/config/"],
         '/v1/jt-808/guide/': [

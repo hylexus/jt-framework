@@ -53,6 +53,8 @@ Jt-808协议服务端。
 - Github : https://github.com/hylexus/xtream-codec
 - Gitee : https://gitee.com/hylexus/xtream-codec
 
+> 从 **3.0.0-rc.1** 开始，**jt-framework** 内置了 [xtream-codec-core](https://github.com/hylexus/xtream-codec) 的适配器。
+
 ## Compatibility / 兼容性
 
 支持 **spring-boot-2.x** [![spring-boot-2.x](https://img.shields.io/maven-central/v/io.github.hylexus.jt/jt-808-server-spring-boot-starter-boot2.svg?label=spring-boot-2.x)](https://search.maven.org/search?q=g:%22io.github.hylexus.jt%22%20AND%20a:%22jt-808-server-spring-boot-starter-boot2%22)
@@ -148,16 +150,16 @@ Jt-808协议服务端。
 ### 2. 添加依赖
 
 - **spring-boot-3.x**
-    - `jt-808-server-spring-boot-starter-2.3.0.jar`
+    - `jt-808-server-spring-boot-starter-3.0.0-rc.1.jar`
 - **spring-boot-2.x**
-    - `jt-808-server-spring-boot-starter-boot2-2.3.0.jar`
+    - `jt-808-server-spring-boot-starter-boot2-3.0.0-rc.1.jar`
 
 按需求引入为 `808协议` 提供的 `spring-boot-starter`：
 
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "2.3.0"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "3.0.0-rc.1"
 ```
 
 - maven
@@ -167,7 +169,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>2.3.0</version>
+    <version>3.0.0-rc.1</version>
 </dependency>
 ```
 

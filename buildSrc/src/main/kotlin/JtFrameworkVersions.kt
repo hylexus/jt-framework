@@ -117,6 +117,9 @@ object JtFrameworkVersions {
         "jt-808-server-spring-boot-autoconfigure",
         "jt-808-server-spring-boot-starter-boot2",
         "jt-808-server-spring-boot-starter",
+        "jt-808-server-xtream-codec-adapter",
+        "jt-808-server-xtream-codec-adapter-spring-boot-starter",
+        "jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2",
     )
 
     // 不需要 Lombok 的模块

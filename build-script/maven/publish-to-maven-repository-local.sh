@@ -13,6 +13,6 @@ rm -rf /tmp/jt-framework/temp-artifacts
 -P jt-framework.maven.repo.central-portal.enabled=false \
 -P jt-framework.maven.repo.private.enabled=false \
 -P jt-framework.maven.repo.github.enabled=false \
--P jt-framework.maven.publications.signing=on \
+-P jt-framework.maven.publications.signing=off \
 -P jt-framework.backend.build.checkstyle.enabled=true \
 -P jt-framework.backend.build.debug-module-fatjar.enabled=false
