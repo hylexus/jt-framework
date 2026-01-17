@@ -146,6 +146,13 @@ public class XtreamMessage8100 {
 
 :::
 
+::: info 提示
+
+更多注解用法参考:
+[io.github.hylexus.xtream.codec.ext.jt808.builtin.messages](https://github.com/hylexus/xtream-codec/tree/develop/ext/jt/jt-808-server-spring-boot-starter-reactive/src/main/java/io/github/hylexus/xtream/codec/ext/jt808/builtin/messages/request)
+
+:::
+
 ## 编写处理器
 
 ::: tip 提示

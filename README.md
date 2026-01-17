@@ -53,7 +53,7 @@ Jt-808协议服务端。
 - Github : https://github.com/hylexus/xtream-codec
 - Gitee : https://gitee.com/hylexus/xtream-codec
 
-> 从 **3.0.0-rc.1** 开始，**jt-framework** 内置了 [xtream-codec-core](https://github.com/hylexus/xtream-codec) 的适配器。
+> 从 **3.0.0-rc.1** 开始，**jt-framework** 内置了 [xtream-codec-core](https://hylexus.github.io/jt-framework/v2/jt-808/guide/xtream-codec-adapter/intro.html) 的适配器。
 
 ## Compatibility / 兼容性
 

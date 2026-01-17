@@ -68,6 +68,7 @@ export const zhSidebar = sidebar({
                 children: [
                     '/v2/jt-808/guide/xtream-codec-adapter/intro.md',
                     '/v2/jt-808/guide/xtream-codec-adapter/quick-start.md',
+                    '/v2/jt-808/guide/xtream-codec-adapter/annotation-sample.md',
                 ]
             },
             {
