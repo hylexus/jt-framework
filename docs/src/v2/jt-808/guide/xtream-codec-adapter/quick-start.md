@@ -17,14 +17,14 @@ icon: launch
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2</artifactId>
-    <version>3.0.0-rc.1</version>
+    <version>3.0.0-rc.2</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation 'io.github.hylexus.jt:jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2:3.0.0-rc.1'
+implementation 'io.github.hylexus.jt:jt-808-server-xtream-codec-adapter-spring-boot-starter-boot2:3.0.0-rc.2'
 ```
 
 :::
@@ -40,14 +40,14 @@ implementation 'io.github.hylexus.jt:jt-808-server-xtream-codec-adapter-spring-b
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-xtream-codec-adapter-spring-boot-starter</artifactId>
-    <version>3.0.0-rc.1</version>
+    <version>3.0.0-rc.2</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation 'io.github.hylexus.jt:jt-808-server-xtream-codec-adapter-spring-boot-starter:3.0.0-rc.1'
+implementation 'io.github.hylexus.jt:jt-808-server-xtream-codec-adapter-spring-boot-starter:3.0.0-rc.2'
 ```
 
 :::

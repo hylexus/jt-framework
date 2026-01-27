@@ -87,7 +87,7 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-        <version>3.0.0-rc.1</version>
+        <version>3.0.0-rc.2</version>
         <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(2.7.18) -->
         <exclusions>
             <exclusion>
@@ -120,7 +120,7 @@ icon: plugin
     <dependency>
         <groupId>io.github.hylexus.jt</groupId>
         <artifactId>jt-808-server-spring-boot-starter</artifactId>
-        <version>3.0.0-rc.1</version>
+        <version>3.0.0-rc.2</version>
         <exclusions>
             <!-- 1. 排除 jt-framework 自带的 spring-boot-starter(3.3.0) -->
             <exclusion>
