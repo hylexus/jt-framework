@@ -5,15 +5,18 @@ import io.github.hylexus.jt.exception.JtSessionNotFoundException;
 import io.github.hylexus.jt.jt808.samples.debug.entity.resp.RespTerminalSettings;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandKey;
 import io.github.hylexus.jt.jt808.spec.Jt808CommandSender;
+import io.github.hylexus.jt.jt808.spec.builtin.msg.resp.BuiltinMsg8300Alias;
 import io.github.hylexus.jt.jt808.spec.impl.BuiltinJt808MsgType;
 import io.github.hylexus.jt.jt808.spec.session.Jt808Session;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.netty.buffer.ByteBufAllocator;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -52,4 +55,37 @@ public class DebugController {
         log.info("RESP::::::: {}", resp);
         return resp;
     }
+
+    @PostMapping("/send-command-8300")
+    public Object sendCommand8300(@RequestBody @Validated Dto8300 dto8300) throws InterruptedException {
+        final String terminalId = dto8300.getTerminalId();
+        final Jt808Session session = sessionManager.findByTerminalId(terminalId).orElseThrow(() -> new JtSessionNotFoundException(terminalId));
+        final int nextFlowId = session.nextFlowId();
+
+        final Jt808CommandKey commandKey = Jt808CommandKey
+                .of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, nextFlowId);
+
+        log.info("[指令下发]: nextFlowId: {}, commandKey: {}", nextFlowId, commandKey);
+
+        final BuiltinMsg8300Alias entity = new BuiltinMsg8300Alias()
+                .setFlag(dto8300.getFlag())
+                .setMessage(dto8300.getMessage());
+        final Object resp = commandSender.sendCommandAndWaitingForReply(commandKey, entity, 15L, TimeUnit.SECONDS);
+        log.info("[指令下发] 响应(8300): {}", resp);
+        return resp;
+    }
+
+    @Data
+    public static class Dto8300 {
+        @NotNull(message = "terminalId is null")
+        @NotEmpty(message = "terminalId is empty")
+        private String terminalId;
+
+        private byte flag;
+
+        @NotNull(message = "message is null")
+        @NotEmpty(message = "message is empty")
+        private String message;
+    }
+
 }

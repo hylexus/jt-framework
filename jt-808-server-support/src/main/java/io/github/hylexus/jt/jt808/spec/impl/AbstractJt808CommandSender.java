@@ -48,7 +48,8 @@ public abstract class AbstractJt808CommandSender implements Jt808CommandSender {
             throws JtCommunicationException, InterruptedException {
 
         final Jt808Session session = this.getSession(key.terminalId());
-        final ByteBuf byteBuf = this.encode(session, entity, key.serverFlowId().orElse(session.nextFlowId()));
+        // @see https://github.com/hylexus/jt-framework/issues/97
+        final ByteBuf byteBuf = this.encode(session, entity, key.serverFlowId().orElseGet(session::nextFlowId));
         return sendAndWait(key, session, timeout, timeUnit, byteBuf);
     }
 

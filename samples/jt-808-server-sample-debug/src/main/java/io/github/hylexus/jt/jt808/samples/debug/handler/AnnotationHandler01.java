@@ -39,9 +39,13 @@ public class AnnotationHandler01 {
 
     @Jt808RequestHandlerMapping(msgType = 0x0001, versions = Jt808ProtocolVersion.AUTO_DETECTION)
     public void processMsg0001(Jt808Request request, TerminalCommonReplyMsg body) {
-        final int serverMsgId = body.getServerMsgId();
         final String terminalId = request.header().terminalId();
-        final Jt808CommandKey commandKey = Jt808CommandKey.of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, serverMsgId);
+        final int serverFlowId = body.getServerFlowId();
+
+        final Jt808CommandKey commandKey = Jt808CommandKey
+                .of(terminalId, BuiltinJt808MsgType.CLIENT_COMMON_REPLY, serverFlowId);
+
+        log.info("[通用应答]: serverFlowId: {}, commandKey: {}", body.getServerFlowId(), commandKey);
         CommandWaitingPool.getInstance().putIfNecessary(commandKey, body);
     }
 
@@ -69,7 +73,7 @@ public class AnnotationHandler01 {
 
     @Jt808RequestHandlerMapping(msgType = 0x0100, versions = VERSION_2019)
     public Jt808Response processRegisterMsgV2019(Jt808Request request, Jt808Session session, DebugTerminalRegisterMsgV2019 authMsgV2019) {
-        log.info("{}", authMsgV2019);
+        log.info("{}, terminalId:{}", authMsgV2019, request.terminalId());
         return Jt808Response.newBuilder()
                 .msgId(BuiltinJt808MsgType.CLIENT_REGISTER_REPLY)
                 .version(VERSION_2019)
