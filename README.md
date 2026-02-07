@@ -230,7 +230,10 @@ Maven 版示例项目
 
 ## Community / 社区
 
-![QQ交流群](https://hylexus.github.io/jt-framework/img/QQ-Group.jpeg)
+|                                QQ交流群-1群                                |                                QQ交流群-2群                                |
+|:----------------------------------------------------------------------:|:----------------------------------------------------------------------:|
+|                      ~~1072477383~~ （1群已满, 请加2群)                       |                               1082632499                               |
+| ![QQ交流群-1群](https://hylexus.github.io/jt-framework/img/QQ-Group-1.png) | ![QQ交流群-2群](https://hylexus.github.io/jt-framework/img/QQ-Group-2.png) |
 
 ## Funding / 打赏
 
