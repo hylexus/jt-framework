@@ -39,6 +39,13 @@
     </a>
 </p>
 
+## Tips / 提示
+
+> 2026.1 版的 idea 中打开项目可能会报错
+
+- 临时解决方案: 临时禁用掉 idea 内置的 `Spark` 插件
+- 详情参考: [https://youtrack.jetbrains.com/issue/IDEA-386409](https://youtrack.jetbrains.com/issue/IDEA-386409)
+
 ## Intro / 介绍
 
 Jt-808协议服务端。
