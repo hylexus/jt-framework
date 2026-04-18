@@ -20,10 +20,11 @@ pluginManagement {
                 content {
                     // 上面几个镜像都没这个依赖
                     excludeGroup("net.minecraftforge.licenser")
+                    excludeGroup("com.github.jk1")
                     // 排除腾讯云 404 的依赖
-                    if (it.contains("tencent")) {
-                        excludeGroup("com.github.jk1.gradle-license-report")
-                    }
+//                    if (it.contains("tencent")) {
+//                        excludeGroup("com.github.jk1")
+//                    }
                 }
             }
         }
