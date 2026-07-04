@@ -79,14 +79,16 @@ public class Jt808SubPackageAutoConfiguration {
             final CaffeineJt808RequestSubPackageStorage.StorageConfig caffeineCacheConfig = storageProps.getRequestSubPackageStorage().getCaffeine();
             final CaffeineJt808RequestSubPackageStorage storage = new CaffeineJt808RequestSubPackageStorage(ByteBufAllocator.DEFAULT, caffeineCacheConfig);
             // 这里有个循环依赖
-            //storage.setRequestMsgDispatcher(requestMsgDispatcher);
+            // storage.setRequestMsgDispatcher(requestMsgDispatcher);
             return storage;
         }
 
-        @Bean
-        public Jt808RequestSubPackageStoragePropertySetter jt808RequestSubPackageStoragePropertySetter(ApplicationContext applicationContext) {
-            return new Jt808RequestSubPackageStoragePropertySetter(applicationContext);
-        }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    Jt808RequestSubPackageStoragePropertySetter jt808RequestSubPackageStoragePropertySetter(ApplicationContext applicationContext) {
+        return new Jt808RequestSubPackageStoragePropertySetter(applicationContext);
     }
 
     @Slf4j
