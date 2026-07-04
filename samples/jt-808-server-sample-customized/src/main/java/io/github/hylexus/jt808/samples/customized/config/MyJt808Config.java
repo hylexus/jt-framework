@@ -13,10 +13,16 @@ import io.github.hylexus.jt.jt808.spec.session.Jt808FlowIdGeneratorFactory;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionEventListener;
 import io.github.hylexus.jt.jt808.spec.session.Jt808SessionManager;
 import io.github.hylexus.jt.jt808.support.codec.*;
-import io.github.hylexus.jt.jt808.support.codec.impl.*;
+import io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808RequestSubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.impl.CaffeineJt808ResponseSubPackageStorage;
+import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgBytesProcessor;
+import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
+import io.github.hylexus.jt808.samples.customized.issue100.Issue100CapturingJt808MsgDecoder;
+import io.github.hylexus.jt808.samples.customized.issue100.Issue100LoggingBatchTerminalRawPacketCollector;
+import io.github.hylexus.jt808.samples.customized.issue100.Issue100TerminalRawPacketCollector;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionEventListener01;
 import io.github.hylexus.jt808.samples.customized.session.MyJt808SessionEventListener02;
 import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
@@ -29,6 +35,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -102,8 +109,31 @@ public class MyJt808Config {
     public Jt808MsgDecoder jt808MsgDecoder(
             Jt808MsgTypeParser jt808MsgTypeParser,
             Jt808MsgBytesProcessor bytesProcessor,
-            Jt808ProtocolVersionDetectorRegistry registry) {
-        return new DefaultJt808MsgDecoder(jt808MsgTypeParser, bytesProcessor, registry, Jt808MsgEncryptionHandler.NO_OPS);
+            Jt808ProtocolVersionDetectorRegistry registry,
+            Issue100TerminalRawPacketCollector issue100TerminalRawPacketCollector) {
+        // return new DefaultJt808MsgDecoder(jt808MsgTypeParser, bytesProcessor, registry, Jt808MsgEncryptionHandler.NO_OPS);
+        // issue-100: 这里用自定义 decoder，而不是 lifecycle listener/filter，
+        // 是为了在 doEscapeForReceive 之前抓到终端线上原始 payload，同时在 decode 之后补齐元数据。
+        return new Issue100CapturingJt808MsgDecoder(
+                jt808MsgTypeParser,
+                bytesProcessor,
+                registry,
+                Jt808MsgEncryptionHandler.NO_OPS,
+                issue100TerminalRawPacketCollector
+        );
+    }
+
+    /**
+     * @see <a href="https://github.com/hylexus/jt-framework/issues/100">https://github.com/hylexus/jt-framework/issues/100</a>
+     */
+    // [[ issue-100 ]] -- 原始终端物理帧采集器: 这里只用 logger 模拟异步批量写库
+    @Bean
+    public Issue100TerminalRawPacketCollector issue100TerminalRawPacketCollector() {
+        return new Issue100LoggingBatchTerminalRawPacketCollector(
+                10_000,
+                500,
+                Duration.ofSeconds(1)
+        );
     }
 
     // [[ 非必须配置 ]] -- 替换内置的 Jt808SessionManager
