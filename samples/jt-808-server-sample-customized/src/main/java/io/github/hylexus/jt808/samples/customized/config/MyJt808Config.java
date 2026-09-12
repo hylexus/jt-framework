@@ -20,6 +20,7 @@ import io.github.hylexus.jt.jt808.support.codec.impl.DefaultJt808MsgEncoder;
 import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapter;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
+import io.github.hylexus.jt.netty.JtEventExecutorGroupProvider;
 import io.github.hylexus.jt808.samples.customized.issue100.Issue100CapturingJt808MsgDecoder;
 import io.github.hylexus.jt808.samples.customized.issue100.Issue100LoggingBatchTerminalRawPacketCollector;
 import io.github.hylexus.jt808.samples.customized.issue100.Issue100TerminalRawPacketCollector;
@@ -29,7 +30,6 @@ import io.github.hylexus.jt808.samples.customized.session.MySessionManager;
 import io.github.hylexus.jt808.samples.customized.subpackage.MyRequestSubPackageStorage;
 import io.github.hylexus.jt808.samples.customized.subpackage.MyResponseSubPackageStorage;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.util.concurrent.EventExecutorGroup;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -148,12 +148,12 @@ public class MyJt808Config {
     // [[ 非必须配置 ]] -- 替换内置的 Netty 配置类
     @Bean
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
-            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
+            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) JtEventExecutorGroupProvider eventExecutorGroupProvider,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter,
             Jt808ServerProps serverProps) {
 
-        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroup, channelHandlerAdapter, heatBeatHandler);
+        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroupProvider.getEventExecutorGroup(), channelHandlerAdapter, heatBeatHandler);
     }
 
     // [[ 非必须配置 ]] -- 替换内置的转义等逻辑

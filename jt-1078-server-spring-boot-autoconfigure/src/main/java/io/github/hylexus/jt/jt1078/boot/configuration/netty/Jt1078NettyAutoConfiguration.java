@@ -9,10 +9,11 @@ import io.github.hylexus.jt.jt1078.support.netty.Jt1078DispatcherChannelHandler;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078NettyTcpServer;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078ServerNettyConfigure;
 import io.github.hylexus.jt.jt1078.support.netty.Jt1078TerminalHeatBeatHandler;
+import io.github.hylexus.jt.netty.DefaultJtEventExecutorGroupProvider;
+import io.github.hylexus.jt.netty.JtEventExecutorGroupProvider;
 import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,30 +35,32 @@ public class Jt1078NettyAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(Jt1078ServerNettyConfigure.class)
     public Jt1078ServerNettyConfigure jt1078ServerNettyConfigure(
-            @Qualifier(BEAN_NAME_1078_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
+            @Qualifier(BEAN_NAME_1078_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) JtEventExecutorGroupProvider eventExecutorGroupProvider,
             @Qualifier(BEAN_NAME_NETTY_HANDLER_NAME_1078_HEART_BEAT) Jt1078TerminalHeatBeatHandler heatBeatHandler,
             Jt1078DispatcherChannelHandler jt1078DispatcherChannelHandler) {
 
         return new BuiltinJt1078ServerNettyConfigure(
                 serverProps,
-                heatBeatHandler, eventExecutorGroup,
+                heatBeatHandler, eventExecutorGroupProvider.getEventExecutorGroup(),
                 jt1078DispatcherChannelHandler
         );
     }
 
-    @Bean(name = BEAN_NAME_1078_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
+    @Bean(name = BEAN_NAME_1078_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP, destroyMethod = "close")
     @ConditionalOnMissingBean(name = BEAN_NAME_1078_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
-    public EventExecutorGroup eventExecutorGroup() {
+    public DefaultJtEventExecutorGroupProvider eventExecutorGroup() {
 
         final MsgProcessorExecutorGroupProps poolProps = serverProps.getMsgProcessor().getExecutorGroup();
         final DefaultThreadFactory threadFactory = new DefaultThreadFactory(poolProps.getPoolName());
 
         log.info("Jt1078MsgProcessorConfig = {}", poolProps);
-        return new DefaultEventExecutorGroup(
-                poolProps.getThreadCount(),
-                threadFactory,
-                poolProps.getMaxPendingTasks(),
-                RejectedExecutionHandlers.reject()
+        return new DefaultJtEventExecutorGroupProvider(
+                new DefaultEventExecutorGroup(
+                        poolProps.getThreadCount(),
+                        threadFactory,
+                        poolProps.getMaxPendingTasks(),
+                        RejectedExecutionHandlers.reject()
+                )
         );
     }
 

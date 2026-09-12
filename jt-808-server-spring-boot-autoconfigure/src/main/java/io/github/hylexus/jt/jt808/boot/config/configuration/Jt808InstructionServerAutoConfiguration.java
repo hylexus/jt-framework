@@ -27,10 +27,11 @@ import io.github.hylexus.jt.jt808.support.netty.Jt808DispatchChannelHandlerAdapt
 import io.github.hylexus.jt.jt808.support.netty.Jt808NettyTcpServer;
 import io.github.hylexus.jt.jt808.support.netty.Jt808ServerNettyConfigure;
 import io.github.hylexus.jt.jt808.support.netty.Jt808TerminalHeatBeatHandler;
+import io.github.hylexus.jt.netty.DefaultJtEventExecutorGroupProvider;
+import io.github.hylexus.jt.netty.JtEventExecutorGroupProvider;
 import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -115,29 +116,31 @@ public class Jt808InstructionServerAutoConfiguration {
         return new Jt808DispatchChannelHandlerAdapter(requestProcessor, jt808SessionManager);
     }
 
-    @Bean(name = BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
+    @Bean(name = BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP, destroyMethod = "close")
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
-    public EventExecutorGroup eventExecutorGroup() {
+    public DefaultJtEventExecutorGroupProvider eventExecutorGroup() {
 
         final MsgProcessorExecutorGroupProps poolProps = serverProps.getMsgProcessor().getExecutorGroup();
         final DefaultThreadFactory threadFactory = new DefaultThreadFactory(poolProps.getPoolName());
 
         log.info("MsgProcessorConfig = {}", poolProps);
-        return new DefaultEventExecutorGroup(
-                poolProps.getThreadCount(),
-                threadFactory,
-                poolProps.getMaxPendingTasks(),
-                RejectedExecutionHandlers.reject()
+        return new DefaultJtEventExecutorGroupProvider(
+                new DefaultEventExecutorGroup(
+                        poolProps.getThreadCount(),
+                        threadFactory,
+                        poolProps.getMaxPendingTasks(),
+                        RejectedExecutionHandlers.reject()
+                )
         );
     }
 
     @Bean
     @ConditionalOnMissingBean(Jt808ServerNettyConfigure.class)
     public Jt808ServerNettyConfigure jt808ServerNettyConfigure(
-            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup eventExecutorGroup,
+            @Qualifier(BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) JtEventExecutorGroupProvider eventExecutorGroupProvider,
             Jt808TerminalHeatBeatHandler heatBeatHandler,
             Jt808DispatchChannelHandlerAdapter channelHandlerAdapter) {
-        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroup, channelHandlerAdapter, heatBeatHandler);
+        return new BuiltinJt808ServerNettyConfigure(serverProps, eventExecutorGroupProvider.getEventExecutorGroup(), channelHandlerAdapter, heatBeatHandler);
     }
 
     @Bean(initMethod = "doStart", destroyMethod = "doStop")

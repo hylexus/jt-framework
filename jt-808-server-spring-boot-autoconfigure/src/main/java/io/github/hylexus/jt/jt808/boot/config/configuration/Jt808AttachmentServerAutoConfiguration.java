@@ -11,10 +11,11 @@ import io.github.hylexus.jt.jt808.support.dispatcher.Jt808DispatcherHandler;
 import io.github.hylexus.jt.jt808.support.dispatcher.Jt808RequestMsgDispatcher;
 import io.github.hylexus.jt.jt808.support.extension.attachment.*;
 import io.github.hylexus.jt.jt808.support.extension.attachment.impl.SimpleAttachmentJt808RequestProcessor;
+import io.github.hylexus.jt.netty.DefaultJtEventExecutorGroupProvider;
+import io.github.hylexus.jt.netty.JtEventExecutorGroupProvider;
 import io.github.hylexus.jt.netty.JtServerNettyConfigure;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import io.netty.util.concurrent.EventExecutorGroup;
 import io.netty.util.concurrent.RejectedExecutionHandlers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,19 +46,21 @@ public class Jt808AttachmentServerAutoConfiguration {
         return new SimpleAttachmentJt808RequestProcessor(jt808MsgDecoder, sessionManager, routeExceptionHandler, msgDispatcher, dispatcherHandler);
     }
 
-    @Bean(name = BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
+    @Bean(name = BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP, destroyMethod = "close")
     @ConditionalOnMissingBean(name = BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP)
-    public EventExecutorGroup eventExecutorGroup() {
+    public DefaultJtEventExecutorGroupProvider eventExecutorGroup() {
 
         final MsgProcessorExecutorGroupProps poolProps = instructionServerProps.getAttachmentServer().getMsgProcessor().getExecutorGroup();
         final DefaultThreadFactory threadFactory = new DefaultThreadFactory(poolProps.getPoolName());
 
         log.info("MsgProcessorConfig = {}", poolProps);
-        return new DefaultEventExecutorGroup(
-                poolProps.getThreadCount(),
-                threadFactory,
-                poolProps.getMaxPendingTasks(),
-                RejectedExecutionHandlers.reject()
+        return new DefaultJtEventExecutorGroupProvider(
+                new DefaultEventExecutorGroup(
+                        poolProps.getThreadCount(),
+                        threadFactory,
+                        poolProps.getMaxPendingTasks(),
+                        RejectedExecutionHandlers.reject()
+                )
         );
     }
 
@@ -78,12 +81,12 @@ public class Jt808AttachmentServerAutoConfiguration {
     public Jt808AttachmentServerNettyConfigure jt808AttachmentServerNettyConfigure(
             AttachmentJt808TerminalHeatBeatHandler heatBeatHandler,
             AttachmentJt808DispatchChannelHandlerAdapter attachmentJt808DispatchChannelHandlerAdapter,
-            @Qualifier(BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) EventExecutorGroup executors) {
+            @Qualifier(BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP) JtEventExecutorGroupProvider eventExecutorGroupProvider) {
 
         return new BuiltinJt808AttachmentServerNettyConfigure(
                 instructionServerProps,
                 heatBeatHandler,
-                executors,
+                eventExecutorGroupProvider.getEventExecutorGroup(),
                 attachmentJt808DispatchChannelHandlerAdapter
         );
     }

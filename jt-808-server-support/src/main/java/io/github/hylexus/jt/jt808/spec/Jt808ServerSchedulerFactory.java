@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 /**
  * @author hylexus
+ * @see io.github.hylexus.jt.netty.JtEventExecutorGroupProvider
  */
 public interface Jt808ServerSchedulerFactory {
 

@@ -1,5 +1,7 @@
 package io.github.hylexus.jt.jt808;
 
+import io.github.hylexus.jt.netty.JtEventExecutorGroupProvider;
+
 import java.nio.charset.Charset;
 
 /**
@@ -14,7 +16,13 @@ public interface JtProtocolConstant {
     int MAX_PACKAGE_LENGTH = 1024;
 
     String BEAN_NAME_JT808_INTERCEPTORS = "jt808Interceptors";
+    /**
+     * 808 指令消息处理器使用的 {@link JtEventExecutorGroupProvider} Bean 名称。
+     */
     String BEAN_NAME_JT808_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP = "jt808MsgProcessorEventExecutorGroup";
+    /**
+     * 808 附件消息处理器使用的 {@link JtEventExecutorGroupProvider} Bean 名称。
+     */
     String BEAN_NAME_JT808_ATTACHMENT_MSG_PROCESSOR_EVENT_EXECUTOR_GROUP = "jt808AttachmentMsgProcessorEventExecutorGroup";
     String BEAN_NAME_NETTY_HANDLER_NAME_808_HEART_BEAT = "Jt808NettyHeartBeatHandler";
     String BEAN_NAME_NETTY_HANDLER_NAME_ATTACHMENT_808_HEART_BEAT = "AttachmentJt808NettyHeartBeatHandler";
