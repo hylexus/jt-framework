@@ -108,6 +108,7 @@ export const zhSidebar = sidebar({
                 collapsible: true,
                 icon: 'merge',
                 children: [
+                    '/v2/jt-808/guide/migration/upgrade-to-3.0.0.md',
                     '/v2/jt-808/guide/migration/upgrade-to-2.3.0-rc.5.md',
                     '/v2/jt-808/guide/migration/migrating-from-2.0.x-to-2.1.x.md',
                 ]
