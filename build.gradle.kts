@@ -213,7 +213,7 @@ configure(subprojects) {
     }
 
     if (isMavenPublication()) {
-        val stagingRepositoryPath = jtFrameworkConfig.centralPortalArtifactsTempDir
+        val stagingRepositoryPath = jtFrameworkConfig.centralPortalArtifactsTempDir + "/${project.name}"
         apply(plugin = "maven-publish")
         if (jtFrameworkConfig.centralPortalMavenRepoEnabled) {
             apply(plugin = "io.gitee.pkmer.pkmerboot-central-publisher")
