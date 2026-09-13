@@ -1,0 +1,5 @@
+
+User-agent:*
+Disallow:
+
+Sitemap: https://github.com/hylexus/jt-framework/jt-framework/sitemap.xml
