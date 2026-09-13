@@ -80,6 +80,7 @@ export const zhSidebar = sidebar({
                     '/v2/jt-808/guide/customization/epoll-config.md',
                     '/v2/jt-808/guide/customization/codec-config.md',
                     '/v2/jt-808/guide/customization/custom-thread-pool.md',
+                    '/v2/jt-808/guide/customization/netty-event-executor-group.md',
                     '/v2/jt-808/guide/customization/session-config.md',
                     '/v2/jt-808/guide/customization/sub-package-config.md',
                     '/v2/jt-808/guide/customization/request-lifecycle-listener.md',
@@ -199,6 +200,7 @@ export const zhSidebar = sidebar({
             "/frequently-asked-questions/debug.md",
             "/frequently-asked-questions/package-parsing.md",
             "/frequently-asked-questions/what-is-the-difference-between-v1-and-v2.md",
+            "/frequently-asked-questions/issue-101-scheduled-task-startup-failure.md",
         ]
     }
 )
