@@ -37,14 +37,14 @@ icon: launch
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>3.0.0-rc.2</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter-boot2:3.0.0-rc.2'
+implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter-boot2:3.0.0'
 ```
 
 :::
@@ -62,14 +62,14 @@ implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter-boot2:3.0
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter</artifactId>
-    <version>3.0.0-rc.2</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
 @tab:active gradle
 
 ```groovy
-implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter:3.0.0-rc.2'
+implementation 'io.github.hylexus.jt:jt-808-server-spring-boot-starter:3.0.0'
 ```
 
 :::

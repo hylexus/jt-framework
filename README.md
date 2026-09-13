@@ -157,16 +157,16 @@ Jt-808协议服务端。
 ### 2. 添加依赖
 
 - **spring-boot-3.x**
-    - `jt-808-server-spring-boot-starter-3.0.0-rc.2.jar`
+    - `jt-808-server-spring-boot-starter-3.0.0.jar`
 - **spring-boot-2.x**
-    - `jt-808-server-spring-boot-starter-boot2-3.0.0-rc.2.jar`
+    - `jt-808-server-spring-boot-starter-boot2-3.0.0.jar`
 
 按需求引入为 `808协议` 提供的 `spring-boot-starter`：
 
 - gradle
 
 ```groovy
-implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "3.0.0-rc.2"
+implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-starter-boot2', version: "3.0.0"
 ```
 
 - maven
@@ -176,7 +176,7 @@ implementation group: 'io.github.hylexus.jt', name: 'jt-808-server-spring-boot-s
 <dependency>
     <groupId>io.github.hylexus.jt</groupId>
     <artifactId>jt-808-server-spring-boot-starter-boot2</artifactId>
-    <version>3.0.0-rc.2</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
