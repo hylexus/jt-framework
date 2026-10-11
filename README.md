@@ -247,4 +247,3 @@ Maven 版示例项目
 项目的发展离不开你的支持，请作者喝一杯🍺吧！
 
 ![有钱的捧个钱场 没钱的捧个人场](https://hylexus.github.io/jt-framework/img/pay.png)
-
