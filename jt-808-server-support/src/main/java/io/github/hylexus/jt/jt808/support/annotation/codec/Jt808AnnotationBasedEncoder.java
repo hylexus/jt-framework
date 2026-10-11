@@ -29,8 +29,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static io.github.hylexus.jt.jt808.support.data.ConvertibleMetadata.forJt808ResponseMsgDataType;
 import static java.util.Objects.requireNonNull;
@@ -38,13 +38,14 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author pruidong
  * @author hylexus
+ * @author Codex
  */
 @Slf4j
 public class Jt808AnnotationBasedEncoder {
 
     private final ByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
     private final ExpressionParser parser = new SpelExpressionParser();
-    private final Map<Class<? extends Jt808FieldSerializer<?>>, Jt808FieldSerializer<?>> converterMapping = new HashMap<>();
+    private final Map<Class<? extends Jt808FieldSerializer<?>>, Jt808FieldSerializer<?>> converterMapping = new ConcurrentHashMap<>();
     private final Jt808FieldSerializerRegistry fieldSerializerRegistry;
 
     public Jt808AnnotationBasedEncoder(Jt808FieldSerializerRegistry fieldSerializerRegistry) {

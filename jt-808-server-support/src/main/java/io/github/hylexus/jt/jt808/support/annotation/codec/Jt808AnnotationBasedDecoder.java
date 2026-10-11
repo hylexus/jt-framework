@@ -27,14 +27,18 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author Codex
+ * @author hylexus
+ */
 @Slf4j
 public class Jt808AnnotationBasedDecoder {
 
-    private final Map<Class<? extends Jt808FieldDeserializer<?>>, Jt808FieldDeserializer<?>> converterMapping = new HashMap<>();
+    private final Map<Class<? extends Jt808FieldDeserializer<?>>, Jt808FieldDeserializer<?>> converterMapping = new ConcurrentHashMap<>();
     private final ExpressionParser parser = new SpelExpressionParser();
     private final Jt808FieldDeserializerRegistry jt808FieldDeserializerRegistry;
     private final SlicedFromAnnotationDecoder slicedFromAnnotationDecoder = new SlicedFromAnnotationDecoder();

@@ -14,19 +14,23 @@ import io.github.hylexus.jt.jt808.support.utils.ReflectionUtils;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
+ * @author Codex
+ * @author hylexus
  * @see RequestFieldAlias.LocationMsgExtraItemMapping
  * @see BuiltinMsg0200V2019AliasV2#getExtraItemMap()
  */
 public class ExtendedJt808FieldDeserializerLocationExtraItem extends AbstractExtendedJt808FieldDeserializer<Object> {
 
-    private final Map<Field, RequestMsgConvertibleMetadata> defaultMapping = new HashMap<>();
-    private final Map<Field, Map<Integer, RequestMsgConvertibleMetadata>> keyValueMappingCache = new HashMap<>();
+    private final ConcurrentMap<Field, FieldMappingMetadata> mappingCache = new ConcurrentHashMap<>();
 
     @Override
     public Object deserialize(ByteBuf byteBuf, MsgDataType msgDataType, int start, int length, Context context) {
@@ -65,30 +69,40 @@ public class ExtendedJt808FieldDeserializerLocationExtraItem extends AbstractExt
 
     private RequestMsgConvertibleMetadata getValueType(Context context, int key) {
         final Field field = context.fieldMetadata().getField();
-        Map<Integer, RequestMsgConvertibleMetadata> map = keyValueMappingCache.get(field);
-        if (map == null) {
-            this.initMetadata(context, field);
-            map = keyValueMappingCache.get(field);
+        // get 仅是快速路径；ConcurrentHashMap.computeIfAbsent 会原子地检查、初始化并安全发布完整配置。
+        // 配置发布后不再修改，因此这里无需额外使用 synchronized。
+        FieldMappingMetadata mapping = mappingCache.get(field);
+        if (mapping == null) {
+            mapping = mappingCache.computeIfAbsent(field, ignored -> this.initMetadata(context));
         }
-        final RequestMsgConvertibleMetadata metadata = map.get(key);
-        if (metadata == null) {
-            return Optional.ofNullable(defaultMapping.get(field))
-                    .orElseGet(() -> RequestMsgConvertibleMetadata.forJt808RequestMsgDataType(MsgDataType.BYTES, byte[].class));
-        }
-        return metadata;
+        final RequestMsgConvertibleMetadata metadata = mapping.keyMappings.get(key);
+        return metadata != null ? metadata : mapping.defaultMapping;
     }
 
-    private void initMetadata(Context context, Field currentField) {
+    private FieldMappingMetadata initMetadata(Context context) {
         final RequestFieldAlias.LocationMsgExtraItemMapping annotation = (RequestFieldAlias.LocationMsgExtraItemMapping) context.fieldMetadata().getAnnotationCache().get(RequestFieldAlias.LocationMsgExtraItemMapping.class);
+        final Map<Integer, RequestMsgConvertibleMetadata> keyMappings = new HashMap<>();
         final KeyValueMapping[] valueTypeMappings = annotation.keyValueMappings();
         for (final KeyValueMapping valueTypeMapping : valueTypeMappings) {
             final int key = valueTypeMapping.key();
             final ValueDescriptor valueDescriptor = valueTypeMapping.value();
-            final Map<Integer, RequestMsgConvertibleMetadata> cache = keyValueMappingCache.computeIfAbsent(currentField, field -> new HashMap<>());
-            cache.put(key, RequestMsgConvertibleMetadata.forJt808RequestMsgDataType(valueDescriptor.source(), valueDescriptor.target()));
+            keyMappings.put(key, RequestMsgConvertibleMetadata.forJt808RequestMsgDataType(valueDescriptor.source(), valueDescriptor.target()));
         }
 
-        defaultMapping.put(currentField, RequestMsgConvertibleMetadata.forJt808RequestMsgDataType(annotation.defaultKeyValueMapping().source(), annotation.defaultKeyValueMapping().target()));
+        final ValueDescriptor defaultDescriptor = annotation.defaultKeyValueMapping();
+        final RequestMsgConvertibleMetadata defaultMapping = RequestMsgConvertibleMetadata.forJt808RequestMsgDataType(defaultDescriptor.source(), defaultDescriptor.target());
+        return new FieldMappingMetadata(keyMappings, defaultMapping);
+    }
+
+    private static final class FieldMappingMetadata {
+        private final Map<Integer, RequestMsgConvertibleMetadata> keyMappings;
+        private final RequestMsgConvertibleMetadata defaultMapping;
+
+        private FieldMappingMetadata(Map<Integer, RequestMsgConvertibleMetadata> keyMappings, RequestMsgConvertibleMetadata defaultMapping) {
+            // Publish all key mappings and the default together; the local map is never modified afterwards.
+            this.keyMappings = Collections.unmodifiableMap(keyMappings);
+            this.defaultMapping = defaultMapping;
+        }
     }
 
 }
