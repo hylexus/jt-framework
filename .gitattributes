@@ -1,0 +1,6 @@
+# Preserve upstream line endings in license materials verified by byte hashes.
+# Git's CRLF/LF conversion would invalidate the recorded SHA-256 values.
+/THIRD-PARTY-FRONTEND-NOTICES.txt -text
+/dashboard/jt-dashboard-server/src/main/resources/static/client/THIRD-PARTY-NOTICES.txt -text
+/docs/src/.vuepress/public/THIRD-PARTY-NOTICES.txt -text
+/licenses/Apache-Commons-Codec-NOTICE.txt -text

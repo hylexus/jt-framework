@@ -1,0 +1,80 @@
+{
+  "lockfile": "dashboard/jt-dashboard-server-ui-vue3/pnpm-lock.yaml",
+  "lockfileSha256": "3f5732b6221f7301faf004da664b596d15916291b859bc3e064ecbef4fe6f496",
+  "inventorySha256": "cd03446f7061bbe49736a5ba45768d838c4a20a2e593368ae6ab10582c7118cf",
+  "thirdPartyNoticesSha256": "f35c8b312c7c330c52fdd36127ee246ffea3991c56830eaab5e3830262450d41",
+  "assets": [
+    {
+      "file": "assets/form-item-091ae207.css",
+      "sha256": "091ae2073abeb1a0e2958ca04571685b385c20d6b8c6ef25ec7bc1fb5833ddbb"
+    },
+    {
+      "file": "assets/form-item-2ab73a10.js",
+      "sha256": "caa486eb2d1c67975502b1081132b9eaaf9a034ace539cccd2f9c26316cb387e"
+    },
+    {
+      "file": "assets/index-7cb4597a.js",
+      "sha256": "3ad65e97ad6370d2ef7b2434067a7e95153c0780ad0bd9f8ef4ebd83fd774817"
+    },
+    {
+      "file": "assets/index-d98d5f6b.css",
+      "sha256": "6e46b57c3f2d70b4e7b85eeefa5a9c65405e29721ddb013f5cdf49b796327dec"
+    },
+    {
+      "file": "assets/jt1078-config-b409f47d.js",
+      "sha256": "b65f9731f82533217d427910cd854b5fee79fdcc59d165f8faf2f1316d5974c2"
+    },
+    {
+      "file": "assets/Jt1078SessionFlvPlayer-ea1144cc.js",
+      "sha256": "0b6452172c875da54238b1431e425cf2d5a075cf9fdcac29c25b678122c473ff"
+    },
+    {
+      "file": "assets/Jt1078SessionFlvPlayer-ee166d77.css",
+      "sha256": "ee166d77cd10093f42aee12eb7332f045b6ba1cddcd3d8005be35c1164fd534e"
+    },
+    {
+      "file": "assets/Jt1078SessionList-1b7bb6a6.css",
+      "sha256": "1b7bb6a6ad05445d1f88efde1cb4aa0d7306f59f275c84b4c4d6e1bf9cbeabb4"
+    },
+    {
+      "file": "assets/Jt1078SessionList-7c70df0c.js",
+      "sha256": "3a92f91d8c448dd8cc95c00713538d2266d1ceb2f62af94736e22b93e38537d4"
+    },
+    {
+      "file": "assets/Jt808SessionList-585e64ae.css",
+      "sha256": "585e64ae7f760f0f852235cb827de6fe6295a2e811214f9b124dfbc9ee420cd4"
+    },
+    {
+      "file": "assets/Jt808SessionList-85b5bdea.js",
+      "sha256": "53ecb51b351ae6695b959d200c169dd1d7ff49f320960d6ce1bc870939fe2333"
+    },
+    {
+      "file": "assets/select-5e45cfc7.css",
+      "sha256": "5e45cfc7a25cb55d6505b5e00a9ae378cd46ad234190fb2ce905cbd90ff5e36c"
+    },
+    {
+      "file": "assets/select-80979e20.js",
+      "sha256": "c8f99fba406cd988ee8f88699a20e38b316348cd9769adbaaaf4bf1612b80cec"
+    },
+    {
+      "file": "favicon.svg",
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    },
+    {
+      "file": "index.html",
+      "sha256": "2a3d38dadefbebe70282848ddc3fec6f97310fca460af6a487cc58638d3c86d8"
+    },
+    {
+      "file": "LICENSE.txt",
+      "sha256": "fb7ac1f2eee382cba0cac32183c1464a36a93f43e190a98f5643bff698914c98"
+    },
+    {
+      "file": "NOTICE.txt",
+      "sha256": "c9612230166047067a337ebdcb2f99a9ce6dcb7a7038acbdc85a5a1c043a04b9"
+    },
+    {
+      "file": "THIRD-PARTY-NOTICES.txt",
+      "sha256": "f35c8b312c7c330c52fdd36127ee246ffea3991c56830eaab5e3830262450d41"
+    }
+  ]
+}

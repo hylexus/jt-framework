@@ -111,6 +111,7 @@ object JtFrameworkVersions {
             }
         )
 
+    // 1078 相关模块尚未完善，暂不发布到 Maven Central，保留在发布名单之外。
     val MODULES_TO_PUBLISH_TO_MAVEN_REPO = listOf<String>(
         "jt-core",
         "jt-808-server-support",

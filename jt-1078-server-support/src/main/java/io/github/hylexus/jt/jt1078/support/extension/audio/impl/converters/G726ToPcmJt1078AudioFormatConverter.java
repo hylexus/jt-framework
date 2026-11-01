@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 matrixy.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Adapted for jt-framework by hylexus; upstream source links appear below.
+ */
+
 package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
@@ -15,7 +33,7 @@ import javax.annotation.Nonnull;
 import static io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.g7xx.G72X.AUDIO_ENCODING_LINEAR;
 
 /**
- * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28">https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28</a>
+ * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28">https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/G726Codec.java#L28</a>
  * @see <a href="https://blog.csdn.net/li_wen01/article/details/81141085">https://blog.csdn.net/li_wen01/article/details/81141085</a>
  * @see <a href="https://datatracker.ietf.org/doc/html/rfc3551#autoid-14">https://datatracker.ietf.org/doc/html/rfc3551#autoid-14</a>
  */

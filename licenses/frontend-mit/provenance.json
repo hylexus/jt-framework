@@ -1,0 +1,221 @@
+{
+  "reviewDate": "2026-10-17",
+  "standardTerms": {
+    "url": "https://raw.githubusercontent.com/spdx/license-list-data/v3.27.0/json/details/MIT.json",
+    "version": "v3.27.0",
+    "sha256": "ff6b1bdaf34abe3a1299a34bca1bd15f8a721d2b1853cc7da32d5c0d99818c75",
+    "localFile": "licenses/frontend-mit/MIT.spdx.json",
+    "licenseTextFile": "licenses/frontend-mit/MIT-template.txt",
+    "licenseTextSha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
+  },
+  "records": [
+    {
+      "name": "lodash-unified",
+      "version": "1.0.3",
+      "declaredLicense": "MIT",
+      "publisherAuthorField": "Jack Works",
+      "archive": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.3.tgz",
+      "integrity": "sha512-WK9qSozxXOD7ZJQlpSqOT+om2ZfcT4yO+03FuzAHD0wF6S0l0090LRPDx3vhTTLZ8cFKpBn+IOcVXK6qOcIlfQ==",
+      "archiveFiles": [
+        "package/import.js",
+        "package/package.json",
+        "package/require.cjs",
+        "package/type.d.ts"
+      ],
+      "metadata": {
+        "path": "licenses/frontend-mit/lodash-unified-1.0.3.package.json",
+        "sha256": "23fa098f88e0f8718bb68854b3574b4649f593065ecf56632c7f4adf23836c24"
+      },
+      "gitHead": null,
+      "comparisonMetadata": null,
+      "originalCopyrightNoticeFound": false,
+      "standaloneLicenseFound": false,
+      "status": "declared-MIT-notices-distributed-original-material-gap-recorded",
+      "supplement": {
+        "path": "licenses/frontend-mit/lodash-unified-NOTICE.txt",
+        "sha256": "48523e5bf0ddd25f74e061b1e95c254f6eda48ef543ce5cc1971f91bdc546149"
+      },
+      "additionalReview": {
+        "date": "2026-10-17",
+        "publishedArchives": [
+          {
+            "version": "1.0.0",
+            "integrityVerified": true,
+            "sha256": "e8b904fc21d3e62e4b52fa266b44ba5fa3967233a37b5f37e4d08c858bf982bc",
+            "files": [
+              "package/require.cjs",
+              "package/import.js",
+              "package/package.json",
+              "package/type.d.ts"
+            ],
+            "copyrightMatches": [],
+            "url": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.0.tgz",
+            "integrity": "sha512-zH+XBXBYtye6aHtxc9uAfrdGRuIfMcfBkqrCU1GvbnKfWtb9vNu/jz3/QlPoF1ABQfgOvyCWhlxreHeCEAGyEg=="
+          },
+          {
+            "version": "1.0.1",
+            "integrityVerified": true,
+            "sha256": "32ac5d67403cd0cfc3ae8b969521fae26cc6133e7eb38e4916dafcceb05943da",
+            "files": [
+              "package/require.cjs",
+              "package/import.js",
+              "package/package.json",
+              "package/type.d.ts"
+            ],
+            "copyrightMatches": [],
+            "url": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.1.tgz",
+            "integrity": "sha512-Py+twfpWn+2dFQWCuGcp21WiQRwZwnm1cyE3piSt/VtBVKVyxlR58WgOVRzXtmdmDRGJKH8F8GPaA29WK/yK8g=="
+          },
+          {
+            "version": "1.0.2",
+            "integrityVerified": true,
+            "sha256": "295b6a9f5ec92382aa616d6d3c5bac4ddbf3fc74bde83ec4ef29f59687e18512",
+            "files": [
+              "package/require.cjs",
+              "package/import.js",
+              "package/package.json",
+              "package/type.d.ts"
+            ],
+            "copyrightMatches": [],
+            "url": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.2.tgz",
+            "integrity": "sha512-OGbEy+1P+UT26CYi4opY4gebD8cWRDxAT6MAObIVQMiqYdxZr1g3QHWCToVsm31x2NkLS4K3+MC2qInaRMa39g=="
+          },
+          {
+            "version": "1.0.3",
+            "url": "https://registry.npmjs.org/lodash-unified/-/lodash-unified-1.0.3.tgz",
+            "integrity": "sha512-WK9qSozxXOD7ZJQlpSqOT+om2ZfcT4yO+03FuzAHD0wF6S0l0090LRPDx3vhTTLZ8cFKpBn+IOcVXK6qOcIlfQ==",
+            "integrityVerified": true,
+            "sha256": "22282888b7d6042186f7b241a6d3376a059feffa3ebe1647bbfdd9893b16e3a2",
+            "files": [
+              "package/import.js",
+              "package/package.json",
+              "package/require.cjs",
+              "package/type.d.ts"
+            ],
+            "copyrightMatches": []
+          }
+        ],
+        "result": "All four published archives contain only the entrypoint/type/metadata files, with no standalone license or copyright wording. No repository URL or gitHead is supplied by their registry metadata. Original notice remains unavailable in the reviewed material."
+      },
+      "currentHandling": "Rely on the preserved upstream MIT declaration; include the reviewed supplement in the frontend aggregate notices. The publisher author field is metadata only, and the supplement does not create a copyright notice or new license grant. Missing original copyright/license files remain a follow-up item before final release."
+    },
+    {
+      "name": "webworkify-webpack",
+      "version": "2.1.5",
+      "declaredLicense": "MIT",
+      "publisherAuthorField": "Boris Sirota <borisirota@gmail.com> (https://github.com/borisirota)",
+      "archive": "https://registry.npmjs.org/webworkify-webpack/-/webworkify-webpack-2.1.5.tgz",
+      "integrity": "sha512-2akF8FIyUvbiBBdD+RoHpoTbHMQF2HwjcxfDvgztAX5YwbZNyrtfUMgvfgFVsgDhDPVTlkbb5vyasqDHfIDPQw==",
+      "archiveFiles": [
+        "package/README.md",
+        "package/example/common-js-worker.js",
+        "package/example/es6-worker.js",
+        "package/example/main.js",
+        "package/example/webpack.config.js",
+        "package/index.html",
+        "package/index.js",
+        "package/package.json"
+      ],
+      "metadata": {
+        "path": "licenses/frontend-mit/webworkify-webpack-2.1.5.package.json",
+        "sha256": "7873167b6805860885430e735f19dea57cff6a2e1a5c26ee73cd660b50237c4e"
+      },
+      "gitHead": "2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99",
+      "comparisonMetadata": "https://raw.githubusercontent.com/borisirota/webworkify-webpack/2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99/package.json",
+      "originalCopyrightNoticeFound": false,
+      "standaloneLicenseFound": false,
+      "status": "declared-MIT-notices-distributed-original-material-gap-recorded",
+      "supplement": {
+        "path": "licenses/frontend-mit/webworkify-webpack-NOTICE.txt",
+        "sha256": "ef987e0c0172f57e62e04840e96047c23516cb53ec04b6970400107efb5a82be"
+      },
+      "additionalReview": {
+        "date": "2026-10-17",
+        "upstreamDeclaration": {
+          "url": "https://raw.githubusercontent.com/borisirota/webworkify-webpack/2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99/README.md",
+          "archiveEntry": "package/README.md",
+          "readmeSha256": "71d3321abe0c26cd108902a0a9dd73edb4281095a3d562270db3d6c0eb14d4e8",
+          "archiveAndCommitReadmeMatch": true,
+          "excerptFile": "licenses/frontend-mit/webworkify-webpack-2.1.5.license-excerpt.txt",
+          "excerptSha256": "4d8a73c1024e09c8b323a225d3a7880156ba5a4b9a8d56c9f4fd4202384b110f",
+          "text": "# license\n\nMIT\n"
+        },
+        "result": "Preserved the original README MIT declaration in the supplement. No original copyright line or standalone license found in the published archive; full repository history review was not completed."
+      },
+      "currentHandling": "Rely on the preserved upstream MIT declaration; include the reviewed supplement in the frontend aggregate notices. The publisher author field is metadata only, and the supplement does not create a copyright notice or new license grant. Missing original copyright/license files remain a follow-up item before final release."
+    },
+    {
+      "name": "element-plus-vite-starter",
+      "version": "0.1.0 comparison snapshot",
+      "declaredLicense": "MIT",
+      "comparisonMetadata": "https://raw.githubusercontent.com/element-plus/element-plus-vite-starter/fa10f32788a09b2faab73d3f9709f33bc7cf4d3f/package.json",
+      "comparisonCommit": "fa10f32788a09b2faab73d3f9709f33bc7cf4d3f",
+      "exactHistoricalImportRevisionKnown": false,
+      "metadata": {
+        "path": "licenses/frontend-mit/element-plus-vite-starter.package.json",
+        "sha256": "66658320b05e727d62be422d9f25d7462634757a584e41ba2b209fb556637390"
+      },
+      "standaloneLicenseFound": false,
+      "originalCopyrightNoticeFound": false,
+      "status": "declared-MIT-notices-distributed-original-material-gap-recorded",
+      "supplement": {
+        "path": "licenses/element-plus-vite-starter-NOTICE.txt",
+        "sha256": "938c44651cdd3a0da152f0e19d61edef7892c2a9b1f658dada8389f1c7660927"
+      },
+      "additionalReview": {
+        "date": "2026-10-17",
+        "snapshot": {
+          "commit": "fa10f32788a09b2faab73d3f9709f33bc7cf4d3f",
+          "archiveSha256": "6e9c6fe3b64dd551a845e22ddf5465d51be34f7d9b277b36ef34c61d9e52fa29",
+          "fileCount": 28,
+          "licenseFilenamesOrCopyrightMatches": [],
+          "metadataMatchesPreservedFile": true,
+          "paths": [
+            ".github/workflows/gh-pages.yml",
+            ".github/workflows/test.yml",
+            ".gitignore",
+            ".npmrc",
+            ".vscode/extensions.json",
+            "README.md",
+            "index.html",
+            "package.json",
+            "public/CNAME",
+            "public/element-plus-logo-small.svg",
+            "public/favicon.svg",
+            "public/vite.svg",
+            "src/App.vue",
+            "src/assets/vue.svg",
+            "src/components.d.ts",
+            "src/components/HelloWorld.vue",
+            "src/components/Logos.vue",
+            "src/components/layouts/BaseHeader.vue",
+            "src/components/layouts/BaseSide.vue",
+            "src/composables/dark.ts",
+            "src/composables/index.ts",
+            "src/env.d.ts",
+            "src/main.ts",
+            "src/styles/element/dark.scss",
+            "src/styles/element/index.scss",
+            "src/styles/index.scss",
+            "tsconfig.json",
+            "vite.config.ts"
+          ],
+          "url": "https://codeload.github.com/element-plus/element-plus-vite-starter/tar.gz/fa10f32788a09b2faab73d3f9709f33bc7cf4d3f"
+        },
+        "result": "The fixed snapshot contains 28 files, with no separate license filenames or copyright wording. Its package.json matches the preserved MIT declaration. Exact historical import revision and full repository history remain unverified."
+      },
+      "currentHandling": "Rely on the preserved upstream MIT declaration; include the reviewed supplement in the frontend aggregate notices. The supplement does not create a copyright notice or new license grant. Missing original copyright/license files remain a follow-up item before final release."
+    }
+  ],
+  "publicNoticeFormat": "2026-10-24: concise component/source/declaration, standard terms and explicit original-material gap; detailed metadata and review limits remain here.",
+  "additionalReviewLimitations": "Findings cover the identified archives, fixed README and starter snapshot, not complete repository histories.",
+  "handlingDecision": {
+    "date": "2026-10-24",
+    "basis": "The three reviewed components explicitly declare MIT in the preserved upstream materials.",
+    "publicDelivery": "THIRD-PARTY-FRONTEND-NOTICES.txt and the corresponding distributed THIRD-PARTY-NOTICES.txt contain the component/source information, actual upstream declarations, standard MIT terms and applicable additional notices.",
+    "repositoryEvidence": "Retain original publisher metadata, source URLs, integrity values, existing supplemental notices and review limitations in the repository.",
+    "originalMaterialGap": "Original copyright wording and standalone upstream license files were not found in the reviewed materials; the gap remains recorded without inventing a holder or year.",
+    "followUp": "Before final release, recheck the upstream packages or snapshots for original attribution and standalone license files; also reassess when contrary license information, a rights claim or version/source/distribution changes arise.",
+    "scopeLimit": "This records the chosen handling of existing MIT declarations, not a new third-party license grant or an exhaustive rights-chain finding."
+  }
+}

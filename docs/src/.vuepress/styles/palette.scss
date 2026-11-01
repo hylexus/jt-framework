@@ -1,2 +1,5 @@
 // you can change colors here
 $theme-color: #096dd9;
+
+// Use installed system fonts; the theme's embedded Crimson subset is removed by PostCSS.
+$font-family-heading: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif';

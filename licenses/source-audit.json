@@ -1,0 +1,1144 @@
+{
+  "reviewDate": "2026-10-02",
+  "gitBaseline": "2f882f5bba93aa4bf4a63f06225e31e4d759d51d",
+  "scope": {
+    "worktreeFilesAtStart": 1331,
+    "javaMain": 832,
+    "javaTest": 67,
+    "javaDocsExamples": 10,
+    "kotlin": 4,
+    "baselineHistoryCommits": 469,
+    "currentDependencySourceArchives": 200,
+    "currentDependencyUpstreamFiles": 33497,
+    "expandedCachedSourceArchives": 996,
+    "expandedCachedUpstreamFiles": 142959,
+    "jdkSourceFiles": 32990
+  },
+  "method": {
+    "exactTokensWindow": 25,
+    "localSamplingStep": 5,
+    "genericWindowFileLimit": 6,
+    "identifierNormalizedWindow": 70,
+    "identifierNormalizedSamplingStep": 7,
+    "notes": "Matches are candidate evidence, manually checked. No exhaustive internet/image search claim. Does not clear prior releases or pending contributor/library obligations."
+  },
+  "unreadableExpandedCache": {
+    "artifact": "com.android.tools.build:manifest-merger:32.4.0",
+    "entriesSkipped": 132,
+    "reason": "ZIP overlapping entries rejected; no bypass; not a current project dependency"
+  },
+  "downloadedComparisonMaterials": {
+    "EyerH264Decoder": {
+      "url": "https://codeload.github.com/redknotmiaoyuqiao/EyerH264Decoder/zip/59e0a396f0b9c0a4a2c034ba6d44fae22297e979",
+      "sha256": "6f5c26d0d0a4e56039fcff1ff0e7fcf1a74af9142be690b809c31059656fa19c",
+      "size": 337889
+    },
+    "spring-HandlerInterceptor.java": {
+      "url": "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.14/spring-webmvc/src/main/java/org/springframework/web/servlet/HandlerInterceptor.java",
+      "sha256": "fd88c78a228b1046c02fd08174e41278fb976a3b90b1d703788052ecc81381ee",
+      "size": 7821
+    },
+    "spring-WebFilter.java": {
+      "url": "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/WebFilter.java",
+      "sha256": "5184e9b23f55ed11cd6940e98bd1cb44feba1125cf6db14a536c20f5aa3d7217",
+      "size": 1384
+    },
+    "spring-WebFilterChain.java": {
+      "url": "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/WebFilterChain.java",
+      "sha256": "f9e1f674ac8f9621a6c41e1977fbe76b400d133dc387af2c08986cad862e4a7e",
+      "size": 1112
+    },
+    "spring-DefaultWebFilterChain.java": {
+      "url": "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/handler/DefaultWebFilterChain.java",
+      "sha256": "f6e647b2125afc94eb237f32b9c5c58de0a7913331830a93f321eb01a9ed8ca6",
+      "size": 4192
+    },
+    "SmallChi-EXPGolombReader.cs": {
+      "url": "https://raw.githubusercontent.com/SmallChi/JT1078/c4931a8ec37678fb5ecedcc749ffe3c9f4c890fe/src/JT1078.Protocol/MessagePack/EXPGolombReader.cs",
+      "sha256": "0dc5a6f321873bc1c3cdd4cc3ce8b38792265b705e4eba40a9bb54f30b23f6cd",
+      "size": 11883
+    },
+    "jmuxer-h264.js": {
+      "url": "https://raw.githubusercontent.com/samirkumardas/jmuxer/579835d7d72796d3374e0c62929456e7202bcb12/src/parsers/h264.js",
+      "sha256": "527f77f9abdf229a823b531e0d1028692cbfe6701025e3b4f899e8823bf967ef",
+      "size": 12043
+    },
+    "jmuxer-exp-golomb.js": {
+      "url": "https://raw.githubusercontent.com/samirkumardas/jmuxer/579835d7d72796d3374e0c62929456e7202bcb12/src/util/exp-golomb.js",
+      "sha256": "a7e3d5976a5b259b852fad0d03c6d29ae1e9af4a94409a2693e06de540d0377e",
+      "size": 3013
+    },
+    "checkstyle-google_checks.xml": {
+      "url": "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/src/main/resources/google_checks.xml",
+      "sha256": "7089569cba801ef8128f328fe71d18d9ece1f6429313e7d7ac373bca5a919ed1",
+      "size": 13066
+    },
+    "checkstyle-LICENSE": {
+      "url": "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/LICENSE",
+      "sha256": "9b872a8a070b8ad329c4bd380fb1bf0000f564c75023ec8e1e6803f15364b9e9",
+      "size": 26461
+    },
+    "checkstyle-pom.xml": {
+      "url": "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/pom.xml",
+      "sha256": "d614d9fd19741350c61c492e89d75cea969ac83ce95c6c48d7167ccf1bb8d7d7",
+      "size": 125474
+    },
+    "vue-element-admin-request.js": {
+      "url": "https://raw.githubusercontent.com/PanJiaChen/vue-element-admin/4.4.0/src/utils/request.js",
+      "sha256": "5abe23ca5e3028c54cf1c7d7e4045f7f7df97397609f65a0e75036c8b7843a0e",
+      "size": 2343
+    },
+    "vue-element-admin-LICENSE": {
+      "url": "https://raw.githubusercontent.com/PanJiaChen/vue-element-admin/4.4.0/LICENSE",
+      "sha256": "707265af5bde955e699607946fec8c26382a803dcb4d59b0a2993c0979382eb8",
+      "size": 1075
+    },
+    "create-vue-LICENSE": {
+      "url": "https://raw.githubusercontent.com/vuejs/create-vue/v3.7.2/LICENSE",
+      "sha256": "4f1e382beaf3b645c565a65fbfbb0387118b988bf4dd1e53a81ee3a9b210cc45",
+      "size": 21787
+    },
+    "element-plus-vite-starter-package.json": {
+      "url": "https://raw.githubusercontent.com/element-plus/element-plus-vite-starter/main/package.json",
+      "sha256": "59bf8cecb6582055a751928e1898b7f28d192b646a478b6e4e819a15a747718b",
+      "size": 1173
+    },
+    "create-vue-archive.zip": {
+      "url": "https://codeload.github.com/vuejs/create-vue/zip/refs/tags/v3.7.2",
+      "sha256": "a6d9290f00a73168e07227bf4d2d0e0ef7b80fd7b1ad3ed52ef85417da2bb046",
+      "size": 487233
+    },
+    "vuepress-theme-hope-metadata.json": {
+      "url": "https://registry.npmjs.org/vuepress-theme-hope/2.0.0-rc.32",
+      "sha256": "727ef777390048c9907a26b4a6c42282320d96809d55be2cd65eafef74b0010a",
+      "size": 5284
+    },
+    "vuepress-hero.png": {
+      "url": "https://raw.githubusercontent.com/vuejs/vuepress/v1.9.10/packages/docs/docs/.vuepress/public/hero.png",
+      "sha256": "3c1981fdf5900898f455ced2acad5fa0807dd465345850d2ec2c16ffa8d3d1a6",
+      "size": 153793
+    },
+    "vuepress-logo.png": {
+      "url": "https://raw.githubusercontent.com/vuejs/vuepress/v1.9.10/packages/docs/docs/.vuepress/public/logo.png",
+      "sha256": "aa4312f4c8fb7c4bbd7185f452494bdd3decc4a8a7e29041eed9432e8ab6874a",
+      "size": 3451
+    },
+    "vuepress-LICENSE": {
+      "url": "https://raw.githubusercontent.com/vuejs/vuepress/v1.9.10/LICENSE",
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "size": 1091
+    },
+    "iconify-ep-1.1.12.tgz": {
+      "url": "https://registry.npmjs.org/@iconify-json/ep/-/ep-1.1.12.tgz",
+      "sha256": "677251d4355c98a4fbec80f9b08be3bde700f7fbec1d06fd0b271acf4385c22d",
+      "size": 39832
+    },
+    "element-icons-LICENSE": {
+      "url": "https://raw.githubusercontent.com/element-plus/element-plus-icons/v2.1.0/LICENSE",
+      "sha256": "5db4ebb3abd8353774ae148723ccc14087d6dab99473f77a7b799b55defd8dfe",
+      "size": 1121
+    },
+    "hope-LICENSE": {
+      "url": "https://raw.githubusercontent.com/vuepress-theme-hope/vuepress-theme-hope/v2.0.0-rc.32/LICENSE",
+      "sha256": "a4cd42d0c11522c7debc3586e2301aad504df529921b89b79fc1331af0fe2b5f",
+      "size": 1112
+    },
+    "hope-RepoLink.ts": {
+      "url": "https://raw.githubusercontent.com/vuepress-theme-hope/vuepress-theme-hope/v2.0.0-rc.32/packages/theme/src/client/modules/navbar/components/RepoLink.ts",
+      "sha256": "552c5bd19bb2a1aaea2f682f60a6c17355c6462f16211e5011de780fcf6a693e",
+      "size": 1192
+    },
+    "hope-repo-link.scss": {
+      "url": "https://raw.githubusercontent.com/vuepress-theme-hope/vuepress-theme-hope/v2.0.0-rc.32/packages/theme/src/client/modules/navbar/styles/repo-link.scss",
+      "sha256": "f6723697a7ed475687ec15a9faea04406e5fd6a78de248f196dee6c873452e69",
+      "size": 289
+    }
+  },
+  "records": [
+    {
+      "id": "spring-extra",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/spec/Jt808Request.java",
+          "sha256": "effbfbdc11b92dd0f9a96bde04dbc59236f27a35b3bff2fc5f33e0d2adf39cd6"
+        },
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/spec/Jt808RequestFilter.java",
+          "sha256": "1e8fe12faac4812e452482e898f518fb14fc91c91c7af70df43d874e79d73ba4"
+        },
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/spec/Jt808RequestFilterChain.java",
+          "sha256": "2ff256ccbace36340b4c829189cb849044d9a424a6d143a65e183c88878ad213"
+        },
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/spec/Jt808ServerExchange.java",
+          "sha256": "38c3b8cbcc66bd0f04c2c6211523928066a4b41f2a41c856ddc7ce78371f00aa"
+        },
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/spec/impl/DefaultJt808RequestFilterChain.java",
+          "sha256": "5ab5d5932e685c8587cdd8faf73fca68db797b83c2cb1bb7df0d611c8c3b1310"
+        },
+        {
+          "path": "jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/support/dispatcher/Jt808HandlerInterceptor.java",
+          "sha256": "11eb07843060ec99082e44d6678ed5d99297d9df84a4b714c5915101ec87db19"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/WebFilter.java",
+        "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/WebFilterChain.java",
+        "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.27/spring-web/src/main/java/org/springframework/web/server/handler/DefaultWebFilterChain.java",
+        "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.14/spring-webmvc/src/main/java/org/springframework/web/servlet/HandlerInterceptor.java",
+        "https://raw.githubusercontent.com/spring-projects/spring-framework/v5.3.31/spring-web/src/main/java/org/springframework/web/server/ServerWebExchange.java"
+      ],
+      "licenseReview": "Apache-2.0; scope of ServerWebExchange correspondence limited to attribute helpers",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "sba-listener",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "dashboard/jt-dashboard-client-spring-boot-starter/src/main/java/io/github/hylexus/jt/boot/autoconfigure/dashboard/client/configuration/JtDashboardAutoConfiguration.java",
+          "sha256": "cea8fcbb524cd7462cab1a74c224c473c0a9b9f4d2fced3aa2889e97e4d4cea1"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/codecentric/spring-boot-admin/83db63e82e916357d36b1e6b4d552e1b6506ecc9/spring-boot-admin-client/src/main/java/de/codecentric/boot/admin/client/registration/RegistrationApplicationListener.java"
+      ],
+      "licenseReview": "Apache-2.0",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "commons-codec-hex",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "jt-core/src/main/java/io/github/hylexus/jt/utils/HexStringUtils.java",
+          "sha256": "88dcd782a8c9cd46fd054ef947bdbcc16264780351dd05e3f8d2c3952a914928"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/apache/commons-codec/commons-codec-1.11/src/main/java/org/apache/commons/codec/binary/Hex.java"
+      ],
+      "licenseReview": "Apache-2.0",
+      "noticeFiles": [
+        {
+          "path": "licenses/Apache-Commons-Codec-NOTICE.txt",
+          "sha256": "791061c250425012443de2ebb80cfa6b4e7362bd3711a07f6d812bbfc0e43bd7"
+        }
+      ],
+      "evidence": "Encoding/decoding loops and toDigit correspond; introduced 2019-07-06 (398dd25d1d36d9325326e9f3531a947f715fd08d); comparison 1.11 predates introduction"
+    },
+    {
+      "id": "eyer-h264",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/support/extension/h264/impl/DefaultSpsDecoder.java",
+          "sha256": "ff1b432a26056ffdaa39cf9ab320f18ebfd500a1904609efdb11af2d22c247c6"
+        },
+        {
+          "path": "jt-core/src/main/java/io/github/hylexus/jt/utils/BitStreamReader.java",
+          "sha256": "7b53e5dfff21a0e071ef67a2b009b7e441df72e7b4ea222efba3bd095142e00c"
+        },
+        {
+          "path": "jt-core/src/main/java/io/github/hylexus/jt/utils/DefaultBitStreamReader.java",
+          "sha256": "5b175f18a46fad089d60b5d12e0a3ef1e58b5134f239f678ca660bca6065f6fc"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/redknotmiaoyuqiao/EyerH264Decoder/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/BitStream.cpp",
+        "https://raw.githubusercontent.com/redknotmiaoyuqiao/EyerH264Decoder/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/NaluSPS.cpp"
+      ],
+      "licenseReview": "MIT; SPS also retains existing SmallChi/jmuxer MIT notices",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-EyerH264Decoder.txt",
+          "sha256": "758985e3584094560af14fa75bc1ead8775016d09216005a1993d504f5d7be0a"
+        },
+        {
+          "path": "licenses/MIT-SmallChi-JT1078.txt",
+          "sha256": "bfe0ce7eecbf78e8382a8aea5fc2a644d5fae1517dc1633d2f4a3672a735c98b"
+        },
+        {
+          "path": "licenses/MIT-jmuxer.txt",
+          "sha256": "5b1eb9ebc7d01ba57c1acdd83171bceea7b4929de5de06eb1be44eb6bc5980f0"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "template-vue-element-admin",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/utils/request.ts",
+          "sha256": "3fc2805f041ce0889ed8a8125b23dd1532aca64afd2759ab2d44f56bbdc8063b"
+        }
+      ],
+      "comparisonSources": [
+        "https://github.com/PanJiaChen/vue-element-admin/blob/4.4.0/src/utils/request.js"
+      ],
+      "licenseReview": "MIT",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-vue-element-admin.txt",
+          "sha256": "707265af5bde955e699607946fec8c26382a803dcb4d59b0a2993c0979382eb8"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "template-create-vue",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/stores/counter.ts",
+          "sha256": "959d9352df45e5750b2a63680cc9c2e744a0263a6c8132f4eeba466f95c90633"
+        }
+      ],
+      "comparisonSources": [
+        "https://github.com/vuejs/create-vue/blob/v3.7.2/template/config/pinia/src/stores/counter.js"
+      ],
+      "licenseReview": "MIT",
+      "noticeFiles": [
+        {
+          "path": "licenses/create-vue-LICENSE.txt",
+          "sha256": "4f1e382beaf3b645c565a65fbfbb0387118b988bf4dd1e53a81ee3a9b210cc45"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "template-element-plus-vite-starter",
+      "status": "declared-MIT-notices-distributed-original-material-gap-recorded",
+      "localFiles": [
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/App.vue",
+          "sha256": "a40616b0c36f481556b7ca6722f7f5059e14e1f37d44d1bafd5541bee2d35e5b"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/components/layouts/BaseHeader.vue",
+          "sha256": "169834cebc4d7d115c1c87c1fcbbfec2ebeace1e78e035ba20c916cc1cc6490c"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/components/layouts/BaseSide.vue",
+          "sha256": "d591fbd0a4661d66822320fb2f3317167d53e33f5c1760a49c3e6759a7b6ffcd"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/composables/dark.ts",
+          "sha256": "2d9a22e386d228e3028d1f0e692b0f73a7b0fa1c5c74995d07f53d5f05899d82"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/composables/index.ts",
+          "sha256": "01beb1c1fdeae229f456055d941b4128e186503c259410bfefd74074f6284e4d"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/styles/element/dark.scss",
+          "sha256": "ea8c92770ee0e9016c5b53ffd1fb686b81dfc15381ebdec03e3ea5f2112e550d"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/styles/element/index.scss",
+          "sha256": "40850f9614a30e07bd06075287cb729a2cb42f3900272043d75e16f19e4a1117"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/styles/index.scss",
+          "sha256": "c7a6de7c3bba4fe30264c377476f382bd337eb079f71bd0ac74a247e974e39e0"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/vite.config.ts",
+          "sha256": "fa9dd66a684348fb51a0acb2cab91527c7dad132b9c5b1cfeb418bda71140264"
+        }
+      ],
+      "comparisonSources": [
+        "https://github.com/element-plus/element-plus-vite-starter/blob/fa10f32788a09b2faab73d3f9709f33bc7cf4d3f/"
+      ],
+      "licenseReview": "Fixed upstream package.json explicitly declares MIT. Standard MIT permission/conditions/disclaimer and unmodified declaration metadata are now supplied with clear provenance. Original copyright wording and standalone upstream LICENSE remain unresolved; no author, holder or year inferred.",
+      "noticeFiles": [
+        {
+          "path": "licenses/element-plus-vite-starter-NOTICE.txt",
+          "sha256": "938c44651cdd3a0da152f0e19d61edef7892c2a9b1f658dada8389f1c7660927"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established",
+      "currentHandling": "2026-10-17: follow the preserved upstream MIT declarations and distributed aggregate notices; retain original-material gaps as records, with review triggered by new evidence or scope changes."
+    },
+    {
+      "id": "hope-doc-component",
+      "status": "attribution-added",
+      "localFiles": [
+        {
+          "path": "docs/src/.vuepress/components/RepoGitee.js",
+          "sha256": "cbdca3a4b0e1fb520e5b0f23884c26745b3c9cbd4c17806ba3a07bd976ccfdba"
+        },
+        {
+          "path": "docs/src/.vuepress/components/styles/repo-link.css",
+          "sha256": "1ab9085772931eb9dbce06715951fe961bf12be9d3bc2cd7d43df0a8452e1a78"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/vuepress-theme-hope/vuepress-theme-hope/v2.0.0-rc.32/packages/theme/src/client/modules/navbar/components/RepoLink.ts",
+        "https://raw.githubusercontent.com/vuepress-theme-hope/vuepress-theme-hope/v2.0.0-rc.32/packages/theme/src/client/modules/navbar/styles/repo-link.scss"
+      ],
+      "licenseReview": "MIT",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-vuepress-theme-hope.txt",
+          "sha256": "a4cd42d0c11522c7debc3586e2301aad504df529921b89b79fc1331af0fe2b5f"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "vuepress-images",
+      "status": "removed-from-current-tree",
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/vuejs/vuepress/v1.9.10/packages/docs/docs/.vuepress/public/hero.png",
+        "https://raw.githubusercontent.com/vuejs/vuepress/v1.9.10/packages/docs/docs/.vuepress/public/logo.png"
+      ],
+      "licenseReview": "Old source no longer used in current assets; historical releases are not changed by this replacement.",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-VuePress.txt",
+          "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175"
+        }
+      ],
+      "evidence": "Both image SHA-256 values exactly match official v1.9.10 assets",
+      "previousLocalFiles": [
+        {
+          "path": "docs/src/.vuepress/public/img/hero.png",
+          "sha256": "3c1981fdf5900898f455ced2acad5fa0807dd465345850d2ec2c16ffa8d3d1a6"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/logo.png",
+          "sha256": "aa4312f4c8fb7c4bbd7185f452494bdd3decc4a8a7e29041eed9432e8ab6874a"
+        }
+      ],
+      "localFiles": [],
+      "resolvedDate": "2026-10-03",
+      "resolution": "All listed assets replaced by project geometric JT artwork; previous hashes retained as historical audit evidence. No external icon/font paths used. See assets/brand/manifest.json.",
+      "historicalLicenseReview": "MIT project notice retained; trademark rights not asserted"
+    },
+    {
+      "id": "openspec-templates",
+      "status": "notice-added",
+      "localFiles": [
+        {
+          "path": ".agents/skills/openspec-apply-change/SKILL.md",
+          "sha256": "6a0268b61f270e6644dde8e763db495e59444619239140313445fb35f43055c0"
+        },
+        {
+          "path": ".agents/skills/openspec-archive-change/SKILL.md",
+          "sha256": "e42ada70c50762ace39c92980eedb511a70c9d9afc5b27416364b474fcf783a6"
+        },
+        {
+          "path": ".agents/skills/openspec-explore/SKILL.md",
+          "sha256": "fc957752fd96975165c3b21ebdb705d8617128039c092ffa853e276b36089b35"
+        },
+        {
+          "path": ".agents/skills/openspec-propose/SKILL.md",
+          "sha256": "89b4c1fee49fc94a59f0801376311544500fd3ff94da8c1b18578a5cf5172c6b"
+        },
+        {
+          "path": ".agents/skills/openspec-sync-specs/SKILL.md",
+          "sha256": "a06d2e32724cd78e9d470c84e7e1d5203dcd6c3373528b19975949fd9f2f75e5"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/Fission-AI/OpenSpec/v1.13.0/LICENSE"
+      ],
+      "licenseReview": "MIT; generatedBy 1.13.0 metadata",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-OpenSpec.txt",
+          "sha256": "c3c7235bea1214ab62df643473975c2e8b8848f528901a976693f7d069713e64"
+        }
+      ],
+      "evidence": "Source comparison; exact historical import revision not established"
+    },
+    {
+      "id": "iconify-element-plus",
+      "status": "notice-added",
+      "localFiles": [
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/src/components/layouts/BaseHeader.vue",
+          "sha256": "169834cebc4d7d115c1c87c1fcbbfec2ebeace1e78e035ba20c916cc1cc6490c"
+        }
+      ],
+      "comparisonSources": [
+        "https://registry.npmjs.org/@iconify-json/ep/-/ep-1.1.12.tgz",
+        "https://raw.githubusercontent.com/element-plus/element-plus-icons/v2.1.0/LICENSE"
+      ],
+      "licenseReview": "MIT; iconSetVersion 2.1.0; locked archive integrity verified",
+      "noticeFiles": [
+        {
+          "path": "licenses/MIT-element-plus-icons.txt",
+          "sha256": "5db4ebb3abd8353774ae148723ccc14087d6dab99473f77a7b799b55defd8dfe"
+        }
+      ],
+      "evidence": "UnoCSS moon/sunny SVG data from devDependency enters production styles"
+    },
+    {
+      "id": "stack-overflow-ip",
+      "status": "removed-from-current-tree",
+      "comparisonSources": [
+        "https://stackoverflow.com/a/55266907",
+        "https://stackoverflow.com/help/licensing",
+        "https://creativecommons.org/licenses/by-sa/4.0/"
+      ],
+      "licenseReview": "Old implementation replaced in current tree; no retrospective relicense of the answer or prior versions.",
+      "noticeFiles": [],
+      "evidence": "Existing question link plus matching ordered 11-header list/selection flow; answer by panser 2019-03-20, edited Neloop 2019-11-13; local X-Real-IP/provider/Optional/comma handling changes",
+      "previousLocalFiles": [
+        {
+          "path": "jt-core/src/main/java/io/github/hylexus/jt/utils/JtWebUtils.java",
+          "sha256": "f036825bdbaa2f6ede7c2e234258ed8c88ff571dfe2e406edc4380c52ae2191c"
+        }
+      ],
+      "localFiles": [],
+      "historicalLicenseReview": "Answer CC BY-SA 4.0; actual adaptation scope and applicable release conditions unresolved",
+      "resolvedDate": "2026-10-03",
+      "resolution": "Default headers are X-Forwarded-For/X-Real-IP, with an overload for caller-configured header names/order. Removed the old 12-header list and implementation; new project implementation and tests recorded separately."
+    },
+    {
+      "id": "logback-blog",
+      "status": "removed-from-current-tree",
+      "comparisonSources": [
+        "https://blog.csdn.net/xu_san_duo/article/details/80364600",
+        "https://www.iteye.com/blog/cgi-bin-2395647"
+      ],
+      "licenseReview": "Blog-derived configurations replaced in the current tree; historical copying permissions remain separate and unresolved.",
+      "noticeFiles": [],
+      "evidence": "Historical configurations were copied from the recorded CSDN and ITEye pages and contain matching explanatory text and configuration blocks. No authorization covering all copied material was established.",
+      "previousLocalFiles": [
+        {
+          "path": "demos/jt-demo-1078-server-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "d77be45701fa899d8ce6258d30d50c4af229a84238b68c7ba9002f7eca4505b5"
+        },
+        {
+          "path": "demos/jt-demo-1078-server-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "a056cae722a68e9d2517197e25de79dc9fa8b0501cb3c54732595e3e46ab5a62"
+        },
+        {
+          "path": "demos/jt-demo-808-server-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "cc93bd373143124f77ce98dce5c9c3c94dc2774ac10a85e104b9f08097b2aa8b"
+        },
+        {
+          "path": "demos/jt-demo-808-server-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "4e06f775904451a6bc9392afaa99b1e84757004ade9511e2bbc684f72139c0e8"
+        },
+        {
+          "path": "demos/jt-demo-dashboard-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "802cf3e0ddf2d0c6b72311471dafd0e6f71bfaec93f19c7e6fee6e5682609f1c"
+        },
+        {
+          "path": "demos/jt-demo-dashboard-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "bc7cc5d4326e4bf47f8e85e59ad4df7c1044c505c5876ffdb0faf7f6c36b58d0"
+        },
+        {
+          "path": "jt-808-server-xtream-codec-adapter/src/test/resources/logback.xml",
+          "sha256": "300c606fcdec3fa57761985a69e7fde26d2809bec2ad0b97df8b3e5fddaeb687"
+        },
+        {
+          "path": "samples/jt-1078-server-sample-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "4bc789df52e8ca21e8b3c2c95719be38b583884996499eea2bb431a30020acbf"
+        },
+        {
+          "path": "samples/jt-1078-server-sample-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "a36539871cd7d1429c9d40e8b0aaa5ef2760a361f1c3905dd71ff6f30decf68a"
+        },
+        {
+          "path": "samples/jt-808-client-sample-debug/src/main/resources/logback.xml",
+          "sha256": "dfd992ee05711f44156cb91a8d9124ae76e40a863bbf8972d912d7eecf99819f"
+        },
+        {
+          "path": "samples/jt-808-server-sample-annotation/src/main/resources/logback.xml",
+          "sha256": "4294ff52f5080b3503309d8564bf115fe531d52fcd9f2cc89e03d7757b9a6ec7"
+        },
+        {
+          "path": "samples/jt-808-server-sample-bare-boot3/src/main/resources/logback.xml",
+          "sha256": "eb8cd451b35444e164f5e38920d46cd28e92cce1dff1142ad34c94faa7218427"
+        },
+        {
+          "path": "samples/jt-808-server-sample-bare/src/main/resources/logback.xml",
+          "sha256": "eb8cd451b35444e164f5e38920d46cd28e92cce1dff1142ad34c94faa7218427"
+        },
+        {
+          "path": "samples/jt-808-server-sample-customized/src/main/resources/logback.xml",
+          "sha256": "c435dd751ae550bb53c99293e1afc72677c670a6e80d62ed630990736d77ba5c"
+        },
+        {
+          "path": "samples/jt-808-server-sample-debug/src/main/resources/logback.xml",
+          "sha256": "1878d22cd9be7f2a98183e916a4ccfe98723e9fec859cf13c6b934d87c2b9869"
+        },
+        {
+          "path": "samples/xtream-codec-adapter-sample-boot2/src/main/resources/logback.xml",
+          "sha256": "28d9a5a632e68fd788317b7a46fe7e8904b8743d411796fd03e3667ff622e848"
+        },
+        {
+          "path": "samples/xtream-codec-adapter-sample-boot3/src/main/resources/logback.xml",
+          "sha256": "f1453d4cb7f24634aa85ce93094d15de94665bb53386839d2e3c219acd208d5f"
+        }
+      ],
+      "localFiles": [],
+      "historicalLicenseReview": "CSDN page declares CC BY-SA 4.0; ITEye repost and quoted original excerpts unresolved",
+      "resolvedDate": "2026-10-03",
+      "resolution": "Rewrote 17 configurations from module logging requirements with new project patterns and overridable directory/archive parameters. Applications retain console and exact-level file routing; adapter tests use only the console. No retrospective relicense of blog material or previously published versions."
+    },
+    {
+      "id": "checkstyle-config",
+      "status": "license-materials-prepared",
+      "localFiles": [
+        {
+          "path": "build-script/checkstyle/checkstyle.xml",
+          "sha256": "b392a72e75816c5576ebee2e4012166f289ea62caaf6a8e2a08968bb9e2dd9d3"
+        },
+        {
+          "path": "licenses/checkstyle/google_checks-8.23.xml",
+          "sha256": "7089569cba801ef8128f328fe71d18d9ece1f6429313e7d7ac373bca5a919ed1"
+        }
+      ],
+      "comparisonSources": [
+        "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/src/main/resources/google_checks.xml",
+        "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/pom.xml",
+        "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/LICENSE"
+      ],
+      "licenseReview": "Retained under LGPL-2.1-or-later as an exception to the repository default Apache-2.0 license. Upstream 8.23 POM explicitly declares LGPL-2.1+; no configuration-file exception assumed. Complete editable source, upstream comparison XML, original license and modification notes supplied.",
+      "noticeFiles": [
+        {
+          "path": "licenses/checkstyle-LICENSE.txt",
+          "sha256": "9b872a8a070b8ad329c4bd380fb1bf0000f564c75023ec8e1e6803f15364b9e9"
+        },
+        {
+          "path": "licenses/checkstyle/README.md",
+          "sha256": "5127cb0e7b989c1fd8bbfa19f6ab0181657b71b363ae09810688441972139175"
+        },
+        {
+          "path": "licenses/checkstyle/provenance.json",
+          "sha256": "75a689764b2364e3d009097b3e5ded6cbf6a3b15ae80eaab4631fea3d4051260"
+        }
+      ],
+      "evidence": "Original authors retained: Max Vetrenko, Ruslan Diachenko, Roman Ivanov. Git introduction 9407eb60 on 2019-08-21; modification authors recorded as hylexus. Exact import version unknown. Current changes include four-space indentation, error severity, suppression support and adjusted/disabled optional checks. This review adds notices/source distribution; no effective XML change.",
+      "reviewDate": "2026-10-03",
+      "previousLocalFiles": [
+        {
+          "path": "build-script/checkstyle/checkstyle.xml",
+          "sha256": "147aeb43c0e83d28e287612b1136ba0a071f016c45357f155bf19dce1c3a847d"
+        }
+      ],
+      "sourceDistribution": {
+        "modifiedSource": "build-script/checkstyle/checkstyle.xml",
+        "jarEntry": "META-INF/licenses/checkstyle/jt-framework-checkstyle.xml",
+        "method": "Gradle Jar reads the actual build configuration directly, with license and original comparison source under META-INF/licenses."
+      },
+      "verification": {
+        "date": "2026-10-03",
+        "effectiveXmlUnchanged": true,
+        "enabledModuleNodes": 61,
+        "originalLicenseByteIdentical": true,
+        "originalComparisonXmlByteIdentical": true,
+        "checkstyleRuntimeVersion": "9.3",
+        "tasks": [
+          ":jt-core:checkstyleMain",
+          ":jt-core:checkstyleTest"
+        ],
+        "beforeNoticeUpdate": "passed",
+        "afterNoticeUpdate": "passed",
+        "checkedJavaFiles": 53,
+        "reportedErrors": 0
+      }
+    },
+    {
+      "id": "h264-standard-excerpts",
+      "status": "removed-from-current-tree",
+      "comparisonSources": [
+        "https://www.itu.int/rec/T-REC-H.264"
+      ],
+      "licenseReview": "The two specification pseudocode excerpts have been removed from current Javadoc; historical reproduction conditions remain separate and unverified.",
+      "noticeFiles": [],
+      "evidence": "Two Javadoc pseudocode excerpts cite sections 7.3.2.1.1.1 and E.1.1",
+      "previousLocalFiles": [
+        {
+          "path": "jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/support/extension/h264/impl/DefaultSpsDecoder.java",
+          "sha256": "d7ac81359ee1db6a2a3f47fbf301b21228cf59b9af7f658eb88902f7c1864e30"
+        }
+      ],
+      "localFiles": [],
+      "resolvedDate": "2026-10-03",
+      "historicalLicenseReview": "Reproduction conditions for specification text excerpts unverified; not claimed as Eyer MIT",
+      "resolution": "Replaced both pseudocode blocks with short project-written descriptions of the current parser purpose and limits. Retained H.264 (08/2021) section references. Non-comment Java source is byte-identical; existing third-party MIT notices preserved."
+    },
+    {
+      "id": "unknown-logo-cube",
+      "status": "removed-from-current-tree",
+      "comparisonSources": [],
+      "licenseReview": "Old source no longer used in current assets; historical releases are not changed by this replacement.",
+      "noticeFiles": [],
+      "evidence": "The historical SVG contains iconfont export traces; the former PNG logos share the cube design and have corresponding derivatives. The original icon author, source and permission remain unidentified.",
+      "previousLocalFiles": [
+        {
+          "path": ".idea/icon.png",
+          "sha256": "e91d7391ab6bc1837bc227cd2573f5fd470b5f09c52c67e26ce097da757a3d30"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/public/favicon.svg",
+          "sha256": "535ad5d944c44cdcce6244483b0d275bec43d214f1d96ca3e8d7bf8f075e4e0f"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server/src/main/resources/static/client/favicon.svg",
+          "sha256": "535ad5d944c44cdcce6244483b0d275bec43d214f1d96ca3e8d7bf8f075e4e0f"
+        },
+        {
+          "path": "docs/src/.vuepress/public/favicon.ico",
+          "sha256": "5776f6cff9e4aec0d0d370dffdc1632dedccf3d07120a658eb8c6888b1a4063a"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/icons/favicon-16x16.png",
+          "sha256": "2fe79ceb39f4adb1199db5c49ab21aaf4270218dad362681cc93a9d44d6b9295"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/icons/favicon-32x32.png",
+          "sha256": "fb2dcdc2bf12378dd6da2da10ccb493550fb0409e77d78fe798dcd9f944bf785"
+        },
+        {
+          "path": "docs/src/.vuepress/public/logo.png",
+          "sha256": "e91d7391ab6bc1837bc227cd2573f5fd470b5f09c52c67e26ce097da757a3d30"
+        }
+      ],
+      "localFiles": [],
+      "resolvedDate": "2026-10-03",
+      "resolution": "All listed assets replaced by project geometric JT artwork; previous hashes retained as historical audit evidence. No external icon/font paths used. See assets/brand/manifest.json.",
+      "historicalLicenseReview": "Original icon author/source/permission unknown"
+    },
+    {
+      "id": "mpegts-samples",
+      "status": "already-covered",
+      "localFiles": [
+        {
+          "path": "samples/jt-1078-server-sample-webflux-boot3/src/main/resources/static/js/mpegts.js",
+          "sha256": "b83dccba1525ae65763b373a85a6513f0b533359292a90083b25b29977a75f90"
+        },
+        {
+          "path": "samples/jt-1078-server-sample-webmvc-boot3/src/main/resources/static/js/mpegts.js",
+          "sha256": "b83dccba1525ae65763b373a85a6513f0b533359292a90083b25b29977a75f90"
+        }
+      ],
+      "comparisonSources": [
+        "https://registry.npmjs.org/mpegts.js/-/mpegts.js-1.7.3.tgz"
+      ],
+      "licenseReview": "Apache-2.0; existing frontend package notices cover version 1.7.3",
+      "noticeFiles": [],
+      "evidence": "Both files byte-identical to package/dist/mpegts.js; SHA-256 b83dccba1525ae65763b373a85a6513f0b533359292a90083b25b29977a75f90"
+    },
+    {
+      "id": "project-brand-2026",
+      "status": "project-artwork-generated",
+      "localFiles": [
+        {
+          "path": ".idea/icon.png",
+          "sha256": "94f16103d434fe40d873bca4aa5e39b6da80d81df2a0e1d1559b708e12c78407"
+        },
+        {
+          "path": "assets/brand/jt-framework-128.png",
+          "sha256": "94f16103d434fe40d873bca4aa5e39b6da80d81df2a0e1d1559b708e12c78407"
+        },
+        {
+          "path": "assets/brand/jt-framework-16.png",
+          "sha256": "002381d43c583ca095cbf840cb85acc1dd698460f2710dbbefcaeb981d3c437d"
+        },
+        {
+          "path": "assets/brand/jt-framework-256.png",
+          "sha256": "2b4e2f9502da9628bf1fa54fbdfa3e6a62235958e8ce0e12dcc19ecca2383818"
+        },
+        {
+          "path": "assets/brand/jt-framework-32.png",
+          "sha256": "ff0cc858e31d92e9e323bba0a5f511af5c9c9350f6568f257fd65bc0c5e17d9c"
+        },
+        {
+          "path": "assets/brand/jt-framework-48.png",
+          "sha256": "b9ebdeef0a5ff941ed7a7ab33036068fbbca21cf99ac5a985cf9bc245eb95fd4"
+        },
+        {
+          "path": "assets/brand/jt-framework-512.png",
+          "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+        },
+        {
+          "path": "assets/brand/jt-framework-64.png",
+          "sha256": "6d704d590f90e263fc13bb7a99a478034e3b83b46e0def1d89b0a291dffc2964"
+        },
+        {
+          "path": "assets/brand/jt-framework.svg",
+          "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server-ui-vue3/public/favicon.svg",
+          "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+        },
+        {
+          "path": "dashboard/jt-dashboard-server/src/main/resources/static/client/favicon.svg",
+          "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+        },
+        {
+          "path": "docs/src/.vuepress/public/favicon.ico",
+          "sha256": "967a60427b17016acf766896d647bf5696def92fab499b677e1e14c6d8f3534a"
+        },
+        {
+          "path": "docs/src/.vuepress/public/favicon.svg",
+          "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/hero.png",
+          "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/icons/favicon-16x16.png",
+          "sha256": "002381d43c583ca095cbf840cb85acc1dd698460f2710dbbefcaeb981d3c437d"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/icons/favicon-32x32.png",
+          "sha256": "ff0cc858e31d92e9e323bba0a5f511af5c9c9350f6568f257fd65bc0c5e17d9c"
+        },
+        {
+          "path": "docs/src/.vuepress/public/img/logo.png",
+          "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+        },
+        {
+          "path": "docs/src/.vuepress/public/logo.png",
+          "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+        },
+        {
+          "path": "docs/src/.vuepress/public/logo.svg",
+          "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+        }
+      ],
+      "comparisonSources": [],
+      "licenseReview": "Project geometric artwork provided under Apache-2.0; no third-party icon or font assets used.",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        },
+        {
+          "path": "assets/brand/README.md",
+          "sha256": "f9cfdf2954126a2655d718ebba105b850cefacf36934a2773ba6b6ffca8256d5"
+        },
+        {
+          "path": "assets/brand/manifest.json",
+          "sha256": "efbc26c22600f51449d40267d1cfeed1a9bf80c654949efc13886bffbef554a1"
+        }
+      ],
+      "evidence": "JT glyph and rounded background drawn directly in build-script/generate-brand-assets.py; J and T share top y=112 and bottom y=402. All current PNG/ICO/SVG variants generated from the same paths.",
+      "createdDate": "2026-10-03"
+    },
+    {
+      "id": "project-client-ip-2026",
+      "status": "project-implementation-replaced",
+      "localFiles": [
+        {
+          "path": "jt-core/src/main/java/io/github/hylexus/jt/utils/JtWebUtils.java",
+          "sha256": "f1a26a535729a7cf4a8ae1ac770ccb58dc96bbd4ed15e309fa6ab2bb59dfab24"
+        },
+        {
+          "path": "jt-core/src/test/java/io/github/hylexus/jt/utils/JtWebUtilsTest.java",
+          "sha256": "6f7be6c415c37c7b5b23cf10fca97198eb4072cdcc9c23e823a00a4d9d10c327"
+        }
+      ],
+      "comparisonSources": [],
+      "functionalReferences": [
+        "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+        "https://httpd.apache.org/docs/2.4/mod/mod_remoteip.html"
+      ],
+      "licenseReview": "Apache-2.0 project implementation for default and caller-configured forwarding headers. Historical source record retained separately; not a retrospective license decision.",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        }
+      ],
+      "evidence": "Public one-argument method retained; added caller-selected header overload. New two-header default, first-segment trim/empty/unknown handling, no DNS/IP parsing. Removed old header catalog and implementation.",
+      "createdDate": "2026-10-03"
+    },
+    {
+      "id": "project-logback-2026",
+      "status": "project-implementation-replaced",
+      "createdDate": "2026-10-03",
+      "localFiles": [
+        {
+          "path": "demos/jt-demo-1078-server-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "d7389b2b669d9d1fc27d6957ff5ec84980747f6e83c560c0df0b67efb5e7d235"
+        },
+        {
+          "path": "demos/jt-demo-1078-server-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "189c494c0929873473804b33d24eade5dcf7588cd9cb82f4cb505812a84f2f65"
+        },
+        {
+          "path": "demos/jt-demo-808-server-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "f16a87b70daa9cbe1b2775199c0eeba5d9458f7d5159b6baf27353a759608a02"
+        },
+        {
+          "path": "demos/jt-demo-808-server-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "87feffafc12e6042f0288f993b0fc24728672f03d9a50c9044a2c5e01f332d2e"
+        },
+        {
+          "path": "demos/jt-demo-dashboard-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "00add790bcb886350ee3b818509153d16a5ee80db3881d3e93cfd8e1f8b85160"
+        },
+        {
+          "path": "demos/jt-demo-dashboard-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "8573d6f8fa46f9cceb90c2655ab041cacc126dc29c3eeef31b381d5ca56fe3c1"
+        },
+        {
+          "path": "jt-808-server-xtream-codec-adapter/src/test/resources/logback.xml",
+          "sha256": "06ad5830d3427aa2f89ad8bef98ee406873f33cd713faea72153b5b962a9b63d"
+        },
+        {
+          "path": "samples/jt-1078-server-sample-webflux-boot3/src/main/resources/logback.xml",
+          "sha256": "927ecc4032885b81908e7296db18a18b375ae6b444223f4b7726fdc379b28fc7"
+        },
+        {
+          "path": "samples/jt-1078-server-sample-webmvc-boot3/src/main/resources/logback.xml",
+          "sha256": "e561f439295d5eb1129fd922fb257357f8a82a01b62bcfc55fa9ffe257eaac9e"
+        },
+        {
+          "path": "samples/jt-808-client-sample-debug/src/main/resources/logback.xml",
+          "sha256": "a15a8097000ed9f7bc0a6bfdd7eb92e6580220d65d844a397ffe24317a979bc1"
+        },
+        {
+          "path": "samples/jt-808-server-sample-annotation/src/main/resources/logback.xml",
+          "sha256": "c4d57b627d4e232a1e707551e14652f0f211501c22ff015000391d49298989a6"
+        },
+        {
+          "path": "samples/jt-808-server-sample-bare-boot3/src/main/resources/logback.xml",
+          "sha256": "b3e0138cd32fa980ae2d9df37dc1da82919f699003454e7128a0948b61c4416f"
+        },
+        {
+          "path": "samples/jt-808-server-sample-bare/src/main/resources/logback.xml",
+          "sha256": "b3e0138cd32fa980ae2d9df37dc1da82919f699003454e7128a0948b61c4416f"
+        },
+        {
+          "path": "samples/jt-808-server-sample-customized/src/main/resources/logback.xml",
+          "sha256": "45b696a238e57898e6b35bb113fba1bdba4bc4a622a6b2d8b108a067b1fcd39b"
+        },
+        {
+          "path": "samples/jt-808-server-sample-debug/src/main/resources/logback.xml",
+          "sha256": "82396caf19b21967a9cbd70cb85face731bcdc91c9887c9620c613098cd20874"
+        },
+        {
+          "path": "samples/xtream-codec-adapter-sample-boot2/src/main/resources/logback.xml",
+          "sha256": "8cae235e00b03f57e5fae963c59aca280239ad471f26741ac53b16d3e694adb7"
+        },
+        {
+          "path": "samples/xtream-codec-adapter-sample-boot3/src/main/resources/logback.xml",
+          "sha256": "9135f30814537aa0c380d3e08b7ba19f16bba4656eb31a5cfe07e1856367fe1c"
+        }
+      ],
+      "comparisonSources": [],
+      "functionalReferences": [
+        "https://logback.qos.ch/manual/configuration.html",
+        "https://logback.qos.ch/manual/filters.html",
+        "https://logback.qos.ch/manual/appenders-rolling.html"
+      ],
+      "licenseReview": "Apache-2.0 project configurations rewritten from logging requirements; dependency converters keep their own licenses. Historical source URLs and old file hashes are retained separately, without a retrospective licensing decision.",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        }
+      ],
+      "evidence": "16 applications preserve module directories, INFO root, exact-level DEBUG/INFO/WARN/ERROR file routing, daily/size filenames and 100MB/2-day/2GB per-level archive defaults. Adapter test has only a console appender. New project console/file patterns and JT_LOG_* parameter overrides replace old blog configuration blocks and explanatory text.",
+      "verification": {
+        "date": "2026-10-03",
+        "runtimeMatrix": [
+          {
+            "springBoot": "2.7.18",
+            "logback": "1.2.12",
+            "slf4j": "1.7.36"
+          },
+          {
+            "springBoot": "3.3.0",
+            "logback": "1.5.6",
+            "slf4j": "2.0.13"
+          }
+        ],
+        "standaloneConfigurationLoads": 68,
+        "additionalConsoleOnlyLoadsWithoutSpringBoot": 2,
+        "checks": [
+          "Default INFO threshold and named DEBUG logger routing",
+          "Actual console output and exact-level file contents",
+          "UTF-8 Chinese messages and exception stacks",
+          "Default filenames, directories and archive settings",
+          "System property directory, size, history, cap and pattern overrides",
+          "Actual daily rollover using a simulated policy clock",
+          "Actual size rollover at an overridden 1KB threshold",
+          "No Logback warning/error statuses",
+          "Adapter tests create no file appenders or log files"
+        ],
+        "result": "passed",
+        "packaging": {
+          "processedResourceConfigurations": 17,
+          "bootJarSamples": [
+            "samples/jt-808-server-sample-bare",
+            "samples/jt-1078-server-sample-webflux-boot3"
+          ],
+          "checks": [
+            "Packaged XML bytes match current source files",
+            "Boot JARs contain current project and source notices"
+          ],
+          "result": "passed"
+        }
+      }
+    },
+    {
+      "id": "h264-project-comments-2026",
+      "status": "project-comment-replacement",
+      "createdDate": "2026-10-03",
+      "localFiles": [
+        {
+          "path": "jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/support/extension/h264/impl/DefaultSpsDecoder.java",
+          "sha256": "ff1b432a26056ffdaa39cf9ab320f18ebfd500a1904609efdb11af2d22c247c6"
+        }
+      ],
+      "comparisonSources": [],
+      "functionalReferences": [
+        "https://www.itu.int/rec/T-REC-H.264-202108-S/en"
+      ],
+      "licenseReview": "New project-written descriptions replace specification excerpts; project comments under Apache-2.0. Existing third-party MIT implementation notices remain applicable, not replaced by these comments.",
+      "noticeFiles": [
+        {
+          "path": "LICENSE",
+          "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+        }
+      ],
+      "evidence": "Replaced scaling_list and vui_parameters Javadoc pseudocode with concise descriptions of the actual parser. Retained edition and section references. Non-comment Java source verified byte-identical by lexical comment removal preserving string and character literals."
+    },
+    {
+      "id": "frontend-mit-declaration-supplements-2026",
+      "status": "declared-MIT-notices-distributed-original-material-gap-recorded",
+      "localFiles": [],
+      "noticeFiles": [
+        {
+          "path": "licenses/frontend-mit/MIT-template.txt",
+          "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5"
+        },
+        {
+          "path": "licenses/frontend-mit/MIT.spdx.json",
+          "sha256": "ff6b1bdaf34abe3a1299a34bca1bd15f8a721d2b1853cc7da32d5c0d99818c75"
+        },
+        {
+          "path": "licenses/frontend-mit/README.md",
+          "sha256": "cceb73560f5c74d8927b5f4fb4c582eff717983cbfeb6380362a07ea57275851"
+        },
+        {
+          "path": "licenses/frontend-mit/element-plus-vite-starter.package.json",
+          "sha256": "66658320b05e727d62be422d9f25d7462634757a584e41ba2b209fb556637390"
+        },
+        {
+          "path": "licenses/frontend-mit/lodash-unified-1.0.3.package.json",
+          "sha256": "23fa098f88e0f8718bb68854b3574b4649f593065ecf56632c7f4adf23836c24"
+        },
+        {
+          "path": "licenses/frontend-mit/lodash-unified-NOTICE.txt",
+          "sha256": "48523e5bf0ddd25f74e061b1e95c254f6eda48ef543ce5cc1971f91bdc546149"
+        },
+        {
+          "path": "licenses/frontend-mit/provenance.json",
+          "sha256": "234b7c3b3e2efd5c3598674d95bea4b5bd148e7e00c50883555a0da0a3628396"
+        },
+        {
+          "path": "licenses/frontend-mit/webworkify-webpack-2.1.5.package.json",
+          "sha256": "7873167b6805860885430e735f19dea57cff6a2e1a5c26ee73cd660b50237c4e"
+        },
+        {
+          "path": "licenses/frontend-mit/webworkify-webpack-NOTICE.txt",
+          "sha256": "ef987e0c0172f57e62e04840e96047c23516cb53ec04b6970400107efb5a82be"
+        },
+        {
+          "path": "licenses/frontend-mit/webworkify-webpack-2.1.5.license-excerpt.txt",
+          "sha256": "4d8a73c1024e09c8b323a225d3a7880156ba5a4b9a8d56c9f4fd4202384b110f"
+        }
+      ],
+      "comparisonSources": [
+        "https://docs.npmjs.com/cli/v10/configuring-npm/package-json/#license",
+        "https://raw.githubusercontent.com/spdx/license-list-data/v3.27.0/json/details/MIT.json",
+        "https://registry.npmjs.org/lodash-unified/1.0.3",
+        "https://raw.githubusercontent.com/borisirota/webworkify-webpack/2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99/package.json",
+        "https://raw.githubusercontent.com/borisirota/webworkify-webpack/2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99/README.md"
+      ],
+      "licenseReview": "All three reviewed components explicitly declare MIT. These clearly labeled supplements preserve declaration evidence and provide standard terms, without fabricating original copyright notices or asserting upstream authorization has been confirmed. Bundled webpack retains its separate existing notice.",
+      "evidence": "Integrity-pinned published archives for the two npm packages; fixed comparison commit for starter; unmodified package.json evidence and hash-pinned SPDX template. Exact historical starter import revision remains unknown. 2026-10-17: inspected all four lodash-unified published archives, preserved webworkify-webpack README MIT declaration matching its fixed commit, and inspected all 28 files in the fixed starter snapshot. No original copyright wording or standalone license found in these materials. Review covers these release archives and fixed snapshots, not complete repository histories.",
+      "currentHandling": "2026-10-17: follow the preserved upstream MIT declarations and distributed aggregate notices; retain original-material gaps as records, with review triggered by new evidence or scope changes."
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-10-03",
+      "scope": "Project logos/favicon replaced, including prior VuePress pictures; old source records retained as historical evidence with no current localFiles.",
+      "artifactManifest": "assets/brand/manifest.json"
+    },
+    {
+      "date": "2026-10-03",
+      "scope": "Replaced former Stack Overflow-associated client-IP implementation with default X-Forwarded-For/X-Real-IP headers and a caller-configured overload; preserved historical source hash and attribution.",
+      "implementation": "jt-core/src/main/java/io/github/hylexus/jt/utils/JtWebUtils.java"
+    },
+    {
+      "date": "2026-10-03",
+      "change": "Replaced 17 blog-derived Logback configurations with project-written configurations; kept historical hashes and source notices. All 17 passed default/override behavior checks on Logback 1.2.12 and 1.5.6; adapter console passed without Spring Boot."
+    },
+    {
+      "date": "2026-10-03",
+      "change": "Removed two H.264 specification pseudocode excerpts from SPS Javadoc; added project-written purpose/limit descriptions, kept section references and third-party MIT notices. Non-comment Java source byte-identical."
+    },
+    {
+      "date": "2026-10-03",
+      "change": "Retained the Checkstyle-derived build configuration under LGPL-2.1-or-later with authors, modification dates, full original license, unmodified 8.23 comparison XML and source records. JARs now include the current editable config read directly from build-script. Effective XML unchanged; core Checkstyle main/test checks passed before and after notices."
+    },
+    {
+      "date": "2026-10-03",
+      "scope": "frontend-mit-declaration-supplements",
+      "summary": "Separated explicit upstream MIT declarations from missing original copyright/license files. Preserved original metadata and added clearly labeled standard MIT terms; unresolved original notices remain recorded."
+    },
+    {
+      "date": "2026-10-03",
+      "scope": "JVM runtime distribution supplements",
+      "summary": "Prepared full license/notice texts and matching source delivery for 9 reviewed versions; runtime-selective Gradle packaging, schema extraction and negative guard checks implemented."
+    },
+    {
+      "date": "2026-10-04",
+      "scope": "JVM original artifact notice collection",
+      "summary": "Preserved original notice/license files and source header evidence for the full aggregate report; added runtime-selective packaging with exact binary/classifier/material hashes. Materials and unresolved scopes remain distinct."
+    },
+    {
+      "date": "2026-10-04",
+      "scope": "JVM application distribution materials",
+      "summary": "Companion license/source materials are generated on demand from the actual Boot archive. Outputs and downloaded materials are stored under ignored build/; selected-version review records are retained in the documentation."
+    },
+    {
+      "date": "2026-10-05",
+      "scope": "Documentation and frontend MIT scopes; concise public notices",
+      "summary": "Added MIT directory/distribution texts for original documentation/site and sample HTML/JS, retained Apache-2.0 for Java examples/shared artwork. Removed package.json/hash/repeated review prose from public frontend notices; original publisher metadata and unresolved original-notice records retained. Historical MIT consent was pending at this date."
+    },
+    {
+      "date": "2026-10-17",
+      "scope": "frontend original license declaration follow-up",
+      "summary": "Added verbatim webworkify-webpack README MIT declaration; recorded integrity-verified lodash-unified publication history and fixed starter snapshot inspection. Missing original notices remain recorded; no dependencies changed."
+    },
+    {
+      "date": "2026-10-17",
+      "scope": "Frontend MIT declarations and distributed notices",
+      "summary": "The three components are handled according to the preserved upstream MIT declarations. Aggregate notices accompany the frontend output and retain MIT terms and applicable attribution. Original metadata is preserved; original copyright wording and standalone license files not found in the reviewed materials remain recorded as gaps."
+    }
+  ]
+}

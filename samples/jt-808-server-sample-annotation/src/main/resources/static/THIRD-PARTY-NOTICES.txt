@@ -1,0 +1,19 @@
+jt-framework 示例前端第三方声明
+Third-party notices for the jt-framework sample frontend
+=========================================================
+
+本目录中维护者有权授权的原创 HTML/JS 按 MIT 提供；见 LICENSE.txt。
+Original HTML/JS in this directory that the maintainer has authority to license is provided under MIT; see LICENSE.txt.
+
+其他贡献按其原有许可及明确授权范围处理。
+Other contributions remain subject to their existing licenses and the scope of their express grants.
+
+第三方文件保留其原始许可和版权声明。
+Third-party files retain their original licenses and copyright notices.
+
+这些页面加载的外部脚本／样式（未捆绑在本目录中）：
+External scripts/styles loaded by these pages (not bundled here):
+https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/axios/0.26.0/axios.js
+https://unpkg.com/element-ui/lib/index.js
+https://unpkg.com/element-ui/lib/theme-chalk/index.css
+https://unpkg.com/vue@2/dist/vue.js

@@ -1,3 +1,9 @@
+import com.github.jk1.license.LicenseReportExtension
+import com.github.jk1.license.render.InventoryHtmlReportRenderer
+import com.github.jk1.license.render.JsonReportRenderer
+import com.github.jk1.license.render.ReportRenderer
+import com.github.jk1.license.render.TextReportRenderer
+import groovy.json.JsonOutput
 import io.github.hylexus.jt.gradle.utils.JtFrameworkConfig.jtFrameworkConfig
 import io.github.hylexus.jt.gradle.utils.logInfo2
 import io.github.hylexus.jt.gradle.utils.logTip
@@ -9,6 +15,7 @@ plugins {
     id("io.gitee.pkmer.pkmerboot-central-publisher") apply false
     id("signing")
     id("checkstyle")
+    id("com.github.jk1.dependency-license-report")
 }
 printCompatibilityMatrix()
 group = jtFrameworkConfig.projectGroupId
@@ -27,6 +34,9 @@ configure(allprojects) {
     version = jtFrameworkConfig.projectVersion
 }
 
+// Root report aggregates Java modules; each module also has its own report task.
+configureDependencyLicenseReport(arrayOf(project) + subprojects.filter { it.isJavaProject() })
+
 // region Java
 configure(subprojects) {
 
@@ -39,6 +49,8 @@ configure(subprojects) {
     logInfo2("configuring project: ${project.name}")
 
     apply(plugin = "java-library")
+    apply(plugin = "com.github.jk1.dependency-license-report")
+    configureDependencyLicenseReport(arrayOf(project))
     java {
         sourceCompatibility = obtainJavaVersion()
         targetCompatibility = obtainJavaVersion()
@@ -182,6 +194,132 @@ configure(subprojects) {
             ignore("META-INF/MANIFEST.MF")
         }
     }
+
+    // 为包含相关运行时依赖的模块提供匹配的 LGPL 库源码和 MPL 文件源码。
+    val runtimeComponents = providers.provider {
+        configurations.getByName("runtimeClasspath").incoming.resolutionResult.allComponents
+    }
+    val jump3rSources = providers.provider {
+        val modules = runtimeComponents.get().mapNotNull {
+            it.id as? org.gradle.api.artifacts.component.ModuleComponentIdentifier
+        }.filter { it.group == "de.sciss" && it.module == "jump3r" }
+        modules.flatMap { module ->
+            val sourceDependency = dependencies.create("${module.group}:${module.module}:${module.version}:sources@jar")
+            configurations.detachedConfiguration(sourceDependency).apply {
+                isTransitive = false
+            }.files
+        }
+    }
+    val symphoniaSource = providers.provider {
+        val usesJt1078 = path == ":jt-1078-server-support" || runtimeComponents.get().any {
+            (it.id as? org.gradle.api.artifacts.component.ProjectComponentIdentifier)?.projectPath == ":jt-1078-server-support"
+        }
+        if (usesJt1078) listOf(rootProject.file(
+            "jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/support/extension/audio/impl/converters/AdpcmImaToPcmJt1078AudioFormatConverter.java"
+        )) else emptyList()
+    }
+    val prepareThirdPartySources = tasks.register<Sync>("prepareThirdPartySources") {
+        group = "reporting"
+        description = "Collect matching jump3r sources and the Symphonia-derived source when used by this module."
+        into(layout.buildDirectory.dir("generated/third-party-sources"))
+        from(jump3rSources) { into("jump3r") }
+        from(providers.provider {
+            if (jump3rSources.get().isNotEmpty()) listOf(rootProject.file("licenses/jump3r")) else emptyList()
+        }) {
+            into("jump3r")
+            exclude("**/__pycache__/**", "**/*.pyc")
+        }
+        from(symphoniaSource) { into("symphonia") }
+    }
+
+    // 每种 JAR 都包含项目许可和当前模块的第三方声明。
+    tasks.withType<Jar>().configureEach {
+        from(rootProject.projectDir) {
+            include("LICENSE", "NOTICE", "THIRD-PARTY-SOURCE-NOTICES.txt", "THIRD-PARTY-FRONTEND-NOTICES.txt")
+            into("META-INF")
+            rename("LICENSE", "LICENSE.txt")
+        }
+        from(rootProject.file("licenses")) {
+            into("META-INF/licenses")
+            exclude("**/__pycache__/**", "**/*.pyc")
+            // Repository audit/build inputs; retain original notices and source records in the JAR.
+            exclude("source-audit.json", "frontend-inventory.json", "docs-frontend-inventory.json")
+        }
+        // Supply the editable LGPL-derived build configuration with its notices.
+        from(rootProject.file("build-script/checkstyle/checkstyle.xml")) {
+            into("META-INF/licenses/checkstyle")
+            rename("checkstyle.xml", "jt-framework-checkstyle.xml")
+        }
+        from(tasks.named("generateLicenseReport")) {
+            include("THIRD-PARTY-NOTICES.txt")
+            into("META-INF")
+        }
+        from(prepareThirdPartySources) {
+            into("META-INF/third-party-sources")
+        }
+    }
+
+    // 完整应用的分发材料按需生成到 build/，不进入普通 JAR 的构建链。
+    pluginManager.withPlugin("org.springframework.boot") {
+        val bootJar = tasks.named<Jar>("bootJar")
+        val distributionArtifacts = providers.provider {
+            configurations.getByName("runtimeClasspath").resolvedConfiguration.resolvedArtifacts
+                .filter { it.id.componentIdentifier is org.gradle.api.artifacts.component.ModuleComponentIdentifier }
+                .sortedBy { "${it.moduleVersion.id}:${it.file.name}" }
+        }
+        val sourceModules = setOf(
+            "ch.qos.logback:logback-classic", "ch.qos.logback:logback-core",
+            "jakarta.annotation:jakarta.annotation-api", "net.jcip:jcip-annotations",
+            "com.google.code.findbugs:jsr305",
+            "org.bouncycastle:bcprov-jdk18on", "org.slf4j:slf4j-api", "org.slf4j:jul-to-slf4j",
+        )
+        val distributionSources = providers.provider {
+            distributionArtifacts.get().filter {
+                "${it.moduleVersion.id.group}:${it.moduleVersion.id.name}" in sourceModules
+            }.associate { artifact ->
+                val coordinate = artifact.moduleVersion.id.toString()
+                val dependency = dependencies.create("$coordinate:sources@jar")
+                coordinate to configurations.detachedConfiguration(dependency).apply { isTransitive = false }.singleFile
+            }
+        }
+        tasks.register<Exec>("prepareDistributionLicenses") {
+            group = "reporting"
+            description = "Prepare a separate license/source bundle for the actual Boot JAR; no publishing."
+            dependsOn(bootJar, tasks.named("generateLicenseReport"))
+            inputs.file(rootProject.file("build-script/prepare-distribution-licenses.py"))
+            inputs.property("bootJarEnabled", bootJar.map { it.enabled })
+            inputs.file(bootJar.flatMap { it.archiveFile })
+            inputs.files(distributionSources.map { it.values })
+            inputs.dir(layout.buildDirectory.dir("reports/dependency-license"))
+            val output = layout.buildDirectory.dir("reports/distribution-licenses")
+            outputs.dir(output)
+            outputs.file(output.map { it.asFile.resolveSibling("distribution-licenses.zip") })
+            doFirst {
+                if (!bootJar.get().enabled) {
+                    throw GradleException("Enable bootJar with -Pjt-framework.backend.build.debug-module-fatjar.enabled=true before preparing distribution materials.")
+                }
+                val input = layout.buildDirectory.file("generated/distribution-license-input.json").get().asFile
+                input.parentFile.mkdirs()
+                input.writeText(JsonOutput.toJson(mapOf(
+                    "archive" to bootJar.get().archiveFile.get().asFile.absolutePath,
+                    "report" to layout.buildDirectory.file("reports/dependency-license/THIRD-PARTY-NOTICES.txt").get().asFile.absolutePath,
+                    "artifacts" to distributionArtifacts.get().map { artifact -> mapOf(
+                        "coordinate" to artifact.moduleVersion.id.toString(),
+                        "filename" to artifact.file.name,
+                        "source" to distributionSources.get()[artifact.moduleVersion.id.toString()]?.absolutePath,
+                    ) },
+                )))
+                val arguments = mutableListOf(
+                    "python3", rootProject.file("build-script/prepare-distribution-licenses.py").absolutePath,
+                    "--input", input.absolutePath, "--output", output.get().asFile.absolutePath,
+                    "--cache", rootProject.layout.buildDirectory.dir("license-downloads").get().asFile.absolutePath,
+                )
+                if (gradle.startParameter.isOffline) arguments.add("--offline")
+                commandLine(arguments)
+            }
+        }
+    }
+
     tasks.jar {
         manifest {
             manifest.attributes["Implementation-Title"] = project.name
@@ -191,13 +329,6 @@ configure(subprojects) {
             manifest.attributes["Created-By"] = "${System.getProperty("java.version")} (${System.getProperty("java.vendor")})"
             manifest.attributes["Minimum-Jdk-Version"] = obtainJavaVersion().majorVersion
             manifest.attributes["X-Requires-Java-Version"] = obtainJavaVersion().majorVersion
-        }
-
-        from(rootProject.projectDir) {
-            include("LICENSE")
-            include("NOTICE")
-            into("META-INF")
-            rename("LICENSE", "LICENSE.txt")
         }
     }
 
@@ -350,6 +481,42 @@ configure(subprojects) {
     }
 }
 // endregion Maven
+
+// Check actual artifacts without publishing or retaining extra dependency copies.
+val licenseCheckJars = subprojects.filter { it.isJavaProject() }.flatMap { module ->
+    val names = if (module.isMavenPublication()) listOf("jar", "sourcesJar", "javaDocJar") else listOf("jar")
+    names.map { module.tasks.named<Jar>(it) }
+}
+tasks.register<Exec>("verifyJarLicenseMaterials") {
+    group = "verification"
+    description = "Check license materials in Java module JARs and Maven publication source/Javadoc JARs."
+    dependsOn(licenseCheckJars)
+    doFirst {
+        commandLine(listOf(
+            "python3", rootProject.file("build-script/check-license-materials.py").absolutePath,
+            "--report", layout.buildDirectory.file("reports/license-check/jars.txt").get().asFile.absolutePath,
+            "jars",
+        ) + licenseCheckJars.map { it.get().archiveFile.get().asFile.absolutePath })
+    }
+}
+
+fun Project.configureDependencyLicenseReport(reportProjects: Array<Project>) {
+    extensions.configure<LicenseReportExtension> {
+        projects = reportProjects
+        configurations = arrayOf("compileClasspath", "runtimeClasspath", "annotationProcessor")
+        outputDir = layout.buildDirectory.dir("reports/dependency-license").get().asFile.absolutePath
+        excludeOwnGroup = true
+        excludeBoms = true
+        // Prefer the artifact's own declaration; inherit parent licenses only when it has none.
+        unionParentPomLicenses = false
+        renderers = arrayOf<ReportRenderer>(
+            InventoryHtmlReportRenderer("index.html", "${project.name} dependency licenses"),
+            // Keep every discovered license; dependencies may have multiple license terms.
+            JsonReportRenderer("index.json", false),
+            TextReportRenderer("THIRD-PARTY-NOTICES.txt"),
+        )
+    }
+}
 
 fun Project.obtainJavaVersion(): JavaVersion = project.compatibilityDefinition().jdkVersion
 

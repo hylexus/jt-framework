@@ -130,3 +130,6 @@ docs/src/.vuepress/dist/
 application-debug.yaml
 /demos/deploy.sh
 /buildSrc/.kotlin/
+
+# Local license preparation archives; keep them outside Gradle's clean output.
+/.local/license-preparation-archive-*/

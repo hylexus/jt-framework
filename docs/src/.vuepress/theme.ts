@@ -14,10 +14,11 @@ export default hopeTheme({
         url: "https://github.com/hylexus",
     },
 
-    // iconAssets: "//at.alicdn.com/t/c/font_3831129_6mpn8dhchwt.css",
-    iconAssets: "iconfont",
+    // Local Font Awesome Free SVG masks; no remote icon font is loaded.
+    iconAssets: [],
+    iconPrefix: "jt-icon-",
 
-    logo: "/logo.png",
+    logo: "/logo.svg",
     repo: "https://github.com/hylexus/jt-framework",
     repoDisplay: true,
 
@@ -114,6 +115,6 @@ export default hopeTheme({
             vPre: true,
             vuePlayground: true,
         },
-        copyCode: {fancy: false,},
+        copyCode: true,
     },
 });

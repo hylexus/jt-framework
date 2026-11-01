@@ -1,16 +1,15 @@
 #!/bin/bash
-set -e
-__JT_WORKING_DIR__=$(cd "$(dirname "$0")";pwd)
-echo "Current Working Dir: ${__JT_WORKING_DIR__}"
+set -euo pipefail
 
-cd ${__JT_WORKING_DIR__}
+JT_UI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$JT_UI_DIR"
 
-pnpm install
-pnpm build
+# Corepack uses package.json's pinned pnpm version. Keep this standalone
+# project's reviewed lockfile unchanged, even when a workspace file exists.
+corepack pnpm --ignore-workspace install --frozen-lockfile
+corepack pnpm --ignore-workspace run build
 
-__TARGET_DIR__="../jt-dashboard-server/src/main/resources/static/client"
-rm -rf ${__TARGET_DIR__}
-mkdir -p ${__TARGET_DIR__}
-cp -r dist/** ${__TARGET_DIR__}
-
-cd -
+JT_UI_TARGET_DIR="$JT_UI_DIR/../jt-dashboard-server/src/main/resources/static/client"
+rm -rf "$JT_UI_TARGET_DIR"
+mkdir -p "$JT_UI_TARGET_DIR"
+cp -R dist/. "$JT_UI_TARGET_DIR/"

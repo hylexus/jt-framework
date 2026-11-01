@@ -478,21 +478,13 @@ public interface BitOperator {
     }
 
     /**
-     * 这个方法是从 {@code java.lang.Long#toUnsignedBigInteger(long)} 中复制过来的。
+     * 将 long 的 64 位位模式解释为无符号整数。
+     * 对于负数，先保留低 63 位，再在 BigInteger 中设置最高位。
      *
      * @since 2.1.5
      */
-    static BigInteger toUnsignedBigInteger(long i) {
-        if (i >= 0L) {
-            return BigInteger.valueOf(i);
-        } else {
-            int upper = (int) (i >>> 32);
-            int lower = (int) i;
-
-            // return (upper << 32) + lower
-            return (BigInteger.valueOf(Integer.toUnsignedLong(upper)))
-                    .shiftLeft(32)
-                    .add(BigInteger.valueOf(Integer.toUnsignedLong(lower)));
-        }
+    static BigInteger toUnsignedBigInteger(long value) {
+        final BigInteger lowerBits = BigInteger.valueOf(value & Long.MAX_VALUE);
+        return value < 0 ? lowerBits.setBit(63) : lowerBits;
     }
 }

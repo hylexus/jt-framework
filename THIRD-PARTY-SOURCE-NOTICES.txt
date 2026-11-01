@@ -1,0 +1,560 @@
+jt-framework 第三方源码声明
+Third-party source code notices for jt-framework
+================================================
+
+本文件记录复制或改编的第三方源码和资源的来源、许可及修改情况，并补充说明部分外部依赖的许可和分发安排。
+This file records the origins, licenses and changes of copied or adapted third-party code and resources, and provides supplemental license and distribution information for selected external dependencies.
+
+JVM 依赖的元数据另行列于生成的 THIRD-PARTY-NOTICES.txt。
+JVM dependency metadata is reported separately in the generated THIRD-PARTY-NOTICES.txt.
+
+引用上游项目不代表获得了重新许可其源码的授权。
+A reference to an upstream project is not a grant to relicense its source code.
+
+必须保留已有的文件级版权和许可声明。
+Existing file-level copyright and license notices must be retained.
+
+1. Spring Framework / Spring MVC / Spring Web
+
+许可：Apache-2.0（见 LICENSE；JAR 中位于 META-INF/LICENSE.txt）。
+License: Apache-2.0 (see LICENSE; in JARs, META-INF/LICENSE.txt)
+
+各文件的原始版权声明予以保留（2002-2015/2019/2020/2021）。
+Original per-file copyright notices are retained (2002-2015/2019/2020/2021).
+
+Local file: jt-808-server-support/src/main/java/io/github/hylexus/jt/jt808/
+  support/dispatcher/Jt808HandlerExecutionChain.java
+Upstream: https://github.com/spring-projects/spring-framework/blob/v5.3.31/
+  spring-webmvc/src/main/java/org/springframework/web/servlet/HandlerExecutionChain.java
+
+修改：hylexus 将其适配为 JT/T 808 的处理器、交互上下文和拦截器。
+Changes: adapted for JT/T 808 handlers, exchanges and interceptors by hylexus.
+
+其他改编源码包括 Jt808RequestFilter、Jt808RequestFilterChain、DefaultJt808RequestFilterChain 和 Jt808HandlerInterceptor。
+Additional adapted source: Jt808RequestFilter, Jt808RequestFilterChain, DefaultJt808RequestFilterChain and Jt808HandlerInterceptor.
+
+Jt808Request 和 Jt808ServerExchange 中的属性辅助方法对应于 ServerWebExchange。
+Attribute helper methods in Jt808Request and Jt808ServerExchange correspond to ServerWebExchange.
+
+对照版本：v5.3.27 的 WebFilter/WebFilterChain/DefaultWebFilterChain、v5.3.14 的 HandlerInterceptor 和 v5.3.31 的 ServerWebExchange。
+Comparison versions: v5.3.27 WebFilter/WebFilterChain/DefaultWebFilterChain, v5.3.14 HandlerInterceptor and v5.3.31 ServerWebExchange.
+
+固定来源 URL 记录在 licenses/source-provenance.json 中；并非所有历史引入版本都已明确。
+Fixed source URLs are in licenses/source-provenance.json; exact historical imports are not all known.
+
+2. Spring Boot Admin
+
+许可：Apache-2.0（见 LICENSE）。
+License: Apache-2.0 (see LICENSE)
+
+Copyright 2014-2023 the original author or authors.
+
+本地源码范围：Dashboard 注册接口、实例代理控制器、Web 客户端、请求头过滤器、实例注册表及指标更新类。
+Local source: Dashboard registration interfaces, instance proxy controllers, web clients, header filters, instance registry and metrics updater classes.
+
+注册实现 DefaultJtApplicationRegistrator、BlockingJtApplicationClient 和 ReactiveJtApplicationClient 分别改编自提交 83db63e82e916357d36b1e6b4d552e1b6506ecc9 中的 DefaultApplicationRegistrator、BlockingRegistrationClient 和 ReactiveRegistrationClient。
+The registration implementations DefaultJtApplicationRegistrator, BlockingJtApplicationClient and ReactiveJtApplicationClient are adapted from DefaultApplicationRegistrator, BlockingRegistrationClient and ReactiveRegistrationClient at commit 83db63e82e916357d36b1e6b4d552e1b6506ecc9.
+
+InstanceRegistry 改编自提交 1433ca5b8343247075ff775d558c9a82341e2ac6 中的上游同名类；其源码链接已更正。
+InstanceRegistry is adapted from the upstream class of the same name at commit 1433ca5b8343247075ff775d558c9a82341e2ac6; its source link has been corrected.
+
+改编类在注释或 Javadoc 中标明了固定的上游来源；其他来源记录见 licenses/source-provenance.json。
+Adapted classes identify their fixed upstream source in comments or Javadoc; additional source records are in licenses/source-provenance.json.
+
+hylexus 为 jt-framework 调整了包名、应用模型、注册和指标行为。
+Package names, application models, registration and metrics behavior were adapted for jt-framework by hylexus.
+
+其余待完成的来源核对记录在发行清单中。
+Remaining provenance checks are in the release checklist.
+
+Upstream: https://github.com/codecentric/spring-boot-admin
+
+JtDashboardAutoConfiguration 的注册调度器／监听器也对应于提交 83db63e82e916357d36b1e6b4d552e1b6506ecc9 中的 RegistrationApplicationListener；hylexus 将其适配为支持多个 JT 应用注册器。
+JtDashboardAutoConfiguration's registration scheduler/listener also corresponds to RegistrationApplicationListener at 83db63e82e916357d36b1e6b4d552e1b6506ecc9; it is adapted for multiple JT application registrators by hylexus.
+
+3. jtt1078-video-server (matrixy)
+
+许可：上游项目的原创代码采用 Apache-2.0（见 LICENSE）。
+License: Apache-2.0 for the upstream project's original code (see LICENSE).
+
+Copyright 2019 matrixy.
+
+本地源码范围：PcmToMp3Jt1078AudioFormatConverter、G711a/G711u/G726 PCM 转换器、DefaultFlvEncoder 的部分代码及 ADPCM 集成。
+Local source: PcmToMp3Jt1078AudioFormatConverter, G711a/G711u/G726 PCM converters, parts of DefaultFlvEncoder and ADPCM integration.
+
+已核查的上游快照早于本仓库在 2023 年的引入时间：
+Reviewed upstream snapshot (predates this repository's 2023 import):
+
+https://gitee.com/matrixy/jtt1078-video-server/tree/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee
+
+原始许可声明：licenses/matrixy-LICENSE.txt。
+Original license notice: licenses/matrixy-LICENSE.txt
+
+确切的原始引入版本未被记录；该快照仅固定用于对照的来源，不表示它就是实际引入时的提交。
+The exact original import revision has not been recorded; this snapshot fixes the source used for comparison without claiming it is the exact import commit.
+
+本地 Javadoc 记录了相关上游文件。
+Local Javadoc records the relevant upstream files.
+
+hylexus 的适配涉及 Netty 缓冲区、可配置格式、FLV 标签及 JT/T 1078 集成。
+Adaptations include Netty buffers, configurable formats, FLV tags and JT/T 1078 integration by hylexus.
+
+上游 ADPCMCodec.java 还署名了 houcheng；本项目改编的音频集成保留该作者署名。
+The upstream ADPCMCodec.java also credits houcheng; that author credit is retained here for the adapted audio integration.
+
+具有独立许可的上游代码，包括 Sun G.7xx 实现，继续遵循其自身许可，不适用上游项目的默认许可。
+Upstream code with its own license, including the Sun G.7xx implementation, retains that license rather than the upstream project's default license.
+
+4. Sun Microsystems G.7xx 音频转换代码
+4. Sun Microsystems G.7xx audio conversion code
+
+许可／授权声明：licenses/Sun-G7xx.txt。
+License/permission statement: licenses/Sun-G7xx.txt
+
+Local source directory: jt-1078-server-support/src/main/java/io/github/hylexus/
+  jt/jt1078/support/extension/audio/impl/converters/g7xx/
+
+G711.java、G726_16.java、G726_24.java、G726_32.java、G726_40.java、G72X.java 和 package-info.java 中保留了 Sun Microsystems 的原始授权及担保声明。
+The original Sun Microsystems permission and warranty statement is retained in G711.java, G726_16.java, G726_24.java, G726_32.java, G726_40.java, G72X.java and package-info.java.
+
+不得用项目统一的 Apache 版权头替换这些声明。
+Do not replace these statements with a project-wide Apache copyright header.
+
+5. Symphonia IMA ADPCM 解码器
+5. Symphonia IMA ADPCM decoder
+
+许可：MPL-2.0（见 licenses/MPL-2.0.txt）。
+License: MPL-2.0 (see licenses/MPL-2.0.txt)
+
+Copyright (c) 2019-2022 The Project Symphonia Developers.
+Local file: jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/
+  support/extension/audio/impl/converters/AdpcmImaToPcmJt1078AudioFormatConverter.java
+Upstream: https://github.com/pdeljanov/Symphonia/blob/
+  b157bb58826a2035405702f481b6fdcbd922cbf3/symphonia-codec-adpcm/src/codec_ima.rs
+
+修改：hylexus 将其转换为 Java 实现，并适配 Netty 和 JT/T 1078 音频分帧。
+Changes: translated/adapted to Java, Netty and JT/T 1078 audio framing by hylexus.
+
+整个本地文件（包括修改部分）均按 MPL-2.0 提供。
+The entire local file, including modifications, is provided under MPL-2.0.
+
+源码位于本仓库及匹配版本的 jt-1078-server-support 源码 JAR 中。
+Source is in this repository and the matching jt-1078-server-support sources JAR.
+
+分发其可执行形式时，应按 MPL-2.0 提供匹配源码，并告知接收者获取方式。
+When distributing its executable form, make the matching source available under MPL-2.0 and inform recipients how to obtain it.
+
+对于运行时依赖图中包含 jt-1078-server-support 的 JAR，构建还会将该许可覆盖的 Java 源码放入 META-INF/third-party-sources/symphonia/。
+The build also includes the covered Java source in META-INF/third-party-sources/symphonia/ in JARs whose runtime dependency graph includes jt-1078-server-support.
+
+6. jmuxer H.264 解析器
+6. jmuxer H.264 parser
+
+许可：MIT（见 licenses/MIT-jmuxer.txt）。
+License: MIT (see licenses/MIT-jmuxer.txt)
+
+Copyright (c) 2018 Samir Das
+Local file: jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/
+  support/extension/h264/impl/DefaultH264Decoder.java
+Upstream: https://github.com/samirkumardas/jmuxer/blob/
+  579835d7d72796d3374e0c62929456e7202bcb12/src/parsers/h264.js
+
+修改：hylexus 将状态机适配为 Java/Netty 实现及 JT/T 1078 NALU 模型。
+Changes: state machine adapted to Java/Netty and JT/T 1078 NALU models by hylexus.
+
+本地 Javadoc 还引用了 SmallChi/JT1078 的 Gitee 镜像 ldming/JT1078。
+The local Javadoc also references the ldming/JT1078 Gitee mirror of SmallChi/JT1078.
+
+已核查的该项目 C# H.264 解析器同样署名了 jmuxer，其 NALU 元数据映射与本地实现相近。
+Its reviewed C# H.264 parser likewise credits jmuxer, and its NALU metadata mapping is comparable to this implementation.
+
+还应保留该参考项目的原始 MIT 声明：licenses/MIT-SmallChi-JT1078.txt，Copyright (c) 2019 SmallChi(Koike)。
+Retain the original MIT notice of that referenced project as well: licenses/MIT-SmallChi-JT1078.txt, Copyright (c) 2019 SmallChi(Koike).
+
+Reviewed source: https://github.com/SmallChi/JT1078/blob/
+  c4931a8ec37678fb5ecedcc749ffe3c9f4c890fe/src/JT1078.Protocol/H264/H264Decoder.cs
+
+未记录当时参考的确切版本及改编范围；固定快照仅用于对照，不代表确认了引入来源。
+The exact historical revision and extent of adaptation from that reference are not recorded; the fixed snapshot is a comparison reference, not an import claim.
+
+7. xtream-codec
+
+许可：Apache-2.0（见 LICENSE）。
+License: Apache-2.0 (see LICENSE)
+
+改编示例和支持类中已有的 Copyright 2024 the original author or authors 声明予以保留。
+Existing Copyright 2024 the original author or authors notices in adapted examples and support classes are retained.
+
+Upstream: https://github.com/hylexus/xtream-codec
+
+8. JVM 元数据的人工补充说明：net.jcip:jcip-annotations:1.0
+8. Manual JVM metadata clarification: net.jcip:jcip-annotations:1.0
+
+已发布源码归档中标明的许可：CC-BY-2.5。
+License found in the published source archive: CC-BY-2.5.
+
+Copyright (c) 2005 Brian Goetz and Tim Peierls.
+
+源码文件头引用的许可地址为 https://creativecommons.org/licenses/by/2.5/。
+Source headers refer to https://creativecommons.org/licenses/by/2.5/
+
+由于该版本的 POM 和二进制 JAR 未提供许可元数据，自动报告可能将其标记为 Unknown。
+The automatic report may mark this version Unknown because its POM and binary JAR omit license metadata.
+
+不得因此将其理解为公有领域或 Apache 许可。
+Do not interpret that as public domain or as Apache.
+
+分发该依赖时，应保留署名和许可引用。
+Retain attribution and the license reference when distributing this dependency.
+
+本说明仅适用于 1.0 版本；版本变化时应重新核对。
+This clarification applies only to version 1.0; recheck any changed version.
+
+9. MP3 依赖：de.sciss:jump3r:1.0.5
+9. MP3 dependency: de.sciss:jump3r:1.0.5
+
+本项目使用该未修改的外部依赖。
+The project uses this unmodified external dependency.
+
+其上游 Maven POM 声明 LGPL-2.1-or-later；本项目的 Apache-2.0 许可不适用于该库。
+Its upstream Maven POM declares LGPL-2.1-or-later; the project's Apache-2.0 license does not apply to this library.
+
+该库的适用原始许可和版权声明予以保留。
+Its applicable original license and copyright notices are retained.
+
+参见 licenses/LGPL-2.1.txt 和 licenses/jump3r/README.md。
+See licenses/LGPL-2.1.txt and licenses/jump3r/README.md.
+
+本项目已依据该声明准备许可、源码及重建／替换材料。
+The project has prepared license, source and rebuild/replacement materials based on that declaration.
+
+公开源码仓库通过 Gradle 声明该外部依赖，由使用者构建时从 Maven 下载。
+The public source repository declares the external Gradle dependency, which is downloaded from Maven during the user's build.
+
+分发包含该库的应用时，还需提供适用的声明、许可文本、匹配的库源码以及可用的重建／替换方法。
+Distributing an application that includes the library also requires the applicable notices, license text, matching library source and a usable rebuild/replacement method.
+
+当模块的运行时依赖图中包含 jump3r 时，构建会将匹配的 Maven 源码归档和重建脚本打包到 META-INF/third-party-sources/jump3r/，并附带用于替换未签名 Boot JAR 中嵌套库的脚本。
+The build packages the matching Maven sources archive and a rebuild script in META-INF/third-party-sources/jump3r/ whenever jump3r occurs in a module's runtime graph, together with a script to replace the nested library in unsigned Boot JARs.
+
+分发使用 jump3r 的应用时，应保持该库可替换。
+Keep jump3r replaceable when distributing applications that use it.
+
+相关普通 JAR 也包含该源码归档；即使没有库的编译后 class，交付这些 JAR 仍会分发 jump3r 源码副本。
+The relevant ordinary JARs also contain the sources archive; delivering those JARs distributes copies of jump3r's source even without its compiled classes.
+
+原始历史声明保存在 licenses/jump3r/UPSTREAM-NOTICES.txt 中。
+The original historical notices are retained in licenses/jump3r/UPSTREAM-NOTICES.txt.
+
+匹配的 LAME 3.98.4 README、源码文件头和 2010-03-22 变更记录支持“mpglib 的 GPL 许可帮助文字未同步更新”这一解释。
+The matching LAME 3.98.4 README, source headers and 2010-03-22 change log support the interpretation that the mpglib GPL license-help text was not updated.
+
+在 1.0.5 版本中，de/sciss/jump3r/mp3/FFT.java 保留了涉及 GPL 来源及其他历史权利事项的文件头说明。
+In version 1.0.5, de/sciss/jump3r/mp3/FFT.java retains header comments concerning GPL origins and other historical rights matters.
+
+现有核查材料尚未明确该历史说明与上游 LGPL 声明对该文件的具体适用关系。
+The reviewed materials do not establish how these historical comments relate to the upstream LGPL declaration for this file.
+
+原始说明保存在 licenses/jump3r/UPSTREAM-NOTICES.txt 中；核查依据及未确定事项记录在仓库 docs/license-1078-review.md 中。
+The original comments are preserved in licenses/jump3r/UPSTREAM-NOTICES.txt; the reviewed evidence and unresolved questions are recorded in docs/license-1078-review.md in the repository.
+
+发行包含 jump3r 源码或二进制的产物前，应针对精确版本确认许可依据。
+Before distributing artifacts containing jump3r source or binaries, establish the applicable licensing basis for the exact version.
+
+已准备的许可、源码及重建／替换材料不代表 FFT 部分的适用许可已经确认。
+The prepared license, source and rebuild/replacement materials do not confirm the applicable license for the FFT code.
+
+本地重建／替换检查验证的是交付方法，不是逐个文件的许可。
+Local rebuild/replace checks verify delivery methods, not every file's license.
+
+10. Apache Commons Codec Hex
+
+许可：Apache-2.0；见 licenses/Apache-Commons-Codec-NOTICE.txt。
+License: Apache-2.0; see licenses/Apache-Commons-Codec-NOTICE.txt.
+
+Copyright 2002-2017 The Apache Software Foundation (comparison NOTICE).
+Local file: jt-core/src/main/java/io/github/hylexus/jt/utils/HexStringUtils.java
+
+改编部分：字节数组的十六进制编码／解码及数字字符处理。
+Adapted portions: byte-array hexadecimal encoding/decoding and digit handling.
+
+Comparison: commons-codec-1.11/src/main/java/org/apache/commons/codec/binary/Hex.java
+Upstream: https://github.com/apache/commons-codec/tree/commons-codec-1.11
+
+hylexus 的修改：大写输出、Netty 缓冲区及非受检异常。
+Changes by hylexus: uppercase output, Netty buffers and unchecked exceptions.
+
+确切的历史引入版本未知。
+The exact historical import version is unknown.
+
+原始上游 NOTICE 还列出了无关的上游测试数据／包；完整保留该声明不代表本仓库包含这些内容。
+The original upstream NOTICE also names unrelated upstream test data/packages; keeping it intact does not claim those portions occur in this repository.
+
+11. EyerH264Decoder SPS 与位读取器
+11. EyerH264Decoder SPS and bit reader
+
+许可：MIT；见 licenses/MIT-EyerH264Decoder.txt。
+License: MIT; see licenses/MIT-EyerH264Decoder.txt.
+
+Copyright (c) 2021 Redknot
+
+本地文件：1078 中的 DefaultSpsDecoder，以及 jt-core 中的 BitStreamReader 和 DefaultBitStreamReader。
+Local files: DefaultSpsDecoder (1078), BitStreamReader and DefaultBitStreamReader (jt-core).
+
+改编的算法部分对应于提交 59e0a396f0b9c0a4a2c034ba6d44fae22297e979 中的 NaluSPS.cpp/BitStream.cpp。
+The adapted algorithm portions correspond to NaluSPS.cpp/BitStream.cpp at 59e0a396f0b9c0a4a2c034ba6d44fae22297e979.
+
+SPS 原先指向 NaluPPS.cpp 的引用已更正。
+The original SPS reference to NaluPPS.cpp has been corrected.
+
+hylexus 的修改：适配 Java、Netty 及 JT 集成。
+Changes by hylexus: Java, Netty and JT integration.
+
+Upstream: https://github.com/redknotmiaoyuqiao/EyerH264Decoder
+
+SPS 尺寸／SAR 部分也对应于 SmallChi/JT1078 和 jmuxer；应保留第 6 节列出的相关 MIT 声明。
+SPS dimension/SAR portions also correspond to SmallChi/JT1078 and jmuxer; retain their MIT notices listed in section 6.
+
+确切的引入版本未知。
+Exact import versions are unknown.
+
+SPS Javadoc 中原有的两段 H.264 规范伪代码摘录已于 2026-10-03 删除。
+The two H.264 specification pseudocode excerpts formerly in SPS Javadoc were removed on 2026-10-03.
+
+项目新编写的注释说明了当前解析器的用途和限制，并保留对 H.264（08/2021）第 7.3.2.1.1.1 节和 E.1.1 节的引用。
+New project-written comments describe the current parser's purpose and limits, retaining references to H.264 (08/2021), sections 7.3.2.1.1.1 and E.1.1.
+
+可执行 Java 代码及上述 MIT 来源声明未作修改。
+Executable Java code and the above MIT source notices are unchanged.
+
+历史摘录的哈希保留在 licenses/source-audit.json 中；这不构成对规范文本的重新许可，也不证明以前版本已取得授权。
+Historical excerpt hashes remain in licenses/source-audit.json; this does not relicense specification text or establish permission for previous versions.
+
+12. 复制的前端与文档模板
+12. Copied frontend and documentation templates
+
+PanJiaChen/vue-element-admin: licenses/MIT-vue-element-admin.txt (MIT),
+Copyright (c) 2017-present PanJiaChen.
+
+Dashboard 的 src/utils/request.ts 对应于 4.4.0 版本的 Axios 拦截器模板，并适配了本地响应处理。
+Dashboard src/utils/request.ts corresponds to version 4.4.0's Axios interceptor template, adapted to local response handling.
+
+vuejs/create-vue: licenses/create-vue-LICENSE.txt (core MIT),
+Copyright (c) 2021-present vuejs.
+
+Dashboard 的 src/stores/counter.ts 与 v3.7.2 的 Pinia 模板相匹配；上游汇总许可文件完整保留。
+Dashboard src/stores/counter.ts matches the v3.7.2 Pinia template; its upstream aggregate license file is kept intact.
+
+vuepress-theme-hope: licenses/MIT-vuepress-theme-hope.txt (MIT),
+Copyright (C) 2021 - PRESENT by Mr.Hope<mister-hope@outlook.com>.
+
+文档中的 RepoGitee.js 和 components/styles/repo-link.css 对应于 v2.0.0-rc.32 的 RepoLink 及其样式，并适配了 Gitee 链接和本地集成。
+Docs RepoGitee.js and components/styles/repo-link.css correspond to RepoLink and styles in v2.0.0-rc.32, adapted for a Gitee link and local integration.
+
+模板的对照版本不代表确认了确切的历史引入版本。
+Template comparison versions are not exact historical import claims.
+
+Dashboard 模板的相关文本也收录于 THIRD-PARTY-FRONTEND-NOTICES.txt。
+Dashboard template texts also occur in THIRD-PARTY-FRONTEND-NOTICES.txt.
+
+13. element-plus-vite-starter（原始声明尚待确认）
+13. element-plus-vite-starter (original notice unresolved)
+
+Dashboard 的 App/BaseHeader/BaseSide、dark composables、三份样式表及部分 Vite 配置，对应于以下项目的 fa10f32788a09b2faab73d3f9709f33bc7cf4d3f 快照：
+Dashboard App/BaseHeader/BaseSide, dark composables, three stylesheets and parts of Vite configuration correspond to snapshot fa10f32788a09b2faab73d3f9709f33bc7cf4d3f of:
+
+https://github.com/element-plus/element-plus-vite-starter
+
+该固定版本的包元数据明确声明 MIT。
+The fixed package metadata explicitly declares MIT.
+
+在已核查的固定快照中，未发现独立 LICENSE 文件或原始版权行。
+No standalone LICENSE or original copyright line was found in the reviewed fixed snapshot.
+
+licenses/element-plus-vite-starter-NOTICE.txt 保留上游 MIT 声明，并提供明确标注的标准 MIT 授权、条件和免责声明。
+licenses/element-plus-vite-starter-NOTICE.txt preserves the upstream MIT declaration and supplies clearly labeled standard MIT permission/conditions/disclaimer.
+
+原始版权／声明措辞仍待确认；未自行编造权利人或年份。
+Original copyright/notice wording remains to be confirmed; no holder or year is invented.
+
+核查依据和 SPDX 模板位于 licenses/frontend-mit/。
+Evidence and the SPDX template are in licenses/frontend-mit/.
+
+Element Plus 库是另一个组件，其许可证不替代该模板项目自身的声明。
+The Element Plus library's license addresses a separate component and does not replace this template project's own notice.
+
+14. 直接复制的图片与工具模板
+14. Directly copied images and tool templates
+
+文档中的 img/hero.png 和 img/logo.png 曾复制 VuePress v1.9.10 的官方资源。
+Docs img/hero.png and img/logo.png formerly copied VuePress v1.9.10 official resources.
+
+这些图片已于 2026-10-03 替换为本项目的 JT 图形。
+They were replaced with project JT artwork on 2026-10-03.
+
+licenses/MIT-VuePress.txt 保留历史来源的原始 MIT 声明及 Copyright (c) 2018-present, Yuxi (Evan) You，供旧版本追溯；它不是当前替换图片的许可证。
+licenses/MIT-VuePress.txt retains the historical source's original MIT notice, Copyright (c) 2018-present, Yuxi (Evan) You, for traceability of older versions; it is not the license for the current replacement images.
+
+五份 .agents/skills/openspec-* 模板声明 MIT 和 generatedBy 1.13.0；licenses/MIT-OpenSpec.txt 保留 Copyright (c) 2024 OpenSpec Contributors。
+The five .agents/skills/openspec-* templates declare MIT and generatedBy 1.13.0; licenses/MIT-OpenSpec.txt retains Copyright (c) 2024 OpenSpec Contributors.
+
+旧的项目立方体标识也已从当前 logo/favicon 资源中移除。
+The old project-logo cube was also removed from current logo/favicon assets.
+
+15. Checkstyle Google 配置
+15. Checkstyle Google configuration
+
+许可：LGPL-2.1-or-later；该配置保留自身许可，不适用项目的 Apache 许可。
+License: LGPL-2.1-or-later, retained as an exception to the project Apache license.
+
+Local file: build-script/checkstyle/checkstyle.xml
+
+原始配置中的作者署名予以保留：Max Vetrenko、Ruslan Diachenko、Roman Ivanov。
+Authors retained in the original configuration: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
+
+对照来源：checkstyle-8.23 的 google_checks.xml。
+Comparison source: checkstyle-8.23 google_checks.xml.
+
+Upstream: https://github.com/checkstyle/checkstyle/tree/checkstyle-8.23
+
+对照版本的 POM 声明 LGPL-2.1+。
+The comparison version's POM declares LGPL-2.1+.
+
+该配置继续遵循这些条款；未假定配置文件另有许可例外。
+The configuration is retained under those terms; no separate configuration-file exception is assumed.
+
+原始 LGPL 文本：licenses/checkstyle-LICENSE.txt。
+Original LGPL text: licenses/checkstyle-LICENSE.txt.
+
+原始对照配置及来源／修改记录：licenses/checkstyle/google_checks-8.23.xml 和 licenses/checkstyle/README.md。
+Original comparison configuration and source/modification records: licenses/checkstyle/google_checks-8.23.xml and licenses/checkstyle/README.md.
+
+本地修改包括缩进、错误严重级别、抑制支持，以及调整／禁用部分检查。
+Local modifications include indentation, error severity, suppression support and adjusted/disabled checks.
+
+许可／来源声明于 2026-10-03 更新；实际生效的配置未变。
+License/source notices updated 2026-10-03; the effective configuration was unchanged.
+
+确切的历史引入版本未知。
+Exact historical import version unknown.
+
+每个项目 JAR 都在 META-INF/licenses/checkstyle/jt-framework-checkstyle.xml 中附带可编辑的当前配置，该文件直接取自实际构建配置。
+Each project JAR includes the editable current configuration at META-INF/licenses/checkstyle/jt-framework-checkstyle.xml, taken directly from the actual build configuration.
+
+不得用 Apache 文件头替换其声明。
+Do not replace its notice with an Apache header.
+
+这些是构建配置源码材料，不是 JVM 运行时库的 class。
+These are build-configuration source materials, not JVM runtime library classes.
+
+16. 历史上来自博客的 Logback 配置（已于 2026-10-03 替换）
+16. Historical blog-derived Logback configuration (replaced 2026-10-03)
+
+原先 17 份 samples/demos/adapter-test 中的 logback.xml 文件复制／改编自：
+The previous 17 samples/demos/adapter-test logback.xml files copied/adapted from:
+
+https://blog.csdn.net/xu_san_duo/article/details/80364600 (xu_san_duo)
+
+已核查的页面声明 CC BY-SA 4.0：
+The reviewed page declares CC BY-SA 4.0:
+
+https://creativecommons.org/licenses/by-sa/4.0/
+
+这些文件还引用了 Kai_Ge 的转载：
+They also reference the Kai_Ge repost:
+
+https://www.iteye.com/blog/cgi-bin-2395647
+
+该转载提及 Logback 文档；这些历史摘录的原始来源及许可范围仍未明确。
+The repost refers to Logback documentation; the original source/license scope of those historical excerpts remains unresolved.
+
+hylexus 当时的修改包括名称、路径、级别和滚动策略。
+Changes by hylexus included names, paths, levels and rolling policies.
+
+当前配置已按本项目的日志需求重写：16 个应用保留控制台输出、按精确级别划分的 DEBUG/INFO/WARN/ERROR 文件、各模块目录及按日期／大小归档的设置。
+The current configurations were rewritten for this project's logging requirements: 16 applications retain console output and exact-level DEBUG/INFO/WARN/ERROR files, their module-specific directories and daily/size archive settings.
+
+适配器测试仅使用控制台 appender。
+The adapter test uses only a console appender.
+
+替换配置使用项目新编写的日志格式和可配置归档属性；复制的博客文字和 XML 代码块已删除。
+The replacement uses new project patterns and configurable archive properties; copied blog text and XML blocks were removed.
+
+使用了 Logback 文档所述的配置 API 和 Spring Boot 运行时转换器，未复制其手册示例或默认配置文件。
+Logback's documented configuration APIs and Spring Boot's runtime converters are used without copying their manual examples or default configuration files.
+
+替换后的配置按 Apache-2.0 提供。
+The replacement configurations are provided under Apache-2.0.
+
+历史 URL、原文件哈希、当前哈希和验证记录保存在 licenses/source-audit.json 和 docs/license-source-audit.md 中。
+Historical URLs, the previous file hashes, current hashes and verification are recorded in licenses/source-audit.json and docs/license-source-audit.md.
+
+此次替换不构成对博客内容的重新许可，也不解决以前已发布版本的授权问题。
+This replacement does not relicense blog content or settle permissions for previously published versions.
+
+17. 历史上来自 Stack Overflow 的客户端 IP 实现（已于 2026-10-03 替换）
+17. Historical Stack Overflow client-IP implementation (replaced 2026-10-03)
+
+旧实现：jt-core/src/main/java/io/github/hylexus/jt/utils/JtWebUtils.java。
+Former implementation: jt-core/src/main/java/io/github/hylexus/jt/utils/JtWebUtils.java
+
+旧的请求头列表和选择逻辑对应于：
+The old header list and selection logic corresponded to:
+
+https://stackoverflow.com/a/55266907
+
+作者：panser（2019-03-20）；Neloop 于 2019-11-13 编辑。
+Author: panser (2019-03-20); edited by Neloop (2019-11-13).
+
+按该站点依据发表日期确定许可的规则，该回答采用 CC BY-SA 4.0：
+That answer is CC BY-SA 4.0 under the site's publication-date licensing rules:
+
+https://stackoverflow.com/help/licensing
+
+hylexus 的历史修改：X-Real-IP、provider 抽象、Optional 结果及逗号分隔值提取。
+Historical changes by hylexus: X-Real-IP, provider abstraction, Optional result and comma extraction.
+
+确切的历史改编范围未被记录。
+Exact historical adaptation scope was not recorded.
+
+旧的 12 项请求头列表及实现已从当前文件中删除。
+The old 12-header list and implementation have been removed from the current file.
+
+替换实现默认依次读取 X-Forwarded-For、X-Real-IP，或使用调用者提供的请求头名称及顺序；提取第一个逗号分隔值并去除两端空白，跳过空值／unknown。
+The replacement reads X-Forwarded-For then X-Real-IP by default, or caller-supplied header names/order; first comma-delimited value, trimmed, with empty/unknown skipped.
+
+项目的新实现按 Apache-2.0 提供。
+The new project implementation is provided under Apache-2.0.
+
+历史来源 URL 和旧文件哈希仍保存在 licenses/source-audit.json 中；此次替换不构成对该回答的重新许可，也不解决以前已发布版本的授权问题。
+Historical source URLs and the old file hash remain in licenses/source-audit.json; this replacement does not relicense the answer or resolve permissions for previously published versions.
+
+兼容性变化及验证记录：docs/license-source-audit.md。
+Compatibility changes and verification: docs/license-source-audit.md.
+
+18. 项目标识替换（当前资源已完成处理，2026-10-03）
+18. Project-logo replacement (current assets resolved, 2026-10-03)
+
+旧立方体图形的作者、来源及授权未能确认。
+The old cube's author/source/permission could not be established.
+
+所有当前项目标识、Dashboard favicon、文档 logo/hero/favicon 衍生图形和 IDEA 图标，均已替换为本项目创作的几何 JT 图形，未使用外部图标或字体路径。
+All current project logos, Dashboard favicons, docs logo/hero/favicon variants and IDEA icon were replaced with geometric JT artwork created for this project, without external icon or font paths.
+
+替换后的图形按 Apache-2.0 提供。
+The replacement artwork is provided under Apache-2.0.
+
+可编辑源文件、生成说明和资源哈希：assets/brand/。
+Editable source, generation instructions and asset hashes: assets/brand/.
+
+生成器：build-script/generate-brand-assets.py。
+Generator: build-script/generate-brand-assets.py
+
+历史资源哈希仍保存在 licenses/source-audit.json 中；此次替换不解决旧版本的授权问题，也不改变已经发布的资源。
+Historical asset hashes remain in licenses/source-audit.json; replacement does not resolve permission for old versions or change already published assets.
+
+仓库级声明可能提及某个具体模块中并未包含的代码。
+Repository-wide notices can mention code absent from a particular module.
+
+生成的依赖报告列出该模块使用的外部 JVM 构件；它提供元数据依据，不构成对全部义务的完整判断。
+The generated dependency report identifies the external JVM artifacts used by that module; it is metadata evidence, not a complete determination of obligations.

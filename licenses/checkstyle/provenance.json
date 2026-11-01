@@ -1,0 +1,39 @@
+{
+  "reviewDate": "2026-10-03",
+  "upstreamProject": "checkstyle/checkstyle",
+  "comparisonVersion": "checkstyle-8.23",
+  "exactHistoricalImportVersion": "unknown",
+  "upstreamAuthors": [
+    "Max Vetrenko",
+    "Ruslan Diachenko",
+    "Roman Ivanov"
+  ],
+  "upstreamLicenseDeclaration": {
+    "name": "LGPL-2.1+",
+    "spdx": "LGPL-2.1-or-later",
+    "evidence": "https://github.com/checkstyle/checkstyle/blob/checkstyle-8.23/pom.xml",
+    "originalPomSha256": "d614d9fd19741350c61c492e89d75cea969ac83ce95c6c48d7167ccf1bb8d7d7"
+  },
+  "originalConfiguration": {
+    "url": "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/src/main/resources/google_checks.xml",
+    "localPath": "licenses/checkstyle/google_checks-8.23.xml",
+    "sha256": "7089569cba801ef8128f328fe71d18d9ece1f6429313e7d7ac373bca5a919ed1"
+  },
+  "licenseText": {
+    "url": "https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-8.23/LICENSE",
+    "localPath": "licenses/checkstyle-LICENSE.txt",
+    "sha256": "9b872a8a070b8ad329c4bd380fb1bf0000f564c75023ec8e1e6803f15364b9e9"
+  },
+  "modifiedConfiguration": {
+    "sourcePath": "build-script/checkstyle/checkstyle.xml",
+    "jarPath": "META-INF/licenses/checkstyle/jt-framework-checkstyle.xml",
+    "spdx": "LGPL-2.1-or-later",
+    "noticeUpdateDate": "2026-10-03"
+  },
+  "effectiveConfigurationChangedByThisReview": false,
+  "historicalIntroduction": {
+    "date": "2019-08-21",
+    "commit": "9407eb60"
+  },
+  "scope": "Build configuration source, not Checkstyle runtime classes. LGPL retained; no configuration-file exception assumed."
+}

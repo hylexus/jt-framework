@@ -3,7 +3,7 @@ home: true
 icon: home
 title: 主页
 heroText: JT-framework
-heroImage: /logo.png
+heroImage: /logo.svg
 tagline: 基于 spring-boot 的 部标协议 服务端
 actions:
   - text: 接入指南

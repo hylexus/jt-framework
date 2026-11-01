@@ -1,0 +1,403 @@
+{
+  "lockfile": "docs/pnpm-lock.yaml",
+  "lockfileSha256": "c80a7037801fef74cba01c0a340ab57030a3919275a2483e0a89a4f0b72494b1",
+  "scope": "Packages contributing browser JavaScript, CSS or the copied search worker to the reviewed production build; Vite validates versions, original worker sources and notices on subsequent builds",
+  "packages": [
+    {
+      "name": "@vue/devtools-api",
+      "version": "6.6.1",
+      "integrity": "sha512-LgPscpE3Vs0x96PzSSB4IGVSZXZBZHpfxs+ZA1d+VEPwHdOXowy/Y2CsvCAIFrf+ssVU1pD1jidj505EpUnfbA==",
+      "licenseSource": {
+        "url": "https://raw.githubusercontent.com/vuejs/devtools-v6/v6.6.1/LICENSE",
+        "localFile": "licenses/docs-frontend/vue-devtools-6.6.1-LICENSE.txt",
+        "sha256": "050bbca6960784db52ff387271bf2ecc5cbed7cf8581b415d528a6ecb6585015"
+      }
+    },
+    {
+      "name": "@vue/reactivity",
+      "version": "3.4.21",
+      "integrity": "sha512-UhenImdc0L0/4ahGCyEzc/pZNwVgcglGy9HVzJ1Bq2Mm9qXOpP8RyNTjookw/gOCUlXSEtuZ2fUg5nrHcoqJcw=="
+    },
+    {
+      "name": "@vue/runtime-core",
+      "version": "3.4.21",
+      "integrity": "sha512-pQthsuYzE1XcGZznTKn73G0s14eCJcjaLvp3/DKeYWoFacD9glJoqlNBxt3W2c5S40t6CCcpPf+jG01N3ULyrA=="
+    },
+    {
+      "name": "@vue/runtime-dom",
+      "version": "3.4.21",
+      "integrity": "sha512-gvf+C9cFpevsQxbkRBS1NpU8CqxKw0ebqMvLwcGQrNpx6gqRDodqKqA+A2VZZpQ9RpK2f9yfg8VbW/EpdFUOJw=="
+    },
+    {
+      "name": "@vue/shared",
+      "version": "3.4.21",
+      "integrity": "sha512-PuJe7vDIi6VYSinuEbUIQgMIRZGgM8e4R+G+/dQTk0X1NEdvgvvgv7m+rfmDH1gZzyA1OjjoWskvHlfRNfQf3g=="
+    },
+    {
+      "name": "@vuepress/client",
+      "version": "2.0.0-rc.9",
+      "integrity": "sha512-V5jA6L1nHQ8tXBshRHBJKei7HPFonGxFzmVK5yjj2Ho/Xtp/SD9rBS6dyYd5CSkKRGQDgy19Z+BUUPXtdI1qzg=="
+    },
+    {
+      "name": "@vuepress/helper",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-yKIG8hwsrA63uWo9hx9u7KBc0HvotKe2/0wVZtUdvdsibG3UYNI9enYQNa8MdqbxF92mmlFkPZdosGjUTA+BYw=="
+    },
+    {
+      "name": "@vuepress/plugin-active-header-links",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-6i9TfGDV1zfszQ5aw6bV+/UvPdBWt3VxN2WB4Dg5o1g8Qn4z5CI6AW6VfLKRyaKUD+Rzj6W+Ikgx4xnF5RZAdA=="
+    },
+    {
+      "name": "@vuepress/plugin-back-to-top",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-qEWu0BFvadJZRH1r1UQW4mHvBYwHGSJtwNv14C/Qmxuvv2UQnpl8T2qbvPAntUWMdy94wVhr2YWCfyLh7TSEOA=="
+    },
+    {
+      "name": "@vuepress/plugin-catalog",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-qWb0K/clF9o0bW8eeiu/30f5MWNt4MZI3jt6pLL67sAOyiMXqlHSMCKI/WYZhzgnPOQi9cnIAWoF4ePsApIzAA=="
+    },
+    {
+      "name": "@vuepress/plugin-copy-code",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-280jsPmI/YeKBnXt/MCw/nrv9pUou+zhHK5mOU3ecVYfY7Pu2Xi1zdZ2kK0Ri02Txm5AwLb5YWeSac349JuUUA=="
+    },
+    {
+      "name": "@vuepress/plugin-external-link-icon",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-Wt7hjWpoUccJHj5KHK24Uks+6oWug6y5cw9QzWlNgiCyg+hvII7I+FdORRvibPUG2ndymi6ZOFyJZcR072kbKA=="
+    },
+    {
+      "name": "@vuepress/plugin-nprogress",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-qpGA76195SyfpuQC1Pb9LwgCYIp/zg+BBDnexukJMdLjP1KnaU7HLhS5NnRNIWv8E+IC61zLvlh/wRox17QE+w==",
+      "additionalLicenseSources": [
+        {
+          "description": "Original NProgress copyright and MIT terms retained for bundled nprogress.js",
+          "url": "https://registry.npmjs.org/nprogress/-/nprogress-0.2.0.tgz",
+          "localFile": "licenses/docs-frontend/nprogress-0.2.0-LICENSE.txt",
+          "sha256": "d90e3b520a248648dcb9aad1a1c932aa33bf8ea09fbb1965d3ca6a2bfcc4fd0a"
+        }
+      ],
+      "reviewNote": "The published lib/client/nprogress.js retains the 2013, 2014 Rico Sta. Cruz NProgress header. The supplement preserves that original copyright and full MIT terms; the plugin root LICENSE alone only names VuePress."
+    },
+    {
+      "name": "@vuepress/plugin-photo-swipe",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-2zCljlDTlSXUUeYy3Z74zkkAc6uEzV0Tos2HL89RZEhiH5tMyvNJaG4+dTVy7uODcQoe+Fcv1hovdbC6LKCFoQ=="
+    },
+    {
+      "name": "@vuepress/plugin-reading-time",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-8ByRTp6z4z0d9W1evfeVyOx55V9OYqxJJeC7KBiJuiA2GP8QkY9b8ajbQ8SWeCjzDLl4H0KudSU1KqH2kqw/zQ=="
+    },
+    {
+      "name": "@vuepress/plugin-theme-data",
+      "version": "2.0.0-rc.21",
+      "integrity": "sha512-vLXvTKx4gWXY6oVaJ9Z2ECnojnKQuXBIe1ZGIAwJdxCYfr6aaqggrVvmphB8BwTURh0XAuis/l6YTcMrs0bX8Q=="
+    },
+    {
+      "name": "@vuepress/shared",
+      "version": "2.0.0-rc.9",
+      "integrity": "sha512-XfI6CWNv4/Vp9Iew6GJil9RUSy1rM7zGdjwikr0j3Rkh55q3f00w1wud47wE9kxRqsZ0PIvsMget5CxEn5rA/w=="
+    },
+    {
+      "name": "@vueuse/core",
+      "version": "10.9.0",
+      "integrity": "sha512-/1vjTol8SXnx6xewDEKfS0Ra//ncg4Hb0DaZiwKf7drgfMsKFExQ+FnnENcN6efPen+1kIzhLQoGSy0eDUVOMg=="
+    },
+    {
+      "name": "@vueuse/shared",
+      "version": "10.9.0",
+      "integrity": "sha512-Uud2IWncmAfJvRaFYzv5OHDli+FbOzxiVEQdLCKQKLyhz94PIyFC3CHcH7EDMwIn8NPtD06+PNbC/PiO0LGLtw=="
+    },
+    {
+      "name": "balloon-css",
+      "version": "1.2.0",
+      "integrity": "sha512-urXwkHgwp6GsXVF+it01485Z2Cj4pnW02ICnM0TemOlkKmCNnDLmyy+ZZiRXBpwldUXO+aRNr7Hdia4CBvXJ5A=="
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.2",
+      "integrity": "sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A=="
+    },
+    {
+      "name": "photoswipe",
+      "version": "5.4.3",
+      "integrity": "sha512-9UC6oJBK4oXFZ5HcdlcvGkfEHsVrmE4csUdCQhEjHYb3PvPLO3PG7UhnPuOgjxwmhq5s17Un5NUdum01LgBDng=="
+    },
+    {
+      "name": "slimsearch",
+      "version": "2.1.1",
+      "integrity": "sha512-l1utJWal8F/RIheYk88DE2+enI12nIrn5SHt4ih/CNAH81PzkTv2GVBODlLynDJb7xan5hjd8XTL5f0L4cxLQA==",
+      "reviewNote": "Embedded in the published Search Pro worker, identified by its source map and byte-for-byte matching dist/index.mjs from slimsearch 2.1.1."
+    },
+    {
+      "name": "vue-router",
+      "version": "4.3.0",
+      "integrity": "sha512-dqUcs8tUeG+ssgWhcPbjHvazML16Oga5w34uCUmsk7i0BcnskoLGwjpa15fqMr2Fa5JgVBrdL2MEgqz6XZ/6IQ=="
+    },
+    {
+      "name": "vuepress-plugin-components",
+      "version": "2.0.0-rc.32",
+      "integrity": "sha512-ndu3lXnmS3AzYwqXn+mTJNItXux0MiPj2BzE8uH5HL473uAtzE8nS3q0gvcAt8CNbOSElJt+I5Hz4AO8/hbtAA=="
+    },
+    {
+      "name": "vuepress-plugin-md-enhance",
+      "version": "2.0.0-rc.32",
+      "integrity": "sha512-zZK8aEfbq26J5w8o9xGWXCHHrL3PYk25tloTPcx96nZWYPeD+5fMFAtVpHte0rXBWUf0MBtDQxddSeATteBE7Q=="
+    },
+    {
+      "name": "vuepress-plugin-search-pro",
+      "version": "2.0.0-rc.32",
+      "integrity": "sha512-Roac2Xxr3V9es9TuKuQon2W7q+jCc2fowSKHuvmO5kbZ2XYH+djH7zZZHqGRoBWLUNtpQj8MOrOBubQqVa4bwg=="
+    },
+    {
+      "name": "vuepress-shared",
+      "version": "2.0.0-rc.32",
+      "integrity": "sha512-wGPPUoP6rxy7QnulD0sNz3r7iEHwp+TJroNmI+AT6FuCo1WCD4ZWfnRnm3dVcAkobc3nuOvSmDTvM9pIDCaxsA=="
+    },
+    {
+      "name": "vuepress-theme-hope",
+      "version": "2.0.0-rc.32",
+      "integrity": "sha512-5S5qg5xa0TErqVjpubhBN5oy0QmROd+ja5EQKfORUCKdXKQvx0soojQZnCPkXsUEXonwiZ12oCLN2+UGO03eng=="
+    }
+  ],
+  "prebuiltAssets": [
+    {
+      "package": "vuepress-plugin-search-pro",
+      "version": "2.0.0-rc.32",
+      "entry": "lib/worker/index.js",
+      "sha256": "6f2bb8b8ea5d23dd1c0fa439cb14cb411acd8b5a570e9f4c4a64fc5f29a8b5d4",
+      "sourceMap": "lib/worker/index.js.map",
+      "sourceMapSha256": "16f7ec9a4ac419a91c15546a744dac4752d24d1de60e6f323a6d3f112fe406ca",
+      "dependencies": [
+        {
+          "name": "@vuepress/helper",
+          "version": "2.0.0-rc.21",
+          "source": "lib/shared/helper.js",
+          "sourceMapIndex": 0,
+          "sha256": "72067a5135f752a35ebe7a324b705cad0b77ddcd72ba65e04f702f893084e251"
+        },
+        {
+          "name": "slimsearch",
+          "version": "2.1.1",
+          "source": "dist/index.mjs",
+          "sourceMapIndex": 1,
+          "sha256": "0f87b713f6b76851b9d8ae25877c52c31bc9f574b3d2f5f5f22f3cf77eefb73c"
+        }
+      ]
+    }
+  ],
+  "noticesSha256": "42b66bc1b413ac4475a162aaec9f9683d3b18eab551fd847b05f1cbdf56ce0aa",
+  "localAssets": [
+    {
+      "name": "Font Awesome Free (solid SVG subset)",
+      "version": "6.7.2",
+      "license": "CC-BY-4.0",
+      "projectUrl": "https://fontawesome.com/",
+      "attribution": "Font Awesome Free 6.7.2 by @fontawesome — https://fontawesome.com/; Copyright 2024 Fonticons, Inc.",
+      "changes": "SVG bytes and embedded attribution are unchanged. Selected files are renamed for the existing project mapping and rendered as CSS masks using the text color.",
+      "sourceArchive": {
+        "url": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-6.7.2.tgz",
+        "integrity": "sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==",
+        "sha256": "794284b4ac7f3e30825bbeea1a073f542c45dff83f8146625f600f1015c9d52b"
+      },
+      "licenseFiles": [
+        {
+          "path": "docs/src/.vuepress/styles/icons/LICENSE.txt",
+          "source": "package/LICENSE.txt",
+          "sha256": "9b914eae88817d63b576eab5aafde7068c7a1abae125d7cdfb034f1da43a9afc"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/CC-BY-4.0.txt",
+          "url": "https://creativecommons.org/licenses/by/4.0/legalcode.txt",
+          "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+        }
+      ],
+      "files": [
+        {
+          "path": "docs/src/.vuepress/styles/icons/arrows.svg",
+          "source": "package/svgs/solid/arrows-left-right.svg",
+          "sha256": "b6b6c91076e1fcd72d47c2eddf16a54dbd10f66e86e5c20940fe84909073031f"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/at.svg",
+          "source": "package/svgs/solid/at.svg",
+          "sha256": "c58b5a99b95716d374d3f5e5985bce5cf8f7d3a8bff43afb3e01e25c269c885c"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/bars.svg",
+          "source": "package/svgs/solid/ranking-star.svg",
+          "sha256": "f05fffd49ba0944a21241ffb75155ad74b7ac66d1a2507bd02b6ff5758cc8df7"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/bits.svg",
+          "source": "package/svgs/solid/microchip.svg",
+          "sha256": "77a55c089932e596715e0cf05cf6aeb19ed1f270f51caaa8a8786b14f2feaaeb"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/book.svg",
+          "source": "package/svgs/solid/book-open.svg",
+          "sha256": "bbd0f7a90fe63750bcbacadde63e76a6a6a4b731a7ab34a20fc28f0c49f4131c"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/branch.svg",
+          "source": "package/svgs/solid/code-branch.svg",
+          "sha256": "80afc17c28937946484aa92a94c7e045a8333d5d4b4658e0c93d88fec616d496"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/bulb.svg",
+          "source": "package/svgs/solid/lightbulb.svg",
+          "sha256": "623cc3c302f263c2b02fff3c05e12d5f3461d72b75a5ed2ab7e10ea29f6a4c39"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/code.svg",
+          "source": "package/svgs/solid/code.svg",
+          "sha256": "17418ab3d65ab588449f520ced8004b3710fe75d96b56f709b9675f9bfaa62e5"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/compare.svg",
+          "source": "package/svgs/solid/code-compare.svg",
+          "sha256": "da1b16d7088f5440ec959712eb185fb29a95c3e111e00fc5fc40fea54e95fe7a"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/cube.svg",
+          "source": "package/svgs/solid/cube.svg",
+          "sha256": "9998b8bf874139090360f409582549c0ac9288f033139961b6cecb7b1b1c1b62"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/database.svg",
+          "source": "package/svgs/solid/database.svg",
+          "sha256": "24b1524527739d559a587af07aefa6f5a109563598dab198fe478f4e5c58d9e7"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/file.svg",
+          "source": "package/svgs/solid/file-lines.svg",
+          "sha256": "15c0a0e17726508ae605db9c8e7af169899fe9080bc063f8e471bb16634eb41b"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/filter.svg",
+          "source": "package/svgs/solid/filter.svg",
+          "sha256": "3f74ec46bf2832f10ced8c8110af0abc815dd96574adf2159f092fed1c6ea9e0"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/home.svg",
+          "source": "package/svgs/solid/house.svg",
+          "sha256": "a2f39593246f7bd7dfcecbe8cf4a0b93926756bbabdd6089b1326545d9389391"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/info.svg",
+          "source": "package/svgs/solid/circle-info.svg",
+          "sha256": "76a4160cf2229bdb5e2a24cf9028a13425e87bb496d46ca5ace4a91b7531d1d0"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/key.svg",
+          "source": "package/svgs/solid/key.svg",
+          "sha256": "ccb59b45b388c7183fbd2542da80d41d5941f180e0556bf440f3938474d6b80e"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/launch.svg",
+          "source": "package/svgs/solid/rocket.svg",
+          "sha256": "f193c820afaf6b9673dedab46020659343c20dd975f3e22d3eba80af9352d4e0"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/leaf.svg",
+          "source": "package/svgs/solid/leaf.svg",
+          "sha256": "4b6137e9ab6ecbdc5da505cc35c06cb7daacabb16e6be384f1e6f7edc1e5353e"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/list.svg",
+          "source": "package/svgs/solid/list-ul.svg",
+          "sha256": "d14719816139f7b0ad17db73fff3c47e91742b2bfc575a09895f6149337224cd"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/lock.svg",
+          "source": "package/svgs/solid/lock.svg",
+          "sha256": "c235ecb8a5bfed86989c97d9be37b9647cb3f3ae3218c2f8afcbcc4e13289218"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/map.svg",
+          "source": "package/svgs/solid/map.svg",
+          "sha256": "7a584c857a34fbff17b2d22938ba1faa14ef125e2d55f1ae96c8daa1309d4ef7"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/merge.svg",
+          "source": "package/svgs/solid/code-merge.svg",
+          "sha256": "5af97e8c822815da670ef20cdaba49e521cb55569ba732141157a9d173f52882"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/more.svg",
+          "source": "package/svgs/solid/comment-dots.svg",
+          "sha256": "7f8c235853ef8a8929317d5aac83a760e85c72471a9695cf2db9d9c1d3d17606"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/notice.svg",
+          "source": "package/svgs/solid/bell.svg",
+          "sha256": "48f758c626ee2d32f12e4255198da04b8b07eae87914cddf2bacfe45b20d19aa"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/person.svg",
+          "source": "package/svgs/solid/user.svg",
+          "sha256": "406706776ec1e3c946edd64218fee626fc2f8f63da1c23e740563ecae44c0851"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/plugin.svg",
+          "source": "package/svgs/solid/plug.svg",
+          "sha256": "4e3a226313852834261c991e06716ac86e6808d362c36f10ac84abf526fed6b1"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/plus.svg",
+          "source": "package/svgs/solid/diagram-project.svg",
+          "sha256": "66706ecf3772ae35b0f6ef2e7edcda0cd606962c680f0d51eabef683025f1eea"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/question.svg",
+          "source": "package/svgs/solid/circle-question.svg",
+          "sha256": "f410a7c686468fe959f5ce92a69c35583486a1049e4f4515bd9f64bb55fe6f5f"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/refresh.svg",
+          "source": "package/svgs/solid/arrows-rotate.svg",
+          "sha256": "0d0ead6a88be1d99e76d16886f91a2582984012a9b929764169f8d4080baf084"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/return.svg",
+          "source": "package/svgs/solid/arrow-rotate-left.svg",
+          "sha256": "22d5c8c32a96bab6e9615d9d4fb29cb60a91a9ca7b702c59884770689e13a514"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/share.svg",
+          "source": "package/svgs/solid/share-nodes.svg",
+          "sha256": "f14d9c86a676aaf443cdf603987e2cbca0dde4bbd156dacc65dda95b1b86c90d"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/shield.svg",
+          "source": "package/svgs/solid/shield-halved.svg",
+          "sha256": "047f2d9eda8a9a2758eb5465ff6da85eaf91ffa3013d419331b7ff1338ef932e"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/sliders.svg",
+          "source": "package/svgs/solid/gears.svg",
+          "sha256": "44fd5217fb99f55dd649bdd65ad526b298b41d93dfe9539f4adc30387358132f"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/tool.svg",
+          "source": "package/svgs/solid/screwdriver-wrench.svg",
+          "sha256": "7de213a52e480bac1ba993e49f7fcd246c3450329ca4df04e5af2864e39cebbf"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/tree.svg",
+          "source": "package/svgs/solid/laptop-code.svg",
+          "sha256": "cf43c30a6cf4c5875460b6047b072faa759773707b66a3192c92e3b3fd66e1f8"
+        },
+        {
+          "path": "docs/src/.vuepress/styles/icons/type.svg",
+          "source": "package/svgs/solid/font.svg",
+          "sha256": "370793f2fc199f4b50eb81e55ae75cde1b66b62cb8de2a84c6ef35760025d73e"
+        }
+      ]
+    }
+  ]
+}

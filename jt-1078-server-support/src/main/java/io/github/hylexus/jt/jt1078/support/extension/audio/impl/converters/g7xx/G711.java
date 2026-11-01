@@ -39,7 +39,7 @@ package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters.g7xx
  * </ul>
  *
  * @see <a href="https://github.com/fredrikhederstierna/g726/blob/41d813c33e2001515e7992bc39423250996e258b/src/g711.c#L56">https://github.com/fredrikhederstierna/g726/blob/41d813c33e2001515e7992bc39423250996e258b/src/g711.c#L56</a>
- * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726.java#L17">https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726.java#L17</a>
+ * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726.java#L17">https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726.java#L17</a>
  */
 public class G711 {
     // #define	SIGN_BIT	(0x80)		/* Sign bit for a A-law byte. */

@@ -1,0 +1,43 @@
+webworkify-webpack@2.1.5
+Declared license: MIT
+Publisher author field: Boris Sirota <borisirota@gmail.com> (https://github.com/borisirota)
+Source: https://github.com/borisirota/webworkify-webpack/tree/2e7827dc8e88a4eb45055d0cc7a0597de0d4fd99
+
+内嵌的 webpack 引导代码有其自身的 MIT 声明，已另行保留。
+The embedded webpack bootstrap has its own MIT notice, retained separately.
+
+上游 README 的许可小节（原文）：
+Upstream README license section (verbatim):
+# license
+
+MIT
+
+随上游 MIT 声明附带的标准 MIT 条款如下。
+Standard MIT terms accompanying the upstream MIT declaration.
+
+已核查的来源材料未提供原始版权行或独立 LICENSE 文件。
+The reviewed source provides no original copyright line or standalone LICENSE.
+
+上方的发布者作者字段仅为包元数据，不据此认定版权人。
+The publisher author field above is package metadata only; it is not asserted as a copyright holder.
+
+本补充说明不创建新的版权声明或许可授予。
+This supplement does not create a copyright notice or a new license grant.
+
+本说明记录已核查的声明及标准 MIT 条款；最终发行前应重新核对上游包中的原始署名材料。
+It records the reviewed declaration and standard MIT terms; recheck the upstream package for original attribution before a final release.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.

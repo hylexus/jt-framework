@@ -1,3 +1,21 @@
+/*
+ * Copyright 2019 matrixy.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Adapted for jt-framework by hylexus; upstream source links appear below.
+ */
+
 package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
@@ -15,7 +33,7 @@ import javax.sound.sampled.AudioFormat;
 /**
  * 这个实现类也是从 <a href="https://gitee.com/matrixy/jtt1078-video-server">https://gitee.com/matrixy/jtt1078-video-server</a> 复制过来之后修改的。
  *
- * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/MP3Encoder.java#L12">https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/MP3Encoder.java#L12</a>
+ * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/MP3Encoder.java#L12">https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/MP3Encoder.java#L12</a>
  * @see <a href="https://sourceforge.net/projects/jump3r/">https://sourceforge.net/projects/jump3r/</a>
  * @see <a href="https://pure-java-mp3-encoder.blogspot.com/">https://pure-java-mp3-encoder.blogspot.com/</a>
  */

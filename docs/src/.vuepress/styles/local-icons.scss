@@ -1,0 +1,163 @@
+// Font Awesome Free 6.7.2 SVGs: CC-BY-4.0, Fonticons, Inc.; see icons/README.md.
+// Project-authored CSS mapping: MIT; see docs/LICENSE.
+.font-icon[class*="jt-icon-"] {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  background-color: currentColor;
+  -webkit-mask: var(--jt-icon) center / contain no-repeat;
+  mask: var(--jt-icon) center / contain no-repeat;
+}
+
+.jt-icon-code,
+.jt-icon-vue {
+  --jt-icon: url("@source/.vuepress/styles/icons/code.svg");
+}
+
+.jt-icon-async,
+.jt-icon-process {
+  --jt-icon: url("@source/.vuepress/styles/icons/arrows.svg");
+}
+
+.jt-icon-at {
+  --jt-icon: url("@source/.vuepress/styles/icons/at.svg");
+}
+
+.jt-icon-bit {
+  --jt-icon: url("@source/.vuepress/styles/icons/bits.svg");
+}
+
+.jt-icon-bitbucket {
+  --jt-icon: url("@source/.vuepress/styles/icons/database.svg");
+}
+
+.jt-icon-branch {
+  --jt-icon: url("@source/.vuepress/styles/icons/branch.svg");
+}
+
+.jt-icon-guide {
+  --jt-icon: url("@source/.vuepress/styles/icons/book.svg");
+}
+
+.jt-icon-build,
+.jt-icon-tool {
+  --jt-icon: url("@source/.vuepress/styles/icons/tool.svg");
+}
+
+.jt-icon-change {
+  --jt-icon: url("@source/.vuepress/styles/icons/refresh.svg");
+}
+
+.jt-icon-compare {
+  --jt-icon: url("@source/.vuepress/styles/icons/compare.svg");
+}
+
+.jt-icon-config,
+.jt-icon-customize,
+.jt-icon-setting {
+  --jt-icon: url("@source/.vuepress/styles/icons/sliders.svg");
+}
+
+.jt-icon-creative {
+  --jt-icon: url("@source/.vuepress/styles/icons/bulb.svg");
+}
+
+.jt-icon-enum,
+.jt-icon-list {
+  --jt-icon: url("@source/.vuepress/styles/icons/list.svg");
+}
+
+.jt-icon-extend {
+  --jt-icon: url("@source/.vuepress/styles/icons/plus.svg");
+}
+
+.jt-icon-filter {
+  --jt-icon: url("@source/.vuepress/styles/icons/filter.svg");
+}
+
+.jt-icon-home {
+  --jt-icon: url("@source/.vuepress/styles/icons/home.svg");
+}
+
+.jt-icon-info {
+  --jt-icon: url("@source/.vuepress/styles/icons/info.svg");
+}
+
+.jt-icon-launch {
+  --jt-icon: url("@source/.vuepress/styles/icons/launch.svg");
+}
+
+.jt-icon-leaf {
+  --jt-icon: url("@source/.vuepress/styles/icons/leaf.svg");
+}
+
+.jt-icon-lock {
+  --jt-icon: url("@source/.vuepress/styles/icons/lock.svg");
+}
+
+.jt-icon-map {
+  --jt-icon: url("@source/.vuepress/styles/icons/map.svg");
+}
+
+.jt-icon-merge {
+  --jt-icon: url("@source/.vuepress/styles/icons/merge.svg");
+}
+
+.jt-icon-more,
+.jt-icon-others {
+  --jt-icon: url("@source/.vuepress/styles/icons/more.svg");
+}
+
+.jt-icon-notice {
+  --jt-icon: url("@source/.vuepress/styles/icons/notice.svg");
+}
+
+.jt-icon-object {
+  --jt-icon: url("@source/.vuepress/styles/icons/cube.svg");
+}
+
+.jt-icon-api,
+.jt-icon-plugin {
+  --jt-icon: url("@source/.vuepress/styles/icons/plugin.svg");
+}
+
+.jt-icon-profile {
+  --jt-icon: url("@source/.vuepress/styles/icons/person.svg");
+}
+
+.jt-icon-proposal {
+  --jt-icon: url("@source/.vuepress/styles/icons/file.svg");
+}
+
+.jt-icon-question {
+  --jt-icon: url("@source/.vuepress/styles/icons/question.svg");
+}
+
+.jt-icon-rank {
+  --jt-icon: url("@source/.vuepress/styles/icons/bars.svg");
+}
+
+.jt-icon-restrict {
+  --jt-icon: url("@source/.vuepress/styles/icons/shield.svg");
+}
+
+.jt-icon-return,
+.jt-icon-wrap {
+  --jt-icon: url("@source/.vuepress/styles/icons/return.svg");
+}
+
+.jt-icon-semantic {
+  --jt-icon: url("@source/.vuepress/styles/icons/tree.svg");
+}
+
+.jt-icon-share {
+  --jt-icon: url("@source/.vuepress/styles/icons/share.svg");
+}
+
+.jt-icon-token {
+  --jt-icon: url("@source/.vuepress/styles/icons/key.svg");
+}
+
+.jt-icon-type {
+  --jt-icon: url("@source/.vuepress/styles/icons/type.svg");
+}

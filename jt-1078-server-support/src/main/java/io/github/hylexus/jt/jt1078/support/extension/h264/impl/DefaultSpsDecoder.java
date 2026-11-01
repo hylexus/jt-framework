@@ -1,3 +1,36 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Redknot
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/*
+ * Adapted algorithm portions: EyerH264Decoder (MIT).
+ * Comparison source: https://github.com/redknotmiaoyuqiao/EyerH264Decoder/blob/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/NaluSPS.cpp
+ * Changes by hylexus: Java, Netty buffers and JT/T 1078 integration.
+ * SPS dimension/SAR logic also corresponds to SmallChi/JT1078 and jmuxer;
+ * retain licenses/MIT-SmallChi-JT1078.txt and licenses/MIT-jmuxer.txt.
+ * Attribution restored 2026-10-02; exact historical import revision is unknown.
+ */
+
 package io.github.hylexus.jt.jt1078.support.extension.h264.impl;
 
 import io.github.hylexus.jt.jt1078.support.extension.h264.Sps;
@@ -11,7 +44,7 @@ import java.util.Map;
 
 /**
  * @author hylexus
- * @see <a href="https://github.com/redknotmiaoyuqiao/EyerH264Decoder/blob/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/NaluPPS.cpp#L11">Github--redknotmiaoyuqiao--EyerH264Decoder/NaluPPS.cpp</a>
+ * @see <a href="https://github.com/redknotmiaoyuqiao/EyerH264Decoder/blob/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/NaluSPS.cpp">Github--redknotmiaoyuqiao--EyerH264Decoder/NaluSPS.cpp</a>
  * @see <a href="https://github.com/SmallChi/JT1078/blob/c4931a8ec37678fb5ecedcc749ffe3c9f4c890fe/src/JT1078.Protocol/MessagePack/EXPGolombReader.cs#L24C20-L24C20">Github--SmallChi--JT1078/EXPGolombReader.cs</a>
  * @see <a href="https://www.itu.int/rec/T-REC-H.264">T-REC-H.264-202108-I!!PDF-E.pdf</a>
  */
@@ -187,25 +220,10 @@ public class DefaultSpsDecoder implements SpsDecoder {
     }
 
     /**
-     * <pre>
-     * {@code
-     * scaling_list( scalingList, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
-     *     lastScale = 8
-     *     nextScale = 8
-     *     for( j = 0; j < sizeOfScalingList; j++ ) {
-     *         if( nextScale != 0 ) {
-     *             delta_scale // 0|1 se(v)
-     *             nextScale = ( lastScale + delta_scale + 256 ) % 256
-     *             useDefaultScalingMatrixFlag = ( j = = 0 && nextScale = = 0 )
-     *         }
-     *         scalingList[ j ] = ( nextScale = = 0 ) ? lastScale : nextScale
-     *         lastScale = scalingList[ j ]
-     *     }
-     * }
-     * }
-     * </pre>
+     * 消费一个缩放列表的编码字段，使 reader 移到后续 SPS 字段。
+     * 按当前缩放状态决定是否读取下一个有符号差值；本解析器不保存列表内容。
      *
-     * @see <a href="https://www.itu.int/rec/T-REC-H.264">T-REC-H.264-202108-I!!PDF-E.pdf -- 7.3.2.1.1.1</a>
+     * @see <a href="https://www.itu.int/rec/T-REC-H.264-202108-S/en">ITU-T H.264 (08/2021), section 7.3.2.1.1.1</a>
      */
     void scalingList(int sizeOfScalingList, BitStreamReader reader) {
         int lastScale = 8;
@@ -222,41 +240,11 @@ public class DefaultSpsDecoder implements SpsDecoder {
     }
 
     /**
-     * <pre>
-     * {@code
-     * vui_parameters( ) {
-     *     aspect_ratio_info_present_flag // u(1)
-     *     if( aspect_ratio_info_present_flag ) {
-     *         aspect_ratio_idc // u(8)
-     *         if( aspect_ratio_idc = = Extended_SAR ) {
-     *              sar_width   // u(16)
-     *              sar_height  // u(16)
-     *         }
-     *     }
-     *     overscan_info_present_flag // u(1)
-     *     if( overscan_info_present_flag )
-     *          overscan_appropriate_flag // u(1)
-     *     video_signal_type_present_flag // u(1)
-     *     if( video_signal_type_present_flag ) {
-     *         video_format   // u(3)
-     *         video_full_range_flag // u(1)
-     *         colour_description_present_flag // u(1)
-     *         if( colour_description_present_flag ) {
-     *             colour_primaries // u(8)
-     *             transfer_characteristics // u(8)
-     *             matrix_coefficients // u(8)
-     *         }
-     *     }
-     *     chroma_loc_info_present_flag // u(1)
-     *     if( chroma_loc_info_present_flag ) {
-     *         chroma_sample_loc_type_top_field // ue(v)
-     *         chroma_sample_loc_type_bottom_field // ue(v)
-     *     }
-     * }
-     * }
-     * </pre>
+     * 读取尺寸计算使用的宽高比信息，并消费紧随其后的 overscan、视频信号
+     * 和色度采样位置字段。sarScale 接收已有映射计算出的缩放系数。
+     * 本方法只处理这些字段，不解析完整 VUI 中的时序及 HRD 信息。
      *
-     * @see <a href="https://www.itu.int/rec/T-REC-H.264">T-REC-H.264-202108-I!!PDF-E.pdf -- E.1.1 VUI parameters syntax</a>
+     * @see <a href="https://www.itu.int/rec/T-REC-H.264-202108-S/en">ITU-T H.264 (08/2021), section E.1.1</a>
      */
     private void vuiParameters(BitStreamReader reader, int[] sarScale) {
         // aspect_ratio_info_present_flag

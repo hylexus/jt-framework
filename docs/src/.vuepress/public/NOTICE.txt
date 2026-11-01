@@ -1,0 +1,26 @@
+jt-framework documentation
+https://github.com/hylexus/jt-framework/tree/master/docs
+
+历史贡献按其原有许可及权利人的明确授权范围处理；本目录的许可证声明不扩大未确认贡献的授权范围。授权状态及范围见仓库 docs/license-consents.md。
+Historical contributions remain subject to their existing licenses and the scope expressly granted by their rights holders. This directory's license notices do not expand the rights granted for unconfirmed contributions. See docs/license-consents.md in the repository for their status and scope.
+
+维护者有权授权的原创文档和站点代码采用 MIT，其他贡献者的内容按其实际授权范围处理；完整条款见 LICENSE.txt。
+Original documentation and site code that the maintainer has authority to license are provided under MIT; other contributors' work follows the scope of their actual grants. See LICENSE.txt for the full terms.
+
+Java 示例及引用的后端源码保留 Apache-2.0 或来源文件的其他许可。
+Java examples and quoted backend source retain Apache-2.0 or their source files' other licenses.
+
+本项目自行绘制的 JT 标识及其衍生图形（logo、favicon、hero）采用 Apache-2.0，源文件及生成记录见仓库 assets/brand/。
+The project's original JT mark and derived artwork (logos, favicons and hero images) use Apache-2.0; sources and generation records are in assets/brand/ in the repository.
+
+第三方内容保留其原始许可及声明；文档导航图标使用 Font Awesome Free，其 SVG 图形采用 CC BY 4.0。
+Third-party content retains its original licenses and notices; documentation navigation uses Font Awesome Free SVG icons under CC BY 4.0.
+
+Apache-2.0 完整条款见 Apache-2.0.txt。
+The full Apache-2.0 terms are provided in Apache-2.0.txt.
+
+站点改编源码和图形说明见 THIRD-PARTY-SOURCE-NOTICES.txt。
+See THIRD-PARTY-SOURCE-NOTICES.txt for adapted site source and artwork notices.
+
+站点浏览器依赖及搜索 Worker 的完整第三方许可见 THIRD-PARTY-NOTICES.txt。
+See THIRD-PARTY-NOTICES.txt for the licenses of browser dependencies and the search worker.

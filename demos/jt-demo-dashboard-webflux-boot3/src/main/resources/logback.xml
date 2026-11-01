@@ -1,174 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2026 the original author or authors.
 
-<!-- @copied from https://blog.csdn.net/xu_san_duo/article/details/80364600 -->
-<!-- @copied from https://www.iteye.com/blog/cgi-bin-2395647 -->
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
 
-<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出 -->
-<!-- scan:当此属性设置为true时，配置文档如果发生改变，将会被重新加载，默认值为true -->
-<!-- scanPeriod:设置监测配置文档是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。
-                 当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
-<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+        https://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
 <configuration scan="true" scanPeriod="10 seconds">
     <contextName>logback</contextName>
 
-    <!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义后，可以使“${}”来使用变量。 -->
-    <property name="log.path" value="logs/jt-demo-dashboard-webflux-boot3"/>
+    <!-- 日志目录和归档上限可通过同名系统属性或环境变量覆盖。 -->
+    <property name="LOG_DIR" value="${JT_LOG_DIR:-logs/jt-demo-dashboard-webflux-boot3}"/>
+    <property name="ARCHIVE_FILE_SIZE" value="${JT_LOG_MAX_FILE_SIZE:-100MB}"/>
+    <property name="ARCHIVE_DAYS" value="${JT_LOG_MAX_HISTORY:-2}"/>
+    <property name="ARCHIVE_TOTAL_SIZE" value="${JT_LOG_TOTAL_SIZE_CAP:-2GB}"/>
 
-    <!--0. 日志格式和颜色渲染 -->
-    <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
-    <!-- 彩色日志格式 -->
+    <conversionRule conversionWord="clr"
+                    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
     <property name="CONSOLE_LOG_PATTERN"
-              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}:%L){cyan} %clr(-){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%-5level}) %clr([${PID:-?}/%thread]){magenta} %clr(%logger{48}:%line){cyan} | %msg%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="FILE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:%L - %msg%n"/>
+              value="${FILE_LOG_PATTERN:-%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %-5level [%thread] %logger{48}:%line | %msg%n%ex}"/>
 
-    <!--1. 输出到控制台-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
-            <!-- 设置字符集 -->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <charset>UTF-8</charset>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
-    <!--2. 输出到文档-->
-    <!-- 2.1 level为 DEBUG 日志，时间滚动输出  -->
+    <!-- 每个文件只接收对应级别；DEBUG 是否产生仍由 logger 的级别决定。 -->
     <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/debug.log</file>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- each file should be at most 100MB, keep 2 days worth of history, but at most 2GB -->
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>2</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>debug</level>
-            <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+            <level>DEBUG</level>
         </filter>
+        <file>${LOG_DIR}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${ARCHIVE_DAYS}</maxHistory>
+            <totalSizeCap>${ARCHIVE_TOTAL_SIZE}</totalSizeCap>
+            <maxFileSize>${ARCHIVE_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
     </appender>
 
-    <!-- 2.2 level为 INFO 日志，时间滚动输出  -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/info.log</file>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+            <level>INFO</level>
+        </filter>
+        <file>${LOG_DIR}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${ARCHIVE_DAYS}</maxHistory>
+            <totalSizeCap>${ARCHIVE_TOTAL_SIZE}</totalSizeCap>
+            <maxFileSize>${ARCHIVE_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <charset>UTF-8</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- each file should be at most 100MB, keep 2 days worth of history, but at most 2GB -->
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>2</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>info</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
     </appender>
 
-    <!-- 2.3 level为 WARN 日志，时间滚动输出  -->
     <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/warn.log</file>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- each file should be at most 100MB, keep 2 days worth of history, but at most 2GB -->
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>2</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>warn</level>
-            <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+            <level>WARN</level>
         </filter>
+        <file>${LOG_DIR}/warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${ARCHIVE_DAYS}</maxHistory>
+            <totalSizeCap>${ARCHIVE_TOTAL_SIZE}</totalSizeCap>
+            <maxFileSize>${ARCHIVE_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
     </appender>
 
-    <!-- 2.4 level为 ERROR 日志，时间滚动输出  -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/error.log</file>
-        <encoder>
-            <pattern>${FILE_LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- each file should be at most 100MB, keep 2 days worth of history, but at most 2GB -->
-            <maxFileSize>100MB</maxFileSize>
-            <maxHistory>2</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+            <level>ERROR</level>
         </filter>
+        <file>${LOG_DIR}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${ARCHIVE_DAYS}</maxHistory>
+            <totalSizeCap>${ARCHIVE_TOTAL_SIZE}</totalSizeCap>
+            <maxFileSize>${ARCHIVE_FILE_SIZE}</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
     </appender>
 
-    <!--
-        <logger>用来设置某一个包或者具体的某一个类的日志打印级别、
-        以及指定<appender>。<logger>仅有一个name属性，
-        一个可选的level和一个可选的addtivity属性。
-        name:用来指定受此logger约束的某一个包或者具体的某一个类。
-        level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，
-              还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。
-              如果未设置此属性，那么当前logger将会继承上级的级别。
-        addtivity:是否向上级logger传递打印信息。默认是true。
-        <logger name="org.springframework.web" level="info"/>
-        <logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="INFO"/>
-    -->
-
-    <!--
-        使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：
-        第一种把<root level="info">改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息
-        第二种就是单独给dao下目录配置debug模式，代码如下，这样配置sql语句会打印，其他还是正常info级别：
-        【logging.level.org.mybatis=debug logging.level.dao=debug】
-     -->
-
-    <!--
-        root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性
-        level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，
-        不能设置为INHERITED或者同义词NULL。默认是DEBUG
-        可以包含零个或多个元素，标识这个appender将会添加到这个logger。
-    -->
-
-    <!-- 4. 最终的策略 -->
-    <!-- 4.1 开发环境:打印控制台-->
-    <!--    <springProfile name="dev">-->
-    <!--        <logger name="com.sdcm.pmp" level="debug"/>-->
-    <!--    </springProfile>-->
-
-    <root level="info">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG_FILE"/>
         <appender-ref ref="INFO_FILE"/>
         <appender-ref ref="WARN_FILE"/>
         <appender-ref ref="ERROR_FILE"/>
     </root>
-
-    <!-- 4.2 生产环境:输出到文档
-    <springProfile name="pro">
-        <root level="info">
-            <appender-ref ref="CONSOLE" />
-            <appender-ref ref="DEBUG_FILE" />
-            <appender-ref ref="INFO_FILE" />
-            <appender-ref ref="ERROR_FILE" />
-            <appender-ref ref="WARN_FILE" />
-        </root>
-    </springProfile> -->
-
 </configuration>

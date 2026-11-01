@@ -1,0 +1,65 @@
+jt-framework
+https://github.com/hylexus/jt-framework
+
+历史贡献的许可确认尚未完成。各项贡献按其原有许可及权利人的明确授权范围处理；本项目的许可证声明不扩大未确认贡献的授权范围。授权记录及发行安排见仓库中的 docs/license-consents.md 和 docs/license-release-checklist.md。
+License confirmation for historical contributions is incomplete. Each contribution remains subject to its existing license and the scope expressly granted by its rights holder. The project's license notices do not expand the rights granted for unconfirmed contributions. See docs/license-consents.md and docs/license-release-checklist.md in the repository for authorization records and release plans.
+
+版权所有：原作者。
+Copyright the original author or authors.
+
+版权仍归各自的版权人所有。
+Copyright remains with the respective copyright holders.
+
+维护者有权授权的原创 Java 后端代码采用 Apache License, Version 2.0；其他贡献者的内容按其实际授权范围处理，文件或目录另有许可证声明的遵循该声明。
+Original Java backend code that the maintainer has authority to license is provided under the Apache License, Version 2.0. Other contributors' work follows the scope of their actual grants, and file- or directory-specific license notices apply where present.
+
+本发行包包含或依赖第三方软件。
+This distribution includes or depends on third-party software.
+
+本项目的许可证不会替代这些第三方软件各自的许可证。
+The project license does not replace the licenses of that software.
+
+请参阅以下文件和目录。
+See the following files and directories.
+
+- THIRD-PARTY-NOTICES.txt：包含为本模块生成的 JVM 依赖声明。
+  THIRD-PARTY-NOTICES.txt contains the generated JVM dependency notices for this module.
+
+- THIRD-PARTY-SOURCE-NOTICES.txt：包含第三方源码和资源的来源及许可声明，以及部分外部依赖的补充说明。
+  THIRD-PARTY-SOURCE-NOTICES.txt contains source and license notices for third-party code and resources, plus supplemental information on selected external dependencies.
+
+- THIRD-PARTY-FRONTEND-NOTICES.txt：包含前端依赖声明。
+  THIRD-PARTY-FRONTEND-NOTICES.txt contains frontend dependency notices.
+
+- licenses/：包含补充许可文本和源码分发说明。
+  licenses/ contains additional license texts and source distribution instructions.
+
+分发包含第三方组件的完整应用时，应按实际捆绑内容保留原始声明和许可文本，并提供适用许可要求的源码等材料。配套材料可通过 prepareDistributionLicenses 按需生成，核对后随应用提供；组件核对记录和操作步骤见仓库 docs/license-jvm-review.md。
+When distributing a complete application containing third-party components, retain their original notices and license texts and provide source code and other materials as required by the applicable licenses. Companion materials can be generated with prepareDistributionLicenses, reviewed and supplied with the application. See docs/license-jvm-review.md in the repository for component review records and instructions.
+
+维护者有权授权的原创文档、文档站点代码、Dashboard UI 和示例前端采用 MIT；其他贡献者的内容按其实际授权范围处理，各目录附有适用许可声明。
+Original documentation, site code, Dashboard UI and sample frontend code that the maintainer has authority to license are provided under MIT; other contributors' work follows the scope of their actual grants, with applicable notices in each directory.
+
+docs/example-src 中的 Java 示例和本项目自行绘制的 JT 标识及其衍生图形（logo、favicon、hero）采用 Apache-2.0；图形源文件及生成记录见仓库 assets/brand/。
+Java examples in docs/example-src and the project's original JT mark and derived artwork (logos, favicons and hero images) use Apache-2.0; artwork sources and generation records are in assets/brand/ in the repository.
+
+源自 Symphonia 的 IMA ADPCM 源码文件继续采用 MPL-2.0。
+The Symphonia-derived IMA ADPCM source file retains MPL-2.0.
+
+1078 的 MP3 编码使用未修改的外部依赖 de.sciss:jump3r:1.0.5。其上游 POM 声明许可为 LGPL-2.1-or-later；本项目的 Apache-2.0 许可不适用于该依赖。该库的适用原始许可和版权声明予以保留。
+1078 MP3 encoding uses the unmodified external dependency de.sciss:jump3r:1.0.5. Its upstream POM declares LGPL-2.1-or-later; the project's Apache-2.0 license does not apply to this dependency. The library's applicable original license and copyright notices are retained.
+
+该版本中的 de/sciss/jump3r/mp3/FFT.java 保留了涉及 GPL 来源及其他历史权利事项的文件头说明，原文见 licenses/jump3r/UPSTREAM-NOTICES.txt。现有核查材料尚未明确该历史说明与上游 LGPL 声明对该文件的具体适用关系。本项目保留相关原始声明，并在仓库 docs/license-1078-review.md 中记录核查依据及未确定事项。
+In this version, de/sciss/jump3r/mp3/FFT.java retains header comments concerning GPL origins and other historical rights matters. The original text is preserved in licenses/jump3r/UPSTREAM-NOTICES.txt. The reviewed materials do not establish how these historical comments relate to the upstream LGPL declaration for this file. The project retains the original notices and records the reviewed evidence and unresolved questions in docs/license-1078-review.md in the repository.
+
+本项目已依据上游 LGPL 声明准备许可、源码及重建／替换材料，见 licenses/LGPL-2.1.txt 和 licenses/jump3r/。这些材料不代替适用许可的判断；发行包含该库源码或二进制的产物前，应针对精确版本确认许可依据。使用该运行时依赖的模块在 META-INF/third-party-sources/jump3r/ 中附带匹配库源码和重建／替换材料。
+The project has prepared license, source and rebuild/replacement materials based on the upstream LGPL declaration; see licenses/LGPL-2.1.txt and licenses/jump3r/. These materials do not establish the applicable license; before distributing artifacts containing this library's source or binaries, establish the licensing basis for the exact version. Modules using this runtime dependency include matching library sources and rebuild/replacement materials in META-INF/third-party-sources/jump3r/.
+
+这些材料也包含在相关普通 JAR 中；交付这些 JAR 同样涉及 jump3r 源码副本的分发。
+These materials are also included in the relevant ordinary JARs; delivering those JARs also distributes copies of jump3r's source.
+
+改自 Checkstyle 的构建配置继续采用 LGPL-2.1-or-later，许可资料中附有配置源码和说明。
+The Checkstyle-derived build configuration retains LGPL-2.1-or-later; its source and notes accompany the license materials.
+
+这些声明仅用于提供信息，不会修改相应许可证的条款。
+These notices are informational and do not modify the respective licenses.

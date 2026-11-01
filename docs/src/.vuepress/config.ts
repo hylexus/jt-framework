@@ -1,18 +1,31 @@
 import {path} from "vuepress/utils"
 import {defineUserConfig} from 'vuepress'
 import theme from "./theme"
+import {viteBundler} from "@vuepress/bundler-vite"
+import {docsLicenseMaterials, docsSystemFonts} from "../../../build-script/docs-license-materials.mjs"
+
+const base = '/jt-framework/'
 
 export default defineUserConfig({
-    base: '/jt-framework/',
+    base,
     // base: '/',
     head: [
         [
             'link',
             {
                 rel: 'icon',
+                type: 'image/svg+xml',
+                sizes: 'any',
+                href: `${base}favicon.svg`,
+            },
+        ],
+        [
+            'link',
+            {
+                rel: 'icon',
                 type: 'image/png',
                 sizes: '16x16',
-                href: `/img/icons/favicon-16x16.png`,
+                href: `${base}img/icons/favicon-16x16.png`,
             },
         ],
         [
@@ -21,11 +34,12 @@ export default defineUserConfig({
                 rel: 'icon',
                 type: 'image/png',
                 sizes: '32x32',
-                href: `/img/icons/favicon-32x32.png`,
+                href: `${base}img/icons/favicon-32x32.png`,
             },
         ],
-        ['meta', {name: 'application-name', content: 'jt808'}],
-        ['meta', {name: 'theme-color', content: '#3eaf7c'}],
+        ['link', {rel: 'shortcut icon', href: `${base}favicon.ico`}],
+        ['meta', {name: 'application-name', content: 'jt-framework'}],
+        ['meta', {name: 'theme-color', content: '#111E37'}],
     ],
 
     locales: {
@@ -42,6 +56,17 @@ export default defineUserConfig({
     },
 
     theme,
+
+    bundler: viteBundler({
+        viteOptions: {
+            plugins: [docsLicenseMaterials()],
+            css: {
+                postcss: {
+                    plugins: [docsSystemFonts()],
+                },
+            },
+        },
+    }),
 
     pagePatterns: [
         "**/*.md",

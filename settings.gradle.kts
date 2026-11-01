@@ -6,6 +6,7 @@ pluginManagement {
         id("io.spring.dependency-management") version "1.1.7" apply false
         id("org.springframework.boot") version defaultSpringBootBomVersion apply false
         id("io.gitee.pkmer.pkmerboot-central-publisher") version "1.1.1" apply false
+        id("com.github.jk1.dependency-license-report") version "3.0.1" apply false
     }
     repositories {
         listOf(

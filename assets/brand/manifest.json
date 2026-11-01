@@ -1,0 +1,133 @@
+{
+  "designDate": "2026-10-03",
+  "license": "Apache-2.0",
+  "source": "build-script/generate-brand-assets.py",
+  "sourceSha256": "465c73fbc0e6aac35fa55cc551004a793ff96bb95dd014cead77f72a68018ba4",
+  "viewBox": [
+    0,
+    0,
+    512,
+    512
+  ],
+  "colors": {
+    "navy": "#111E37",
+    "blue": "#60A5FA",
+    "mint": "#2DD4BF"
+  },
+  "assets": [
+    {
+      "path": ".idea/icon.png",
+      "format": "png",
+      "size": 128,
+      "sha256": "94f16103d434fe40d873bca4aa5e39b6da80d81df2a0e1d1559b708e12c78407"
+    },
+    {
+      "path": "assets/brand/jt-framework-128.png",
+      "format": "png",
+      "size": 128,
+      "sha256": "94f16103d434fe40d873bca4aa5e39b6da80d81df2a0e1d1559b708e12c78407"
+    },
+    {
+      "path": "assets/brand/jt-framework-16.png",
+      "format": "png",
+      "size": 16,
+      "sha256": "002381d43c583ca095cbf840cb85acc1dd698460f2710dbbefcaeb981d3c437d"
+    },
+    {
+      "path": "assets/brand/jt-framework-256.png",
+      "format": "png",
+      "size": 256,
+      "sha256": "2b4e2f9502da9628bf1fa54fbdfa3e6a62235958e8ce0e12dcc19ecca2383818"
+    },
+    {
+      "path": "assets/brand/jt-framework-32.png",
+      "format": "png",
+      "size": 32,
+      "sha256": "ff0cc858e31d92e9e323bba0a5f511af5c9c9350f6568f257fd65bc0c5e17d9c"
+    },
+    {
+      "path": "assets/brand/jt-framework-48.png",
+      "format": "png",
+      "size": 48,
+      "sha256": "b9ebdeef0a5ff941ed7a7ab33036068fbbca21cf99ac5a985cf9bc245eb95fd4"
+    },
+    {
+      "path": "assets/brand/jt-framework-512.png",
+      "format": "png",
+      "size": 512,
+      "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+    },
+    {
+      "path": "assets/brand/jt-framework-64.png",
+      "format": "png",
+      "size": 64,
+      "sha256": "6d704d590f90e263fc13bb7a99a478034e3b83b46e0def1d89b0a291dffc2964"
+    },
+    {
+      "path": "assets/brand/jt-framework.svg",
+      "format": "svg",
+      "size": 512,
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    },
+    {
+      "path": "dashboard/jt-dashboard-server-ui-vue3/public/favicon.svg",
+      "format": "svg",
+      "size": 512,
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    },
+    {
+      "path": "dashboard/jt-dashboard-server/src/main/resources/static/client/favicon.svg",
+      "format": "svg",
+      "size": 512,
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    },
+    {
+      "path": "docs/src/.vuepress/public/favicon.ico",
+      "format": "ico",
+      "size": null,
+      "sha256": "967a60427b17016acf766896d647bf5696def92fab499b677e1e14c6d8f3534a"
+    },
+    {
+      "path": "docs/src/.vuepress/public/favicon.svg",
+      "format": "svg",
+      "size": 512,
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    },
+    {
+      "path": "docs/src/.vuepress/public/img/hero.png",
+      "format": "png",
+      "size": 512,
+      "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+    },
+    {
+      "path": "docs/src/.vuepress/public/img/icons/favicon-16x16.png",
+      "format": "png",
+      "size": 16,
+      "sha256": "002381d43c583ca095cbf840cb85acc1dd698460f2710dbbefcaeb981d3c437d"
+    },
+    {
+      "path": "docs/src/.vuepress/public/img/icons/favicon-32x32.png",
+      "format": "png",
+      "size": 32,
+      "sha256": "ff0cc858e31d92e9e323bba0a5f511af5c9c9350f6568f257fd65bc0c5e17d9c"
+    },
+    {
+      "path": "docs/src/.vuepress/public/img/logo.png",
+      "format": "png",
+      "size": 512,
+      "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+    },
+    {
+      "path": "docs/src/.vuepress/public/logo.png",
+      "format": "png",
+      "size": 512,
+      "sha256": "88363470b06edd0be8abb6b04205c30b01e6c5dc9d3973b7d7eff4258dab0d6c"
+    },
+    {
+      "path": "docs/src/.vuepress/public/logo.svg",
+      "format": "svg",
+      "size": 512,
+      "sha256": "87e2a7eeb166694afbc0cfecfd62371b5a56b51b97ed3436503048a7e870d3fb"
+    }
+  ]
+}

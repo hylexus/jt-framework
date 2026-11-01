@@ -73,7 +73,7 @@ import static io.github.hylexus.jt.jt1078.support.extension.audio.impl.converter
  *     <li><a href="https://github.com/fredrikhederstierna/g726">https://github.com/fredrikhederstierna/g726</a></li>
  * </ul>
  *
- * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726_24.java#L20">https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726_24.java#L20</a>
+ * @see <a href="https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726_24.java#L20">https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/g726/G726_24.java#L20</a>
  * @see <a href="https://github.com/fredrikhederstierna/g726/blob/41d813c33e2001515e7992bc39423250996e258b/src/g726_24.c#L150">https://github.com/fredrikhederstierna/g726/blob/41d813c33e2001515e7992bc39423250996e258b/src/g726_24.c#L150</a>
  */
 public class G726_24 extends G72X {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPDX-License-Identifier: Apache-2.0; project geometric mark, 2026-10-03. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title desc">
+  <title id="title">jt-framework</title>
+  <desc id="desc">Blue J and mint T on a rounded navy square.</desc>
+  <path fill="#111E37" d="M128 16 H384 C446 16 496 66 496 128 V384 C496 446 446 496 384 496 H128 C66 496 16 446 16 384 V128 C16 66 66 16 128 16 Z"/>
+  <path fill="#60A5FA" d="M188 112 H248 V304 C248 366 212 402 152 402 C116 402 88 390 64 370 L100 324 C114 338 130 346 150 346 C174 346 188 332 188 304 Z"/>
+  <path fill="#2DD4BF" d="M276 112 H416 Q432 112 432 128 V156 Q432 172 416 172 H382 V386 Q382 402 366 402 H338 Q322 402 322 386 V172 H276 Q260 172 260 156 V128 Q260 112 276 112 Z"/>
+</svg>

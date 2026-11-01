@@ -1,0 +1,409 @@
+{
+  "lockfile": "dashboard/jt-dashboard-server-ui-vue3/pnpm-lock.yaml",
+  "lockfileSha256": "3f5732b6221f7301faf004da664b596d15916291b859bc3e064ecbef4fe6f496",
+  "packages": [
+    {
+      "name": "@babel/helper-string-parser",
+      "version": "7.22.5",
+      "integrity": "sha512-mM4COjgZox8U+JcXQwPijIZLElkgEpO5rsERVDJTc2qfCDfERyob6k5WegS14SX18IIjv+XD+GrqNumY5JRCDw=="
+    },
+    {
+      "name": "@babel/helper-validator-identifier",
+      "version": "7.22.5",
+      "integrity": "sha512-aJXu+6lErq8ltp+JhkJUfk1MTGyuA4v7f3pA+BJ5HLfNC6nAQ0Cpi9uOquUj8Hehg0aUiHzWQbOVJGao6ztBAQ=="
+    },
+    {
+      "name": "@babel/parser",
+      "version": "7.22.11",
+      "integrity": "sha512-R5zb8eJIBPJriQtbH/htEQy4k7E2dHWlD2Y2VT07JCzwYZHBxV5ZYtM0UhXSNMT74LyxuM+b1jdL7pSesXbC/g=="
+    },
+    {
+      "name": "@babel/types",
+      "version": "7.22.11",
+      "integrity": "sha512-siazHiGuZRz9aB9NpHy9GOs9xiQPKnMzgdr493iI1M67vRXpnEq8ZOOKzezC5q7zwuQ6sDhdSp4SD9ixKSqKZg=="
+    },
+    {
+      "name": "@ctrl/tinycolor",
+      "version": "3.6.1",
+      "integrity": "sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA=="
+    },
+    {
+      "name": "@element-plus/icons-vue",
+      "version": "2.1.0",
+      "integrity": "sha512-PSBn3elNoanENc1vnCfh+3WA9fimRC7n+fWkf3rE5jvv+aBohNHABC/KAR5KWPecxWxDTVT1ERpRbOMRcOV/vA=="
+    },
+    {
+      "name": "@floating-ui/core",
+      "version": "1.4.1",
+      "integrity": "sha512-jk3WqquEJRlcyu7997NtR5PibI+y5bi+LS3hPmguVClypenMsCY3CBa3LAQnozRCtCrYWSEtAdiskpamuJRFOQ=="
+    },
+    {
+      "name": "@floating-ui/dom",
+      "version": "1.5.1",
+      "integrity": "sha512-KwvVcPSXg6mQygvA1TjbN/gh///36kKtllIF8SUm0qpFj8+rvYrpvlYdL1JoA71SHpDqgSSdGOSoQ0Mp3uY5aw=="
+    },
+    {
+      "name": "@floating-ui/utils",
+      "version": "0.1.1",
+      "integrity": "sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw=="
+    },
+    {
+      "name": "@iconify-json/ep",
+      "version": "1.1.12",
+      "integrity": "sha512-UnWhRfcGzB9daN5pL9hkq/sWZB9FMPAVo9VKhN/Qf3//CrBNwh8r9hSPW3WTrJO2NKGpTzlIFTvrfHdbhFH3Jg==",
+      "licenseSource": {
+        "url": "https://raw.githubusercontent.com/element-plus/element-plus-icons/v2.1.0/LICENSE",
+        "sha256": "5db4ebb3abd8353774ae148723ccc14087d6dab99473f77a7b799b55defd8dfe"
+      },
+      "reviewNote": "UnoCSS uses Element Plus moon/sunny SVG data; info.json identifies iconSetVersion 2.1.0 and MIT."
+    },
+    {
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.4.15",
+      "integrity": "sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg=="
+    },
+    {
+      "name": "@sxzz/popperjs-es",
+      "version": "2.11.7",
+      "integrity": "sha512-Ccy0NlLkzr0Ex2FKvh2X+OyERHXJ88XJ1MXtsI9y9fGexlaXaVTPzBCRBwIxFkORuOb+uBqeu+RqnpgYTEZRUQ=="
+    },
+    {
+      "name": "@types/lodash",
+      "version": "4.14.197",
+      "integrity": "sha512-BMVOiWs0uNxHVlHBgzTIqJYmj+PgCo4euloGF+5m4okL3rEYzM2EEv78mw8zWSMM57dM7kVIgJ2QDvwHSoCI5g=="
+    },
+    {
+      "name": "@types/lodash-es",
+      "version": "4.17.8",
+      "integrity": "sha512-euY3XQcZmIzSy7YH5+Unb3b2X12Wtk54YWINBvvGQ5SmMvwb11JQskGsfkH/5HXK77Kr8GF0wkVDIxzAisWtog=="
+    },
+    {
+      "name": "@types/web-bluetooth",
+      "version": "0.0.16",
+      "integrity": "sha512-oh8q2Zc32S6gd/j50GowEjKLoOVOwHP/bWVjKJInBwQqdOYMdPrf1oVlelTlyfFK3CKxL1uahMDAr+vy8T7yMQ=="
+    },
+    {
+      "name": "@types/web-bluetooth",
+      "version": "0.0.17",
+      "integrity": "sha512-4p9vcSmxAayx72yn70joFoL44c9MO/0+iVEBIQXe3v2h2SiAsEIo/G5v6ObFWvNKRFjbrVadNf9LqEEZeQPzdA=="
+    },
+    {
+      "name": "@vue/compiler-core",
+      "version": "3.3.4",
+      "integrity": "sha512-cquyDNvZ6jTbf/+x+AgM2Arrp6G4Dzbb0R64jiG804HRMfRiFXWI6kqUVqZ6ZR0bQhIoQjB4+2bhNtVwndW15g=="
+    },
+    {
+      "name": "@vue/compiler-dom",
+      "version": "3.3.4",
+      "integrity": "sha512-wyM+OjOVpuUukIq6p5+nwHYtj9cFroz9cwkfmP9O1nzH68BenTTv0u7/ndggT8cIQlnBeOo6sUT/gvHcIkLA5w=="
+    },
+    {
+      "name": "@vue/compiler-sfc",
+      "version": "3.3.4",
+      "integrity": "sha512-6y/d8uw+5TkCuzBkgLS0v3lSM3hJDntFEiUORM11pQ/hKvkhSKZrXW6i69UyXlJQisJxuUEJKAWEqWbWsLeNKQ=="
+    },
+    {
+      "name": "@vue/compiler-ssr",
+      "version": "3.3.4",
+      "integrity": "sha512-m0v6oKpup2nMSehwA6Uuu+j+wEwcy7QmwMkVNVfrV9P2qE5KshC6RwOCq8fjGS/Eak/uNb8AaWekfiXxbBB6gQ=="
+    },
+    {
+      "name": "@vue/devtools-api",
+      "version": "6.5.0",
+      "integrity": "sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==",
+      "licenseSource": {
+        "url": "https://raw.githubusercontent.com/vuejs/devtools-v6/v6.5.0/LICENSE",
+        "sha256": "050bbca6960784db52ff387271bf2ecc5cbed7cf8581b415d528a6ecb6585015"
+      }
+    },
+    {
+      "name": "@vue/reactivity",
+      "version": "3.3.4",
+      "integrity": "sha512-kLTDLwd0B1jG08NBF3R5rqULtv/f8x3rOFByTDz4J53ttIQEDmALqKqXY0J+XQeN0aV2FBxY8nJDf88yvOPAqQ=="
+    },
+    {
+      "name": "@vue/reactivity-transform",
+      "version": "3.3.4",
+      "integrity": "sha512-MXgwjako4nu5WFLAjpBnCj/ieqcjE2aJBINUNQzkZQfzIZA4xn+0fV1tIYBJvvva3N3OvKGofRLvQIwEQPpaXw=="
+    },
+    {
+      "name": "@vue/runtime-core",
+      "version": "3.3.4",
+      "integrity": "sha512-R+bqxMN6pWO7zGI4OMlmvePOdP2c93GsHFM/siJI7O2nxFRzj55pLwkpCedEY+bTMgp5miZ8CxfIZo3S+gFqvA=="
+    },
+    {
+      "name": "@vue/runtime-dom",
+      "version": "3.3.4",
+      "integrity": "sha512-Aj5bTJ3u5sFsUckRghsNjVTtxZQ1OyMWCr5dZRAPijF/0Vy4xEoRCwLyHXcj4D0UFbJ4lbx3gPTgg06K/GnPnQ=="
+    },
+    {
+      "name": "@vue/server-renderer",
+      "version": "3.3.4",
+      "integrity": "sha512-Q6jDDzR23ViIb67v+vM1Dqntu+HUexQcsWKhhQa4ARVzxOY2HbC7QRW/ggkDBd5BU+uM1sV6XOAP0b216o34JQ=="
+    },
+    {
+      "name": "@vue/shared",
+      "version": "3.3.4",
+      "integrity": "sha512-7OjdcV8vQ74eiz1TZLzZP4JwqM5fA94K6yntPS5Z25r9HDuGNzaGdgvwKYq6S+MxwF0TFRwe50fIR/MYnakdkQ=="
+    },
+    {
+      "name": "@vueuse/core",
+      "version": "10.4.1",
+      "integrity": "sha512-DkHIfMIoSIBjMgRRvdIvxsyboRZQmImofLyOHADqiVbQVilP8VVHDhBX2ZqoItOgu7dWa8oXiNnScOdPLhdEXg=="
+    },
+    {
+      "name": "@vueuse/core",
+      "version": "9.13.0",
+      "integrity": "sha512-pujnclbeHWxxPRqXWmdkKV5OX4Wk4YeK7wusHqRwU0Q7EFusHoqNA/aPhB6KCh9hEqJkLAJo7bb0Lh9b+OIVzw=="
+    },
+    {
+      "name": "@vueuse/metadata",
+      "version": "10.4.1",
+      "integrity": "sha512-2Sc8X+iVzeuMGHr6O2j4gv/zxvQGGOYETYXEc41h0iZXIRnRbJZGmY/QP8dvzqUelf8vg0p/yEA5VpCEu+WpZg=="
+    },
+    {
+      "name": "@vueuse/metadata",
+      "version": "9.13.0",
+      "integrity": "sha512-gdU7TKNAUVlXXLbaF+ZCfte8BjRJQWPCa2J55+7/h+yDtzw3vOoGQDRXzI6pyKyo6bXFT5/QoPE4hAknExjRLQ=="
+    },
+    {
+      "name": "@vueuse/shared",
+      "version": "10.4.1",
+      "integrity": "sha512-vz5hbAM4qA0lDKmcr2y3pPdU+2EVw/yzfRsBdu+6+USGa4PxqSQRYIUC9/NcT06y+ZgaTsyURw2I9qOFaaXHAg=="
+    },
+    {
+      "name": "@vueuse/shared",
+      "version": "9.13.0",
+      "integrity": "sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw=="
+    },
+    {
+      "name": "async-validator",
+      "version": "4.2.5",
+      "integrity": "sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg=="
+    },
+    {
+      "name": "asynckit",
+      "version": "0.4.0",
+      "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
+    },
+    {
+      "name": "axios",
+      "version": "1.5.0",
+      "integrity": "sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ=="
+    },
+    {
+      "name": "combined-stream",
+      "version": "1.0.8",
+      "integrity": "sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg=="
+    },
+    {
+      "name": "csstype",
+      "version": "3.1.2",
+      "integrity": "sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ=="
+    },
+    {
+      "name": "dayjs",
+      "version": "1.11.9",
+      "integrity": "sha512-QvzAURSbQ0pKdIye2txOzNaHmxtUBXerpY0FJsFXUMKbIZeFm5ht1LS/jFsrncjnmtv8HsG0W2g6c0zUjZWmpA=="
+    },
+    {
+      "name": "delayed-stream",
+      "version": "1.0.0",
+      "integrity": "sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ=="
+    },
+    {
+      "name": "element-plus",
+      "version": "2.3.9",
+      "integrity": "sha512-TIOLnPl4cnoCPXqK3QYh+jpkthUBQnAM21O7o3Lhbse8v9pfrRXRTaBJtoEKnYNa8GZ4lZptUfH0PeZgDCNLUg==",
+      "licenseSource": {
+        "url": "https://raw.githubusercontent.com/element-plus/element-plus/8b083b454e966f4812852992b9c618e0ba68c8f5/LICENSE",
+        "sha256": "0790118bb4d66681db1d63181f72ef68e632d632f6db0373ef87cf328561af27"
+      }
+    },
+    {
+      "name": "es6-promise",
+      "version": "4.2.8",
+      "integrity": "sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w=="
+    },
+    {
+      "name": "escape-html",
+      "version": "1.0.3",
+      "integrity": "sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow=="
+    },
+    {
+      "name": "estree-walker",
+      "version": "2.0.2",
+      "integrity": "sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w=="
+    },
+    {
+      "name": "follow-redirects",
+      "version": "1.15.2",
+      "integrity": "sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA=="
+    },
+    {
+      "name": "form-data",
+      "version": "4.0.0",
+      "integrity": "sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww=="
+    },
+    {
+      "name": "lodash",
+      "version": "4.17.21",
+      "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
+    },
+    {
+      "name": "lodash-es",
+      "version": "4.17.21",
+      "integrity": "sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw=="
+    },
+    {
+      "name": "lodash-unified",
+      "version": "1.0.3",
+      "integrity": "sha512-WK9qSozxXOD7ZJQlpSqOT+om2ZfcT4yO+03FuzAHD0wF6S0l0090LRPDx3vhTTLZ8cFKpBn+IOcVXK6qOcIlfQ==",
+      "licenseSupplement": {
+        "declaredLicense": "MIT",
+        "noticeFile": "licenses/frontend-mit/lodash-unified-NOTICE.txt",
+        "sha256": "48523e5bf0ddd25f74e061b1e95c254f6eda48ef543ce5cc1971f91bdc546149"
+      }
+    },
+    {
+      "name": "magic-string",
+      "version": "0.30.3",
+      "integrity": "sha512-B7xGbll2fG/VjP+SWg4sX3JynwIU0mjoTc6MPpKNuIvftk6u6vqhDnk1R80b8C2GBR6ywqy+1DcKBrevBg+bmw=="
+    },
+    {
+      "name": "memoize-one",
+      "version": "6.0.0",
+      "integrity": "sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw=="
+    },
+    {
+      "name": "mime-db",
+      "version": "1.52.0",
+      "integrity": "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg=="
+    },
+    {
+      "name": "mime-types",
+      "version": "2.1.35",
+      "integrity": "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw=="
+    },
+    {
+      "name": "mpegts.js",
+      "version": "1.7.3",
+      "integrity": "sha512-kqZ1C1IsbAQN72cK8vMrzKeM7hwrwSBbFAwVAc7PPweOeoZxCANrc7fAVDKMfYUzxdNkMTnec9tVmlxmKZB0TQ=="
+    },
+    {
+      "name": "nanoid",
+      "version": "3.3.6",
+      "integrity": "sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA=="
+    },
+    {
+      "name": "normalize-wheel-es",
+      "version": "1.2.0",
+      "integrity": "sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw=="
+    },
+    {
+      "name": "picocolors",
+      "version": "1.0.0",
+      "integrity": "sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ=="
+    },
+    {
+      "name": "pinia",
+      "version": "2.1.6",
+      "integrity": "sha512-bIU6QuE5qZviMmct5XwCesXelb5VavdOWKWaB17ggk++NUwQWWbP5YnsONTk3b752QkW9sACiR81rorpeOMSvQ=="
+    },
+    {
+      "name": "postcss",
+      "version": "8.4.28",
+      "integrity": "sha512-Z7V5j0cq8oEKyejIKfpD8b4eBy9cwW2JWPk0+fB1HOAMsfHbnAXLLS+PfVWlzMSLQaWttKDt607I0XHmpE67Vw=="
+    },
+    {
+      "name": "proxy-from-env",
+      "version": "1.1.0",
+      "integrity": "sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg=="
+    },
+    {
+      "name": "source-map-js",
+      "version": "1.0.2",
+      "integrity": "sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw=="
+    },
+    {
+      "name": "to-fast-properties",
+      "version": "2.0.0",
+      "integrity": "sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog=="
+    },
+    {
+      "name": "typescript",
+      "version": "5.1.6",
+      "integrity": "sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA=="
+    },
+    {
+      "name": "vue",
+      "version": "3.3.4",
+      "integrity": "sha512-VTyEYn3yvIeY1Py0WaYGZsXnz3y5UnGi62GjVEqvEGPl6nxbOrCXbVOTQWBEJUqAyTUk2uJ5JLVnYJ6ZzGbrSw=="
+    },
+    {
+      "name": "vue-demi",
+      "version": "0.14.5",
+      "integrity": "sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA=="
+    },
+    {
+      "name": "vue-router",
+      "version": "4.2.4",
+      "integrity": "sha512-9PISkmaCO02OzPVOMq2w82ilty6+xJmQrarYZDkjZBfl4RvYAlt4PKnEX21oW4KTtWfa9OuO/b3qk1Od3AEdCQ=="
+    },
+    {
+      "name": "webworkify-webpack",
+      "version": "2.1.5",
+      "integrity": "sha512-2akF8FIyUvbiBBdD+RoHpoTbHMQF2HwjcxfDvgztAX5YwbZNyrtfUMgvfgFVsgDhDPVTlkbb5vyasqDHfIDPQw==",
+      "additionalLicenseSources": [
+        {
+          "description": "MIT notice for the embedded webpack bootstrap; reviewed against the webpack 4 development dependency declared by this package",
+          "url": "https://raw.githubusercontent.com/webpack/webpack/v4.29.6/LICENSE",
+          "sha256": "9068a8782d2fb4c6e432cfa25334efa56f722822180570802bf86e71b6003b1e",
+          "localFile": "licenses/MIT-webpack.txt"
+        }
+      ],
+      "licenseSupplement": {
+        "declaredLicense": "MIT",
+        "noticeFile": "licenses/frontend-mit/webworkify-webpack-NOTICE.txt",
+        "sha256": "ef987e0c0172f57e62e04840e96047c23516cb53ec04b6970400107efb5a82be"
+      }
+    }
+  ],
+  "copiedSources": [
+    {
+      "name": "vue-element-admin",
+      "source": "https://github.com/PanJiaChen/vue-element-admin/blob/4.4.0/src/utils/request.js",
+      "localFiles": [
+        "src/utils/request.ts"
+      ],
+      "noticeFile": "licenses/MIT-vue-element-admin.txt",
+      "sha256": "707265af5bde955e699607946fec8c26382a803dcb4d59b0a2993c0979382eb8"
+    },
+    {
+      "name": "create-vue",
+      "source": "https://github.com/vuejs/create-vue/blob/v3.7.2/template/config/pinia/src/stores/counter.js",
+      "localFiles": [
+        "src/stores/counter.ts"
+      ],
+      "noticeFile": "licenses/create-vue-LICENSE.txt",
+      "sha256": "4f1e382beaf3b645c565a65fbfbb0387118b988bf4dd1e53a81ee3a9b210cc45"
+    },
+    {
+      "name": "element-plus-vite-starter",
+      "source": "https://github.com/element-plus/element-plus-vite-starter/blob/fa10f32788a09b2faab73d3f9709f33bc7cf4d3f/",
+      "localFiles": [
+        "src/App.vue",
+        "src/components/layouts/BaseHeader.vue",
+        "src/components/layouts/BaseSide.vue",
+        "src/composables/dark.ts",
+        "src/composables/index.ts",
+        "src/styles/index.scss",
+        "src/styles/element/index.scss",
+        "src/styles/element/dark.scss",
+        "vite.config.ts"
+      ],
+      "noticeFile": "licenses/element-plus-vite-starter-NOTICE.txt",
+      "sha256": "938c44651cdd3a0da152f0e19d61edef7892c2a9b1f658dada8389f1c7660927"
+    }
+  ]
+}

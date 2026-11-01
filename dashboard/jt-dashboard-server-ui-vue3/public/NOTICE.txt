@@ -1,0 +1,7 @@
+jt-framework Dashboard UI
+https://github.com/hylexus/jt-framework/tree/master/dashboard/jt-dashboard-server-ui-vue3
+
+UI code that the maintainer has authority to license is provided under MIT; other contributors' work follows the scope of their actual grants. See LICENSE.txt.
+The shared project favicon retains Apache-2.0 as described in assets/brand/README.md.
+Third-party components retain their original licenses and copyright notices;
+see THIRD-PARTY-NOTICES.txt. The Apache-2.0 text is also reproduced there.

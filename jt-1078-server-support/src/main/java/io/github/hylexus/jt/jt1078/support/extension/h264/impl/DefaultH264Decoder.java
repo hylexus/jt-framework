@@ -1,3 +1,30 @@
+/*
+ * The H.264 state machine is adapted from jmuxer.
+ * Copyright (c) 2018 Samir Das
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Adapted for jt-framework by hylexus; see the upstream source link below.
+ * The referenced JT1078 C# implementation also credits jmuxer. Its MIT notice
+ * is retained in licenses/MIT-SmallChi-JT1078.txt; see third-party source notices.
+ */
+
 package io.github.hylexus.jt.jt1078.support.extension.h264.impl;
 
 import io.github.hylexus.jt.jt1078.spec.Jt1078Request;
@@ -15,6 +42,7 @@ import java.util.List;
  *
  * @see <a href="https://github.com/samirkumardas/jmuxer/blob/579835d7d72796d3374e0c62929456e7202bcb12/src/parsers/h264.js#LL7C18-L7C18">github--jmuxer--h264.js</a>
  * @see <a href="https://gitee.com/ldming/JT1078">https://gitee.com/ldming/JT1078</a>
+ * @see <a href="https://github.com/SmallChi/JT1078/blob/c4931a8ec37678fb5ecedcc749ffe3c9f4c890fe/src/JT1078.Protocol/H264/H264Decoder.cs">SmallChi/JT1078: reviewed H.264 parser snapshot</a>
  * @see <a href="https://gitee.com/matrixy/jtt1078-video-server">https://gitee.com/matrixy/jtt1078-video-server</a>
  */
 public class DefaultH264Decoder implements H264Decoder {

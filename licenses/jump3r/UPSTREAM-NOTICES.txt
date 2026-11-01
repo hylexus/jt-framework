@@ -1,0 +1,109 @@
+jump3r 1.0.5 上游声明摘录
+Selected upstream notices retained from de.sciss:jump3r:1.0.5
+
+对应源码归档的 SHA-256：
+Source archive SHA-256:
+bbd353fcb01d6192b7faf00939cbb4f65e31c6911de4972007af0dd9775614e9
+
+关键内容导读（由 jt-framework 编写）
+Key points (written by jt-framework)
+
+以下内容仅概述原文要点；完整英文摘录保留在后半部分，完整源码归档保留其余声明。
+The notes below summarize key points; the original English excerpts follow, and the full source archive retains all other notices.
+
+1. FFT.java
+
+文件头提到作者此前按 GPL 发布的例程，以及当时的专利和机构权利事项。
+The header refers to an earlier routine released by the author under the GPL, as well as patents and institutional rights discussed at the time.
+
+其中“If it were up to me, I'd say go do whatever you want with it;”这句表态未被作为覆盖全部相关权利的授权；这些历史表述也不说明所提权利目前是否存在。
+The statement "If it were up to me, I'd say go do whatever you want with it;" is not treated as a grant covering all relevant rights; these historical comments also do not establish whether the referenced rights exist today.
+
+现有核查材料尚未明确该文件头与上游 POM 的 LGPL-2.1-or-later 声明对当前实现的具体适用关系。
+The reviewed materials do not establish how this header relates to the upstream POM's LGPL-2.1-or-later declaration for the current implementation.
+
+2. MPGLib.java
+
+文件头声明可按 LGPL 第 2 版或后续版本再分发和修改，并附有无担保说明；此处保留文件头原有的版本表述。
+The header permits redistribution and modification under LGPL version 2 or later and includes a warranty disclaimer; the original header's version wording is retained here.
+
+3. Parse.java
+
+帮助文字称 mpglib 解码部分按 GPL 提供，非 GPL 程序使用需取得 MPG123 项目的许可，与 MPGLib.java 的 LGPL 文件头不同。
+The help text states that mpglib decoding functions are under the GPL and require permission from the MPG123 project for use by non-GPL programs, differing from MPGLib.java's LGPL header.
+
+对照 LAME 3.98.4 的材料支持旧帮助文字未同步更新的解释，具体依据见仓库 docs/license-1078-review.md。
+Comparison with LAME 3.98.4 supports the interpretation that the old help text was not updated; see docs/license-1078-review.md in the repository for the evidence.
+
+本导读及摘录不修改上游声明，也不授予额外权限；使用与分发安排见本目录 README.md。
+These notes and excerpts do not amend upstream statements or grant additional permissions; see README.md in this directory for use and distribution arrangements.
+
+上游英文原文摘录（保持原文）
+Original upstream English excerpts (unchanged)
+
+de/sciss/jump3r/mp3/FFT.java
+/*
+** FFT and FHT routines
+**  Copyright 1988, 1993; Ron Mayer
+**      Copyright (c) 1999-2000 Takehiro Tominaga
+**
+**  fht(fz,n);
+**      Does a hartley transform of "n" points in the array "fz".
+**
+** NOTE: This routine uses at least 2 patented algorithms, and may be
+**       under the restrictions of a bunch of different organizations.
+**       Although I wrote it completely myself; it is kind of a derivative
+**       of a routine I once authored and released under the GPL, so it
+**       may fall under the free software foundation's restrictions;
+**       it was worked on as a Stanford Univ project, so they claim
+**       some rights to it; it was further optimized at work here, so
+**       I think this company claims parts of it.  The patents are
+**       held by R. Bracewell (the FHT algorithm) and O. Buneman (the
+**       trig generator), both at Stanford Univ.
+**       If it were up to me, I'd say go do whatever you want with it;
+**       but it would be polite to give credit to the following people
+**       if you use this anywhere:
+**           Euler     - probable inventor of the fourier transform.
+**           Gauss     - probable inventor of the FFT.
+**           Hartley   - probable inventor of the hartley transform.
+**           Buneman   - for a really cool trig generator
+**           Mayer(me) - for authoring this particular version and
+**                       including all the optimizations in one package.
+**       Thanks,
+**       Ron Mayer; mayer@acuson.com
+** and added some optimization by
+**           Mather    - idea of using lookup table
+**           Takehiro  - some dirty hack for speed up
+*/
+
+de/sciss/jump3r/mpg/MPGLib.java
+/*
+ *      LAME MP3 encoding engine
+ *
+ *      Copyright (c) 1999-2000 Mark Taylor
+ *      Copyright (c) 2003 Olcios
+ *      Copyright (c) 2008 Robert Hegemann
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+de/sciss/jump3r/mp3/Parse.java (license-help excerpt)
+fp.printf("*** IMPORTANT NOTE ***\n"
+				+ "\n"
+				+ "The decoding functions provided in LAME use the mpglib decoding engine which\n"
+				+ "is under the GPL.  They may not be used by any program not released under the\n"
+				+ "GPL unless you obtain such permission from the MPG123 project (www.mpg123.de).\n"
+				+ "\n");

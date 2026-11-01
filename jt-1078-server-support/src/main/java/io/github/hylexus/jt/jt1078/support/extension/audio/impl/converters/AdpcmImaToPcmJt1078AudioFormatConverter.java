@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2019-2022 The Project Symphonia Developers.
+ * Portions of audio integration adapted from matrixy (Copyright 2019 matrixy),
+ * whose original code is Apache-2.0; its notice and LICENSE are retained.
+ * Adapted from Symphonia codec_ima.rs for jt-framework by hylexus.
+ * Changes include Java/Netty integration and JT/T 1078 audio framing.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 package io.github.hylexus.jt.jt1078.support.extension.audio.impl.converters;
 
 import io.github.hylexus.jt.common.JtCommonUtils;
@@ -23,7 +36,7 @@ import javax.annotation.Nonnull;
  * 该算法是从下面几个 代码库/资料 中改造而来：
  * <ol>
  *     <li><a href="https://github.com/pdeljanov/Symphonia/blob/b157bb58826a2035405702f481b6fdcbd922cbf3/symphonia-codec-adpcm/src/codec_ima.rs#L65">symphonia-codec-adpcm/src/codec_ima.rs#L65(Rust 版本的音频库)</a></li>
- *     <li><a href="https://gitee.com/matrixy/jtt1078-video-server/blob/flv/src/main/java/cn/org/hentai/jtt1078/codec/ADPCMCodec.java#L181">cn.org.hentai.jtt1078.codec.ADPCMCodec</a></li>
+ *     <li><a href="https://gitee.com/matrixy/jtt1078-video-server/blob/2d425b69ca441eeadbb9b4d23a4f7d989ace5aee/src/main/java/cn/org/hentai/jtt1078/codec/ADPCMCodec.java#L181">cn.org.hentai.jtt1078.codec.ADPCMCodec</a></li>
  *     <li><a href="https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf">https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf</a></li>
  * </ol>
  *
@@ -128,105 +141,6 @@ public class AdpcmImaToPcmJt1078AudioFormatConverter implements Jt1078AudioForma
         status.predictor = this.ensurePredictorRange(predictor);
         status.stepIndex = this.ensureIndexCapacity(status.stepIndex + IMA_INDEX_TABLE[nibble]);
 
-        return status.predictor;
-    }
-
-    /**
-     * 参考这里的算法: <a href="https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf">https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf</a>
-     *
-     * <pre>{@code
-     * long step; // Quantizer step size
-     * signed long predsample; // Output of ADPCM predictor
-     * signed long diffq; // Dequantized predicted difference
-     * int index; // Index into step size table
-     *
-     * signed long ADPCMDecoder(char code )
-     * {
-     * // Restore previous values of predicted sample and quantizer step size index
-     * predsample =state.prevsample;
-     * index =state.previndex;
-     *
-     * // Find quantizer step size from lookup table using index
-     * step = StepSizeTable[index];
-     *
-     * // Inverse quantize the ADPCM code into a difference using the quantizer step size
-     * diffq = step >> 3;
-     * if( code & 4 )
-     *   diffq += step;
-     * if( code & 2 )
-     *   diffq += step >> 1;
-     * if( code & 1 )
-     *   diffq += step >> 2;
-     *
-     * // Add the difference to the predicted sample
-     * if( code & 8 )
-     *   predsample -= diffq;
-     * else
-     *   predsample += diffq;
-     *
-     * // Check for overflow of the new predicted sample
-     * if( predsample > 32767 )
-     *   predsample = 32767;
-     * else if( predsample < -32768 )
-     *   predsample = -32768;
-     *
-     * // Find new quantizer step size by adding the old index and a table lookup using the ADPCM code
-     * index += IndexTable[code];
-     *
-     * // Check for overflow of the new quantizer step size index
-     * if( index < 0 )
-     *   index = 0;
-     * if( index > 88 )
-     *   index = 88;
-     * // Save predicted sample and quantizer step size index for next iteration
-     * state.prevsample = predsample;
-     * state.previndex = index;
-     *
-     * // Return the new speech sample
-     * return( predsample );
-     *
-     * }
-     * }</pre>
-     *
-     * @see <a href="https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf">https://ww1.microchip.com/downloads/en/AppNotes/00643b.pdf</a>
-     */
-    private short expandNibbleV2(AdpcmImaBlockStatus status, short code) {
-        int predSample = status.predictor;
-        byte index = status.stepIndex;
-        final int step = IMA_STEP_TABLE[index];
-        int diffq = step >> 3;
-        if ((code & 4) > 0) {
-            diffq += step;
-        }
-        if ((code & 2) > 0) {
-            diffq += step >> 1;
-        }
-        if ((code & 1) > 0) {
-            diffq += step >> 2;
-        }
-
-        if ((code & 8) > 0) {
-            predSample -= diffq;
-        } else {
-            predSample += diffq;
-        }
-
-        if (predSample > 32767) {
-            predSample = 32767;
-        }
-        if (predSample < -32768) {
-            predSample = -32768;
-        }
-
-        index += (byte) IMA_INDEX_TABLE[code];
-        if (index < 0) {
-            index = 0;
-        }
-        if (index > 88) {
-            index = 88;
-        }
-        status.predictor = (short) predSample;
-        status.stepIndex = index;
         return status.predictor;
     }
 

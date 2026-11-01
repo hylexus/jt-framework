@@ -12,6 +12,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BitOperatorTest {
 
     @Test
+    void testUnsignedLongBoundaries() {
+        assertEquals(BigInteger.ZERO, toUnsignedBigInteger(0));
+        assertEquals(BigInteger.ONE, toUnsignedBigInteger(1));
+        assertEquals(new BigInteger("9223372036854775807"), toUnsignedBigInteger(Long.MAX_VALUE));
+        assertEquals(new BigInteger("9223372036854775808"), toUnsignedBigInteger(Long.MIN_VALUE));
+        assertEquals(new BigInteger("9223372036854775809"), toUnsignedBigInteger(Long.MIN_VALUE + 1));
+        assertEquals(new BigInteger("18446744073709551615"), toUnsignedBigInteger(-1));
+    }
+
+    @Test
+    void testUnsignedLongBitPatterns() {
+        final java.util.Random random = new java.util.Random(1078);
+        for (int i = 0; i < 1000; i++) {
+            final long value = random.nextLong();
+            final BigInteger expected = new BigInteger(Long.toUnsignedString(value));
+            assertEquals(expected, toUnsignedBigInteger(value));
+            assertEquals(expected, immutable(value).unsignedLongValue());
+        }
+    }
+
+    @Test
     void testRange() {
         final BitOperator operator = mutable(0).set(63);
         assertEquals(new BigInteger("9223372036854775808"), operator.rangedUnsignedLongValue(0, 64));
