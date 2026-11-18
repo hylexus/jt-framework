@@ -176,7 +176,7 @@ Dashboard UI 和示例前端历史原创贡献。它不覆盖范围外的构建/
 | 根 `.gitignore`                      | 当时修改的旧文档输出路径已变更；新增的单条 `.cache` 忽略规则仍在                                                         | 保留实际改动记录，不把它当作 Java 后端实现贡献，也不扩展 MIT 回复范围                 |
 | 旧 Vue 2 的 `vue.config.js`          | 仅修改代理目标地址；整个 Vue 2 目录已由维护者在 [71b124ad](https://github.com/hylexus/jt-framework/commit/71b124ad) 删除 | 当前文件不存在，历史授权状态保留                                                      |
 | 1078 示例的 `application-local.yaml` | 仅修改本机输出目录；该值已由维护者在 [3d177401](https://github.com/hylexus/jt-framework/commit/3d177401) 替换            | 当前配置不保留该目录值，历史授权状态保留                                              |
-| 旧项目 logo/icon 资源                | 当前使用的新项目图形已整体替换旧资源                                                                                     | 旧图来源和授权不由该 MIT 回复解决；当前替换情况见 [资源核对](license-source-audit.md) |
+| 旧项目 logo/icon 资源                | 当前使用的新项目图形已整体替换旧资源                                                                                     | 旧图来源和授权不由该 MIT 回复解决；当前替换情况见 [品牌资产](../assets/brand/README.md) |
 
 未发现这些提交新增或修改 Java/Kotlin 后端实现。合并提交
 [`f6363e73`](https://github.com/hylexus/jt-framework/commit/f6363e734a025ce084c31a60ec1b4b279cebc2a7)

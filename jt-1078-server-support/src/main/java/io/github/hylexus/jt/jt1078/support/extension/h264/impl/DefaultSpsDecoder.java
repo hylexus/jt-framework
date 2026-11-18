@@ -27,7 +27,7 @@
  * Comparison source: https://github.com/redknotmiaoyuqiao/EyerH264Decoder/blob/59e0a396f0b9c0a4a2c034ba6d44fae22297e979/EyerH264Decoder/NaluSPS.cpp
  * Changes by hylexus: Java, Netty buffers and JT/T 1078 integration.
  * SPS dimension/SAR logic also corresponds to SmallChi/JT1078 and jmuxer;
- * retain licenses/MIT-SmallChi-JT1078.txt and licenses/MIT-jmuxer.txt.
+ * their original copyrights and MIT terms are retained in project NOTICE.
  * Attribution restored 2026-10-02; exact historical import revision is unknown.
  */
 

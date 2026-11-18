@@ -19,7 +19,7 @@
  * Hex byte-array encoding/decoding adapted from Apache Commons Codec Hex.
  * Comparison source: https://github.com/apache/commons-codec/blob/commons-codec-1.11/src/main/java/org/apache/commons/codec/binary/Hex.java
  * Changes by hylexus: uppercase output, Netty buffers and unchecked exceptions.
- * See licenses/Apache-Commons-Codec-NOTICE.txt (META-INF/licenses/ in JARs).
+ * The applicable Commons Codec attribution is retained in project NOTICE (META-INF/NOTICE in JARs).
  * Attribution restored 2026-10-02; exact historical import version is unknown.
  */
 

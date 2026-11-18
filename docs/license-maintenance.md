@@ -1,142 +1,104 @@
-# 依赖与许可维护清单
+# 许可维护
 
-按变更类型执行对应流程。普通业务代码或页面修改未影响依赖、第三方来源和
-已登记资源时，按常规测试、构建验证即可。下列命令除特别注明外，在仓库根目录执行。
+日常维护以依赖配置、源文件原始声明和实际交付内容为准。无需维护第三方依赖的
+逐文件清单、源码哈希、锁文件哈希或产物哈希。
 
-## 先判断需要维护什么
+## 后端
 
-| 变更                      | 人工核对和更新                                              | 自动生成的内容                              |
-|---------------------------|-------------------------------------------------------------|---------------------------------------------|
-| JVM 依赖或使用范围        | 依赖配置、原始许可，必要时更新现有组件说明                  | Gradle 依赖报告、JAR 内的声明与适用源码材料 |
-| Dashboard／示例播放器依赖 | `licenses/frontend-inventory.json`、必要的上游许可材料      | 根前端声明、示例声明、Dashboard 构建记录    |
-| 文档站点依赖              | `licenses/docs-frontend-inventory.json`、必要的上游许可材料 | 站点第三方声明及构建记录                    |
-| 复制或改编第三方源码      | 文件头、源码声明、来源链接及核查记录                        | 构建时复制进 JAR；来源记录本身不自动更新    |
-| 图标、字体或项目图形      | 来源、许可、适用清单和资源哈希                              | 按对应资源流程生成声明或图形产物            |
+普通库采用统一的 `META-INF/LICENSE.txt` 和 `META-INF/NOTICE`。源码来源集中
+维护在根目录 [NOTICE](../NOTICE)，复制源码的版权、MIT 条款、Sun 声明均合并在其中；
+不把前端、Checkstyle、历史调查材料或所有传递依赖的声明复制到每个 JAR。
+`jt-1078-server-support` 自身附带 MPL 覆盖的 Symphonia 改编文件源码。
 
-## 后端 JVM 依赖
+常规依赖升级更新依赖配置并执行相关测试和构建；许可或分发要求变化时，同步更新
+适用声明和交付材料。需要查看依赖许可声明时，可按需生成报告：
 
-1. 修改依赖配置，确认直接及传递依赖的变化，特别是 `compileOnly` 改为运行时、
-   复制源码或捆绑进应用等使用方式变化。
-2. 生成报告，核对变更组件的 POM、归档内 LICENSE／NOTICE；对 Unknown 和多重
-   许可结合实际文件判断。报告不覆盖测试专用依赖、构建插件及已复制的源码，
-   这些内容变化时另查其原始材料。
+```sh
+./gradlew :generateLicenseReport
+# 或仅指定模块
+./gradlew :jt-1078-server-support:generateLicenseReport
+```
 
-   ```sh
-   ./gradlew :generateLicenseReport
-   ```
+报告写入 `build/reports/dependency-license/`，不进入普通打包链。
+根任务汇总 Java 模块，也可执行单个模块的同名任务。报告包含 HTML、JSON 和文本，
+汇总编译、运行及注解处理器的依赖声明；不扫描测试、前端、构建插件或复制源码。
+Unknown、多重许可及仅编译可见的条目需结合实际交付内容理解。
 
-3. 若变化影响已登记的 jump3r、Logback 等组件，更新对应的 `licenses/` 材料和
-   [依赖说明](license-jvm-review.md)；项目级分发说明变化时同步 `NOTICE`。
-4. 运行相关测试、构建和 JAR 材料检查：
+完整 Boot 应用捆绑了外部库，交付时按实际内容提供原始声明、适用源码和替换材料。
+原始库声明保留在未修改的嵌套 JAR 中，可按需准备补充目录和 ZIP：
 
-   ```sh
-   ./gradlew build verifyJarLicenseMaterials
-   ```
+```sh
+./gradlew :samples:jt-1078-server-sample-webflux-boot3:prepareDistributionLicenses \
+  -Pjt-framework.backend.build.debug-module-fatjar.enabled=true
+```
 
-模块的 JVM `THIRD-PARTY-NOTICES.txt` 由 Gradle 自动生成到 `build/reports/`，
-随 JAR 打包，不需要手工编辑或提交报告。普通 JVM 依赖升级通常不修改根目录的
-`THIRD-PARTY-FRONTEND-NOTICES.txt` 或 `THIRD-PARTY-SOURCE-NOTICES.txt`。
+任务仅为需要额外源码或声明的组件准备补充材料：完整交付匹配版本的源码包，
+保留其中的原始版权和条款；Netty、Logback 等 Maven 构件缺少的声明从对应
+上游发行版本补充。缺少缓存时需要联网获取匹配源码和上游声明，缓存齐全后可用 `--offline`。
+依赖报告也随目录交付，实际范围仍以 Boot JAR 为准。
+不再逐 Java 文件提取注释、复制已有嵌套声明、自动选择许可或生成哈希清单。
 
-交付包含外部库的 Boot 应用时，还需执行该模块的 `prepareDistributionLicenses`，
-核对生成的配套材料并随应用提供；普通 `build` 不自动执行此任务。
-命令示例及适用源码、替换步骤见[分发说明](license-jvm-review.md#普通库与完整应用分别处理)。
+输出留在模块 `build/reports/distribution-licenses/` 及同级 ZIP 中，核对后随应用交付。
+1078 模块内的 MPL 改编源码继续随自身 JAR 提供，不在补充目录重复复制。
+jump3r 的源码、原始说明和重建／替换工具位于补充目录的 `sources/jump3r/`；
+操作见 [jump3r 使用材料](../licenses/jump3r/README.md)，未确定事项集中见
+[核查记录](license-1078-review.md)。生成材料不改变其授权状态，也不代替发行核对。
 
-## Dashboard／示例播放器依赖
+## Dashboard 与文档站点
 
-1. 使用 Dashboard `package.json` 固定的 pnpm 版本更新依赖及锁文件，操作方式见
-   [前端构建说明](../dashboard/jt-dashboard-server-ui-vue3/README.md)。
-2. 人工审核并更新 `licenses/frontend-inventory.json`：
-   - `packages`：新增、升级、移除的直接及传递依赖；`name`、`version` 和
-     `integrity` 对应锁文件中的包及 `resolution.integrity`。
-   - 清单还覆盖构建时使用的图标数据和示例播放器；只列 `package.json` 中的
-     直接依赖不足以覆盖这些内容。
-   - 随版本复核 `licenseSource`、`additionalLicenseSources`、`licenseSupplement`
-     及 `copiedSources` 中的适用原文、来源和哈希。未变化的复制来源保留原记录。
-   - 审核完成后，用下列结果更新 `lockfileSha256`：
+更新各自的 `package.json` 和 `pnpm-lock.yaml`，从仓库根目录执行构建：
 
-     ```sh
-     shasum -a 256 dashboard/jt-dashboard-server-ui-vue3/pnpm-lock.yaml
-     ```
+```sh
+bash dashboard/jt-dashboard-server-ui-vue3/build.sh
+pnpm --dir docs docs:build
+```
 
-3. 若升级示例播放器，同步更新示例静态目录中的实际 JS 文件；生成器会校验它与
-   对应发布包的一致性。播放器新增内嵌组件时，一并更新清单及生成器的声明范围。
-4. 生成声明、构建并同步 Dashboard，再检查产物：
+两端都使用普通的 Vite／VuePress 构建。第三方署名和适用条款分别集中在
+[Dashboard NOTICE](../dashboard/jt-dashboard-server-ui-vue3/public/NOTICE.txt) 和
+[文档站点 NOTICE](src/.vuepress/public/NOTICE.txt)，由构建工具复制到输出目录。
+相同 MIT 条款共用一份，
+保留各来源的版权；Lodash 的补充条款、BSD、Apache-2.0 和图标的 CC BY 4.0
+按适用范围保留。不维护逐包版本清单，不自建许可扫描器或构建门禁。
 
-   ```sh
-   python3 build-script/generate-frontend-license-notices.py
-   bash dashboard/jt-dashboard-server-ui-vue3/build.sh
-   python3 build-script/generate-frontend-license-notices.py --check
-   python3 build-script/check-license-materials.py dashboard dashboard/jt-dashboard-server-ui-vue3/dist
-   ```
+Dashboard 的 `build.sh` 附带本模块 `LICENSE`，再将整个 `dist/` 同步到后端
+静态目录；文档站点从 `public/` 复制 `LICENSE.txt`、`Apache-2.0.txt` 和
+`NOTICE.txt`，产物留在被忽略的 `.vuepress/dist/` 中。
+提交 Dashboard 静态目录的实际变化。
+独立示例目录中的 mpegts.js 是固定的静态播放器副本，其旁边的既有
+`THIRD-PARTY-NOTICES.txt` 继续随播放器交付；替换播放器时一同更新适用声明。
 
-生成器更新根目录 `THIRD-PARTY-FRONTEND-NOTICES.txt` 和三个示例目录的
-`THIRD-PARTY-NOTICES.txt`。`build.sh` 将完整 UI 产物同步到后端的
-`src/main/resources/static/client/`。该目录中已纳入仓库的资源、许可文件及
-`license-build-provenance.json` 随变更一起提交；构建记录由 Vite 自动生成。
+引入、更换或升级浏览器依赖、复制模板、Worker、图标时，核对变更涉及的原始
+声明。来源、版权或许可有变化的，更新对应 `public/NOTICE.txt`；仅版本变化
+且声明不变的，不需要修改许可材料。保留上游源码头和打包器保留的许可注释。
+纯构建依赖不进入浏览器产物时，不为它们扩充站点声明。
 
-## 文档站点依赖
+前端已知缺项集中保留在 Dashboard 的 [NOTICE](../dashboard/jt-dashboard-server-ui-vue3/public/NOTICE.txt)：
+element-plus-vite-starter 和 webworkify-webpack 的已核查材料声明 MIT，
+但未附原始版权行或独立 LICENSE。补充说明不创造缺失的版权或新的授权。
+此前核查的 lodash-unified 1.0.3 也存在同类缺项；当前浏览器产物只保留其实际
+使用的 lodash-es，不再为已消除的 re-export 模块复制补充文件。Vue Devtools
+等发布包缺项也合并到站点 NOTICE，不另存许可副本。来源或打包方式变化时复核。
 
-1. 更新 `docs/package.json` 及其锁文件，保持文档项目使用的 pnpm 锁文件格式。
-2. 在 `docs/` 下执行发现构建，收集实际进入浏览器的依赖：
+## 复制源码和静态资源
 
-   ```sh
-   JT_DOCS_LICENSE_DISCOVER=1 pnpm docs:build
-   ```
+保留文件头、原作者、许可和修改说明。复制后端源码时，在根目录 `NOTICE`
+中按组件说明来源和适配用途。前端源码和静态资源的声明按上节路径维护。
+各声明文件内可以共用相同的 MIT 条款，后端 Apache-2.0 代码复用项目 LICENSE。
+`licenses/` 保留共用的 MPL／LGPL 全文和
+jump3r 的源码交付说明及工具。外部依赖升级无需扩充源码逐文件记录。
 
-3. 根据根目录 `build/docs-license-materials/browser-packages.json` 和锁文件，
-   审核并更新 `licenses/docs-frontend-inventory.json` 的 `packages`，包含
-   包名、版本、完整性值和必要的补充许可来源；同时更新锁文件哈希：
+Checkstyle 改编配置保留原始署名、LGPL 声明和修改说明，实际可编辑源码就是
+`build-script/checkstyle/checkstyle.xml`，不另存一份上游配置作比较档案。
 
-   ```sh
-   shasum -a 256 docs/pnpm-lock.yaml
-   ```
+本地图标按[图标说明](src/.vuepress/styles/icons/README.md)保留许可和署名。
+站点继续移除主题内嵌的 Crimson 字体子集，使用系统字体；新增要分发的字体时
+保留该字体自己的许可。项目 JT 图形的生成方式见
+[品牌资产](../assets/brand/README.md)。
 
-   搜索 Worker、图标或字体变化时，一并核对 `prebuiltAssets`、`localAssets`
-   及其原始材料。发现模式仍执行资源校验；遇到这些校验报错时先核对对应材料。
-4. 回到仓库根目录，生成声明并执行正常构建：
+历史调查和当时的清单可从 Git 历史追溯，不另维护归档副本或更新其中的文件哈希。
+旧实现和旧资源的替换不追溯改变历史版本的授权状态。
+历史贡献确认、正式发行范围和 jump3r 未决事项分别维护在现有专门文档，
+不因简化而视为已解决。
 
-   ```sh
-   python3 build-script/generate-docs-license-notices.py
-   python3 build-script/generate-docs-license-notices.py --check
-   pnpm --dir docs run docs:build
-   ```
-
-生成器自动更新 `docs/src/.vuepress/public/THIRD-PARTY-NOTICES.txt` 和清单的
-`noticesSha256`。
-提交更新的清单、声明及适用的原始材料；站点 `dist/` 和发现构建记录留在忽略目录。
-清单与锁文件哈希需人工审核后更新，生成器不会自动接受新的依赖集合。
-
-## 第三方源码与静态资源
-
-- **复制／改编源码**：保留原始署名、许可和修改说明，更新根目录
-  `THIRD-PARTY-SOURCE-NOTICES.txt` 及 `licenses/source-provenance.json` 中的固定来源。
-  更新核查记录时，同步 `licenses/source-audit.json` 中受影响的当前文件哈希，
-  保留历史记录。普通业务文件修改不要求重做整份来源核查。
-- **源码声明副本**：根声明修改后，手动同步文档站点副本：
-
-  ```sh
-  cp THIRD-PARTY-SOURCE-NOTICES.txt docs/src/.vuepress/public/THIRD-PARTY-SOURCE-NOTICES.txt
-  ```
-
-- **复制的前端模板**：同时核对 `frontend-inventory.json` 的 `copiedSources`，
-  更新对应许可材料并重新生成前端声明。
-- **导航图标**：按[本地图标说明](src/.vuepress/styles/icons/README.md)保留来源和
-  适用许可，更新文档清单并重新生成声明、构建。
-- **字体**：当前站点使用系统字体，构建会拒绝新增 `@font-face`。若改为分发字体，
-  先核对字体来源和许可，再调整构建策略。
-- **项目 JT 标识**：修改生成器后运行 `python3 build-script/generate-brand-assets.py`，
-  同步来源核查记录中的当前哈希，再运行 Dashboard `build.sh` 更新静态资源与构建记录；
-  详见[品牌说明](../assets/brand/README.md)。
-- **项目声明或许可范围**：核对受影响目录的 LICENSE／NOTICE 及其分发副本。
-  各目录的 MIT、Apache-2.0 和第三方许可分别保留。
-
-## 提交与交付前核对
-
-- [ ] 本次变更已包含源配置、锁文件、受影响的清单和必要的上游原始材料。
-- [ ] 已重新生成声明；根源码声明与站点副本一致。
-- [ ] 已按变更范围构建、检查，Dashboard 后端静态产物与前端构建一致。
-- [ ] `build/` 报告、下载缓存、`node_modules/` 和忽略的 `dist/` 未纳入提交。
-- [ ] 若交付完整应用，已核对并随附实际构件对应的许可／源码材料。
-
-以上检查针对材料维护；正式发行的版本、授权范围及历史贡献确认以
-[许可发行清单](license-release-checklist.md)为准。
+日常验证沿用模块构建和前端构建，不另设许可打包校验任务。正式发行的授权范围以
+[贡献确认](license-consents.md)和[发行清单](license-release-checklist.md)为准。

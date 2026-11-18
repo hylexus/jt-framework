@@ -10,8 +10,8 @@
 
 图形材料按项目的 Apache-2.0 条款提供，参见根目录 `LICENSE`。
 本目录的设计取代来源和许可尚未确认的旧立方体图标，以及此前使用的
-VuePress logo／hero。VuePress 图片的已知 MIT 来源及历史记录见
-[源码与资源说明](../../docs/license-source-audit.md)。
+VuePress logo／hero。旧图片的已知来源及当时调查可从 Git 历史追溯，
+替换不追溯改变历史资源的授权状态。
 
 修改生成脚本中的路径或配色后，运行：
 
@@ -27,5 +27,4 @@ SVG 也可在矢量编辑器中打开；若手动编辑，应同步更新生成�
 
 更新 Dashboard 图标后，还需运行
 `dashboard/jt-dashboard-server-ui-vue3/build.sh`，重新生成前端产物并同步到
-server 静态目录。构建会更新 `license-build-provenance.json` 中 favicon
-对应的哈希。其他第三方源码、依赖和模板继续保留它们自己的许可。
+server 静态目录。其他第三方源码、依赖和模板继续保留各自许可。

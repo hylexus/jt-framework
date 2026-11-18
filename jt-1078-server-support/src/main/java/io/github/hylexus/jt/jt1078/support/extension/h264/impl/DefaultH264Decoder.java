@@ -22,7 +22,7 @@
  *
  * Adapted for jt-framework by hylexus; see the upstream source link below.
  * The referenced JT1078 C# implementation also credits jmuxer. Its MIT notice
- * is retained in licenses/MIT-SmallChi-JT1078.txt; see third-party source notices.
+ * is retained in project NOTICE with the original MIT terms.
  */
 
 package io.github.hylexus.jt.jt1078.support.extension.h264.impl;

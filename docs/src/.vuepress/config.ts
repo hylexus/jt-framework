@@ -2,7 +2,6 @@ import {path} from "vuepress/utils"
 import {defineUserConfig} from 'vuepress'
 import theme from "./theme"
 import {viteBundler} from "@vuepress/bundler-vite"
-import {docsLicenseMaterials, docsSystemFonts} from "../../../build-script/docs-license-materials.mjs"
 
 const base = '/jt-framework/'
 
@@ -59,10 +58,21 @@ export default defineUserConfig({
 
     bundler: viteBundler({
         viteOptions: {
-            plugins: [docsLicenseMaterials()],
             css: {
                 postcss: {
-                    plugins: [docsSystemFonts()],
+                    plugins: [{
+                        postcssPlugin: 'jt-docs-system-fonts',
+                        OnceExit(styles) {
+                            styles.walkAtRules(/^font-face$/i, (rule) => {
+                                rule.walkDecls(/^font-family$/i, (declaration) => {
+                                    // The theme's Crimson subset has unconfirmed font terms; use system fonts.
+                                    if (declaration.value.replace(/["']/g, '').trim().toLowerCase() === 'crimson') {
+                                        rule.remove()
+                                    }
+                                })
+                            })
+                        },
+                    }],
                 },
             },
         },

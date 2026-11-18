@@ -7,14 +7,14 @@
     Comparison: https://github.com/checkstyle/checkstyle/blob/checkstyle-8.23/src/main/resources/google_checks.xml
     This modified configuration is distributed under the GNU Lesser General
     Public License, version 2.1 or any later version, with no warranty.
-    Full terms: licenses/checkstyle-LICENSE.txt.
+    Full terms: licenses/LGPL-2.1.txt.
     It is an exception to the repository's default Apache-2.0 license.
 
     Local changes include four-space indentation, error severity, suppression
     support, adjusted Unicode/Javadoc checks and disabled optional style checks.
     License/source notices updated 2026-10-03; executable configuration unchanged.
     Historical introduction: 2019-08-21. Exact historical import version unknown.
-    Source and modification records: licenses/checkstyle/README.md.
+    Source notices are consolidated in the project NOTICE; history remains in Git.
 -->
 
 <!DOCTYPE module PUBLIC

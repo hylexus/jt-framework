@@ -1,65 +1,249 @@
 jt-framework
 https://github.com/hylexus/jt-framework
-
-历史贡献的许可确认尚未完成。各项贡献按其原有许可及权利人的明确授权范围处理；本项目的许可证声明不扩大未确认贡献的授权范围。授权记录及发行安排见仓库中的 docs/license-consents.md 和 docs/license-release-checklist.md。
-License confirmation for historical contributions is incomplete. Each contribution remains subject to its existing license and the scope expressly granted by its rights holder. The project's license notices do not expand the rights granted for unconfirmed contributions. See docs/license-consents.md and docs/license-release-checklist.md in the repository for authorization records and release plans.
-
-版权所有：原作者。
 Copyright the original author or authors.
 
-版权仍归各自的版权人所有。
-Copyright remains with the respective copyright holders.
+维护者有权授权的原创后端代码采用 Apache-2.0；其他贡献按其原有许可及明确授权范围处理。
+历史贡献的许可确认尚未完成，项目声明不扩大未确认贡献的授权范围。
+授权状态及发行安排见仓库 docs/license-consents.md 和 docs/license-release-checklist.md。
+Original backend code that the maintainer has authority to license is provided
+under Apache-2.0; other contributions remain subject to their existing licenses
+and express grants. Permissions for historical contributions have not all been confirmed;
+these notices do not expand the rights granted for unconfirmed contributions.
+See docs/license-consents.md and docs/license-release-checklist.md in the repository.
 
-维护者有权授权的原创 Java 后端代码采用 Apache License, Version 2.0；其他贡献者的内容按其实际授权范围处理，文件或目录另有许可证声明的遵循该声明。
-Original Java backend code that the maintainer has authority to license is provided under the Apache License, Version 2.0. Other contributors' work follows the scope of their actual grants, and file- or directory-specific license notices apply where present.
+第三方内容保留各自的版权、许可和源文件声明。复制或改编源码的来源、原始声明与共用条款
+集中在本文件，MPL／LGPL 全文保留在仓库的 licenses/ 目录。前端产物自带其 LICENSE
+和集中维护的 NOTICE，随静态资源一同交付。
+Third-party content retains its own copyrights, licenses and source headers.
+Source attributions, original notices and shared terms for copied/adapted components are collected below.
+Shared MPL/LGPL texts are in the repository's licenses/ directory.
+Frontend builds carry their own LICENSE and NOTICE alongside the static assets.
 
-本发行包包含或依赖第三方软件。
-This distribution includes or depends on third-party software.
+完整应用的依赖许可和适用源码材料按实际捆绑内容提供；维护方式见
+仓库 docs/license-maintenance.md。本声明不修改任何许可条款。
+Applications provide dependency notices and applicable source materials according
+to what they bundle; see docs/license-maintenance.md in the repository.
+These notices do not modify any license terms.
 
-本项目的许可证不会替代这些第三方软件各自的许可证。
-The project license does not replace the licenses of that software.
+复制和改编的后端源码
+Copied and adapted backend sources
+=================================
 
-请参阅以下文件和目录。
-See the following files and directories.
+Apache Commons Codec (Apache-2.0) — jt-core
+HexStringUtils 改编自 Hex，调整了工具方法和错误处理，保留原 Apache 许可头。
+HexStringUtils is adapted from Hex, with project utility methods and error
+handling. Original Apache headers remain.
+https://commons.apache.org/proper/commons-codec/
+Applicable excerpt from the Apache Commons Codec NOTICE
 
-- THIRD-PARTY-NOTICES.txt：包含为本模块生成的 JVM 依赖声明。
-  THIRD-PARTY-NOTICES.txt contains the generated JVM dependency notices for this module.
+Apache Commons Codec
+Copyright 2002-2017 The Apache Software Foundation
 
-- THIRD-PARTY-SOURCE-NOTICES.txt：包含第三方源码和资源的来源及许可声明，以及部分外部依赖的补充说明。
-  THIRD-PARTY-SOURCE-NOTICES.txt contains source and license notices for third-party code and resources, plus supplemental information on selected external dependencies.
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
 
-- THIRD-PARTY-FRONTEND-NOTICES.txt：包含前端依赖声明。
-  THIRD-PARTY-FRONTEND-NOTICES.txt contains frontend dependency notices.
+------------------------------------------------------------------------
 
-- licenses/：包含补充许可文本和源码分发说明。
-  licenses/ contains additional license texts and source distribution instructions.
+EyerH264Decoder (MIT) — jt-core and jt-1078-server-support
+Copyright (c) 2021 Redknot.
+位流读取器和 SPS 解析器改编自 EyerH264Decoder，用于 Java/Netty 和 JT/T 1078。
+原始署名与适用的 MIT 条款见下方共用 MIT 条款一节。
+BitStreamReader, DefaultBitStreamReader and the SPS parser are adapted for
+Java/Netty bit-reading interfaces and JT/T 1078 integration by hylexus.
+https://github.com/redknotmiaoyuqiao/EyerH264Decoder
+The original copyright and MIT terms are reproduced in the shared MIT section below.
 
-分发包含第三方组件的完整应用时，应按实际捆绑内容保留原始声明和许可文本，并提供适用许可要求的源码等材料。配套材料可通过 prepareDistributionLicenses 按需生成，核对后随应用提供；组件核对记录和操作步骤见仓库 docs/license-jvm-review.md。
-When distributing a complete application containing third-party components, retain their original notices and license texts and provide source code and other materials as required by the applicable licenses. Companion materials can be generated with prepareDistributionLicenses, reviewed and supplied with the application. See docs/license-jvm-review.md in the repository for component review records and instructions.
+------------------------------------------------------------------------
 
-维护者有权授权的原创文档、文档站点代码、Dashboard UI 和示例前端采用 MIT；其他贡献者的内容按其实际授权范围处理，各目录附有适用许可声明。
-Original documentation, site code, Dashboard UI and sample frontend code that the maintainer has authority to license are provided under MIT; other contributors' work follows the scope of their actual grants, with applicable notices in each directory.
+Spring Framework (Apache-2.0) — jt-808-server-support
+Copyright 2002-2021 the original author or authors; individual source years remain.
+处理器执行链、过滤器、拦截器及请求与交换对象的属性辅助代码由 hylexus 改编，用于 JT/T 808。
+各源文件保留原版权年份。
+Handler execution chain, filters, interceptor and request/exchange attribute
+helpers are adapted to JT/T 808 by hylexus.
+https://github.com/spring-projects/spring-framework
 
-docs/example-src 中的 Java 示例和本项目自行绘制的 JT 标识及其衍生图形（logo、favicon、hero）采用 Apache-2.0；图形源文件及生成记录见仓库 assets/brand/。
-Java examples in docs/example-src and the project's original JT mark and derived artwork (logos, favicons and hero images) use Apache-2.0; artwork sources and generation records are in assets/brand/ in the repository.
+------------------------------------------------------------------------
 
-源自 Symphonia 的 IMA ADPCM 源码文件继续采用 MPL-2.0。
-The Symphonia-derived IMA ADPCM source file retains MPL-2.0.
+xtream-codec (Apache-2.0) — 808 annotation support, adapter and adapter samples
+Copyright 2024 the original author or authors.
+JT/T 808 注解支持、适配器及其示例中的改编代码保留原文件头声明。
+Adapted support and examples retain their original headers.
+https://github.com/hylexus/xtream-codec
 
-1078 的 MP3 编码使用未修改的外部依赖 de.sciss:jump3r:1.0.5。其上游 POM 声明许可为 LGPL-2.1-or-later；本项目的 Apache-2.0 许可不适用于该依赖。该库的适用原始许可和版权声明予以保留。
-1078 MP3 encoding uses the unmodified external dependency de.sciss:jump3r:1.0.5. Its upstream POM declares LGPL-2.1-or-later; the project's Apache-2.0 license does not apply to this dependency. The library's applicable original license and copyright notices are retained.
+------------------------------------------------------------------------
 
-该版本中的 de/sciss/jump3r/mp3/FFT.java 保留了涉及 GPL 来源及其他历史权利事项的文件头说明，原文见 licenses/jump3r/UPSTREAM-NOTICES.txt。现有核查材料尚未明确该历史说明与上游 LGPL 声明对该文件的具体适用关系。本项目保留相关原始声明，并在仓库 docs/license-1078-review.md 中记录核查依据及未确定事项。
-In this version, de/sciss/jump3r/mp3/FFT.java retains header comments concerning GPL origins and other historical rights matters. The original text is preserved in licenses/jump3r/UPSTREAM-NOTICES.txt. The reviewed materials do not establish how these historical comments relate to the upstream LGPL declaration for this file. The project retains the original notices and records the reviewed evidence and unresolved questions in docs/license-1078-review.md in the repository.
+Spring Boot Admin (Apache-2.0) — Dashboard Java modules
+Copyright 2014-2023 the original author or authors.
+Dashboard Java 模块的注册、调度、代理、注册表和指标支持由 hylexus 改编，用于 JT 应用。
+源文件保留原文件头和改编说明。
+Registration, scheduling, proxy, registry and metrics support is adapted
+to JT applications by hylexus. Original headers and adaptation notes remain.
+https://github.com/codecentric/spring-boot-admin
 
-本项目已依据上游 LGPL 声明准备许可、源码及重建／替换材料，见 licenses/LGPL-2.1.txt 和 licenses/jump3r/。这些材料不代替适用许可的判断；发行包含该库源码或二进制的产物前，应针对精确版本确认许可依据。使用该运行时依赖的模块在 META-INF/third-party-sources/jump3r/ 中附带匹配库源码和重建／替换材料。
-The project has prepared license, source and rebuild/replacement materials based on the upstream LGPL declaration; see licenses/LGPL-2.1.txt and licenses/jump3r/. These materials do not establish the applicable license; before distributing artifacts containing this library's source or binaries, establish the licensing basis for the exact version. Modules using this runtime dependency include matching library sources and rebuild/replacement materials in META-INF/third-party-sources/jump3r/.
+------------------------------------------------------------------------
 
-这些材料也包含在相关普通 JAR 中；交付这些 JAR 同样涉及 jump3r 源码副本的分发。
-These materials are also included in the relevant ordinary JARs; delivering those JARs also distributes copies of jump3r's source.
+jtt1078-video-server / matrixy (Apache-2.0) — jt-1078-server-support
+Copyright 2019 matrixy.
+音频转换、FLV 和 ADPCM 接入由 hylexus 改编，用于 Java/Netty 和 JT/T 1078。
+ADPCM 接入同时保留 houcheng 的署名。上游声明见下文，Apache-2.0 全文见项目 LICENSE。
+Audio conversion, FLV and ADPCM integration are adapted to Java/Netty and
+JT/T 1078 by hylexus; the ADPCM integration also credits houcheng.
+https://gitee.com/matrixy/jtt1078-video-server
+Original upstream declaration (Apache-2.0 terms are in the project LICENSE):
 
-改自 Checkstyle 的构建配置继续采用 LGPL-2.1-or-later，许可资料中附有配置源码和说明。
-The Checkstyle-derived build configuration retains LGPL-2.1-or-later; its source and notes accompany the license materials.
+Copyright [2019] [matrixy]
 
-这些声明仅用于提供信息，不会修改相应许可证的条款。
-These notices are informational and do not modify the respective licenses.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+------------------------------------------------------------------------
+
+Sun Microsystems G.7xx — jt-1078-server-support
+g7xx 包保留 Sun Microsystems 原有的使用许可和免责声明，原文见下方。
+The g7xx package retains its original permission and warranty statements.
+Original Sun permission and warranty statements:
+
+This source code is a product of Sun Microsystems, Inc. and is provided
+for unrestricted use.  Users may copy or modify this source code without
+charge.
+
+SUN SOURCE CODE IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING
+THE WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
+PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
+
+Sun source code is provided with no support and without any obligation on
+the part of Sun Microsystems, Inc. to assist in its use, correction,
+modification or enhancement.
+
+SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
+INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY THIS SOFTWARE
+OR ANY PART THEREOF.
+
+In no event will Sun Microsystems, Inc. be liable for any lost revenue
+or profits or other special, indirect and consequential damages, even if
+Sun has been advised of the possibility of such damages.
+
+Sun Microsystems, Inc.
+2550 Garcia Avenue
+Mountain View, California  94043
+
+------------------------------------------------------------------------
+
+Symphonia (MPL-2.0) — jt-1078-server-support
+Copyright (c) 2019-2022 The Project Symphonia Developers.
+该改编文件及其修改继续采用 MPL-2.0。匹配源码与许可全文随本模块 JAR 提供，路径见下文。
+AdpcmImaToPcmJt1078AudioFormatConverter.java is translated/adapted from
+Symphonia's IMA ADPCM decoder to Java/Netty and JT/T 1078 audio framing.
+https://github.com/pdeljanov/Symphonia
+The entire adapted file, including modifications, remains MPL-2.0.
+Matching editable source is supplied in this module's JAR at
+META-INF/third-party-sources/symphonia/AdpcmImaToPcmJt1078AudioFormatConverter.java,
+and in the repository and matching sources JAR.
+License: META-INF/licenses/MPL-2.0.txt in this module.
+
+------------------------------------------------------------------------
+
+H.264 parser adaptations (MIT) — jt-1078-server-support
+Java/Netty 的 H.264 解析状态机改编自 jmuxer，元数据处理参考 SmallChi/JT1078。
+源文件保留原文件头和改编说明，原始署名及 MIT 条款见下方共用条款一节。
+
+jmuxer: Copyright (c) 2018 Samir Das <cse.samir@gmail.com>; Java/Netty parser state machine adaptations.
+https://github.com/samirkumardas/jmuxer
+
+SmallChi/JT1078: Copyright (c) 2019 SmallChi(Koike); H.264 metadata reference.
+https://github.com/SmallChi/JT1078
+
+Original copyright notices and MIT terms appear in the shared MIT section below.
+Original source headers and adaptation notes remain.
+
+------------------------------------------------------------------------
+
+External MP3 dependency: de.sciss:jump3r:1.0.5
+上游 POM 声明 LGPL-2.1-or-later。FFT.java 中历史权利说明与该声明的适用关系仍待确认。
+实际捆绑此库的 Boot 应用可用 prepareDistributionLicenses 准备声明、匹配源码和重建／替换材料。
+The upstream POM declares LGPL-2.1-or-later. FFT.java retains comments concerning
+GPL origins and other historical rights matters; their relationship to that
+declaration is unresolved. See repository docs/license-1078-review.md and
+licenses/jump3r/UPSTREAM-NOTICES.txt. No relicensing is asserted here.
+Applications shipping it need applicable notices, matching sources and
+rebuild/replacement materials. prepareDistributionLicenses prepares a separate
+companion bundle for the actual Boot JAR.
+
+仓库中的其他内容
+Other repository content
+========================
+
+Checkstyle
+Checkstyle 改编配置保留 LGPL-2.1-or-later。可编辑配置位于
+build-script/checkstyle/checkstyle.xml，文件头记录了修改内容及历史引入版本的不确定性。
+许可全文见 licenses/LGPL-2.1.txt。该配置用于构建阶段的代码检查。
+Checkstyle-derived configuration retains LGPL-2.1-or-later.
+Original authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
+Comparison source: https://github.com/checkstyle/checkstyle/blob/checkstyle-8.23/src/main/resources/google_checks.xml
+The editable modified source is build-script/checkstyle/checkstyle.xml. Its header
+records the project changes and uncertain historical import version.
+Full terms: licenses/LGPL-2.1.txt. The configuration is not a runtime JAR resource.
+
+------------------------------------------------------------------------
+
+OpenSpec
+OpenSpec 技能模板保留 MIT 许可，原始署名和适用条款见下方共用 MIT 条款一节。
+OpenSpec skill templates retain MIT, Copyright (c) 2024 OpenSpec Contributors.
+Their original copyright and MIT terms are reproduced below.
+
+------------------------------------------------------------------------
+
+前端模板 / Frontend templates
+引入的前端模板 vue-element-admin、create-vue、element-plus-vite-starter 和
+vuepress-theme-hope 保留各自的声明。
+Copied frontend templates (vue-element-admin, create-vue,
+element-plus-vite-starter and vuepress-theme-hope) retain their own notices.
+
+------------------------------------------------------------------------
+
+图标与项目图形 / Icons and project artwork
+Font Awesome Free 的 SVG 图标保留 CC BY 4.0 许可及署名。项目原创 JT 图形采用
+Apache-2.0，来源见 assets/brand/README.md。
+Font Awesome Free SVG icons retain CC BY 4.0 and attribution. Original project
+JT artwork is Apache-2.0; see assets/brand/README.md.
+
+后端改编源码与技能模板共用的 MIT 条款
+Shared MIT terms for copied backend sources and skill templates
+==============================================================
+
+EyerH264Decoder: Copyright (c) 2021 Redknot
+jmuxer: Copyright (c) 2018 Samir Das <cse.samir@gmail.com>
+SmallChi/JT1078: Copyright (c) 2019 SmallChi(Koike)
+OpenSpec templates: Copyright (c) 2024 OpenSpec Contributors
+
+以上组件适用下文的 MIT 授权和免责声明。
+The following MIT permission and warranty terms apply to each component above.
+The project Apache-2.0 license does not replace these terms.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

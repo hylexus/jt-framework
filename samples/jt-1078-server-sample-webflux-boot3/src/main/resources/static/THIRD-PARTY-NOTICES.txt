@@ -280,7 +280,7 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
------ Supplemental MIT terms: licenses/frontend-mit/webworkify-webpack-NOTICE.txt -----
+----- Supplemental MIT terms: webworkify-webpack upstream declaration -----
 webworkify-webpack@2.1.5
 Declared license: MIT
 Publisher author field: Boris Sirota <borisirota@gmail.com> (https://github.com/borisirota)
@@ -306,9 +306,6 @@ The publisher author field above is package metadata only; it is not asserted as
 
 本补充说明不创建新的版权声明或许可授予。
 This supplement does not create a copyright notice or a new license grant.
-
-本说明记录已核查的声明及标准 MIT 条款；最终发行前应重新核对上游包中的原始署名材料。
-It records the reviewed declaration and standard MIT terms; recheck the upstream package for original attribution before a final release.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction, including

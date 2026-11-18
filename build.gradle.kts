@@ -195,84 +195,41 @@ configure(subprojects) {
         }
     }
 
-    // 为包含相关运行时依赖的模块提供匹配的 LGPL 库源码和 MPL 文件源码。
-    val runtimeComponents = providers.provider {
-        configurations.getByName("runtimeClasspath").incoming.resolutionResult.allComponents
-    }
-    val jump3rSources = providers.provider {
-        val modules = runtimeComponents.get().mapNotNull {
-            it.id as? org.gradle.api.artifacts.component.ModuleComponentIdentifier
-        }.filter { it.group == "de.sciss" && it.module == "jump3r" }
-        modules.flatMap { module ->
-            val sourceDependency = dependencies.create("${module.group}:${module.module}:${module.version}:sources@jar")
-            configurations.detachedConfiguration(sourceDependency).apply {
-                isTransitive = false
-            }.files
-        }
-    }
-    val symphoniaSource = providers.provider {
-        val usesJt1078 = path == ":jt-1078-server-support" || runtimeComponents.get().any {
-            (it.id as? org.gradle.api.artifacts.component.ProjectComponentIdentifier)?.projectPath == ":jt-1078-server-support"
-        }
-        if (usesJt1078) listOf(rootProject.file(
-            "jt-1078-server-support/src/main/java/io/github/hylexus/jt/jt1078/support/extension/audio/impl/converters/AdpcmImaToPcmJt1078AudioFormatConverter.java"
-        )) else emptyList()
-    }
-    val prepareThirdPartySources = tasks.register<Sync>("prepareThirdPartySources") {
-        group = "reporting"
-        description = "Collect matching jump3r sources and the Symphonia-derived source when used by this module."
-        into(layout.buildDirectory.dir("generated/third-party-sources"))
-        from(jump3rSources) { into("jump3r") }
-        from(providers.provider {
-            if (jump3rSources.get().isNotEmpty()) listOf(rootProject.file("licenses/jump3r")) else emptyList()
-        }) {
-            into("jump3r")
-            exclude("**/__pycache__/**", "**/*.pyc")
-        }
-        from(symphoniaSource) { into("symphonia") }
-    }
-
-    // 每种 JAR 都包含项目许可和当前模块的第三方声明。
+    // 每种 JAR 统一附带项目许可和集中维护的来源声明。
     tasks.withType<Jar>().configureEach {
         from(rootProject.projectDir) {
-            include("LICENSE", "NOTICE", "THIRD-PARTY-SOURCE-NOTICES.txt", "THIRD-PARTY-FRONTEND-NOTICES.txt")
+            include("LICENSE", "NOTICE")
             into("META-INF")
             rename("LICENSE", "LICENSE.txt")
         }
-        from(rootProject.file("licenses")) {
-            into("META-INF/licenses")
-            exclude("**/__pycache__/**", "**/*.pyc")
-            // Repository audit/build inputs; retain original notices and source records in the JAR.
-            exclude("source-audit.json", "frontend-inventory.json", "docs-frontend-inventory.json")
-        }
-        // Supply the editable LGPL-derived build configuration with its notices.
-        from(rootProject.file("build-script/checkstyle/checkstyle.xml")) {
-            into("META-INF/licenses/checkstyle")
-            rename("checkstyle.xml", "jt-framework-checkstyle.xml")
-        }
-        from(tasks.named("generateLicenseReport")) {
-            include("THIRD-PARTY-NOTICES.txt")
-            into("META-INF")
-        }
-        from(prepareThirdPartySources) {
-            into("META-INF/third-party-sources")
+        if (project.name == "jt-1078-server-support") {
+            from(rootProject.file("licenses/MPL-2.0.txt")) {
+                into("META-INF/licenses")
+            }
+            // 随二进制提供 MPL 覆盖文件的匹配源码。
+            from(file("src/main/java/io/github/hylexus/jt/jt1078/support/extension/audio/impl/converters/AdpcmImaToPcmJt1078AudioFormatConverter.java")) {
+                into("META-INF/third-party-sources/symphonia")
+            }
         }
     }
 
-    // 完整应用的分发材料按需生成到 build/，不进入普通 JAR 的构建链。
+    // 完整应用的补充分发材料按需生成；原始库声明保留在嵌套 JAR 中。
     pluginManager.withPlugin("org.springframework.boot") {
         val bootJar = tasks.named<Jar>("bootJar")
-        val distributionArtifacts = providers.provider {
-            configurations.getByName("runtimeClasspath").resolvedConfiguration.resolvedArtifacts
-                .filter { it.id.componentIdentifier is org.gradle.api.artifacts.component.ModuleComponentIdentifier }
-                .sortedBy { "${it.moduleVersion.id}:${it.file.name}" }
-        }
+        // 直接交付完整源码包，保留适用源码和原始声明，不扫描其中的单个文件。
         val sourceModules = setOf(
+            "de.sciss:jump3r",
             "ch.qos.logback:logback-classic", "ch.qos.logback:logback-core",
             "jakarta.annotation:jakarta.annotation-api", "net.jcip:jcip-annotations",
             "com.google.code.findbugs:jsr305",
             "org.bouncycastle:bcprov-jdk18on", "org.slf4j:slf4j-api", "org.slf4j:jul-to-slf4j",
         )
+        val distributionArtifacts = providers.provider {
+            configurations.getByName("runtimeClasspath").resolvedConfiguration.resolvedArtifacts
+                .filter { it.id.componentIdentifier is ModuleComponentIdentifier }
+                .filter { "${it.moduleVersion.id.group}:${it.moduleVersion.id.name}" in sourceModules || it.moduleVersion.id.group == "io.netty" }
+                .sortedBy { "${it.moduleVersion.id}:${it.file.name}" }
+        }
         val distributionSources = providers.provider {
             distributionArtifacts.get().filter {
                 "${it.moduleVersion.id.group}:${it.moduleVersion.id.name}" in sourceModules
@@ -284,9 +241,11 @@ configure(subprojects) {
         }
         tasks.register<Exec>("prepareDistributionLicenses") {
             group = "reporting"
-            description = "Prepare a separate license/source bundle for the actual Boot JAR; no publishing."
+            description = "Prepare supplemental notices and matching sources for the actual Boot JAR."
             dependsOn(bootJar, tasks.named("generateLicenseReport"))
             inputs.file(rootProject.file("build-script/prepare-distribution-licenses.py"))
+            inputs.dir(rootProject.file("licenses/jump3r"))
+            inputs.file(rootProject.file("licenses/LGPL-2.1.txt"))
             inputs.property("bootJarEnabled", bootJar.map { it.enabled })
             inputs.file(bootJar.flatMap { it.archiveFile })
             inputs.files(distributionSources.map { it.values })
@@ -300,13 +259,14 @@ configure(subprojects) {
                 }
                 val input = layout.buildDirectory.file("generated/distribution-license-input.json").get().asFile
                 input.parentFile.mkdirs()
+                val sources = distributionSources.get()
                 input.writeText(JsonOutput.toJson(mapOf(
                     "archive" to bootJar.get().archiveFile.get().asFile.absolutePath,
                     "report" to layout.buildDirectory.file("reports/dependency-license/THIRD-PARTY-NOTICES.txt").get().asFile.absolutePath,
                     "artifacts" to distributionArtifacts.get().map { artifact -> mapOf(
                         "coordinate" to artifact.moduleVersion.id.toString(),
                         "filename" to artifact.file.name,
-                        "source" to distributionSources.get()[artifact.moduleVersion.id.toString()]?.absolutePath,
+                        "source" to sources[artifact.moduleVersion.id.toString()]?.absolutePath,
                     ) },
                 )))
                 val arguments = mutableListOf(
@@ -481,24 +441,6 @@ configure(subprojects) {
     }
 }
 // endregion Maven
-
-// Check actual artifacts without publishing or retaining extra dependency copies.
-val licenseCheckJars = subprojects.filter { it.isJavaProject() }.flatMap { module ->
-    val names = if (module.isMavenPublication()) listOf("jar", "sourcesJar", "javaDocJar") else listOf("jar")
-    names.map { module.tasks.named<Jar>(it) }
-}
-tasks.register<Exec>("verifyJarLicenseMaterials") {
-    group = "verification"
-    description = "Check license materials in Java module JARs and Maven publication source/Javadoc JARs."
-    dependsOn(licenseCheckJars)
-    doFirst {
-        commandLine(listOf(
-            "python3", rootProject.file("build-script/check-license-materials.py").absolutePath,
-            "--report", layout.buildDirectory.file("reports/license-check/jars.txt").get().asFile.absolutePath,
-            "jars",
-        ) + licenseCheckJars.map { it.get().archiveFile.get().asFile.absolutePath })
-    }
-}
 
 fun Project.configureDependencyLicenseReport(reportProjects: Array<Project>) {
     extensions.configure<LicenseReportExtension> {

@@ -9,6 +9,7 @@ export interface Registration {
 
 export interface Config {
   instanceId?: string
+  createdAt?: string
   host?: string
   httpPort?: string
   tcpPort?: string

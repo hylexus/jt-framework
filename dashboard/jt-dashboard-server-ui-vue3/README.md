@@ -2,7 +2,7 @@
 
 ## jt-framework 中的构建方式
 
-本模块的已审核依赖使用 pnpm 8.15.9，在 `package.json` 的
+本模块使用 pnpm 8.15.9，在 `package.json` 的
 `packageManager` 中固定。使用 Node.js 20 提供的 Corepack 执行构建，
 避免全局 pnpm 的版本差异自动迁移锁文件或升级依赖：
 
@@ -10,8 +10,9 @@
 bash build.sh
 ```
 
-脚本会冻结安装依赖、构建 UI，再将完整产物（包括许可文件和
-`license-build-provenance.json`）复制到后端的 `static/client/`。
+脚本会冻结安装依赖、构建 UI，附带本模块 `LICENSE`，再将完整产物复制到
+后端的 `static/client/`。`public/NOTICE.txt` 中集中的第三方署名和适用条款
+由 Vite 原样复制，随静态资源交付。
 本模块按独立项目安装，`--ignore-workspace` 用于保持原有锁文件结构；
 构建不会读取 `pnpm-workspace.yaml` 中的 workspace 设置。
 
@@ -20,14 +21,14 @@ bash build.sh
 ```bash
 corepack pnpm --ignore-workspace install --frozen-lockfile
 corepack pnpm --ignore-workspace run build
+cp LICENSE dist/LICENSE.txt
 ```
 
-升级依赖应作为单独变更进行，同时重新核对
-`licenses/frontend-inventory.json` 和第三方声明。普通构建不更新锁文件，
-也不自动接受新的许可审核记录。
+依赖、复制模板、图标和播放器的来源、版权或许可变化时，更新
+`public/NOTICE.txt`，保留上游源码头和适用条款。仅版本变化且声明不变的，
+不需要修改许可材料；不维护额外的版本清单、哈希或许可构建门禁。
 
-依赖升级后的清单更新、声明生成和产物检查见
-[依赖与许可维护清单](../../docs/license-maintenance.md#dashboard示例播放器依赖)。
+操作和产物检查见 [许可维护](../../docs/license-maintenance.md)。
 
 > A starter kit for Element Plus with Vite
 
